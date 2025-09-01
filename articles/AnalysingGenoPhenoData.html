@@ -8,7 +8,9 @@
 <title>Analysing Geno-Pheno Data • AMRgen</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Nunito-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Analysing Geno-Pheno Data">
 </head>
@@ -56,8 +58,6 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://AMRverse.github.io/AMRgen/">AMRgen</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -77,6 +77,9 @@ EUCAST</p></li>
 <p>This vignette walks through a basic workflow using example datasets
 included in the <code>AMRgen</code> package, and explains how to wrangle
 your own data files into the right formats to use the same workflow.</p>
+<p>Start by loading the package:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://AMRverse.github.io/AMRgen/">AMRgen</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="genotype-table">1. Genotype table<a class="anchor" aria-label="anchor" href="#genotype-table"></a>
 </h3>
@@ -252,7 +255,15 @@ presence/absence).</p>
 <code class="sourceCode R"><span><span class="co"># Get matrix combining phenotype data for ciprofloxacin, binary calls for R/NWT phenotype,</span></span>
 <span><span class="co">#    and genotype presence/absence data for all markers associated with the relevant drug</span></span>
 <span><span class="co">#    class (which are labelled "Quinolones" in AMRfinderplus).</span></span>
-<span><span class="va">cip_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>, keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<span><span class="va">cip_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
+<span>  <span class="va">ecoli_geno</span>,</span>
+<span>  <span class="va">ecoli_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno"</span>,</span>
+<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Defining NWT as I/R vs 0, as no ECOFF column defined"</span></span>
 <span></span>
 <span><span class="co"># check format</span></span>
@@ -443,8 +454,11 @@ regression models</p></li>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Alternatively, use the amr_logistic() function to model R and NWT and plot the results together</span></span>
 <span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
-<span>  geno_table <span class="op">=</span> <span class="fu"><a href="../reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span>, pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, maf <span class="op">=</span> <span class="fl">10</span></span>
+<span>  geno_table <span class="op">=</span> <span class="fu"><a href="../reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>,</span>
+<span>  maf <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Defining NWT as I/R vs 0, as no ECOFF column defined"</span></span>
 <span><span class="co">#&gt; [1] "Fitting logistic regression models using logistf"</span></span>
@@ -555,7 +569,13 @@ marker</p></li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run a solo PPV analysis</span></span>
-<span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
+<span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
+<span>  <span class="va">ecoli_geno</span>,</span>
+<span>  <span class="va">ecoli_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Defining NWT as I/R vs 0, as no ECOFF column defined"</span></span>
 <span><span class="co">#&gt; Warning: Removed 15 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_segment()`).</span></span>
@@ -645,7 +665,12 @@ combination</p></li>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare ciprofloxacin MIC data with quinolone marker combinations,</span></span>
 <span><span class="co">#    using the binary matrix we constructed earlier via get_binary_matrix()</span></span>
-<span><span class="va">cipro_mic_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">cip_bin</span>, min_set_size <span class="op">=</span> <span class="fl">2</span>, assay <span class="op">=</span> <span class="st">"mic"</span>, order <span class="op">=</span> <span class="st">"value"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">cipro_mic_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  <span class="va">cip_bin</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"value"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/amr_upset-1.png" width="100%"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -696,7 +721,10 @@ data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distribu
 <span></span>
 <span><span class="co"># plot the MIC data</span></span>
 <span><span class="va">mics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">ecoli_cip_mic_data</span><span class="op">$</span><span class="va">mic</span>, <span class="va">ecoli_cip_mic_data</span><span class="op">$</span><span class="va">count</span><span class="op">)</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">mics</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span>, title <span class="op">=</span> <span class="st">"E. coli cipro reference distribution"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">mics</span>,</span>
+<span>                  ab <span class="op">=</span> <span class="st">"cipro"</span>,</span>
+<span>                  mo <span class="op">=</span> <span class="st">"E. coli"</span>,</span>
+<span>                  title <span class="op">=</span> <span class="st">"E. coli cipro reference distribution"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/get_eucast_distribution-1.png" width="100%"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare reference distribution to random test data</span></span>

@@ -44,25 +44,19 @@
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
 
 <div class="section">
-<h3 id="ecoli-ast-a-data-frame-with-rows-and-columns-representing-reinterpreted-data-from-the-ncbi-ast-browser-"><code>ecoli_ast</code> A data frame with 6305 rows and 7 columns representing reinterpreted data from the NCBI AST browser.<a class="anchor" aria-label="anchor" href="#ecoli-ast-a-data-frame-with-rows-and-columns-representing-reinterpreted-data-from-the-ncbi-ast-browser-"></a></h3>
+<h3 id="ecoli-ast-a-data-frame-with-rows-and-columns-representing-reinterpreted-data-from-the-ncbi-ast-browser-"><code>ecoli_ast</code> A data frame with 4170 rows and 10 columns representing reinterpreted data from the NCBI AST browser.<a class="anchor" aria-label="anchor" href="#ecoli-ast-a-data-frame-with-rows-and-columns-representing-reinterpreted-data-from-the-ncbi-ast-browser-"></a></h3>
 
 
 <p>Columns include:</p><ul><li><p><code>id</code>: Sample identifier, imported from the <code>#BioSample</code> column in the raw input.</p></li>
-<li><p><code>spp_pheno</code>: Species identifier, interpreted from <code>Scientific name</code> using <code>as.mo</code>, used to interpret <code>ecoff</code> and <code>pheno</code> columns.</p></li>
 <li><p><code>drug_agent</code>: Antibiotic code, interpreted from <code>Antibiotic</code> using <code>as.ab</code>, used to interpret <code>ecoff</code> and <code>pheno</code> columns.</p></li>
-<li><p><code>ecoff</code>: WT/NWT classification, interpreted using <code>as.sir</code>.</p></li>
-<li><p><code>pheno</code>: S/I/R classification, interpreted using <code>as.sir</code>.</p></li>
 <li><p><code>mic</code>: Minimum inhibitory concentration, formatted using <code>as.mic</code>, used to interpret <code>ecoff</code> and <code>pheno</code> columns.</p></li>
 <li><p><code>disk</code>: Disk diffusion zone, formatted using <code>as.disk</code>, used to interpret <code>ecoff</code> and <code>pheno</code> columns.</p></li>
+<li><p><code>pheno_clsi</code>: S/I/R classification according to CLSI, interpreted using <code>as.sir</code>.</p></li>
+<li><p><code>ecoff</code>: WT/NWT classification, interpreted using <code>as.sir</code>.</p></li>
 <li><p><code>guideline</code>: Interpretation guidelines used to interpret <code>ecoff</code> and <code>pheno</code> columns.</p></li>
-<li><p><code>Scientific name</code>: Species identifier, from input file.</p></li>
-<li><p><code>Antibiotic</code>: Antibiotic name, from input file.</p></li>
-<li><p><code>Testing standard</code>: Interpretation standard (EUCAST or CLSI), from input file.</p></li>
-<li><p><code>Measurement sign</code>: Measurement sign (&gt;, &lt;, =, etc.) relating to MIC measurement, from input file.</p></li>
-<li><p><code>MIC (mg/L)</code>: Minimum inhibitory concentration, from input file.</p></li>
-<li><p><code>Disk diffusion (mm)</code>: Disk diffusion zone, from input file.</p></li>
-<li><p><code>Resistance phenotype</code>: Resistance call (SIR), from input file.</p></li>
-<li><p>...: Additional metadata columns from the NCBI AST export.</p></li>
+<li><p><code>method</code>: Test method, one of: "Etest', "Microscan', "Phoenix', "Phoenix NMIC-203 card', "Sensititer', "Sensititre', "Vitek'.</p></li>
+<li><p><code>pheno_provided</code>: ??</p></li>
+<li><p><code>spp_pheno</code>: Species identifier, interpreted from <code>Scientific name</code> using <code>as.mo</code>, used to interpret <code>ecoff</code> and <code>pheno</code> columns.</p></li>
 </ul></div>
 
     </div>

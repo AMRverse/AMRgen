@@ -103,19 +103,43 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">ecoli_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ecoli_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">binary_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  geno_table <span class="op">=</span> <span class="va">ecoli_geno</span>,</span></span>
 <span class="r-in"><span>  pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>,</span></span>
 <span class="r-in"><span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span></span>
 <span class="r-in"><span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  sir_col <span class="op">=</span> <span class="st">"pheno"</span>,</span></span>
+<span class="r-in"><span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span></span>
 <span class="r-in"><span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Defining NWT in binary matrix using ecoff column provided: ecoff </span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">amr_upset</span><span class="op">(</span><span class="va">binary_matrix</span>, min_set_size <span class="op">=</span> <span class="fl">3</span>, order <span class="op">=</span> <span class="st">"value"</span>, assay <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-plt img"><img src="amr_upset-1.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $plot</span>
+<span class="r-plt img"><img src="amr_upset-2.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $summary</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 42 × 14</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    marker_list       marker_count     n   R.ppv     R NWT.ppv   NWT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> <span style="color: #949494;">""</span>                           0  <span style="text-decoration: underline;">2</span>590 0.003<span style="text-decoration: underline;">86</span>    10  0.019<span style="text-decoration: underline;">7</span>    51</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> <span style="color: #949494;">"</span>qnrB<span style="color: #949494;">"</span>                       1     1 1           1  1          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> <span style="color: #949494;">"</span>parE_D475E<span style="color: #949494;">"</span>                 1    61 0           0  0          0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> <span style="color: #949494;">"</span>qnrA1<span style="color: #949494;">"</span>                      1     2 0           0  1          2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> <span style="color: #949494;">"</span>gyrA_S83A<span style="color: #949494;">"</span>                  1     3 0           0  0.667      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> <span style="color: #949494;">"</span>qnrB4<span style="color: #949494;">"</span>                      1     2 1           2  1          2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> <span style="color: #949494;">"</span>marR_S3N<span style="color: #949494;">"</span>                   1    38 0.105       4  0.263     10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> <span style="color: #949494;">"</span>qnrS1<span style="color: #949494;">"</span>                      1    31 0.548      17  0.968     30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> <span style="color: #949494;">"</span>qnrS1, marR_S3N<span style="color: #949494;">"</span>            2     1 1           1  1          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> <span style="color: #949494;">"</span>parE_I529L<span style="color: #949494;">"</span>                 1    16 0           0  0.188      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: median_excludeRangeValues &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   q25_excludeRangeValues &lt;dbl&gt;, q75_excludeRangeValues &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_excludeRangeValues &lt;int&gt;, median_ignoreRanges &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   q25_ignoreRanges &lt;dbl&gt;, q75_ignoreRanges &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

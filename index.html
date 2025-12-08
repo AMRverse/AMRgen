@@ -66,7 +66,7 @@
 </h2>
 <ul>
 <li>
-<strong>Import Genotype and Phenotype Data</strong>: Import from common formats (NCBI AST for phenotypes; AMRFinderPlus and hAMRonization for genotypes</li>
+<strong>Import Genotype and Phenotype Data</strong>: Import from common formats (NCBI or EBI antibiogram format for phenotypes; AMRFinderPlus and hAMRonization for genotypes</li>
 <li>
 <strong>Genotype-Phenotype Integration</strong>: Links AMR gene presence with phenotypic resistance profiles, enabling deeper insights into resistance mechanisms.</li>
 <li>
@@ -118,7 +118,7 @@
 <span></span>
 <span><span class="co"># Calculate positive predictive value for ciprofloxacin resistance</span></span>
 <span><span class="co">#  (for all quinolone-associated genotype markers)</span></span>
-<span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_ast</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, drug_class_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno"</span><span class="op">)</span></span>
+<span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_ast</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, drug_class_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno_clsi"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations</span></span>
 <span><span class="co">#  (for combinations observed at least 5 times)</span></span>
@@ -126,7 +126,8 @@
 <span></span>
 <span><span class="co"># Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers</span></span>
 <span><span class="co">#  (for markers observed at least 10 times)</span></span>
-<span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="fu"><a href="reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span>, pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>, </span>
+<span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="fu"><a href="reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span>,</span>
+<span>                       pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>, sir_col<span class="op">=</span><span class="st">"pheno_clsi"</span>,</span>
 <span>                       antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, maf<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">

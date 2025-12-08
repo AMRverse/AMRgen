@@ -172,34 +172,37 @@ NCBI format files.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example E. coli AST data from NCBI</span></span>
 <span><span class="co"># This one has already been imported and phenotypes interpreted from assay data</span></span>
-<span><span class="co"># You can make your own from NCBI format data using:</span></span>
-<span><span class="co">#    import_ncbi_ast("filepath/AST.tsv", interpret=T)</span></span>
+<span><span class="co"># You can make your own from NCBI of EBI antibiogram format data using e.g.:</span></span>
+<span><span class="co">#    import_ast("filepath/AST.tsv", format="ncbi", interpret_clsi=T)</span></span>
+<span><span class="co">#    import_ast("filepath/AST.tsv", format="ebi", interpret_eucast=T)</span></span>
 <span><span class="va">ecoli_ast</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6,305 × 7</span></span></span>
-<span><span class="co">#&gt;    id           spp_pheno    pheno drug_agent   mic  disk guideline</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;mo&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN04452146 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.12    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN04452145 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CIP         8<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN04452138 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.12    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN04452143 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.12    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN04452154 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CIP         8<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN04452136 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CIP         8<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN04461499 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.12    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN04461483 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.12    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN04461495 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CIP         8<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN04461493 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.06    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6,295 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4,170 × 10</span></span></span>
+<span><span class="co">#&gt;    id           drug_agent     mic  disk pheno_clsi ecoff guideline method</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN36015110 CIP        <span style="color: #555555;">&lt;</span>128<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN11638310 CIP         256<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN05729964 CIP          64<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      Etest </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN10620111 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN10620168 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN10620104 CIP         <span style="color: #555555;">&lt;=</span>0.25    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN10620102 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN10620129 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN10620121 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN10620086 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4,160 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: pheno_provided &lt;sir&gt;, spp_pheno &lt;mo&gt;</span></span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ecoli_ast</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
-<span><span class="co">#&gt;   id           spp_pheno    pheno drug_agent   mic  disk guideline</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;mo&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN04452146 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.12    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN04452145 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CIP         8<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN04452138 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.12    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN04452143 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #5FD7AF;">  S  </span> CIP         0.12    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN04452154 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CIP         8<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> CLSI     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN04452136 <span style="color: #949494;">B_</span>CMPYL<span style="color: #949494;">_</span>COLI <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CIP         8<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> CLSI</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
+<span><span class="co">#&gt;   id           drug_agent     mic  disk pheno_clsi ecoff guideline method</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN36015110 CIP        <span style="color: #555555;">&lt;</span>128<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN11638310 CIP         256<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN05729964 CIP          64<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      Etest </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN10620111 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN10620168 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN10620104 CIP         <span style="color: #555555;">&lt;=</span>0.25    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: pheno_provided &lt;sir&gt;, spp_pheno &lt;mo&gt;</span></span></span></code></pre></div>
 <p>The phenotype table has one row for each assay measurement, i.e. one
 per strain/drug combination. If your assay data is not in NCBI AST
 format, you can wrangle other input data files into the necessary
@@ -219,7 +222,9 @@ string, using <code>AMR::as.mo(species_string)</code>)</p></li>
 package <code>ab</code> class (can be created from a column with
 antibiotic name as string, using
 <code>AMR::as.ab(antibiotic_string)</code>)</p></li>
-<li><p><code>pheno</code>: S/I/R phenotype calls in the form of an AMR
+<li><p>a phenotype column, e.g. the import functions output fields
+<code>pheno_eucast</code>, <code>pheno_clsi</code>,
+<code>pheno_provided</code>: S/I/R phenotype calls in the form of an AMR
 package <code>sir</code> class (can be created from a column with
 phenotype values as string, using <code>AMR::as(sir_string)</code>, or
 generated by interpreting MIC or disk assay data using
@@ -260,24 +265,24 @@ presence/absence).</p>
 <span>  <span class="va">ecoli_ast</span>,</span>
 <span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
 <span>  drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>,</span>
-<span>  sir_col <span class="op">=</span> <span class="st">"pheno"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Defining NWT as I/R vs 0, as no ECOFF column defined"</span></span>
+<span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
 <span></span>
 <span><span class="co"># check format</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cip_bin</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 50</span></span></span>
-<span><span class="co">#&gt;   id           pheno     mic     R   NWT gyrA_S83L gyrA_D87Y gyrA_D87N parC_S80I</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN03177615 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN03177616 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN03177617 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN03177618 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>   0.25<span style="color: #555555;">0</span>     0     0         1         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN03177619 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>   0.12<span style="color: #555555;">0</span>     0     0         0         1         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN03177620 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 more variables: parE_S458A &lt;dbl&gt;, parC_S80R &lt;dbl&gt;, parE_L416F &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt;   id     pheno ecoff     mic     R   NWT gyrA_S83L gyrA_D87Y gyrA_D87N parC_S80I</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN0… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015     0     0         0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN0… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015     0     0         0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN0… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015     0     0         0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN0… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>   0.25<span style="color: #555555;">0</span>     0     1         1         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN0… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>   0.12<span style="color: #555555;">0</span>     0     1         0         1         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN0… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015     0     0         0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 40 more variables: parE_S458A &lt;dbl&gt;, parC_S80R &lt;dbl&gt;, parE_L416F &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   qnrB6 &lt;dbl&gt;, gyrA_D87G &lt;dbl&gt;, parC_S57T &lt;dbl&gt;, parC_E84A &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   soxS_A12S &lt;dbl&gt;, qnrB2 &lt;dbl&gt;, qnrS2 &lt;dbl&gt;, parC_E84K &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   parC_A56T &lt;dbl&gt;, qnrB19 &lt;dbl&gt;, `aac(6')-Ib-cr5` &lt;dbl&gt;, parC_E84V &lt;dbl&gt;,</span></span></span>
@@ -287,18 +292,18 @@ presence/absence).</p>
 <span></span>
 <span><span class="co"># list colnames, to see full list of quinolone markers included</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">cip_bin</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "id"             "pheno"          "mic"            "R"             </span></span>
-<span><span class="co">#&gt;  [5] "NWT"            "gyrA_S83L"      "gyrA_D87Y"      "gyrA_D87N"     </span></span>
-<span><span class="co">#&gt;  [9] "parC_S80I"      "parE_S458A"     "parC_S80R"      "parE_L416F"    </span></span>
-<span><span class="co">#&gt; [13] "qnrB6"          "gyrA_D87G"      "parC_S57T"      "parC_E84A"     </span></span>
-<span><span class="co">#&gt; [17] "soxS_A12S"      "qnrB2"          "qnrS2"          "parC_E84K"     </span></span>
-<span><span class="co">#&gt; [21] "parC_A56T"      "qnrB19"         "aac(6')-Ib-cr5" "parC_E84V"     </span></span>
-<span><span class="co">#&gt; [25] "parE_I529L"     "parE_S458T"     "parE_E460D"     "parC_E84G"     </span></span>
-<span><span class="co">#&gt; [29] "qnrS1"          "marR_S3N"       "aac(6')-Ib-cr"  "soxR_R20H"     </span></span>
-<span><span class="co">#&gt; [33] "qnrB1"          "parE_I355T"     "soxR_G121D"     "qnrB4"         </span></span>
-<span><span class="co">#&gt; [37] "qepA"           "gyrA_S83A"      "qnrA1"          "parE_D475E"    </span></span>
-<span><span class="co">#&gt; [41] "parC_A108V"     "qepA1"          "parE_E460K"     "gyrA_S83W"     </span></span>
-<span><span class="co">#&gt; [45] "qnrB7"          "marR_R77C"      "parE_L445H"     "parE_I464F"    </span></span>
+<span><span class="co">#&gt;  [1] "id"             "pheno"          "ecoff"          "mic"           </span></span>
+<span><span class="co">#&gt;  [5] "R"              "NWT"            "gyrA_S83L"      "gyrA_D87Y"     </span></span>
+<span><span class="co">#&gt;  [9] "gyrA_D87N"      "parC_S80I"      "parE_S458A"     "parC_S80R"     </span></span>
+<span><span class="co">#&gt; [13] "parE_L416F"     "qnrB6"          "gyrA_D87G"      "parC_S57T"     </span></span>
+<span><span class="co">#&gt; [17] "parC_E84A"      "soxS_A12S"      "qnrB2"          "qnrS2"         </span></span>
+<span><span class="co">#&gt; [21] "parC_E84K"      "parC_A56T"      "qnrB19"         "aac(6')-Ib-cr5"</span></span>
+<span><span class="co">#&gt; [25] "parC_E84V"      "parE_I529L"     "parE_S458T"     "parE_E460D"    </span></span>
+<span><span class="co">#&gt; [29] "parC_E84G"      "qnrS1"          "marR_S3N"       "aac(6')-Ib-cr" </span></span>
+<span><span class="co">#&gt; [33] "soxR_R20H"      "qnrB1"          "parE_I355T"     "soxR_G121D"    </span></span>
+<span><span class="co">#&gt; [37] "qnrB4"          "qepA"           "gyrA_S83A"      "qnrA1"         </span></span>
+<span><span class="co">#&gt; [41] "parE_D475E"     "parC_A108V"     "qepA1"          "parE_E460K"    </span></span>
+<span><span class="co">#&gt; [45] "gyrA_S83W"      "marR_R77C"      "parE_L445H"     "parE_I464F"    </span></span>
 <span><span class="co">#&gt; [49] "qnrB"           "acrR_R45C"</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -355,7 +360,7 @@ regression models</p></li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Manually run Firth's logistic regression model using the binary matrix produced above</span></span>
-<span><span class="va">dataR</span> <span class="op">&lt;-</span> <span class="va">cip_bin</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cip_bin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"pheno"</span>, <span class="st">"mic"</span>, <span class="st">"NWT"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">dataR</span> <span class="op">&lt;-</span> <span class="va">cip_bin</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cip_bin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"pheno"</span>, <span class="st">"ecoff"</span>, <span class="st">"mic"</span>, <span class="st">"NWT"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">dataR</span> <span class="op">&lt;-</span> <span class="va">dataR</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">dataR</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">5</span><span class="op">]</span></span>
 <span><span class="va">modelR</span> <span class="op">&lt;-</span> <span class="fu">logistf</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/logistf/man/logistf.html" class="external-link">logistf</a></span><span class="op">(</span><span class="va">R</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">dataR</span>, pl <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in logistf::logistf(R ~ ., data = dataR, pl = FALSE): logistf.fit:</span></span>
@@ -369,168 +374,185 @@ regression models</p></li>
 <span><span class="co">#&gt; Model fitted by Penalized ML</span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt;                        coef  se(coef) lower 0.95 upper 0.95       Chisq</span></span>
-<span><span class="co">#&gt; (Intercept)      -5.3112343 0.2630326 -5.8267687 -4.7956998         Inf</span></span>
-<span><span class="co">#&gt; gyrA_S83L         5.0958327 0.3392669  4.4308819  5.7607836         Inf</span></span>
-<span><span class="co">#&gt; gyrA_D87Y         0.6681393 1.9565741 -3.1666755  4.5029541  0.11661152</span></span>
-<span><span class="co">#&gt; gyrA_D87N         1.0837938 1.2942631 -1.4529153  3.6205029  0.70121011</span></span>
-<span><span class="co">#&gt; parC_S80I         3.4520722 1.2568521  0.9886872  5.9154571  7.54382060</span></span>
-<span><span class="co">#&gt; parE_S458A       -0.6344485 1.4089874 -3.3960130  2.1271161  0.20275822</span></span>
-<span><span class="co">#&gt; parC_S80R         0.9478717 0.9372397 -0.8890844  2.7848277  1.02281649</span></span>
-<span><span class="co">#&gt; parE_L416F        1.0908648 1.4790546 -1.8080290  3.9897586  0.54396807</span></span>
-<span><span class="co">#&gt; gyrA_D87G         1.9705483 1.7873824 -1.5326567  5.4737534  1.21545601</span></span>
-<span><span class="co">#&gt; parC_S57T         1.4719771 1.3345617 -1.1437158  4.0876699  1.21653549</span></span>
-<span><span class="co">#&gt; soxS_A12S         1.5875648 1.4885862 -1.3300106  4.5051401  1.13740446</span></span>
-<span><span class="co">#&gt; parC_A56T         2.6610040 1.5175165 -0.3132736  5.6352816  3.07485210</span></span>
-<span><span class="co">#&gt; qnrB19            5.2694258 0.4539093  4.3797799  6.1590717         Inf</span></span>
-<span><span class="co">#&gt; `aac(6')-Ib-cr5`  4.2772706 1.3426205  1.6457827  6.9087585 10.14908503</span></span>
-<span><span class="co">#&gt; parC_E84V        -0.5055866 1.7759859 -3.9864549  2.9752818  0.08104235</span></span>
-<span><span class="co">#&gt; parE_I529L        2.0642420 0.4421951  1.1975555  2.9309284 21.79181349</span></span>
-<span><span class="co">#&gt; parE_S458T       -2.7271010 1.9392749 -6.5280100  1.0738081  1.97753268</span></span>
-<span><span class="co">#&gt; parE_E460D       -1.4879561 1.8772705 -5.1673387  2.1914264  0.62824139</span></span>
-<span><span class="co">#&gt; parC_E84G         1.2132418 1.5865104 -1.8962615  4.3227451  0.58480202</span></span>
-<span><span class="co">#&gt; qnrS1             5.5063830 0.4381611  4.6476030  6.3651629         Inf</span></span>
-<span><span class="co">#&gt; marR_S3N          3.1460868 0.5141755  2.1383213  4.1538523 37.43851630</span></span>
-<span><span class="co">#&gt; parE_I355T        1.9441291 0.8700166  0.2389279  3.6493302  4.99338573</span></span>
-<span><span class="co">#&gt; soxR_G121D       -2.5704703 1.6084571 -5.7229884  0.5820478  2.55391352</span></span>
-<span><span class="co">#&gt; qnrB4             6.9206273 1.5713017  3.8409326 10.0003221 19.39866140</span></span>
-<span><span class="co">#&gt; gyrA_S83A         3.3653241 1.5345685  0.3576252  6.3730231  4.80929310</span></span>
-<span><span class="co">#&gt; parE_D475E       -0.9808119 1.4387237 -3.8006586  1.8390348  0.46474703</span></span>
+<span><span class="co">#&gt; (Intercept)      -5.3126336 0.2631271 -5.8283532 -4.7969141         Inf</span></span>
+<span><span class="co">#&gt; gyrA_S83L         5.0964769 0.3396242  4.4308257  5.7621280         Inf</span></span>
+<span><span class="co">#&gt; gyrA_D87Y         0.6106668 1.9594688 -3.2298214  4.4511550  0.09712520</span></span>
+<span><span class="co">#&gt; gyrA_D87N         1.0360455 1.2910108 -1.4942892  3.5663801  0.64401779</span></span>
+<span><span class="co">#&gt; parC_S80I         3.5373730 1.2607416  1.0663649  6.0083812  7.87244336</span></span>
+<span><span class="co">#&gt; parE_S458A       -0.6704877 1.4211494 -3.4558894  2.1149139  0.22258823</span></span>
+<span><span class="co">#&gt; parC_S80R         0.9483222 0.9365007 -0.8871855  2.7838299  1.02540544</span></span>
+<span><span class="co">#&gt; parE_L416F        1.0898410 1.4770169 -1.8050589  3.9847409  0.54444672</span></span>
+<span><span class="co">#&gt; parC_S57T         1.4138484 1.4556144 -1.4391034  4.2668003  0.94343723</span></span>
+<span><span class="co">#&gt; soxS_A12S         1.5835771 1.4858311 -1.3285984  4.4957527  1.13589853</span></span>
+<span><span class="co">#&gt; parC_A56T         2.6649799 1.5169240 -0.3081365  5.6380963  3.08645711</span></span>
+<span><span class="co">#&gt; qnrB19            5.2724510 0.4539251  4.3827740  6.1621279         Inf</span></span>
+<span><span class="co">#&gt; `aac(6')-Ib-cr5`  4.2781111 1.3428296  1.6462134  6.9100089 10.14991218</span></span>
+<span><span class="co">#&gt; parC_E84V        -0.5431447 1.7851855 -4.0420441  2.9557547  0.09256874</span></span>
+<span><span class="co">#&gt; parE_I529L        2.0650647 0.4422569  1.1982571  2.9318724 21.80309146</span></span>
+<span><span class="co">#&gt; parE_S458T       -2.7638947 1.9476308 -6.5811808  1.0533915  2.01386205</span></span>
+<span><span class="co">#&gt; parE_E460D       -1.5247536 1.8858945 -5.2210388  2.1715317  0.65367903</span></span>
+<span><span class="co">#&gt; parC_E84G         1.2138825 1.5879100 -1.8983640  4.3261290  0.58438832</span></span>
+<span><span class="co">#&gt; qnrS1             5.5078662 0.4382199  4.6489710  6.3667613         Inf</span></span>
+<span><span class="co">#&gt; marR_S3N          3.1497735 0.5128996  2.1445088  4.1550382 37.71325169</span></span>
+<span><span class="co">#&gt; parE_I355T        1.9452320 0.8701522  0.2397651  3.6506990  4.99749513</span></span>
+<span><span class="co">#&gt; soxR_G121D       -2.5711031 1.6085609 -5.7238245  0.5816183  2.55484162</span></span>
+<span><span class="co">#&gt; qnrB4             6.9220299 1.5713224  3.8422946 10.0017653 19.40601369</span></span>
+<span><span class="co">#&gt; parE_D475E       -0.7090156 1.4119171 -3.4763223  2.0582910  0.25216990</span></span>
 <span><span class="co">#&gt;                             p method</span></span>
 <span><span class="co">#&gt; (Intercept)      0.000000e+00      1</span></span>
 <span><span class="co">#&gt; gyrA_S83L        0.000000e+00      1</span></span>
-<span><span class="co">#&gt; gyrA_D87Y        7.327390e-01      1</span></span>
-<span><span class="co">#&gt; gyrA_D87N        4.023774e-01      1</span></span>
-<span><span class="co">#&gt; parC_S80I        6.021622e-03      1</span></span>
-<span><span class="co">#&gt; parE_S458A       6.525036e-01      1</span></span>
-<span><span class="co">#&gt; parC_S80R        3.118519e-01      1</span></span>
-<span><span class="co">#&gt; parE_L416F       4.607929e-01      1</span></span>
-<span><span class="co">#&gt; gyrA_D87G        2.702543e-01      1</span></span>
-<span><span class="co">#&gt; parC_S57T        2.700416e-01      1</span></span>
-<span><span class="co">#&gt; soxS_A12S        2.862014e-01      1</span></span>
-<span><span class="co">#&gt; parC_A56T        7.951183e-02      1</span></span>
+<span><span class="co">#&gt; gyrA_D87Y        7.553072e-01      1</span></span>
+<span><span class="co">#&gt; gyrA_D87N        4.222596e-01      1</span></span>
+<span><span class="co">#&gt; parC_S80I        5.019379e-03      1</span></span>
+<span><span class="co">#&gt; parE_S458A       6.370749e-01      1</span></span>
+<span><span class="co">#&gt; parC_S80R        3.112402e-01      1</span></span>
+<span><span class="co">#&gt; parE_L416F       4.605957e-01      1</span></span>
+<span><span class="co">#&gt; parC_S57T        3.313954e-01      1</span></span>
+<span><span class="co">#&gt; soxS_A12S        2.865207e-01      1</span></span>
+<span><span class="co">#&gt; parC_A56T        7.894653e-02      1</span></span>
 <span><span class="co">#&gt; qnrB19           0.000000e+00      1</span></span>
-<span><span class="co">#&gt; `aac(6')-Ib-cr5` 1.443729e-03      1</span></span>
-<span><span class="co">#&gt; parC_E84V        7.758898e-01      1</span></span>
-<span><span class="co">#&gt; parE_I529L       3.038940e-06      1</span></span>
-<span><span class="co">#&gt; parE_S458T       1.596506e-01      1</span></span>
-<span><span class="co">#&gt; parE_E460D       4.280011e-01      1</span></span>
-<span><span class="co">#&gt; parC_E84G        4.444362e-01      1</span></span>
+<span><span class="co">#&gt; `aac(6')-Ib-cr5` 1.443081e-03      1</span></span>
+<span><span class="co">#&gt; parC_E84V        7.609366e-01      1</span></span>
+<span><span class="co">#&gt; parE_I529L       3.021130e-06      1</span></span>
+<span><span class="co">#&gt; parE_S458T       1.558681e-01      1</span></span>
+<span><span class="co">#&gt; parE_E460D       4.188004e-01      1</span></span>
+<span><span class="co">#&gt; parC_E84G        4.445974e-01      1</span></span>
 <span><span class="co">#&gt; qnrS1            0.000000e+00      1</span></span>
-<span><span class="co">#&gt; marR_S3N         9.434054e-10      1</span></span>
-<span><span class="co">#&gt; parE_I355T       2.544438e-02      1</span></span>
-<span><span class="co">#&gt; soxR_G121D       1.100214e-01      1</span></span>
-<span><span class="co">#&gt; qnrB4            1.060814e-05      1</span></span>
-<span><span class="co">#&gt; gyrA_S83A        2.830665e-02      1</span></span>
-<span><span class="co">#&gt; parE_D475E       4.954138e-01      1</span></span>
+<span><span class="co">#&gt; marR_S3N         8.194598e-10      1</span></span>
+<span><span class="co">#&gt; parE_I355T       2.538403e-02      1</span></span>
+<span><span class="co">#&gt; soxR_G121D       1.099568e-01      1</span></span>
+<span><span class="co">#&gt; qnrB4            1.056738e-05      1</span></span>
+<span><span class="co">#&gt; parE_D475E       6.155513e-01      1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Method: 1-Wald, 2-Profile penalized log-likelihood, 3-None</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Likelihood ratio test=3332.895 on 25 df, p=0, n=3630</span></span>
-<span><span class="co">#&gt; Wald test = 516.5791 on 25 df, p = 0</span></span>
+<span><span class="co">#&gt; Likelihood ratio test=3335.169 on 23 df, p=0, n=3630</span></span>
+<span><span class="co">#&gt; Wald test = 515.415 on 23 df, p = 0</span></span>
 <span></span>
 <span><span class="co"># Extract model summary details using `logistf_details()`</span></span>
 <span><span class="va">modelR_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logistf_details.html">logistf_details</a></span><span class="op">(</span><span class="va">modelR</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">modelR_summary</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 26 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 24 × 5</span></span></span>
 <span><span class="co">#&gt;    marker         est ci.lower ci.upper    pval</span></span>
 <span><span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> (Intercept) -<span style="color: #BB0000;">5.31</span>    -<span style="color: #BB0000;">5.83</span>     -<span style="color: #BB0000;">4.80</span> 0      </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA_S83L    5.10     4.43      5.76 0      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_D87Y    0.668   -<span style="color: #BB0000;">3.17</span>      4.50 0.733  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA_D87N    1.08    -<span style="color: #BB0000;">1.45</span>      3.62 0.402  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> parC_S80I    3.45     0.989     5.92 0.006<span style="text-decoration: underline;">02</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> parE_S458A  -<span style="color: #BB0000;">0.634</span>   -<span style="color: #BB0000;">3.40</span>      2.13 0.653  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parC_S80R    0.948   -<span style="color: #BB0000;">0.889</span>     2.78 0.312  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parE_L416F   1.09    -<span style="color: #BB0000;">1.81</span>      3.99 0.461  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> gyrA_D87G    1.97    -<span style="color: #BB0000;">1.53</span>      5.47 0.270  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> parC_S57T    1.47    -<span style="color: #BB0000;">1.14</span>      4.09 0.270  </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_D87Y    0.611   -<span style="color: #BB0000;">3.23</span>      4.45 0.755  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA_D87N    1.04    -<span style="color: #BB0000;">1.49</span>      3.57 0.422  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> parC_S80I    3.54     1.07      6.01 0.005<span style="text-decoration: underline;">02</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> parE_S458A  -<span style="color: #BB0000;">0.670</span>   -<span style="color: #BB0000;">3.46</span>      2.11 0.637  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parC_S80R    0.948   -<span style="color: #BB0000;">0.887</span>     2.78 0.311  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parE_L416F   1.09    -<span style="color: #BB0000;">1.81</span>      3.98 0.461  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parC_S57T    1.41    -<span style="color: #BB0000;">1.44</span>      4.27 0.331  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> soxS_A12S    1.58    -<span style="color: #BB0000;">1.33</span>      4.50 0.287  </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more rows</span></span></span>
 <span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise</span></span>
 <span></span>
 <span><span class="co"># Plot the point estimates and 95% confidence intervals of the model</span></span>
 <span><span class="fu"><a href="../reference/plot_estimates.html">plot_estimates</a></span><span class="op">(</span><span class="va">modelR_summary</span><span class="op">)</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/manual_logistic-1.png" width="100%"></p>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/manual_logistic-1.png" class="r-plt" width="100%"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Alternatively, use the amr_logistic() function to model R and NWT and plot the results together</span></span>
 <span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
-<span>  geno_table <span class="op">=</span> <span class="fu"><a href="../reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span>,</span>
+<span>  geno_table <span class="op">=</span> <span class="va">ecoli_geno</span>,</span>
 <span>  pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span>
 <span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
 <span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>,</span>
 <span>  maf <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Defining NWT as I/R vs 0, as no ECOFF column defined"</span></span>
-<span><span class="co">#&gt; [1] "Fitting logistic regression models using logistf"</span></span>
-<span><span class="co">#&gt; Warning in logistf::logistf(R ~ ., data = bin_mat %&gt;% select(-any_of(c("id", :</span></span>
-<span><span class="co">#&gt; logistf.fit: Maximum number of iterations for full model exceeded. Try to</span></span>
-<span><span class="co">#&gt; increase the number of iterations or alter step size by passing</span></span>
-<span><span class="co">#&gt; 'logistf.control(maxit=..., maxstep=...)' to parameter control</span></span>
-<span><span class="co">#&gt; Warning in logistf::logistf(NWT ~ ., data = bin_mat %&gt;% select(-any_of(c("id",</span></span>
-<span><span class="co">#&gt; : logistf.fit: Maximum number of iterations for full model exceeded. Try to</span></span>
-<span><span class="co">#&gt; increase the number of iterations or alter step size by passing</span></span>
-<span><span class="co">#&gt; 'logistf.control(maxit=..., maxstep=...)' to parameter control</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/amr_logistic-1.png" width="100%"></p>
+<span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff </span></span>
+<span><span class="co">#&gt; ...Fitting logistic regression model to R using logistf</span></span>
+<span><span class="co">#&gt; Warning in logistf::logistf(R ~ ., data = to_fit, pl = FALSE): logistf.fit:</span></span>
+<span><span class="co">#&gt; Maximum number of iterations for full model exceeded. Try to increase the</span></span>
+<span><span class="co">#&gt; number of iterations or alter step size by passing 'logistf.control(maxit=...,</span></span>
+<span><span class="co">#&gt; maxstep=...)' to parameter control</span></span>
+<span><span class="co">#&gt; ...Fitting logistic regression model to NWT using logistf</span></span>
+<span><span class="co">#&gt; Warning in logistf::logistf(NWT ~ ., data = to_fit, pl = FALSE): logistf.fit:</span></span>
+<span><span class="co">#&gt; Maximum number of iterations for full model exceeded. Try to increase the</span></span>
+<span><span class="co">#&gt; number of iterations or alter step size by passing 'logistf.control(maxit=...,</span></span>
+<span><span class="co">#&gt; maxstep=...)' to parameter control</span></span>
+<span><span class="co">#&gt; Generating plots</span></span></code></pre></div>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/amr_logistic-1.png" class="r-plt" width="100%"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output tables</span></span>
 <span><span class="va">models</span><span class="op">$</span><span class="va">modelR</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 22 × 5</span></span></span>
-<span><span class="co">#&gt;    marker         est ci.lower ci.upper    pval</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> (Intercept) -<span style="color: #BB0000;">5.31</span>    -<span style="color: #BB0000;">5.83</span>     -<span style="color: #BB0000;">4.80</span> 0      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA_S83L    5.10     4.43      5.76 0      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_D87Y    0.900   -<span style="color: #BB0000;">2.99</span>      4.79 0.650  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA_D87N    1.20    -<span style="color: #BB0000;">1.39</span>      3.80 0.363  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> parC_S80I    3.61     1.06      6.16 0.005<span style="text-decoration: underline;">44</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> parE_S458A  -<span style="color: #BB0000;">0.991</span>   -<span style="color: #BB0000;">3.80</span>      1.82 0.489  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parC_S80R    0.946   -<span style="color: #BB0000;">0.893</span>     2.78 0.313  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parE_L416F   1.09    -<span style="color: #BB0000;">1.84</span>      4.01 0.467  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parC_S57T    1.41    -<span style="color: #BB0000;">1.44</span>      4.27 0.331  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> soxS_A12S    1.60    -<span style="color: #BB0000;">1.34</span>      4.53 0.286  </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 5</span></span></span>
+<span><span class="co">#&gt;    marker            est ci.lower ci.upper          pval</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> (Intercept)    -<span style="color: #BB0000;">5.18</span>    -<span style="color: #BB0000;">5.66</span>     -<span style="color: #BB0000;">4.70</span> 0            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA:Ser83Leu   4.98     4.33      5.62 0            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA:Asp87Tyr   0.917   -<span style="color: #BB0000;">2.94</span>      4.78 0.642        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA:Asp87Asn   1.19    -<span style="color: #BB0000;">1.38</span>      3.77 0.363        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> parC:Ser80Ile   3.65     1.13      6.17 0.004<span style="text-decoration: underline;">57</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> parE:Ser458Ala -<span style="color: #BB0000;">1.03</span>    -<span style="color: #BB0000;">3.86</span>      1.79 0.472        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parC:Ser80Arg   0.940   -<span style="color: #BB0000;">0.896</span>     2.78 0.316        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parE:Leu416Phe  1.08    -<span style="color: #BB0000;">1.85</span>      4.01 0.471        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parC:Ser57Thr   1.28    -<span style="color: #BB0000;">1.57</span>      4.13 0.377        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> soxS:Ala12Ser   1.62    -<span style="color: #BB0000;">1.31</span>      4.56 0.279        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> parC:Ala56Thr   2.54    -<span style="color: #BB0000;">0.420</span>     5.50 0.092<span style="text-decoration: underline;">6</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> qnrB19          5.13     4.26      6.01 0            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> aac(6')-Ib-cr5  4.22     1.61      6.83 0.001<span style="text-decoration: underline;">51</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> parC:Glu84Val  -<span style="color: #BB0000;">0.733</span>   -<span style="color: #BB0000;">4.49</span>      3.02 0.702        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> parE:Ile529Leu  2.04     1.19      2.90 0.000<span style="text-decoration: underline;">003</span>11   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> parC:Glu84Gly   1.22    -<span style="color: #BB0000;">1.92</span>      4.35 0.448        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> qnrS1           5.38     4.54      6.22 0            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> marR:Ser3Asn    3.04     2.06      4.02 0.000<span style="text-decoration: underline;">000</span>001<span style="text-decoration: underline;">25</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> parE:Ile355Thr  1.86     0.190     3.53 0.029<span style="text-decoration: underline;">0</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> parE:Asp475Glu -<span style="color: #BB0000;">0.761</span>   -<span style="color: #BB0000;">3.48</span>      1.96 0.583</span></span>
 <span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise</span></span>
 <span></span>
 <span><span class="va">models</span><span class="op">$</span><span class="va">modelNWT</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 22 × 5</span></span></span>
-<span><span class="co">#&gt;    marker         est ci.lower ci.upper       pval</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> (Intercept) -<span style="color: #BB0000;">5.28</span>    -<span style="color: #BB0000;">5.80</span>     -<span style="color: #BB0000;">4.77</span> 0         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA_S83L    5.44     4.77      6.12 0         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_D87Y   -<span style="color: #BB0000;">0.251</span>   -<span style="color: #BB0000;">4.59</span>      4.09 0.910     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA_D87N    0.142   -<span style="color: #BB0000;">3.07</span>      3.35 0.931     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> parC_S80I    3.79     0.650     6.93 0.018<span style="text-decoration: underline;">0</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> parE_S458A  -<span style="color: #BB0000;">0.465</span>   -<span style="color: #BB0000;">3.00</span>      2.07 0.719     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parC_S80R    1.80    -<span style="color: #BB0000;">0.892</span>     4.49 0.190     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parE_L416F   0.732   -<span style="color: #BB0000;">2.16</span>      3.62 0.620     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parC_S57T    1.38    -<span style="color: #BB0000;">1.48</span>      4.24 0.344     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> soxS_A12S    5.28     2.96      7.59 0.000<span style="text-decoration: underline;">008</span>02</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 5</span></span></span>
+<span><span class="co">#&gt;    marker            est ci.lower ci.upper     pval</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> (Intercept)    -<span style="color: #BB0000;">3.71</span>    -<span style="color: #BB0000;">3.97</span>    -<span style="color: #BB0000;">3.46</span>  0   <span style="color: #949494;"> </span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA:Ser83Leu   9.52     6.22    12.8   1.57<span style="color: #949494;">e</span><span style="color: #BB0000;">- 8</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA:Asp87Tyr   5.51     2.81     8.21  6.29<span style="color: #949494;">e</span><span style="color: #BB0000;">- 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA:Asp87Asn   5.14     2.08     8.21  1.00<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> parC:Ser80Ile  -<span style="color: #BB0000;">2.52</span>    -<span style="color: #BB0000;">6.06</span>     1.02  1.63<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> parE:Ser458Ala -<span style="color: #BB0000;">3.85</span>    -<span style="color: #BB0000;">7.90</span>     0.202 6.26<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parC:Ser80Arg  -<span style="color: #BB0000;">3.78</span>    -<span style="color: #BB0000;">7.89</span>     0.337 7.20<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parE:Leu416Phe -<span style="color: #BB0000;">4.63</span>    -<span style="color: #BB0000;">8.40</span>    -<span style="color: #BB0000;">0.858</span> 1.61<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parC:Ser57Thr   0.959   -<span style="color: #BB0000;">0.709</span>    2.63  2.60<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> soxS:Ala12Ser   3.71     1.44     5.98  1.38<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> parC:Ala56Thr   1.13    -<span style="color: #BB0000;">1.78</span>     4.03  4.48<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> qnrB19          6.59     4.92     8.25  8.22<span style="color: #949494;">e</span><span style="color: #BB0000;">-15</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> aac(6')-Ib-cr5  5.75     2.31     9.19  1.06<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> parC:Glu84Val  -<span style="color: #BB0000;">4.83</span>    -<span style="color: #BB0000;">9.41</span>    -<span style="color: #BB0000;">0.251</span> 3.87<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> parE:Ile529Leu  2.35     1.16     3.54  1.07<span style="color: #949494;">e</span><span style="color: #BB0000;">- 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> parC:Glu84Gly  -<span style="color: #BB0000;">4.54</span>    -<span style="color: #BB0000;">8.41</span>    -<span style="color: #BB0000;">0.681</span> 2.11<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> qnrS1           6.73     5.07     8.39  1.78<span style="color: #949494;">e</span><span style="color: #BB0000;">-15</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> marR:Ser3Asn    2.91     2.22     3.59  1.11<span style="color: #949494;">e</span><span style="color: #BB0000;">-16</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> parE:Ile355Thr -<span style="color: #BB0000;">0.882</span>   -<span style="color: #BB0000;">3.65</span>     1.89  5.32<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> parE:Asp475Glu -<span style="color: #BB0000;">0.263</span>   -<span style="color: #BB0000;">1.64</span>     1.12  7.08<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span></span></span>
 <span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise</span></span>
 <span></span>
 <span><span class="co"># Note the matrix output is the same as cip_bin, but without the MIC data as this is not required</span></span>
 <span><span class="co">#    for logistic regression.</span></span>
 <span><span class="va">models</span><span class="op">$</span><span class="va">bin_mat</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5,258 × 49</span></span></span>
-<span><span class="co">#&gt;    id       pheno     R   NWT gyrA_S83L gyrA_D87Y gyrA_D87N parC_S80I parE_S458A</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0         0         0         0         0          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0         0         0         0         0          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0         0         0         0         0          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0         1         0         0         0          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0         0         1         0         0          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0         0         0         0         0          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0         0         0         0         0          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN031… <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     1     1         1         0         1         1          1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0         1         0         0         0          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN031… <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     1     1         1         0         1         1          1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5,248 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 40 more variables: parC_S80R &lt;dbl&gt;, parE_L416F &lt;dbl&gt;, qnrB6 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   gyrA_D87G &lt;dbl&gt;, parC_S57T &lt;dbl&gt;, parC_E84A &lt;dbl&gt;, soxS_A12S &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   qnrB2 &lt;dbl&gt;, qnrS2 &lt;dbl&gt;, parC_E84K &lt;dbl&gt;, parC_A56T &lt;dbl&gt;, qnrB19 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   `aac(6')-Ib-cr5` &lt;dbl&gt;, parC_E84V &lt;dbl&gt;, parE_I529L &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   parE_S458T &lt;dbl&gt;, parE_E460D &lt;dbl&gt;, parC_E84G &lt;dbl&gt;, qnrS1 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   marR_S3N &lt;dbl&gt;, `aac(6')-Ib-cr` &lt;dbl&gt;, soxR_R20H &lt;dbl&gt;, qnrB1 &lt;dbl&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,630 × 49</span></span></span>
+<span><span class="co">#&gt;    id       pheno ecoff     R   NWT gyrA..Ser83Leu gyrA..Asp87Tyr gyrA..Asp87Asn</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     0     1              1              0              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     0     1              0              1              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN031… <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     1     1              1              0              1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     0     1              1              0              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN031… <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     1     1              1              0              1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3,620 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 more variables: parC..Ser80Ile &lt;dbl&gt;, parE..Ser458Ala &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parC..Ser80Arg &lt;dbl&gt;, parE..Leu416Phe &lt;dbl&gt;, qnrB6 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   gyrA..Asp87Gly &lt;dbl&gt;, parC..Ser57Thr &lt;dbl&gt;, parC..Glu84Ala &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   soxS..Ala12Ser &lt;dbl&gt;, qnrB2 &lt;dbl&gt;, qnrS2 &lt;dbl&gt;, parC..Glu84Lys &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parC..Ala56Thr &lt;dbl&gt;, qnrB19 &lt;dbl&gt;, `aac(6')-Ib-cr5` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parC..Glu84Val &lt;dbl&gt;, parE..Ile529Leu &lt;dbl&gt;, parE..Ser458Thr &lt;dbl&gt;, …</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="assess-solo-positive-predictive-value-of-genetic-markers">5. Assess solo positive predictive value of genetic markers<a class="anchor" aria-label="anchor" href="#assess-solo-positive-predictive-value-of-genetic-markers"></a>
@@ -572,72 +594,69 @@ marker</p></li>
 <span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
 <span>  <span class="va">ecoli_geno</span>,</span>
 <span>  <span class="va">ecoli_ast</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span>
 <span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>,</span>
-<span>  sir_col <span class="op">=</span> <span class="st">"pheno"</span></span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 15 rows containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_segment()`).</span></span>
-<span><span class="co">#&gt; Warning: Removed 15 rows containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/solo_ppv_analysis-1.png" width="100%"></p>
+<span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span></code></pre></div>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/solo_ppv_analysis-1.png" class="r-plt" width="100%"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">solo_stats</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 44 × 8</span></span></span>
-<span><span class="co">#&gt;    marker         category     x     n     ppv      se ci.lower ci.upper</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> aac(6')-Ib-cr5 R            0     1 0       0       0          0     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA_D87G      R            0     4 0       0       0          0     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_D87N      R            0     6 0       0       0          0     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA_D87Y      R            0     4 0       0       0          0     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> gyrA_S83A      R            0    13 0       0       0          0     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> gyrA_S83L      R           27   108 0.25    0.041<span style="text-decoration: underline;">7</span>  0.168      0.332 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> marR_S3N       R            4   524 0.007<span style="text-decoration: underline;">63</span> 0.003<span style="text-decoration: underline;">80</span> 0.000<span style="text-decoration: underline;">181</span>   0.015<span style="text-decoration: underline;">1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parC_A56T      R            0     6 0       0       0          0     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parC_S57T      R            0    40 0       0       0          0     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> parE_D475E     R            0    91 0       0       0          0     </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 34 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 40 × 8</span></span></span>
+<span><span class="co">#&gt;    marker         category     x     n   ppv     se ci.lower ci.upper</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> aac(6')-Ib-cr5 R            0     1 0     0       0          0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA_D87N      R            0     1 0     0       0          0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_D87Y      R            0     3 0     0       0          0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA_S83A      R            0     3 0     0       0          0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> gyrA_S83L      R           27    62 0.435 0.063<span style="text-decoration: underline;">0</span>  0.312      0.559</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> marR_S3N       R            4    38 0.105 0.049<span style="text-decoration: underline;">8</span>  0.007<span style="text-decoration: underline;">69</span>    0.203</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parC_A56T      R            0     6 0     0       0          0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parC_S57T      R            0    23 0     0       0          0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parE_D475E     R            0    61 0     0       0          0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> parE_I355T     R            0    24 0     0       0          0    </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30 more rows</span></span></span>
 <span></span>
 <span><span class="co"># Interim matrices with data used to compute stats and plots</span></span>
 <span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">solo_binary</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1,009 × 8</span></span></span>
-<span><span class="co">#&gt;    id           pheno   mic  disk     R   NWT marker    value</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN03177618 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     0 gyrA_S83L     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN03177619 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.12    <span style="color: #BB0000;">NA</span>     0     0 gyrA_D87Y     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN03177623 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     0 gyrA_S83L     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN03177631 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     0 gyrA_S83L     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN03177635 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     0 gyrA_S83L     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN03177637 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     0 gyrA_S83L     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN03177638 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     0 qnrB6         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN03177639 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.12    <span style="color: #BB0000;">NA</span>     0     0 gyrA_S83L     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN03177643 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     0 gyrA_S83L     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN03177646 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     0 gyrA_S83L     1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 999 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 306 × 9</span></span></span>
+<span><span class="co">#&gt;    id           pheno ecoff   mic  disk     R   NWT marker    value</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN03177618 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     1 gyrA_S83L     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN03177619 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.12    <span style="color: #BB0000;">NA</span>     0     1 gyrA_D87Y     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN03177623 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     1 gyrA_S83L     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN03177631 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     1 gyrA_S83L     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN03177635 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     1 gyrA_S83L     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN03177637 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     1 gyrA_S83L     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN03177638 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     1 qnrB6         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN03177639 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.12    <span style="color: #BB0000;">NA</span>     0     1 gyrA_S83L     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN03177643 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     1 gyrA_S83L     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN03177646 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  0.25    <span style="color: #BB0000;">NA</span>     0     1 gyrA_S83L     1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 296 more rows</span></span></span>
 <span></span>
 <span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5,258 × 51</span></span></span>
-<span><span class="co">#&gt;    id    pheno     mic  disk     R   NWT gyrA_S83L gyrA_D87Y gyrA_D87N parC_S80I</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>   0.25<span style="color: #555555;">0</span>    <span style="color: #BB0000;">NA</span>     0     0         1         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>   0.12<span style="color: #555555;">0</span>    <span style="color: #BB0000;">NA</span>     0     0         0         1         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN… <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  <span style="color: #555555;">&gt;</span>4<span style="color: #555555;">.000</span>    <span style="color: #BB0000;">NA</span>     1     1         1         0         1         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span>   0.25<span style="color: #555555;">0</span>    <span style="color: #BB0000;">NA</span>     0     0         1         0         0         0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN… <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  <span style="color: #555555;">&gt;</span>4<span style="color: #555555;">.000</span>    <span style="color: #BB0000;">NA</span>     1     1         1         0         1         1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5,248 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 more variables: parE_S458A &lt;dbl&gt;, parC_S80R &lt;dbl&gt;, parE_L416F &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   qnrB6 &lt;dbl&gt;, gyrA_D87G &lt;dbl&gt;, parC_S57T &lt;dbl&gt;, parC_E84A &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   soxS_A12S &lt;dbl&gt;, qnrB2 &lt;dbl&gt;, qnrS2 &lt;dbl&gt;, parC_E84K &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   parC_A56T &lt;dbl&gt;, qnrB19 &lt;dbl&gt;, `aac(6')-Ib-cr5` &lt;dbl&gt;, parC_E84V &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   parE_I529L &lt;dbl&gt;, parE_S458T &lt;dbl&gt;, parE_E460D &lt;dbl&gt;, parC_E84G &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   qnrS1 &lt;dbl&gt;, marR_S3N &lt;dbl&gt;, `aac(6')-Ib-cr` &lt;dbl&gt;, soxR_R20H &lt;dbl&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,630 × 51</span></span></span>
+<span><span class="co">#&gt;    id        pheno ecoff     mic  disk     R   NWT gyrA_S83L gyrA_D87Y gyrA_D87N</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN0317… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN0317… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN0317… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN0317… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>   0.25<span style="color: #555555;">0</span>    <span style="color: #BB0000;">NA</span>     0     1         1         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN0317… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>   0.12<span style="color: #555555;">0</span>    <span style="color: #BB0000;">NA</span>     0     1         0         1         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN0317… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN0317… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #555555;">&lt;=</span>0.015    <span style="color: #BB0000;">NA</span>     0     0         0         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN0317… <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  <span style="color: #555555;">&gt;</span>4<span style="color: #555555;">.000</span>    <span style="color: #BB0000;">NA</span>     1     1         1         0         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN0317… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>   0.25<span style="color: #555555;">0</span>    <span style="color: #BB0000;">NA</span>     0     1         1         0         0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN0317… <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>  <span style="color: #555555;">&gt;</span>4<span style="color: #555555;">.000</span>    <span style="color: #BB0000;">NA</span>     1     1         1         0         1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3,620 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 more variables: parC_S80I &lt;dbl&gt;, parE_S458A &lt;dbl&gt;, parC_S80R &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parE_L416F &lt;dbl&gt;, qnrB6 &lt;dbl&gt;, gyrA_D87G &lt;dbl&gt;, parC_S57T &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parC_E84A &lt;dbl&gt;, soxS_A12S &lt;dbl&gt;, qnrB2 &lt;dbl&gt;, qnrS2 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parC_E84K &lt;dbl&gt;, parC_A56T &lt;dbl&gt;, qnrB19 &lt;dbl&gt;, `aac(6')-Ib-cr5` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parC_E84V &lt;dbl&gt;, parE_I529L &lt;dbl&gt;, parE_S458T &lt;dbl&gt;, parE_E460D &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parC_E84G &lt;dbl&gt;, qnrS1 &lt;dbl&gt;, marR_S3N &lt;dbl&gt;, `aac(6')-Ib-cr` &lt;dbl&gt;, …</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="compare-markers-with-assay-data">6. Compare markers with assay data<a class="anchor" aria-label="anchor" href="#compare-markers-with-assay-data"></a>
@@ -670,25 +689,29 @@ combination</p></li>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/amr_upset-1.png" width="100%"></p>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/amr_upset-1.png" class="r-plt" width="100%"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">cipro_mic_upset</span><span class="op">$</span><span class="va">summary</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 110 × 8</span></span></span>
-<span><span class="co">#&gt;    marker_list             marker_count median   q25   q75       ppv     R     n</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> <span style="color: #949494;">""</span>                                 0  0.015 0.015  0.25   0.003<span style="text-decoration: underline;">86</span>    10  <span style="text-decoration: underline;">3</span>436</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> <span style="color: #949494;">"</span>qnrB<span style="color: #949494;">"</span>                             1  2     2      2      1           1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> <span style="color: #949494;">"</span>qnrB7<span style="color: #949494;">"</span>                            1  1     1      1    <span style="color: #BB0000;">NaN</span>           0     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> <span style="color: #949494;">"</span>parE_E460K, gyrA_S83W<span style="color: #949494;">"</span>            2  4     4      4      1           1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> <span style="color: #949494;">"</span>parE_D475E<span style="color: #949494;">"</span>                       1  0.015 0.015  0.5    0           0    91</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> <span style="color: #949494;">"</span>qnrA1<span style="color: #949494;">"</span>                            1  0.12  0.12   0.12   0           0     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> <span style="color: #949494;">"</span>gyrA_S83A<span style="color: #949494;">"</span>                        1  0.5   0.5    0.5    0           0    13</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> <span style="color: #949494;">"</span>qnrB4<span style="color: #949494;">"</span>                            1  0.5   0.5    0.75   1           2     7</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> <span style="color: #949494;">"</span>parE_I355T<span style="color: #949494;">"</span>                       1  0.015 0.015  0.5    0           0    40</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> <span style="color: #949494;">"</span>marR_S3N<span style="color: #949494;">"</span>                         1  0.5   0.5    0.5    0.105       4   524</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 100 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 42 × 14</span></span></span>
+<span><span class="co">#&gt;    marker_list       marker_count     n   R.ppv     R NWT.ppv   NWT</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> <span style="color: #949494;">""</span>                           0  <span style="text-decoration: underline;">2</span>590 0.003<span style="text-decoration: underline;">86</span>    10  0.019<span style="text-decoration: underline;">7</span>    51</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> <span style="color: #949494;">"</span>qnrB<span style="color: #949494;">"</span>                       1     1 1           1  1          1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> <span style="color: #949494;">"</span>parE_D475E<span style="color: #949494;">"</span>                 1    61 0           0  0          0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> <span style="color: #949494;">"</span>qnrA1<span style="color: #949494;">"</span>                      1     2 0           0  1          2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> <span style="color: #949494;">"</span>gyrA_S83A<span style="color: #949494;">"</span>                  1     3 0           0  0.667      2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> <span style="color: #949494;">"</span>qnrB4<span style="color: #949494;">"</span>                      1     2 1           2  1          2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> <span style="color: #949494;">"</span>marR_S3N<span style="color: #949494;">"</span>                   1    38 0.105       4  0.263     10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> <span style="color: #949494;">"</span>qnrS1<span style="color: #949494;">"</span>                      1    31 0.548      17  0.968     30</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> <span style="color: #949494;">"</span>qnrS1, marR_S3N<span style="color: #949494;">"</span>            2     1 1           1  1          1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> <span style="color: #949494;">"</span>parE_I529L<span style="color: #949494;">"</span>                 1    16 0           0  0.188      3</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 32 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: median_excludeRangeValues &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   q25_excludeRangeValues &lt;dbl&gt;, q75_excludeRangeValues &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   n_excludeRangeValues &lt;int&gt;, median_ignoreRanges &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   q25_ignoreRanges &lt;dbl&gt;, q75_ignoreRanges &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="download-reference-mic-distributions-and-compare-to-your-data">7. Download reference MIC distributions and compare to your
@@ -720,11 +743,13 @@ data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distribu
 <span></span>
 <span><span class="co"># plot the MIC data</span></span>
 <span><span class="va">mics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">ecoli_cip_mic_data</span><span class="op">$</span><span class="va">mic</span>, <span class="va">ecoli_cip_mic_data</span><span class="op">$</span><span class="va">count</span><span class="op">)</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">mics</span>,</span>
-<span>                  ab <span class="op">=</span> <span class="st">"cipro"</span>,</span>
-<span>                  mo <span class="op">=</span> <span class="st">"E. coli"</span>,</span>
-<span>                  title <span class="op">=</span> <span class="st">"E. coli cipro reference distribution"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/get_eucast_distribution-1.png" width="100%"></p>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span></span>
+<span>  <span class="va">mics</span>,</span>
+<span>  ab <span class="op">=</span> <span class="st">"cipro"</span>,</span>
+<span>  mo <span class="op">=</span> <span class="st">"E. coli"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"E. coli cipro reference distribution"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/get_eucast_distribution-1.png" class="r-plt" width="100%"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare reference distribution to random test data</span></span>
 <span><span class="va">my_mic_values</span> <span class="op">&lt;-</span> <span class="fu">AMR</span><span class="fu">::</span><span class="fu"><a href="https://amr-for-r.org/reference/random.html" class="external-link">random_mic</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
@@ -747,7 +772,7 @@ data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distribu
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more rows</span></span></span>
 <span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise.</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-1.png" width="100%"></p>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-1.png" class="r-plt" width="100%"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span></span>
@@ -756,23 +781,23 @@ data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distribu
 <span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ecoli_cip</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
 <span><span class="va">comparison</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 36 × 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 34 × 3</span></span></span>
 <span><span class="co">#&gt;    value    user eucast</span></span>
 <span><span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 0.002       0     14</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 0.004       0    189</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 0.008       0   <span style="text-decoration: underline;">3</span>952</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> &lt;0.015     41      0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> &lt;=0.015  <span style="text-decoration: underline;">2</span>645      0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> &lt;=0.015  <span style="text-decoration: underline;">2</span>642      0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 0.016       0   <span style="text-decoration: underline;">7</span>238</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 0.03       70   <span style="text-decoration: underline;">1</span>355</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 0.03       69   <span style="text-decoration: underline;">1</span>355</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> &lt;=0.06     11      0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 0.06       77    356</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 0.12      194      0</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 26 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 0.06        5    356</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 0.12       34      0</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 24 more rows</span></span></span>
 <span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise.</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-2.png" width="100%"></p>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-2.png" class="r-plt" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

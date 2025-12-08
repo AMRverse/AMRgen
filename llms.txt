@@ -1,0 +1,233 @@
+# AMRgen
+
+## Overview
+
+![AMRgen](logo.png)
+
+**AMRgen** is an open-source R package designed to **bridge the gap
+between genotypic and phenotypic antimicrobial resistance (AMR) data**.
+Developed as an extension to the [AMR R package](https://amr-for-r.org),
+it provides tools to interpret AMR genes, integrate these findings with
+antimicrobial susceptibility test (AST) data, and calculate
+genotype-phenotype associations.
+
+This package is developed in collaboration with the ESGEM-AMR Working
+Group and is tailored for researchers and healthcare professionals
+tackling AMR globally.
+
+The [AMRgen website](https://AMRverse.github.io/AMRgen) has full
+function
+[documentation](https://AMRverse.github.io/AMRgen/reference/index.html)
+and a
+[Vignette](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html)
+working through analysing geno/pheno data using key functions.
+
+------------------------------------------------------------------------
+
+## Key Features
+
+- **Import Genotype and Phenotype Data**: Import from common formats
+  (NCBI or EBI antibiogram format for phenotypes; AMRFinderPlus and
+  hAMRonization for genotypes
+- **Genotype-Phenotype Integration**: Links AMR gene presence with
+  phenotypic resistance profiles, enabling deeper insights into
+  resistance mechanisms.
+- **Automated EUCAST MIC Distribution Integration**: Fetch MIC
+  distribution data directly from [EUCAST](https://mic.eucast.org) for
+  seamless comparison with local susceptibility data.
+- **Visualisation**: Generate powerful UpSet plots to identify
+  intersections of AMR gene presence and phenotypic resistance,
+  highlighting multidrug resistance patterns.
+- **Modular and Extensible**: Leverages the robust foundation of the AMR
+  package, including antibiotic selectors and clinical breakpoint
+  interpretations.
+
+Planned for development:
+
+- **NCBI-Compliant Export**: Export phenotype data to NCBI-compliant
+  antibiogram format.
+- **Expanded Data Import**: Import and parse phenotype data from other
+  tools (e.g. CARD, ResFinder).
+
+------------------------------------------------------------------------
+
+## Getting Started
+
+To install and explore the package, follow the instructions below:
+
+### Installation
+
+Install the latest version of this package with:
+
+``` r
+install.packages("remotes") # if you haven't already
+remotes::install_github("AMRverse/AMRgen")
+```
+
+All required packages, including the [AMR
+package](https://amr-for-r.org), will be installed automatically.
+
+It might be best to restart R before running the installation to prevent
+issues with running the examples below.
+
+## Quick Usage Examples
+
+``` r
+library(AMRgen)
+```
+
+### Investigate ciprofloxacin resistance vs quinolone genotype markers, via solo PPV and upset plots
+
+``` r
+# Example public E. coli AST data from NCBI
+#  (already imported via import_ncbi_ast() and re-interpreted with as.sir())
+ecoli_ast
+
+# Import matching E. coli AMRFinderPlus data from AllTheBacteria
+ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
+
+# Calculate positive predictive value for ciprofloxacin resistance
+#  (for all quinolone-associated genotype markers)
+soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_ast, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_clsi")
+
+# Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
+#  (for combinations observed at least 5 times)
+cip_upset <- amr_upset(soloPPV_cipro$amr_binary, min_set_size=5, assay="mic", order="value")
+
+# Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers
+#  (for markers observed at least 10 times)
+models <- amr_logistic(geno_table = import_amrfp(ecoli_geno_raw, "Name"),
+                       pheno_table = ecoli_ast, sir_col="pheno_clsi",
+                       antibiotic = "Ciprofloxacin", drug_class_list = c("Quinolones"), maf=10)
+```
+
+### Download reference MIC distribution from eucast.org and compare to example data
+
+``` r
+# Get MIC reference distribution for ciprofloxacin in E. coli
+ecoli_cip_mic_data <- get_eucast_mic_distribution("cipro", "E. coli")
+
+# Plot the reference distribution 
+mics <- rep(ecoli_cip_mic_data$mic, ecoli_cip_mic_data$count)
+ggplot2::autoplot(mics, ab = "cipro", mo = "E. coli", title = "E. coli cipro reference distribution")
+
+# Compare reference distribution to example E. coli data
+ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent=="CIP"]
+comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
+comparison
+ggplot2::autoplot(comparison)
+```
+
+For more see the
+[Vignette](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
+
+## Contributions
+
+Contributions are welcome! If you encounter issues or wish to suggest
+new features, please open an issue or submit a pull request.
+
+## Licence
+
+This package is distributed under the GNU GPL-3.0 Licence. See `LICENSE`
+for details.
+
+# Package index
+
+## Data Import & Preprocessing
+
+Functions to import, harmonise, and prepare genotype and phenotype data
+from public repositories or internal formats.
+
+- [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
+  : Import and Process AMRFinderPlus Results
+- [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
+  : Import and Process AST Data from an EBI or NCBI antibiogram File
+- [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
+  : Import and Process AST Data from an EBI File
+- [`import_gtdb()`](https://AMRverse.github.io/AMRgen/reference/import_gtdb.md)
+  : Import GTDB Output
+- [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
+  : Import and Process AST Data from an NCBI File
+- [`export_ncbi_biosample()`](https://AMRverse.github.io/AMRgen/reference/export_ncbi_biosample.md)
+  : Import/Export BioSample Antibiograms
+- [`convert_aa_code()`](https://AMRverse.github.io/AMRgen/reference/convert_aa_code.md)
+  : Convert single-letter amino acid code(s) to three-letter code(s)
+- [`convert_mutation()`](https://AMRverse.github.io/AMRgen/reference/convert_mutation.md)
+  : Convert mutation string based on method
+- [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+  : Get Binary Matrix of Genotype and Phenotype Data
+- [`as.gene()`](https://AMRverse.github.io/AMRgen/reference/as.gene.md)
+  : Gene Class and AMR Parsing Functions
+- [`gtdb.mo()`](https://AMRverse.github.io/AMRgen/reference/gtdb.mo.md)
+  : Get Microorganism from GTDB Species Name
+
+## Resistance Interpretation
+
+Core tools for interpreting antimicrobial resistance based on EUCAST
+breakpoints and custom models.
+
+- [`compare_estimates()`](https://AMRverse.github.io/AMRgen/reference/compare_estimates.md)
+  : Plot to Compare Two Sets of Estimates
+- [`compare_geno_pheno_id()`](https://AMRverse.github.io/AMRgen/reference/compare_geno_pheno_id.md)
+  : Compare Genotype and Phenotype Data by Sample ID
+- [`get_eucast_amr_distribution()`](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md)
+  [`get_eucast_mic_distribution()`](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md)
+  [`get_eucast_disk_distribution()`](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md)
+  [`compare_mic_with_eucast()`](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md)
+  [`compare_disk_with_eucast()`](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md)
+  : Get and Compare Antimicrobial Wild Type Distributions from EUCAST
+- [`eucast_supported_ab_distributions()`](https://AMRverse.github.io/AMRgen/reference/eucast_supported_ab_distributions.md)
+  : Retrieve Available Antimicrobial Wild Type Distributions from EUCAST
+- [`merge_logreg_soloppv()`](https://AMRverse.github.io/AMRgen/reference/merge_logreg_soloppv.md)
+  : Merge Logistic Regression and Solo PPV Statistics
+- [`interpret_ast()`](https://AMRverse.github.io/AMRgen/reference/interpret_ast.md)
+  : Interpret AST data in a standard format tibble
+
+## Modelling and analysis
+
+Statistical models for resistance prediction and inference, including
+logistic regression and Firth regression.
+
+- [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md)
+  : Perform Solo PPV Analysis for AMR Markers
+- [`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md)
+  : AMR Logistic Regression Analysis
+- [`glm_details()`](https://AMRverse.github.io/AMRgen/reference/glm_details.md)
+  : Extract Details from a Generalized Linear Model
+- [`logistf_details()`](https://AMRverse.github.io/AMRgen/reference/logistf_details.md)
+  : Extract Details from a logistf Model
+
+## Visualisation & Reporting
+
+Tools to visualise results, including MIC distributions, model outputs,
+and genotype-phenotype relationships.
+
+- [`barplot_mic_gen()`](https://AMRverse.github.io/AMRgen/reference/barplot_mic_gen.md)
+  : Generate a Stacked Bar Plot of MIC Values Colored by Gene Symbol for
+  Each Antibiotic
+- [`plot_combined_stats()`](https://AMRverse.github.io/AMRgen/reference/plot_combined_stats.md)
+  : Plot Combined Statistics
+- [`plot_estimates()`](https://AMRverse.github.io/AMRgen/reference/plot_estimates.md)
+  : Plot Estimates from a Table of Results
+- [`plot_solo_logReg()`](https://AMRverse.github.io/AMRgen/reference/plot_solo_logReg.md)
+  : Plot Combined Statistics of Logistic Regression and Solo PPV
+- [`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
+  : Generate a Series of Plots for AMR Gene and Combination Analysis
+
+## Data
+
+Example datasets for demonstration and reproducible analysis.
+
+- [`ecoli_ast`](https://AMRverse.github.io/AMRgen/reference/ecoli_ast.md)
+  : E. coli NCBI AST Example Data, Re-interpreted with AMR Package
+- [`ecoli_ast_raw`](https://AMRverse.github.io/AMRgen/reference/ecoli_ast_raw.md)
+  : E. coli NCBI AST Example Data
+- [`ecoli_geno_raw`](https://AMRverse.github.io/AMRgen/reference/ecoli_geno_raw.md)
+  : E. coli Genotype Example Data
+
+# Articles
+
+### Vignettes
+
+- [Analysing Geno-Pheno
+  Data](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.md):

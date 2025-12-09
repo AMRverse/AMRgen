@@ -17,12 +17,13 @@ solo_ppv_analysis(
   pheno_sample_col = NULL,
   sir_col = NULL,
   ecoff_col = "ecoff",
+  icat = FALSE,
   marker_col = "marker",
   keep_assay_values = TRUE,
   min = 1,
   axis_label_size = 9,
   pd = position_dodge(width = 0.8),
-  plot_cols = c(R = "maroon", S = "skyblue", I = "gold", NWT = "navy")
+  plot_cols = c(R = "maroon", I = "skyblue", NWT = "navy")
 )
 ```
 
@@ -80,6 +81,11 @@ solo_ppv_analysis(
   against the ECOFF rather than a clinical breakpoint. The values should
   be interpretable as "R" (resistant), "I" (intermediate), or "S"
   (susceptible).
+
+- icat:
+
+  A logical indicating whether to calculate PPV for "I" (if such a
+  category exists in the phenotype column) (default FALSE).
 
 - marker_col:
 

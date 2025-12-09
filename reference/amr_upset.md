@@ -126,20 +126,20 @@ amr_upset(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
 
 #> 
 #> $summary
-#> # A tibble: 42 × 14
-#>    marker_list       marker_count     n   R.ppv     R NWT.ppv   NWT
-#>    <chr>                    <dbl> <int>   <dbl> <dbl>   <dbl> <dbl>
-#>  1 ""                           0  2590 0.00386    10  0.0197    51
-#>  2 "qnrB"                       1     1 1           1  1          1
-#>  3 "parE_D475E"                 1    61 0           0  0          0
-#>  4 "qnrA1"                      1     2 0           0  1          2
-#>  5 "gyrA_S83A"                  1     3 0           0  0.667      2
-#>  6 "qnrB4"                      1     2 1           2  1          2
-#>  7 "marR_S3N"                   1    38 0.105       4  0.263     10
-#>  8 "qnrS1"                      1    31 0.548      17  0.968     30
-#>  9 "qnrS1, marR_S3N"            2     1 1           1  1          1
-#> 10 "parE_I529L"                 1    16 0           0  0.188      3
-#> # ℹ 32 more rows
+#> # A tibble: 103 × 14
+#>    marker_list             marker_count     n   R.ppv     R NWT.ppv   NWT
+#>    <chr>                          <dbl> <int>   <dbl> <dbl>   <dbl> <dbl>
+#>  1 ""                                 0  2590 0.00386    10  0.0197    51
+#>  2 "qnrB"                             1     1 1           1  1          1
+#>  3 "parE_E460K, gyrA_S83W"            2     1 1           1  1          1
+#>  4 "parE_D475E"                       1    61 0           0  0          0
+#>  5 "qnrA1"                            1     2 0           0  1          2
+#>  6 "gyrA_S83A"                        1     3 0           0  0.667      2
+#>  7 "qnrB4"                            1     2 1           2  1          2
+#>  8 "parE_I355T"                       1    24 0           0  0          0
+#>  9 "marR_S3N"                         1    38 0.105       4  0.263     10
+#> 10 "marR_S3N, parE_D475E"             2     4 0           0  0.25       1
+#> # ℹ 93 more rows
 #> # ℹ 7 more variables: median_excludeRangeValues <dbl>,
 #> #   q25_excludeRangeValues <dbl>, q75_excludeRangeValues <dbl>,
 #> #   n_excludeRangeValues <int>, median_ignoreRanges <dbl>,

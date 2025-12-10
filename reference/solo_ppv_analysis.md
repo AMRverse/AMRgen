@@ -23,7 +23,8 @@ solo_ppv_analysis(
   min = 1,
   axis_label_size = 9,
   pd = position_dodge(width = 0.8),
-  plot_cols = c(R = "maroon", I = "skyblue", NWT = "navy")
+  plot_cols = c(R = "maroon", I = "skyblue", NWT = "navy"),
+  excludeRanges = c("NWT")
 )
 ```
 
@@ -121,6 +122,14 @@ solo_ppv_analysis(
   should be valid color names or hexadecimal color codes. Default colors
   are provided for resistant ("R"), intermediate ("I"), susceptible
   ("S"), and non-wild-type ("NWT").
+
+- excludeRanges:
+
+  Vector of phenotype categories (comprised of "R", "I", "NWT") for
+  which we should ignore MIC values expressed as ranges when calculating
+  PPVs. Default c("NWT"), as calling against ECOFF with the AMR package
+  currently does not interpret ranges correctly. To include MICs
+  expressed as ranges set this to NULL.
 
 ## Value
 

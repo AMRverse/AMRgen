@@ -586,7 +586,7 @@ soloPPV_cipro <- solo_ppv_analysis(
 
 # Output table
 soloPPV_cipro$solo_stats
-#> # A tibble: 40 × 8
+#> # A tibble: 36 × 8
 #>    marker         category     x     n   ppv     se ci.lower ci.upper
 #>    <chr>          <chr>    <dbl> <int> <dbl>  <dbl>    <dbl>    <dbl>
 #>  1 aac(6')-Ib-cr5 R            0     1 0     0       0          0    
@@ -599,7 +599,7 @@ soloPPV_cipro$solo_stats
 #>  8 parC_S57T      R            0    23 0     0       0          0    
 #>  9 parE_D475E     R            0    61 0     0       0          0    
 #> 10 parE_I355T     R            0    24 0     0       0          0    
-#> # ℹ 30 more rows
+#> # ℹ 26 more rows
 
 # Interim matrices with data used to compute stats and plots
 soloPPV_cipro$solo_binary

@@ -63,6 +63,10 @@ logistic regression and Firth regression.
   : Extract Details from a Generalized Linear Model
 - [`logistf_details()`](https://AMRverse.github.io/AMRgen/reference/logistf_details.md)
   : Extract Details from a logistf Model
+- [`getBreakpoints()`](https://AMRverse.github.io/AMRgen/reference/getBreakpoints.md)
+  : Get Clinical Breakpoints for an Antibiotic
+- [`checkBreakpoints()`](https://AMRverse.github.io/AMRgen/reference/checkBreakpoints.md)
+  : Check and Retrieve Breakpoints for an Antibiotic
 
 ## Visualisation & Reporting
 
@@ -80,6 +84,9 @@ and genotype-phenotype relationships.
   : Plot Combined Statistics of Logistic Regression and Solo PPV
 - [`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
   : Generate a Series of Plots for AMR Gene and Combination Analysis
+- [`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
+  : Generate a Stacked Bar Plot of MIC Values Colored by Gene Symbol for
+  Each Antibiotic
 
 ## Data
 

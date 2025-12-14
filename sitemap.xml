@@ -9,7 +9,9 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/amr_logistic.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/amr_upset.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/as.gene.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/assay_by_var.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/barplot_mic_gen.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/checkBreakpoints.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/compare_estimates.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/compare_geno_pheno_id.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/convert_aa_code.html</loc></url>
@@ -19,6 +21,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/ecoli_geno_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/eucast_supported_ab_distributions.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/export_ncbi_biosample.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/getBreakpoints.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/glm_details.html</loc></url>

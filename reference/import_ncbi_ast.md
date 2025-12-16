@@ -183,12 +183,12 @@ head(pheno)
 #> # A tibble: 6 × 32
 #>   id           drug_agent     mic  disk pheno_eucast ecoff guideline method
 #>   <chr>        <ab>         <mic> <dsk> <sir>        <sir> <chr>     <chr> 
-#> 1 SAMN36015110 CIP        <128.00    NA   R            R   CLSI      NA    
+#> 1 SAMN36015110 CIP        <128.00    NA   NI           NI  CLSI      NA    
 #> 2 SAMN11638310 CIP         256.00    NA   R            R   CLSI      NA    
 #> 3 SAMN05729964 CIP          64.00    NA   R            R   CLSI      Etest 
 #> 4 SAMN10620111 CIP         >=4.00    NA   R            R   CLSI      NA    
 #> 5 SAMN10620168 CIP         >=4.00    NA   R            R   CLSI      NA    
-#> 6 SAMN10620104 CIP         <=0.25    NA   S            R   CLSI      NA    
+#> 6 SAMN10620104 CIP         <=0.25    NA   S            NI  CLSI      NA    
 #> # ℹ 24 more variables: pheno_provided <sir>, spp_pheno <mo>,
 #> #   `Organism group` <chr>, `Scientific name` <chr>, `Isolation type` <chr>,
 #> #   Location <chr>, `Isolation source` <chr>, Isolate <chr>, Antibiotic <chr>,

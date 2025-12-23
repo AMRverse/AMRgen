@@ -23,6 +23,7 @@ assay_by_var(
   bp_S = NULL,
   bp_R = NULL,
   ecoff = NULL,
+  guideline = "EUCAST 2025",
   marker_free_strains = NULL,
   colour_by = NULL,
   cols = NULL
@@ -70,6 +71,11 @@ assay_by_var(
 
   (optional) ECOFF breakpoint
 
+- guideline:
+
+  (optional) Guideline to use when looking up breakpoints (default
+  'EUCAST 2025')
+
 - marker_free_strains:
 
   (optional) Vector of sample names to select to get their own plot.
@@ -103,3 +109,58 @@ A list containing
 
   Additional plot showing only those samples listed in
   `marker_free_strains`
+
+## Examples
+
+``` r
+# plot MIC distribution, highlighting values expressed as ranges
+assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
+                measure="mic")
+#> $plot_nomarkers
+#> NULL
+#> 
+#> $plot
+
+#> 
+
+# colour by SIR interpretion recorded in column 'pheno_clsi'
+assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
+                measure="mic", colour_by = "pheno_clsi")
+#> $plot_nomarkers
+#> NULL
+#> 
+#> $plot
+
+#> 
+
+# look up ECOFF and CLSI breakpoints and annotate these on the plot
+assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
+                measure="mic", colour_by = "pheno_clsi", 
+                species="E. coli", guideline="CLSI 2025")
+#> Error in executing command: object of type 'builtin' is not subsettable
+#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
+#> $plot_nomarkers
+#> NULL
+#> 
+#> $plot
+#> Warning: Removed 26 rows containing missing values or values outside the scale range
+#> (`geom_vline()`).
+
+#> 
+
+# facet by method
+assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
+                measure="mic", colour_by = "pheno_clsi", 
+                species="E. coli", guideline="CLSI 2025", 
+                facet_var ="method")
+#> Error in executing command: object of type 'builtin' is not subsettable
+#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
+#> $plot_nomarkers
+#> NULL
+#> 
+#> $plot
+#> Warning: Removed 208 rows containing missing values or values outside the scale range
+#> (`geom_vline()`).
+
+#> 
+```

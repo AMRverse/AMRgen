@@ -197,7 +197,88 @@ will need that data in one or both of:
   `disk` class (can be created from a column with assay values as
   string, using `AMR::as.disk(disk_string)`)
 
-### 3. Combine genotype and phenotype data for a given drug
+### 3. Plot phenotype data distribution
+
+It is always a good idea to check the distribution of raw AST data that
+we have to work with. The function
+[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
+can be used to plot the distribution of MIC or disk measurements,
+coloured by a variable.
+
+``` r
+# Example E. coli AST data from NCBI
+
+# Plot MIC distribution, coloured by CLSI S/I/R call
+assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi")
+#> $plot_nomarkers
+#> NULL
+#> 
+#> $plot
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/plot_mic-1.png)
+
+It’s a good idea to make sure that the `SIR` field in the input data
+file has been interpreted correctly against the breakpoints. The AMRgen
+function
+[`checkBreakpoints()`](https://AMRverse.github.io/AMRgen/reference/checkBreakpoints.md)
+can be used to help look up breakpoints in the `AMR` package. Or, if you
+provide the function
+[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
+with a species and guideline, it can look up the breakpoints and ECOFF
+and annotate these directly on the plot.
+
+``` r
+# Look up breakpoints recorded in the AMR package
+checkBreakpoints(species="E. coli", guide="CLSI 2025", antibiotic="Ciprofloxacin", assay="MIC")
+#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
+#> $breakpoint_S
+#> [1] 0.25
+#> 
+#> $breakpoint_R
+#> [1] 1
+#> 
+#> $bp_standard
+#> [1] "-"
+
+# Specify species and guideline, to annotate with CLSI breakpoints
+assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025")
+#> Error in executing command: object of type 'builtin' is not subsettable
+#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
+#> $plot_nomarkers
+#> NULL
+#> 
+#> $plot
+#> Warning: Removed 26 rows containing missing values or values outside the scale range
+#> (`geom_vline()`).
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints-1.png)
+
+When aggregating AST data from different methods and sources, it is a
+good idea to check the distributions broken down by method or source.
+This can be done easily by passing the
+[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
+function a variable name to facet by, which means a separate
+distribution will be plotted for each value of that variable (e.g. each
+type of ‘method’ in our AST test data).
+
+``` r
+# specify facet_var="method" to generate facet plots by assay method
+assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025", facet_var ="method")
+#> Error in executing command: object of type 'builtin' is not subsettable
+#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
+#> $plot_nomarkers
+#> NULL
+#> 
+#> $plot
+#> Warning: Removed 208 rows containing missing values or values outside the scale range
+#> (`geom_vline()`).
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints_method-1.png)
+
+### 4. Combine genotype and phenotype data for a given drug
 
 The genotype and phenotype tables can include data related to many
 different drugs, but we need to analyse things one drug at a time. The
@@ -263,7 +344,7 @@ colnames(cip_bin)
 #> [49] "qnrB"           "acrR_R45C"
 ```
 
-### 4. Model a binary drug phenotype using genetic marker presence/absence data
+### 5. Model a binary drug phenotype using genetic marker presence/absence data
 
 Logistic regression models can be informative to get an overview of the
 association between a drug resistance phenotype, and each marker thought
@@ -529,7 +610,7 @@ models$bin_mat
 #> #   parC..Glu84Val <dbl>, parE..Ile529Leu <dbl>, parE..Ser458Thr <dbl>, …
 ```
 
-### 5. Assess solo positive predictive value of genetic markers
+### 6. Assess solo positive predictive value of genetic markers
 
 The strongest evidence of the effect of an individual genetic marker on
 a drug phenotype is its positive predictive value (PPV) for resistance
@@ -641,7 +722,7 @@ soloPPV_cipro$amr_binary
 #> #   parC_E84G <dbl>, qnrS1 <dbl>, marR_S3N <dbl>, `aac(6')-Ib-cr` <dbl>, …
 ```
 
-### 6. Compare markers with assay data
+### 7. Compare markers with assay data
 
 So far we have considered only the impact of individual markers, and
 their association with categorical S/I/R or WT/NWT calls.
@@ -704,7 +785,7 @@ cipro_mic_upset$summary
 #> #   q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
 ```
 
-### 7. Download reference MIC distributions and compare to your data
+### 8. Download reference MIC distributions and compare to your data
 
 ``` r
 # get MIC distribution for ciprofloxacin, for all organisms

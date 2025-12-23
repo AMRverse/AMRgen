@@ -13,11 +13,15 @@ assay_by_var(
   pheno_table,
   antibiotic,
   measure = "mic",
-  var = "method",
+  facet_var = NULL,
   species = NULL,
-  marker_free_strains = NULL,
   bp_site = NULL,
-  cols = c(range = "maroon", value = "navy", `NA` = "grey")
+  bp_S = NULL,
+  bp_R = NULL,
+  ecoff = NULL,
+  marker_free_strains = NULL,
+  colour_by = NULL,
+  cols = NULL
 )
 ```
 
@@ -35,14 +39,32 @@ assay_by_var(
 
   Field name containing the assay measurements to plot (default "mic").
 
-- var:
+- facet_var:
 
-  Field name containing a field to facet on (default "method").
+  (optional) Field name containing a field to facet on (default NULL).
 
 - species:
 
   (optional) Name of species, so we can retrieve breakpoints to print at
   the top of the plot to help interpret it.
+
+- bp_site:
+
+  (optional) Breakpoint site to retrieve (only relevant if also
+  supplying `species` to retrieve breakpoints, and not supplying
+  breakpoints via `bp_S`, `bp_R`, `ecoff`).
+
+- bp_S:
+
+  (optional) S breakpoint
+
+- bp_R:
+
+  (optional) R breakpoint
+
+- ecoff:
+
+  (optional) ECOFF breakpoint
 
 - marker_free_strains:
 
@@ -52,14 +74,17 @@ assay_by_var(
   of assay values for strains expected to be wildtype, which can help to
   identify issues with the assay.
 
-- bp_site:
+- colour_by:
 
-  (optional) Breakpoint site to retrieve (only relevant if also
-  supplying species to retrieve breakpoints).
+  (optional) Field name containing a field to colour bars by (default
+  NULL, which will colour each bar to indicate whether the value is
+  expressed as a range or not)
 
 - cols:
 
-  (optional) Manual colour scale to use for plot.
+  (optional) Manual colour scale to use for plot. If NULL, `colour_by`
+  variable is of class 'sir', bars will by default be coloured using
+  standard SIR colours.
 
 ## Value
 

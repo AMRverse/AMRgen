@@ -73,9 +73,6 @@ logistic regression and Firth regression.
 Tools to visualise results, including MIC distributions, model outputs,
 and genotype-phenotype relationships.
 
-- [`barplot_mic_gen()`](https://AMRverse.github.io/AMRgen/reference/barplot_mic_gen.md)
-  : Generate a Stacked Bar Plot of MIC Values Colored by Gene Symbol for
-  Each Antibiotic
 - [`plot_combined_stats()`](https://AMRverse.github.io/AMRgen/reference/plot_combined_stats.md)
   : Plot Combined Statistics
 - [`plot_estimates()`](https://AMRverse.github.io/AMRgen/reference/plot_estimates.md)
@@ -85,8 +82,7 @@ and genotype-phenotype relationships.
 - [`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
   : Generate a Series of Plots for AMR Gene and Combination Analysis
 - [`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
-  : Generate a Stacked Bar Plot of MIC Values Colored by Gene Symbol for
-  Each Antibiotic
+  : Generate a Stacked Bar Plot of Assay Values Colored by a Variable
 
 ## Data
 

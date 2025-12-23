@@ -1,10 +1,14 @@
-# Generate a Stacked Bar Plot of MIC Values Colored by Gene Symbol for Each Antibiotic
+# Generate a Stacked Bar Plot of Assay Values Colored by a Variable
 
 This function creates a stacked bar plot using `ggplot2`, where the
 x-axis represents MIC (Minimum Inhibitory Concentration) or disk values,
-the y-axis represents their frequency, and the bars are colored to
-indicate whether the assay value is expressed as a range or not. It can
-optionally be faceted on an additional categorical variable.
+the y-axis indicates their frequency, and the bars are colored by a
+variable (by default, colours indicate whether the assay value is
+expressed as a range or not). Plots can optionally be faceted on an
+additional categorical variable. If breakpoints are provided, or species
+and drug are provided so we can extract EUCAST breakpoints, vertical
+lines indicating the S/R breakpoints and ECOFF will be added to the
+plot.
 
 ## Usage
 

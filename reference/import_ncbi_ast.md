@@ -16,7 +16,7 @@ interpretation may not be possible.
 ``` r
 import_ncbi_ast(
   input,
-  sample_col = "#BioSample",
+  sample_col = "BioSample",
   source = NULL,
   species = NULL,
   ab = NULL,
@@ -38,7 +38,7 @@ import_ncbi_ast(
 - sample_col:
 
   A string indicating the name of the column with sample identifiers. If
-  `NULL`, assume this is '#BioSample'.
+  `NULL`, assume this is 'BioSample'.
 
 - source:
 
@@ -90,7 +90,7 @@ import_ncbi_ast(
 
 A data frame with the processed AST data, including additional columns:
 
-- `id`: The biological sample identifier (renamed from `#BioSample` or
+- `id`: The biological sample identifier (renamed from `BioSample` or
   specified column).
 
 - `spp_pheno`: The species phenotype, formatted using the `as.mo`

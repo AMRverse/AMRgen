@@ -203,20 +203,20 @@ my_mic_values <- AMR::random_mic(500)
 comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "K. pneumoniae")
 #> Joining with `by = join_by(value)`
 comparison
-#> # A tibble: 26 × 3
+#> # A tibble: 27 × 3
 #>    value   user eucast
 #>  * <fct>  <int>  <int>
-#>  1 0.0005    45      0
-#>  2 0.001     30      0
-#>  3 0.002     44      0
-#>  4 0.004     34      4
-#>  5 0.008     22    116
-#>  6 0.016     35    545
-#>  7 0.03       0   1456
-#>  8 0.032     20      0
-#>  9 0.06       0    692
-#> 10 0.064     31      0
-#> # ℹ 16 more rows
+#>  1 0.0002    43      0
+#>  2 0.0005    31      0
+#>  3 0.001     42      0
+#>  4 0.002     30      0
+#>  5 0.004     23      4
+#>  6 0.008     37    116
+#>  7 0.016     22    545
+#>  8 0.03       0   1456
+#>  9 0.032     24      0
+#> 10 0.06       0    692
+#> # ℹ 17 more rows
 #> Use ggplot2::autoplot() on this output to visualise.
 ggplot2::autoplot(comparison)
 ```

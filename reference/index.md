@@ -29,6 +29,8 @@ from public repositories or internal formats.
   : Get Microorganism from GTDB Species Name
 - [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
   : Import and Process AST Data from a generic format
+- [`download_ebi_geno()`](https://AMRverse.github.io/AMRgen/reference/download_ebi_geno.md)
+  : Download antimicrobial genotype data from the EBI AMR Portal
 
 ## Resistance Interpretation
 

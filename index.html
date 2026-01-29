@@ -92,23 +92,29 @@
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
+<p>It is best to restart R before running the installation to prevent issues.</p>
 <p>Install the latest version of this package with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span> <span class="co"># if you haven't already</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"AMRverse/AMRgen"</span><span class="op">)</span></span></code></pre></div>
-<p>All required packages, including the <a href="https://amr-for-r.org" class="external-link">AMR package</a>, will be installed automatically.</p>
-<p>It might be best to restart R before running the installation to prevent issues with running the examples below.</p>
+<p>All required packages, including the <a href="https://amr-for-r.org" class="external-link">AMR package</a> if you don’t have it already, will be installed automatically.</p>
+<p>If you have issues, we recommend you install the latest version of the AMR package directly, then try again to install AMRgen:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span> <span class="co"># if you haven't already</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"msberends/AMR"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"AMRverse/AMRgen"</span><span class="op">)</span></span></code></pre></div>
+<p>If you still have trouble with installation please post an issue <a href="https://github.com/AMRverse/AMRgen/issues" class="external-link">here</a>! The package is new and we want to make it as accessible as possible for new users.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="quick-usage-examples">Quick Usage Examples<a class="anchor" aria-label="anchor" href="#quick-usage-examples"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://AMRverse.github.io/AMRgen/">AMRgen</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="investigate-ciprofloxacin-resistance-vs-quinolone-genotype-markers-via-solo-ppv-and-upset-plots">Investigate ciprofloxacin resistance vs quinolone genotype markers, via solo PPV and upset plots<a class="anchor" aria-label="anchor" href="#investigate-ciprofloxacin-resistance-vs-quinolone-genotype-markers-via-solo-ppv-and-upset-plots"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example public E. coli AST data from NCBI</span></span>
 <span><span class="co">#  (already imported via import_ncbi_ast() and re-interpreted with as.sir())</span></span>
 <span><span class="va">ecoli_ast</span></span>
@@ -133,7 +139,7 @@
 <div class="section level3">
 <h3 id="download-reference-mic-distribution-from-eucastorg-and-compare-to-example-data">Download reference MIC distribution from eucast.org and compare to example data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distribution-from-eucastorg-and-compare-to-example-data"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get MIC reference distribution for ciprofloxacin in E. coli</span></span>
 <span><span class="va">ecoli_cip_mic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">get_eucast_mic_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"E. coli"</span><span class="op">)</span></span>
 <span></span>

@@ -27,6 +27,8 @@ from public repositories or internal formats.
   : Gene Class and AMR Parsing Functions
 - [`gtdb.mo()`](https://AMRverse.github.io/AMRgen/reference/gtdb.mo.md)
   : Get Microorganism from GTDB Species Name
+- [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
+  : Import and Process AST Data from a generic format
 
 ## Resistance Interpretation
 

@@ -18,14 +18,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/AMRverse/AMRgen/blob/main/DESCRIPTION)
 
-Berends MS, Couto N, Dyson ZA, Hawkey J, Holt K (2025). *AMRgen:
+Berends MS, Couto N, Dyson ZA, Hawkey J, Holt K (2026). *AMRgen:
 Genotype-Phenotype Integration for Antimicrobial Resistance Research*. R
 package version 0.0.1.9000, <https://AMRverse.github.io/AMRgen/>.
 
     @Manual{,
       title = {AMRgen: Genotype-Phenotype Integration for Antimicrobial Resistance Research},
       author = {Matthijs S. Berends and Natacha Couto and Zoe A. Dyson and Jane Hawkey and Kat Holt},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.0.1.9000},
       url = {https://AMRverse.github.io/AMRgen/},
     }

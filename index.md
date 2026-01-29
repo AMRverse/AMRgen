@@ -57,6 +57,9 @@ To install and explore the package, follow the instructions below:
 
 ### Installation
 
+It is best to restart R before running the installation to prevent
+issues.
+
 Install the latest version of this package with:
 
 ``` r
@@ -65,10 +68,21 @@ remotes::install_github("AMRverse/AMRgen")
 ```
 
 All required packages, including the [AMR
-package](https://amr-for-r.org), will be installed automatically.
+package](https://amr-for-r.org) if you don’t have it already, will be
+installed automatically.
 
-It might be best to restart R before running the installation to prevent
-issues with running the examples below.
+If you have issues, we recommend you install the latest version of the
+AMR package directly, then try again to install AMRgen:
+
+``` r
+install.packages("remotes") # if you haven't already
+remotes::install_github("msberends/AMR")
+remotes::install_github("AMRverse/AMRgen")
+```
+
+If you still have trouble with installation please post an issue
+[here](https://github.com/AMRverse/AMRgen/issues)! The package is new
+and we want to make it as accessible as possible for new users.
 
 ## Quick Usage Examples
 

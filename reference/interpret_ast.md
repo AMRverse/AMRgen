@@ -39,7 +39,7 @@ interpret_ast(
 
   A logical value (default is FALSE). If `TRUE`, the function will
   interpret the susceptibility phenotype (SIR) for each row based on the
-  MIC or disk diffusion values, against ECOFF human breakpoints. These
+  MIC or disk diffusion values, against EUCAST human breakpoints. These
   will be reported in a new column `pheno_eucast`, of class 'sir'.
 
 - interpret_clsi:

@@ -4,12 +4,12 @@ This function imports an antibiotic susceptibility testing (AST) dataset
 in either EBI or NCBI antibiogram format, processes the data, and
 optionally interprets the results based on MIC or disk diffusion data.
 It assumes that the input file is a tab-delimited text file (e.g., TSV)
-or CSV (which may be commpressed) and parses relevant columns
-(antibiotic names, species names, MIC or disk data) into suitable
-classes using the AMR package. It optionally can use the AMR package to
-interpret susceptibility phenotype (SIR) based on EUCAST or CLSI
-guidelines (human breakpoints and/or ECOFF). If expected columns are not
-found warnings will be given, and interpretation may not be possible.
+or CSV (which may be compressed) and parses relevant columns (antibiotic
+names, species names, MIC or disk data) into suitable classes using the
+AMR package. It optionally can use the AMR package to interpret
+susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human
+breakpoints and/or ECOFF). If expected columns are not found warnings
+will be given, and interpretation may not be possible.
 
 ## Usage
 
@@ -46,7 +46,7 @@ import_ast(
 
   A logical value (default is FALSE). If `TRUE`, the function will
   interpret the susceptibility phenotype (SIR) for each row based on the
-  MIC or disk diffusion values, against ECOFF human breakpoints. These
+  MIC or disk diffusion values, against EUCAST human breakpoints. These
   will be reported in a new column `pheno_eucast`, of class 'sir'.
 
 - interpret_clsi:

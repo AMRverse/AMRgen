@@ -54,11 +54,11 @@
 
 
 <dl><dt id="arg-input">input<a class="anchor" aria-label="anchor" href="#arg-input"></a></dt>
-<dd><p>A string representing a dataframe, or a path to an input file, containing the AST data in EBI or NCBI antibiogram format. These files can be downloaded from the EBI AMR browser, e.g. https://www.ebi.ac.uk/amr/data/?view=experiments or NCBI browser e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa.</p></dd>
+<dd><p>A string representing a dataframe, or a path to an input file, containing the AST data in EBI or NCBI antibiogram format. These files can be downloaded from the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa), or from EBI using the function <code><a href="download_ebi.html">download_ebi()</a></code>.</p></dd>
 
 
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
-<dd><p>A string indicating the format of the data, either "ebi" (default) or "ncbi". This determines whether the data is passed on to the <code>import_ebi_ast</code> or <code>import_ncbi_ast</code>()` function to process.</p></dd>
+<dd><p>A string indicating the format of the data, either "ebi" (default), ebi_web", "ebi_ftp", or "ncbi". This determines whether the data is passed on to the <code><a href="import_ebi_ast.html">import_ebi_ast()</a></code> (ebi/ebi_web), <code><a href="import_ebi_ast_ftp.html">import_ebi_ast_ftp()</a></code> (ebi_ftp), or <code><a href="import_ncbi_ast.html">import_ncbi_ast()</a></code> function to process.</p></dd>
 
 
 <dt id="arg-interpret-eucast">interpret_eucast<a class="anchor" aria-label="anchor" href="#arg-interpret-eucast"></a></dt>

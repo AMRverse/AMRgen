@@ -157,7 +157,11 @@ from public repositories or internal formats.
 - [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
   : Import and Process AST Data from an EBI or NCBI antibiogram File
 - [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
-  : Import and Process AST Data from an EBI File
+  : Import and Process AST Data from files downloaded from the EBI AMR
+  portal website
+- [`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
+  : Import and Process AST Data files retrieved from the EBI AMR portal
+  FTP site
 - [`import_gtdb()`](https://AMRverse.github.io/AMRgen/reference/import_gtdb.md)
   : Import GTDB Output
 - [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
@@ -176,7 +180,7 @@ from public repositories or internal formats.
   : Get Microorganism from GTDB Species Name
 - [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
   : Import and Process AST Data from a generic format
-- [`download_ebi_geno()`](https://AMRverse.github.io/AMRgen/reference/download_ebi_geno.md)
+- [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
   : Download antimicrobial genotype data from the EBI AMR Portal
 
 ## Resistance Interpretation

@@ -32,15 +32,25 @@ import_ast(
 
   A string representing a dataframe, or a path to an input file,
   containing the AST data in EBI or NCBI antibiogram format. These files
-  can be downloaded from the EBI AMR browser, e.g.
-  https://www.ebi.ac.uk/amr/data/?view=experiments or NCBI browser e.g.
-  https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa.
+  can be downloaded from the EBI AMR web browser
+  (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site
+  (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI
+  browser (e.g.
+  https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa),
+  or from EBI using the function
+  [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md).
 
 - format:
 
-  A string indicating the format of the data, either "ebi" (default) or
-  "ncbi". This determines whether the data is passed on to the
-  `import_ebi_ast` or `import_ncbi_ast`()\` function to process.
+  A string indicating the format of the data, either "ebi" (default),
+  ebi_web", "ebi_ftp", or "ncbi". This determines whether the data is
+  passed on to the
+  [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
+  (ebi/ebi_web),
+  [`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
+  (ebi_ftp), or
+  [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
+  function to process.
 
 - interpret_eucast:
 

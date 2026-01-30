@@ -1,15 +1,15 @@
-# Import and Process AST Data from an EBI File
+# Import and Process AST Data from files downloaded from the EBI AMR portal website
 
-This function imports an antibiotic susceptibility testing (AST)
-dataset, processes the data, and optionally interprets the results based
-on MIC or disk diffusion data. It assumes that the input file is a
-tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and
-parses relevant columns (antibiotic names, species names, MIC or disk
-data) into suitable classes using the AMR package. It optionally can use
-the AMR package to interpret susceptibility phenotype (SIR) based on
-EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected
-columns are not found warnings will be given, and interpretation may not
-be possible.
+This function imports an antibiotic susceptibility testing (AST) dataset
+that has been downloaded from the EBI AMR portal website
+(https://www.ebi.ac.uk/amr/data/?view=experiments) Data downloaded from
+the EBI AMR Portal FTP site
+(ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), either
+directly or via the function
+[`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md),
+is formatted differently and can instead be processed using the
+[`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
+function.
 
 ## Usage
 
@@ -129,6 +129,17 @@ A data frame with the processed AST data, including additional columns:
 - `source`: The source of each data point (renamed from the publications
   field in the input file, or replaced with a single value passed in as
   the 'source' parameter).
+
+## Details
+
+This function will process the data, and optionally interpret the
+results based on MIC or disk diffusion data. It assumes that the input
+file is a tab-delimited text file (e.g., TSV) or CSV (which may be
+compressed) and parses relevant columns (antibiotic names, species
+names, MIC or disk data) into suitable classes using the AMR package. It
+optionally can use the AMR package to interpret susceptibility phenotype
+(SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or
+ECOFF).
 
 ## Examples
 

@@ -405,7 +405,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 #'
 #' This function imports an antibiotic susceptibility testing (AST) dataset in either EBI or NCBI antibiogram format, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
 #' @param input A string representing a dataframe, or a path to an input file, containing the AST data in EBI or NCBI antibiogram format. These files can be downloaded from the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa), or from EBI using the function `download_ebi()`.
-#' @param format A string indicating the format of the data, either "ebi" (default), ebi_web", "ebi_ftp", or "ncbi". This determines whether the data is passed on to the `import_ebi_ast()` (ebi/ebi_web), `import_ebi_ast_ftp()` (ebi_ftp), or `import_ncbi_ast()` function to process.
+#' @param format A string indicating the format of the data: "ebi" (default), "ebi_web", "ebi_ftp", "ncbi", or "vitek". This determines whether the data is passed on to the `import_ebi_ast()` (ebi/ebi_web), `import_ebi_ast_ftp()` (ebi_ftp), `import_ncbi_ast()` (ncbi), or `import_vitek_ast()` (vitek) function to process.
 #' @param interpret_eucast A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
 #' @param interpret_clsi A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
 #' @param interpret_ecoff A logical value (default is FALSE). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).
@@ -455,6 +455,15 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   if (format == "ncbi") {
     cat("Reading in as NCBI AST format\n")
     ast <- import_ncbi_ast(input, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, interpret_ecoff = interpret_ecoff, species = species, ab = ab)
+  }
+
+  if (format == "vitek") {
+    cat("Reading in as VITEK AST format\n")
+    ast <- import_vitek_ast(input,
+                            interpret_eucast = interpret_eucast,
+                            interpret_clsi = interpret_clsi,
+                            interpret_ecoff = interpret_ecoff,
+                            species = species, ab = ab, source = source)
   }
 
   if (!is.null(source)) { ast <- ast %>% mutate(source=source)}
@@ -659,9 +668,195 @@ import_ebi_ast_ftp <- function(input,
                species_col="species", 
                ab_col="antibiotic_name", 
                pheno_cols="pheno_provided",
-               interpret_eucast = interpret_eucast, 
-               interpret_clsi = interpret_clsi, 
-               interpret_ecoff = interpret_ecoff) 
-  
+               interpret_eucast = interpret_eucast,
+               interpret_clsi = interpret_clsi,
+               interpret_ecoff = interpret_ecoff)
+
   return(ast)
+}
+
+
+#' Import and Process AST Data from Vitek Output Files
+#'
+#' This function imports AST data from Vitek instrument output files (wide CSV format)
+#' and converts it to the standardized long-format used by AMRgen.
+#'
+#' @param input A dataframe or path to a CSV file containing Vitek AST output data
+#' @param sample_col Column name for sample identifiers. Default: "Lab ID"
+#' @param source Optional source value to record for all data points
+#' @param species Optional species override for phenotype interpretation
+#' @param ab Optional antibiotic override for phenotype interpretation
+#' @param use_expertized Use expertized SIR (TRUE, default) or instrument SIR (FALSE)
+#' @param interpret_eucast Interpret against EUCAST breakpoints
+#' @param interpret_clsi Interpret against CLSI breakpoints
+#' @param interpret_ecoff Interpret against ECOFF values
+#' @param include_dates Include collection_date and testing_date in output
+#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom dplyr across any_of case_when coalesce mutate relocate rename
+#' @importFrom tidyr pivot_longer matches
+#' @importFrom stringr str_match
+#' @importFrom rlang sym
+#' @return Standardized AST data frame
+#' @export
+import_vitek_ast <- function(input,
+                             sample_col = "Lab ID",
+                             source = NULL,
+                             species = NULL,
+                             ab = NULL,
+                             use_expertized = TRUE,
+                             interpret_eucast = FALSE,
+                             interpret_clsi = FALSE,
+                             interpret_ecoff = FALSE,
+                             include_dates = TRUE) {
+
+  ast <- process_input(input)
+
+  # Validate sample column exists
+  if (!(sample_col %in% colnames(ast))) {
+    stop(paste("Invalid column name:", sample_col))
+  }
+
+  # Identify antibiotic MIC columns (CODE-Name pattern, excluding -Other-*)
+  all_cols <- colnames(ast)
+  mic_cols <- all_cols[grepl("^[A-Z0-9]+-", all_cols) &
+                        !grepl("-Other-Instrument$|-Other-Expertized$", all_cols)]
+
+  if (length(mic_cols) == 0) {
+    stop("No antibiotic columns found in Vitek format")
+  }
+
+  # Extract antibiotic codes and names from column headers
+  ab_codes <- stringr::str_match(mic_cols, "^([A-Z0-9]+)-")[,2]
+  ab_names <- stringr::str_match(mic_cols, "^[A-Z0-9]+-(.*)$")[,2]
+
+  # Metadata columns to preserve
+  metadata_cols <- c("Lab ID", "Isolate Number", "Patient Name", "Patient ID",
+                     "Patient Location", "Specimen Type", "Specimen Source",
+                     "Collection Date", "Testing Date", "Organism Name",
+                     "Organism Code", "Bio Number", "Percent Probability",
+                     "ID Confidence", "Selected BP Infection Site")
+  metadata_cols <- metadata_cols[metadata_cols %in% all_cols]
+
+  # Rename columns for pivoting: CODE-Name -> CODE_mic, CODE-Other-Instrument -> CODE_sir_inst
+  rename_map <- c()
+  for (i in seq_along(ab_codes)) {
+    code <- ab_codes[i]
+    mic_col <- mic_cols[i]
+    sir_inst_col <- paste0(code, "-Other-Instrument")
+    sir_exp_col <- paste0(code, "-Other-Expertized")
+
+    rename_map[paste0(code, "_mic")] <- mic_col
+    if (sir_inst_col %in% all_cols) {
+      rename_map[paste0(code, "_sir_inst")] <- sir_inst_col
+    }
+    if (sir_exp_col %in% all_cols) {
+      rename_map[paste0(code, "_sir_exp")] <- sir_exp_col
+    }
+  }
+
+  # Create lookup table for ab_code -> ab_name
+  ab_lookup <- setNames(ab_names, ab_codes)
+
+  # Apply renames
+  for (new_name in names(rename_map)) {
+    old_name <- rename_map[new_name]
+    if (old_name %in% colnames(ast)) {
+      colnames(ast)[colnames(ast) == old_name] <- new_name
+    }
+  }
+
+  # Convert all MIC and SIR columns to character to avoid type conflicts in pivot
+  mic_col_names <- paste0(ab_codes, "_mic")
+  sir_inst_col_names <- paste0(ab_codes, "_sir_inst")
+  sir_exp_col_names <- paste0(ab_codes, "_sir_exp")
+  all_ab_cols <- c(mic_col_names, sir_inst_col_names, sir_exp_col_names)
+  all_ab_cols <- all_ab_cols[all_ab_cols %in% colnames(ast)]
+
+  ast <- ast %>%
+    mutate(across(any_of(all_ab_cols), as.character))
+
+  # Pivot to long format
+  ast_long <- ast %>%
+    tidyr::pivot_longer(
+      cols = tidyr::matches("^[A-Z0-9]+_(mic|sir_inst|sir_exp)$"),
+      names_to = c("ab_code", ".value"),
+      names_pattern = "^([A-Z0-9]+)_(mic|sir_inst|sir_exp)$"
+    )
+
+  # Add antibiotic full name and parse values
+  ast_long <- ast_long %>%
+    mutate(ab_name = ab_lookup[ab_code]) %>%
+    mutate(mic = case_when(
+      is.na(mic) | mic == "" | mic == "-" | mic == "NEG" ~ NA_character_,
+      TRUE ~ mic
+    )) %>%
+    mutate(mic = as.mic(mic)) %>%
+    mutate(disk = as.disk(NA))  # Vitek is MIC-based only
+
+  # Select SIR source based on use_expertized parameter
+  if (use_expertized && "sir_exp" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>%
+      mutate(pheno_provided = case_when(
+        sir_exp %in% c("S", "I", "R") ~ sir_exp,
+        TRUE ~ NA_character_
+      ))
+  } else if ("sir_inst" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>%
+      mutate(pheno_provided = case_when(
+        sir_inst %in% c("S", "I", "R") ~ sir_inst,
+        TRUE ~ NA_character_
+      ))
+  } else {
+    ast_long <- ast_long %>% mutate(pheno_provided = NA_character_)
+  }
+  ast_long <- ast_long %>% mutate(pheno_provided = as.sir(pheno_provided))
+
+  # Parse organism and antibiotic
+  if ("Organism Name" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>% mutate(spp_pheno = as.mo(`Organism Name`))
+  }
+
+  # Try code first, then name for drug_agent
+  ast_long <- ast_long %>%
+    mutate(drug_agent_code = as.ab(ab_code)) %>%
+    mutate(drug_agent_name = as.ab(ab_name)) %>%
+    mutate(drug_agent = coalesce(drug_agent_code, drug_agent_name))
+
+  # Rename sample column and add standard columns
+  ast_long <- ast_long %>%
+    rename(id = !!sym(sample_col)) %>%
+    mutate(method = "VITEK", guideline = NA_character_)
+
+  # Add source
+  if (!is.null(source)) {
+    ast_long <- ast_long %>% mutate(source = source)
+  } else {
+    ast_long <- ast_long %>% mutate(source = "VITEK")
+  }
+
+  # Add dates if requested
+  if (include_dates) {
+    if ("Collection Date" %in% colnames(ast_long)) {
+      ast_long <- ast_long %>% rename(collection_date = `Collection Date`)
+    }
+    if ("Testing Date" %in% colnames(ast_long)) {
+      ast_long <- ast_long %>% rename(testing_date = `Testing Date`)
+    }
+  }
+
+  # Interpret phenotypes
+  ast_long <- interpret_ast(ast_long,
+                            interpret_ecoff = interpret_ecoff,
+                            interpret_eucast = interpret_eucast,
+                            interpret_clsi = interpret_clsi,
+                            species = species, ab = ab)
+
+  # Reorder columns
+  ast_long <- ast_long %>%
+    relocate(any_of(c("id", "drug_agent", "mic", "disk",
+                      "pheno_eucast", "pheno_clsi", "ecoff",
+                      "guideline", "method", "source",
+                      "pheno_provided", "spp_pheno")))
+
+  return(ast_long)
 }

@@ -405,7 +405,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 #'
 #' This function imports an antibiotic susceptibility testing (AST) dataset in either EBI or NCBI antibiogram format, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
 #' @param input A string representing a dataframe, or a path to an input file, containing the AST data in EBI or NCBI antibiogram format. These files can be downloaded from the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa), or from EBI using the function `download_ebi()`.
-#' @param format A string indicating the format of the data: "ebi" (default), "ebi_web", "ebi_ftp", "ncbi", or "vitek". This determines whether the data is passed on to the `import_ebi_ast()` (ebi/ebi_web), `import_ebi_ast_ftp()` (ebi_ftp), `import_ncbi_ast()` (ncbi), or `import_vitek_ast()` (vitek) function to process.
+#' @param format A string indicating the format of the data: "ebi" (default), "ebi_web", "ebi_ftp", "ncbi", "vitek", or "whonet". This determines whether the data is passed on to the `import_ebi_ast()` (ebi/ebi_web), `import_ebi_ast_ftp()` (ebi_ftp), `import_ncbi_ast()` (ncbi), `import_vitek_ast()` (vitek), or `import_whonet_ast()` (whonet) function to process.
 #' @param interpret_eucast A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
 #' @param interpret_clsi A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
 #' @param interpret_ecoff A logical value (default is FALSE). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).
@@ -464,6 +464,15 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
                             interpret_clsi = interpret_clsi,
                             interpret_ecoff = interpret_ecoff,
                             species = species, ab = ab, source = source)
+  }
+
+  if (format == "whonet") {
+    cat("Reading in as WHONET AST format\n")
+    ast <- import_whonet_ast(input,
+                             interpret_eucast = interpret_eucast,
+                             interpret_clsi = interpret_clsi,
+                             interpret_ecoff = interpret_ecoff,
+                             species = species, ab = ab, source = source)
   }
 
   if (!is.null(source)) { ast <- ast %>% mutate(source=source)}
@@ -842,6 +851,139 @@ import_vitek_ast <- function(input,
     if ("Testing Date" %in% colnames(ast_long)) {
       ast_long <- ast_long %>% rename(testing_date = `Testing Date`)
     }
+  }
+
+  # Interpret phenotypes
+  ast_long <- interpret_ast(ast_long,
+                            interpret_ecoff = interpret_ecoff,
+                            interpret_eucast = interpret_eucast,
+                            interpret_clsi = interpret_clsi,
+                            species = species, ab = ab)
+
+  # Reorder columns
+  ast_long <- ast_long %>%
+    relocate(any_of(c("id", "drug_agent", "mic", "disk",
+                      "pheno_eucast", "pheno_clsi", "ecoff",
+                      "guideline", "method", "source",
+                      "pheno_provided", "spp_pheno")))
+
+  return(ast_long)
+}
+
+
+#' Import and Process AST Data from WHONET Output Files
+#'
+#' This function imports AST data from WHONET software output files (wide CSV format)
+#' and converts it to the standardised long-format used by AMRgen.
+#'
+#' @param input A dataframe or path to a CSV file containing WHONET AST output data
+#' @param sample_col Column name for sample identifiers. Default: "Identification number"
+#' @param source Optional source value to record for all data points
+#' @param species Optional species override for phenotype interpretation
+#' @param ab Optional antibiotic override for phenotype interpretation
+#' @param interpret_eucast Interpret against EUCAST breakpoints
+#' @param interpret_clsi Interpret against CLSI breakpoints
+#' @param interpret_ecoff Interpret against ECOFF values
+#' @param include_patient_info Include patient demographic columns in output
+#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom dplyr across any_of case_when coalesce mutate relocate rename
+#' @importFrom tidyr pivot_longer matches
+#' @importFrom stringr str_match
+#' @importFrom rlang sym
+#' @return Standardised AST data frame
+#' @export
+import_whonet_ast <- function(input,
+                              sample_col = "Identification number",
+                              source = NULL,
+                              species = NULL,
+                              ab = NULL,
+                              interpret_eucast = FALSE,
+                              interpret_clsi = FALSE,
+                              interpret_ecoff = FALSE,
+                              include_patient_info = FALSE) {
+
+  ast <- process_input(input)
+
+  # Validate sample column exists
+  if (!(sample_col %in% colnames(ast))) {
+    stop(paste("Invalid column name:", sample_col))
+  }
+
+  # Identify antibiotic columns (CODE_METHOD pattern, e.g., AMP_ND10, CIP_ED5, AMP_EE)
+  all_cols <- colnames(ast)
+  ab_cols <- all_cols[grepl("^[A-Z]{2,4}_[A-Z]{2}", all_cols)]
+
+  if (length(ab_cols) == 0) {
+    stop("No antibiotic columns found in WHONET format")
+  }
+
+  # Extract antibiotic codes from column headers
+  ab_codes <- stringr::str_match(ab_cols, "^([A-Z]{2,4})_")[,2]
+
+  # Metadata columns to preserve
+  metadata_cols <- c("Identification number", "Specimen number", "Organism",
+                     "Country", "Laboratory", "Specimen date", "Specimen type",
+                     "Isolate number", "Organism type", "Date of data entry")
+  if (include_patient_info) {
+    metadata_cols <- c(metadata_cols, "Last name", "First name", "Sex",
+                       "Age", "Age category", "Date of admission")
+  }
+  metadata_cols <- metadata_cols[metadata_cols %in% all_cols]
+
+  # Convert antibiotic columns to character to avoid type conflicts
+  ast <- ast %>%
+    mutate(across(any_of(ab_cols), as.character))
+
+  # Pivot to long format
+  ast_long <- ast %>%
+    tidyr::pivot_longer(
+      cols = any_of(ab_cols),
+      names_to = "ab_col",
+      values_to = "sir_value"
+    )
+
+  # Parse antibiotic code and method from column name
+  ast_long <- ast_long %>%
+    mutate(ab_code = stringr::str_match(ab_col, "^([A-Z]{2,4})_")[,2]) %>%
+    mutate(test_method = stringr::str_match(ab_col, "^[A-Z]{2,4}_(.*)$")[,2])
+
+  # Parse SIR values
+  ast_long <- ast_long %>%
+    mutate(pheno_provided = case_when(
+      sir_value %in% c("S", "I", "R") ~ sir_value,
+      TRUE ~ NA_character_
+    )) %>%
+    mutate(pheno_provided = as.sir(pheno_provided))
+
+  # Set MIC and disk to NA (WHONET provides interpretations, not raw values)
+  ast_long <- ast_long %>%
+    mutate(mic = as.mic(NA)) %>%
+    mutate(disk = as.disk(NA))
+
+  # Parse organism
+  if ("Organism" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>% mutate(spp_pheno = as.mo(Organism))
+  }
+
+  # Parse antibiotic code to drug_agent
+  ast_long <- ast_long %>%
+    mutate(drug_agent = as.ab(ab_code))
+
+  # Rename sample column and add standard columns
+  ast_long <- ast_long %>%
+    rename(id = !!sym(sample_col)) %>%
+    mutate(method = "WHONET", guideline = NA_character_)
+
+  # Add source
+  if (!is.null(source)) {
+    ast_long <- ast_long %>% mutate(source = source)
+  } else {
+    ast_long <- ast_long %>% mutate(source = "WHONET")
+  }
+
+  # Rename date columns if present
+  if ("Specimen date" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>% rename(collection_date = `Specimen date`)
   }
 
   # Interpret phenotypes

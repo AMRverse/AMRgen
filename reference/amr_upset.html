@@ -45,8 +45,16 @@
 <span>  plot_category <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  print_category_counts <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  print_set_size <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  boxplot_colour <span class="op">=</span> <span class="st">"grey"</span>,</span>
-<span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
+<span>  boxplot_col <span class="op">=</span> <span class="st">"grey"</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  SIR_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>S <span class="op">=</span> <span class="st">"#3CAEA3"</span>, SDD <span class="op">=</span> <span class="st">"#8FD6C4"</span>, I <span class="op">=</span> <span class="st">"#F6D55C"</span>, R <span class="op">=</span> <span class="st">"#ED553B"</span><span class="op">)</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  species <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bp_site <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  guideline <span class="op">=</span> <span class="st">"EUCAST 2025"</span>,</span>
+<span>  bp_S <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bp_R <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ecoff_bp <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,7 +93,7 @@
 <dd><p>Logical indicating whether, if <code>plot_set_size</code> is TRUE, to print the number of strains with each marker combination on the plot. Default is FALSE.</p></dd>
 
 
-<dt id="arg-boxplot-colour">boxplot_colour<a class="anchor" aria-label="anchor" href="#arg-boxplot-colour"></a></dt>
+<dt id="arg-boxplot-col">boxplot_col<a class="anchor" aria-label="anchor" href="#arg-boxplot-col"></a></dt>
 <dd><p>Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is "grey".</p></dd>
 
 
@@ -93,6 +101,38 @@
 <dd><p>A character string indicating whether to plot MIC or disk diffusion data. Must be one of:</p><ul><li><p>"mic": plot MIC data stored in column <code>mic</code></p></li>
 <li><p>"disk": plot disk diffusion data stored in column <code>disk</code></p></li>
 </ul></dd>
+
+
+<dt id="arg-sir-col">SIR_col<a class="anchor" aria-label="anchor" href="#arg-sir-col"></a></dt>
+<dd><p>A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., "R", "I", "S"), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package <code>scale_colour_sir()</code>.</p></dd>
+
+
+<dt id="arg-antibiotic">antibiotic<a class="anchor" aria-label="anchor" href="#arg-antibiotic"></a></dt>
+<dd><p>(optional) Name of antibiotic, so we can retrieve breakpoints to the assay value distribution plot.</p></dd>
+
+
+<dt id="arg-species">species<a class="anchor" aria-label="anchor" href="#arg-species"></a></dt>
+<dd><p>(optional) Name of species, so we can retrieve breakpoints to add to the assay value distribution plot.</p></dd>
+
+
+<dt id="arg-bp-site">bp_site<a class="anchor" aria-label="anchor" href="#arg-bp-site"></a></dt>
+<dd><p>(optional) Breakpoint site to retrieve (only relevant if also supplying <code>species</code> and <code>antibiotic</code> to retrieve breakpoints to plot, and not supplying breakpoints via <code>bp_S</code>, <code>bp_R</code>, <code>ecoff_bp</code>).</p></dd>
+
+
+<dt id="arg-guideline">guideline<a class="anchor" aria-label="anchor" href="#arg-guideline"></a></dt>
+<dd><p>(optional) Guideline to use when looking up breakpoints (default 'EUCAST 2025')</p></dd>
+
+
+<dt id="arg-bp-s">bp_S<a class="anchor" aria-label="anchor" href="#arg-bp-s"></a></dt>
+<dd><p>(optional) S breakpoint to add to plot (numerical).</p></dd>
+
+
+<dt id="arg-bp-r">bp_R<a class="anchor" aria-label="anchor" href="#arg-bp-r"></a></dt>
+<dd><p>(optional) R breakpoint to add to plot (numerical).</p></dd>
+
+
+<dt id="arg-ecoff-bp">ecoff_bp<a class="anchor" aria-label="anchor" href="#arg-ecoff-bp"></a></dt>
+<dd><p>(optional) ECOFF breakpoint to add to plot (numerical).</p></dd>
 
 </dl></div>
     <div class="section level2">

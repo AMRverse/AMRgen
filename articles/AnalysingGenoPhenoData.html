@@ -281,14 +281,12 @@ the plot.</p>
 <span></span>
 <span><span class="co"># Specify species and guideline, to annotate with CLSI breakpoints</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table<span class="op">=</span><span class="va">ecoli_ast</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>, species<span class="op">=</span><span class="st">"E. coli"</span>, guideline<span class="op">=</span><span class="st">"CLSI 2025"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in executing command: object of type 'builtin' is not subsettable</span></span>
+<span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span></span>
 <span><span class="co">#&gt; $plot_nomarkers</span></span>
 <span><span class="co">#&gt; NULL</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $plot</span></span>
-<span><span class="co">#&gt; Warning: Removed 26 rows containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_vline()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; $plot</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints-1.png" class="r-plt" alt="" width="100%"></p>
 <p>When aggregating AST data from different methods and sources, it is a
 good idea to check the distributions broken down by method or source.
@@ -299,14 +297,12 @@ type of ‘method’ in our AST test data).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># specify facet_var="method" to generate facet plots by assay method</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table<span class="op">=</span><span class="va">ecoli_ast</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>, species<span class="op">=</span><span class="st">"E. coli"</span>, guideline<span class="op">=</span><span class="st">"CLSI 2025"</span>, facet_var <span class="op">=</span><span class="st">"method"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in executing command: object of type 'builtin' is not subsettable</span></span>
+<span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span></span>
 <span><span class="co">#&gt; $plot_nomarkers</span></span>
 <span><span class="co">#&gt; NULL</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $plot</span></span>
-<span><span class="co">#&gt; Warning: Removed 208 rows containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_vline()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; $plot</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints_method-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">

@@ -137,14 +137,12 @@ assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin",
 assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
                 measure="mic", colour_by = "pheno_clsi", 
                 species="E. coli", guideline="CLSI 2025")
-#> Error in executing command: object of type 'builtin' is not subsettable
+#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 #> $plot_nomarkers
 #> NULL
 #> 
 #> $plot
-#> Warning: Removed 26 rows containing missing values or values outside the scale range
-#> (`geom_vline()`).
 
 #> 
 
@@ -153,14 +151,12 @@ assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin",
                 measure="mic", colour_by = "pheno_clsi", 
                 species="E. coli", guideline="CLSI 2025", 
                 facet_var ="method")
-#> Error in executing command: object of type 'builtin' is not subsettable
+#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 #> $plot_nomarkers
 #> NULL
 #> 
 #> $plot
-#> Warning: Removed 208 rows containing missing values or values outside the scale range
-#> (`geom_vline()`).
 
 #> 
 ```

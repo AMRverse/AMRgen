@@ -19,8 +19,16 @@ amr_upset(
   plot_category = TRUE,
   print_category_counts = FALSE,
   print_set_size = FALSE,
-  boxplot_colour = "grey",
-  assay = "mic"
+  boxplot_col = "grey",
+  assay = "mic",
+  SIR_col = c(S = "#3CAEA3", SDD = "#8FD6C4", I = "#F6D55C", R = "#ED553B"),
+  antibiotic = NULL,
+  species = NULL,
+  bp_site = NULL,
+  guideline = "EUCAST 2025",
+  bp_S = NULL,
+  bp_R = NULL,
+  ecoff_bp = NULL
 )
 ```
 
@@ -78,7 +86,7 @@ amr_upset(
   number of strains with each marker combination on the plot. Default is
   FALSE.
 
-- boxplot_colour:
+- boxplot_col:
 
   Colour for lines of the box plots summarising the MIC distribution for
   each marker combination. Default is "grey".
@@ -91,6 +99,46 @@ amr_upset(
   - "mic": plot MIC data stored in column `mic`
 
   - "disk": plot disk diffusion data stored in column `disk`
+
+- SIR_col:
+
+  A named vector of colours for the percentage bar plot. The names
+  should be the phenotype categories (e.g., "R", "I", "S"), and the
+  values should be valid color names or hexadecimal color codes. Default
+  values are those used in the AMR package `scale_colour_sir()`.
+
+- antibiotic:
+
+  (optional) Name of antibiotic, so we can retrieve breakpoints to the
+  assay value distribution plot.
+
+- species:
+
+  (optional) Name of species, so we can retrieve breakpoints to add to
+  the assay value distribution plot.
+
+- bp_site:
+
+  (optional) Breakpoint site to retrieve (only relevant if also
+  supplying `species` and `antibiotic` to retrieve breakpoints to plot,
+  and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff_bp`).
+
+- guideline:
+
+  (optional) Guideline to use when looking up breakpoints (default
+  'EUCAST 2025')
+
+- bp_S:
+
+  (optional) S breakpoint to add to plot (numerical).
+
+- bp_R:
+
+  (optional) R breakpoint to add to plot (numerical).
+
+- ecoff_bp:
+
+  (optional) ECOFF breakpoint to add to plot (numerical).
 
 ## Value
 

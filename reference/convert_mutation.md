@@ -8,12 +8,12 @@ string. Specifically designed for use within
 ## Usage
 
 ``` r
-convert_mutation(gene_symbol_col, method_col)
+convert_mutation(symbol_col, method_col)
 ```
 
 ## Arguments
 
-- gene_symbol_col:
+- symbol_col:
 
   A character vector representing the 'Gene symbol' column (the mutation
   string).

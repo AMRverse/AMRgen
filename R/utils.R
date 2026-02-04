@@ -110,6 +110,7 @@ utils::globalVariables(c(
   "pheno_mic",
   "pheno_MIC",
   "phenotype-AMR_associated_publications",
+  "phenotype-laboratory_typing_method",
   "platform",
   "phenotype-antibiotic_name",
   "phenotype-ast_standard",

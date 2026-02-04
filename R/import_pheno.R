@@ -252,8 +252,11 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
     cat("Warning: Expected AST platform column 'phenotype-platform' not found in input\n")
   }
 
-  # Note: EBI web format doesn't have a separate method column, so we leave method unset
-  # Users can infer method from mic/disk columns
+  if ("phenotype-laboratory_typing_method" %in% colnames(ast)) {
+    ast <- ast %>% mutate(method = `phenotype-laboratory_typing_method`)
+  } else {
+    cat("Warning: Expected AST method column 'phenotype-laboratory_typing_method' not found in input\n")
+  }
 
   if ("phenotype-ast_standard" %in% colnames(ast)) {
     ast <- ast %>% mutate(guideline = `phenotype-ast_standard`)

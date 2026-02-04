@@ -513,11 +513,13 @@ models <- amr_logistic(
 )
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff 
 #> ...Fitting logistic regression model to R using logistf
+#>    Filtered data contains 3630 samples (793 => 1, 2837 => 0) and 19 variables.
 #> Warning in logistf::logistf(R ~ ., data = to_fit, pl = FALSE): logistf.fit:
 #> Maximum number of iterations for full model exceeded. Try to increase the
 #> number of iterations or alter step size by passing 'logistf.control(maxit=...,
 #> maxstep=...)' to parameter control
 #> ...Fitting logistic regression model to NWT using logistf
+#>    Filtered data contains 3630 samples (929 => 1, 2701 => 0) and 19 variables.
 #> Warning in logistf::logistf(NWT ~ ., data = to_fit, pl = FALSE): logistf.fit:
 #> Maximum number of iterations for full model exceeded. Try to increase the
 #> number of iterations or alter step size by passing 'logistf.control(maxit=...,

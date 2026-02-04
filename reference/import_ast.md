@@ -193,6 +193,19 @@ head(pheno)
 pheno <- import_ast(ecoli_ast_raw, format="ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
 #> Reading in as NCBI AST format
 #> Warning: Expected column 'BioProject' not found in input
+#> Warning: There was 1 warning in `mutate()`.
+#> ℹ In argument: `across(...)`.
+#> Caused by warning:
+#> ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+#> Supply arguments directly to `.fns` through an anonymous function instead.
+#> 
+#>   # Previously
+#>   across(a:b, mean, na.rm = TRUE)
+#> 
+#>   # Now
+#>   across(a:b, \(x) mean(x, na.rm = TRUE))
+#> ℹ The deprecated feature was likely used in the AMRgen package.
+#>   Please report the issue at <https://github.com/AMRverse/AMRgen/issues>.
 head(pheno)
 #> # A tibble: 6 × 32
 #>   id           drug_agent     mic  disk pheno_eucast ecoff guideline method

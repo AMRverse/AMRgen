@@ -688,30 +688,32 @@ import_ebi_ast_ftp <- function(input,
 #' Import and Process AST Data from Vitek Output Files
 #'
 #' This function imports AST data from Vitek instrument output files (wide CSV format)
-#' and converts it to the standardized long-format used by AMRgen.
+#' and converts it to the standardised long-format used by AMRgen.
 #'
 #' @param input A dataframe or path to a CSV file containing Vitek AST output data
 #' @param sample_col Column name for sample identifiers. Default: "Lab ID"
-#' @param source Optional source value to record for all data points
+#' @param source Optional source value to record for all data points (e.g., dataset name or study identifier)
 #' @param species Optional species override for phenotype interpretation
 #' @param ab Optional antibiotic override for phenotype interpretation
+#' @param instrument_guideline Optional guideline used by the Vitek instrument for SIR interpretation (e.g., "EUCAST 2025", "CLSI 2025"). Default: NULL
 #' @param use_expertized Use expertized SIR (TRUE, default) or instrument SIR (FALSE)
 #' @param interpret_eucast Interpret against EUCAST breakpoints
 #' @param interpret_clsi Interpret against CLSI breakpoints
 #' @param interpret_ecoff Interpret against ECOFF values
 #' @param include_dates Include collection_date and testing_date in output
-#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom AMR as.ab as.mic as.mo as.sir
 #' @importFrom dplyr across any_of case_when coalesce mutate relocate rename
 #' @importFrom tidyr pivot_longer matches
 #' @importFrom stringr str_match
 #' @importFrom rlang sym
-#' @return Standardized AST data frame
+#' @return Standardised AST data frame
 #' @export
 import_vitek_ast <- function(input,
                              sample_col = "Lab ID",
                              source = NULL,
                              species = NULL,
                              ab = NULL,
+                             instrument_guideline = NULL,
                              use_expertized = TRUE,
                              interpret_eucast = FALSE,
                              interpret_clsi = FALSE,
@@ -799,8 +801,7 @@ import_vitek_ast <- function(input,
       is.na(mic) | mic == "" | mic == "-" | mic == "NEG" ~ NA_character_,
       TRUE ~ mic
     )) %>%
-    mutate(mic = as.mic(mic)) %>%
-    mutate(disk = as.disk(NA))  # Vitek is MIC-based only
+    mutate(mic = as.mic(mic))
 
   # Select SIR source based on use_expertized parameter
   if (use_expertized && "sir_exp" %in% colnames(ast_long)) {
@@ -825,22 +826,25 @@ import_vitek_ast <- function(input,
     ast_long <- ast_long %>% mutate(spp_pheno = as.mo(`Organism Name`))
   }
 
-  # Try code first, then name for drug_agent
+  # Try full name first, then code for drug_agent (name is more reliable)
   ast_long <- ast_long %>%
-    mutate(drug_agent_code = as.ab(ab_code)) %>%
     mutate(drug_agent_name = as.ab(ab_name)) %>%
-    mutate(drug_agent = coalesce(drug_agent_code, drug_agent_name))
+    mutate(drug_agent_code = as.ab(ab_code)) %>%
+    mutate(drug_agent = coalesce(drug_agent_name, drug_agent_code))
 
   # Rename sample column and add standard columns
   ast_long <- ast_long %>%
     rename(id = !!sym(sample_col)) %>%
-    mutate(method = "VITEK", guideline = NA_character_)
+    mutate(method = "Vitek")
 
-  # Add source
+  # Add guideline if specified
+  if (!is.null(instrument_guideline)) {
+    ast_long <- ast_long %>% mutate(guideline = instrument_guideline)
+  }
+
+  # Add source only if specified
   if (!is.null(source)) {
     ast_long <- ast_long %>% mutate(source = source)
-  } else {
-    ast_long <- ast_long %>% mutate(source = "VITEK")
   }
 
   # Add dates if requested
@@ -862,7 +866,7 @@ import_vitek_ast <- function(input,
 
   # Reorder columns
   ast_long <- ast_long %>%
-    relocate(any_of(c("id", "drug_agent", "mic", "disk",
+    relocate(any_of(c("id", "drug_agent", "mic",
                       "pheno_eucast", "pheno_clsi", "ecoff",
                       "guideline", "method", "source",
                       "pheno_provided", "spp_pheno")))
@@ -917,9 +921,6 @@ import_whonet_ast <- function(input,
     stop("No antibiotic columns found in WHONET format")
   }
 
-  # Extract antibiotic codes from column headers
-  ab_codes <- stringr::str_match(ab_cols, "^([A-Z]{2,4})_")[,2]
-
   # Metadata columns to preserve
   metadata_cols <- c("Identification number", "Specimen number", "Organism",
                      "Country", "Laboratory", "Specimen date", "Specimen type",
@@ -942,10 +943,21 @@ import_whonet_ast <- function(input,
       values_to = "sir_value"
     )
 
-  # Parse antibiotic code and method from column name
+  # Parse antibiotic directly from column name (as.ab handles WHONET format)
   ast_long <- ast_long %>%
-    mutate(ab_code = stringr::str_match(ab_col, "^([A-Z]{2,4})_")[,2]) %>%
-    mutate(test_method = stringr::str_match(ab_col, "^[A-Z]{2,4}_(.*)$")[,2])
+    mutate(drug_agent = as.ab(ab_col))
+
+  # Parse method from column name suffix (e.g., ND10, ED5, EE)
+  # ND = Neo-Sensitabs disk, ED = EUCAST disk, EE = EUCAST MIC/E-test
+  ast_long <- ast_long %>%
+    mutate(method_code = stringr::str_match(ab_col, "^[A-Z]{2,4}_(.*)$")[,2]) %>%
+    mutate(method = case_when(
+      grepl("^ND", method_code) ~ paste0("Disk diffusion (Neo-Sensitabs ", gsub("^ND", "", method_code), "µg)"),
+      grepl("^ED", method_code) ~ paste0("Disk diffusion (EUCAST ", gsub("^ED", "", method_code), "µg)"),
+      grepl("^EE$", method_code) ~ "MIC (EUCAST)",
+      grepl("^NE$", method_code) ~ "MIC (Neo-Sensitabs)",
+      TRUE ~ method_code
+    ))
 
   # Parse SIR values
   ast_long <- ast_long %>%
@@ -955,30 +967,18 @@ import_whonet_ast <- function(input,
     )) %>%
     mutate(pheno_provided = as.sir(pheno_provided))
 
-  # Set MIC and disk to NA (WHONET provides interpretations, not raw values)
-  ast_long <- ast_long %>%
-    mutate(mic = as.mic(NA)) %>%
-    mutate(disk = as.disk(NA))
-
   # Parse organism
   if ("Organism" %in% colnames(ast_long)) {
     ast_long <- ast_long %>% mutate(spp_pheno = as.mo(Organism))
   }
 
-  # Parse antibiotic code to drug_agent
+  # Rename sample column
   ast_long <- ast_long %>%
-    mutate(drug_agent = as.ab(ab_code))
+    rename(id = !!sym(sample_col))
 
-  # Rename sample column and add standard columns
-  ast_long <- ast_long %>%
-    rename(id = !!sym(sample_col)) %>%
-    mutate(method = "WHONET", guideline = NA_character_)
-
-  # Add source
+  # Add source only if specified
   if (!is.null(source)) {
     ast_long <- ast_long %>% mutate(source = source)
-  } else {
-    ast_long <- ast_long %>% mutate(source = "WHONET")
   }
 
   # Rename date columns if present
@@ -995,9 +995,9 @@ import_whonet_ast <- function(input,
 
   # Reorder columns
   ast_long <- ast_long %>%
-    relocate(any_of(c("id", "drug_agent", "mic", "disk",
+    relocate(any_of(c("id", "drug_agent",
                       "pheno_eucast", "pheno_clsi", "ecoff",
-                      "guideline", "method", "source",
+                      "method", "source",
                       "pheno_provided", "spp_pheno")))
 
   return(ast_long)

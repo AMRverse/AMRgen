@@ -81,6 +81,7 @@ utils::globalVariables(c(
   "median",
   "Method",
   "method",
+  "method_code",
   "MIC (mg/L)",
   "mic",
   "microorganism",

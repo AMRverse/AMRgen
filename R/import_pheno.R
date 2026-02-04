@@ -947,15 +947,32 @@ import_whonet_ast <- function(input,
   ast_long <- ast_long %>%
     mutate(drug_agent = as.ab(ab_col))
 
-  # Parse method from column name suffix (e.g., ND10, ED5, EE)
-  # ND = Neo-Sensitabs disk, ED = EUCAST disk, EE = EUCAST MIC/E-test
+
+  # Parse method and guideline from column name suffix
+
+  # Format: [GUIDELINE][METHOD][POTENCY] where:
+  # - Guideline: N = CLSI/NCCLS, E = EUCAST, D = DIN
+  # - Method: D = Disk diffusion, M = MIC, E = Etest
+  # - Potency: disk strength in µg (for disk diffusion only)
+  # Reference: https://whonet.org/WebDocs/WHONET%202.Laboratory%20configuration.html
   ast_long <- ast_long %>%
     mutate(method_code = stringr::str_match(ab_col, "^[A-Z]{2,4}_(.*)$")[,2]) %>%
+    mutate(guideline = case_when(
+      grepl("^N", method_code) ~ "CLSI",
+      grepl("^E", method_code) ~ "EUCAST",
+      grepl("^D", method_code) ~ "DIN",
+      TRUE ~ NA_character_
+    )) %>%
     mutate(method = case_when(
-      grepl("^ND", method_code) ~ paste0("Disk diffusion (Neo-Sensitabs ", gsub("^ND", "", method_code), "µg)"),
+      grepl("^ND", method_code) ~ paste0("Disk diffusion (CLSI ", gsub("^ND", "", method_code), "µg)"),
       grepl("^ED", method_code) ~ paste0("Disk diffusion (EUCAST ", gsub("^ED", "", method_code), "µg)"),
-      grepl("^EE$", method_code) ~ "MIC (EUCAST)",
-      grepl("^NE$", method_code) ~ "MIC (Neo-Sensitabs)",
+      grepl("^DD", method_code) ~ paste0("Disk diffusion (DIN ", gsub("^DD", "", method_code), "µg)"),
+      grepl("^NM", method_code) ~ "MIC (CLSI)",
+      grepl("^EM", method_code) ~ "MIC (EUCAST)",
+      grepl("^DM", method_code) ~ "MIC (DIN)",
+      grepl("^NE", method_code) ~ "Etest (CLSI)",
+      grepl("^DE", method_code) ~ "Etest (DIN)",
+      grepl("^EE", method_code) ~ "Etest (EUCAST)",
       TRUE ~ method_code
     ))
 

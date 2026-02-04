@@ -1,4 +1,4 @@
-# Download antimicrobial genotype data from the EBI AMR Portal
+# Download antimicrobial genotype or phenotype data from the EBI AMR Portal
 
 This function will retrieve genotype or phenotype data from the EBI AMR
 Portal, via FTP. The portal uses AMRfinderplus to identify

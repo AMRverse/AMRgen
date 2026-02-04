@@ -38,7 +38,8 @@ from public repositories or internal formats.
 - [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
   : Import and Process AST Data from a generic format
 - [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
-  : Download antimicrobial genotype data from the EBI AMR Portal
+  : Download antimicrobial genotype or phenotype data from the EBI AMR
+  Portal
 
 ## Resistance Interpretation
 

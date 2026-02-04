@@ -67,7 +67,8 @@ provides tools to:</p>
 <ul>
 <li><p>Import AMR genotype data (e.g. from AMRFinderPlus,
 hAMRonization)</p></li>
-<li><p>Import AST phenotype data (e.g. from NCBI or EBI)</p></li>
+<li><p>Import AST phenotype data (e.g. public data from NCBI or EBI, or
+your own data in formats like Vitek or WHOnet)</p></li>
 <li><p>Conduct genotype-phenotype analyses to explore the impact of
 genotypic markers on phenotype, including via logistic regression, solo
 marker analysis, and upset plots</p></li>
@@ -84,10 +85,11 @@ your own data files into the right formats to use the same workflow.</p>
 <h3 id="genotype-table">1. Genotype table<a class="anchor" aria-label="anchor" href="#genotype-table"></a>
 </h3>
 <p>The <code><a href="../reference/import_amrfp.html">import_amrfp()</a></code> function lets you load genotype data
-from AMRFinderPlus outputs, and process it to generate an object with
-the key columns needed to work with the <code>AMRgen</code> package.</p>
+from AMRFinderPlus output files, and process it to generate an object
+with the key columns needed to work with the <code>AMRgen</code>
+package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Example AMRFinderPlus genotyping output</span></span>
+<code class="sourceCode R"><span><span class="co"># Example AMRFinderPlus genotyping output (from Allthebacteria project)</span></span>
 <span><span class="va">ecoli_geno_raw</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 45,228 × 28</span></span></span>
 <span><span class="co">#&gt;    Name      `Protein identifier` `Contig id`  Start   Stop Strand `Gene symbol`</span></span>
@@ -172,9 +174,10 @@ NCBI format files.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example E. coli AST data from NCBI</span></span>
 <span><span class="co"># This one has already been imported and phenotypes interpreted from assay data</span></span>
-<span><span class="co"># You can make your own from NCBI of EBI antibiogram format data using e.g.:</span></span>
-<span><span class="co">#    import_ast("filepath/AST.tsv", format="ncbi", interpret_clsi=T)</span></span>
-<span><span class="co">#    import_ast("filepath/AST.tsv", format="ebi", interpret_eucast=T)</span></span>
+<span><span class="co"># You can make your own from different file formats, and interpret against breakpoints, using:</span></span>
+<span><span class="co">#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)</span></span>
+<span><span class="co">#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)</span></span>
+<span></span>
 <span><span class="va">ecoli_ast</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4,170 × 10</span></span></span>
 <span><span class="co">#&gt;    id           drug_agent     mic  disk pheno_clsi ecoff guideline method</span></span>
@@ -203,10 +206,19 @@ NCBI format files.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN10620168 CIP         <span style="color: #555555;">&gt;=</span>4<span style="color: #555555;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN10620104 CIP         <span style="color: #555555;">&lt;=</span>0.25    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>      <span style="color: #080808; background-color: #FF5F5F;">  R  </span> CLSI      <span style="color: #BB0000;">NA</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: pheno_provided &lt;sir&gt;, spp_pheno &lt;mo&gt;</span></span></span></code></pre></div>
-<p>The phenotype table has one row for each assay measurement, i.e. one
-per strain/drug combination. If your assay data is not in NCBI AST
-format, you can wrangle other input data files into the necessary
-format.</p>
+<p>Data can be imported from various standard formats using the
+<code>import_ast</code> function, and re-interpreted using latest
+breakpoints and/or ECOFF. Use <code><a href="../reference/import_ast.html">?import_ast</a></code> to see the
+available formats and other options.</p>
+<p>If your assay data is not in a standard format, you can wrangle other
+input data files into the necessary format, manually and/or with the
+help of the <code>format_ast</code> function.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">?</span><span class="va">import_ast</span></span>
+<span></span>
+<span><span class="op">?</span><span class="va">format_ast</span></span></code></pre></div>
+<p>The phenotype table is long form, with one row for each assay
+measurement, i.e. one per strain/drug combination.</p>
 <p>The essential columns for a phenotype table to work with
 <code>AMRgen</code> functions are:</p>
 <ul>
@@ -241,6 +253,20 @@ AMR package <code>disk</code> class (can be created from a column with
 assay values as string, using
 <code>AMR::as.disk(disk_string)</code>)</p></li>
 </ul>
+<p>The import functions also standardise names for the following common
+fields:</p>
+<ul>
+<li><p><code>method</code>: The laboratory testing method (e.g., “MIC”,
+“disk diffusion”, “Etest”, “agar dilution”)</p></li>
+<li><p><code>platform</code>: The laboratory testing platform/instrument
+if relevant (e.g., “Vitek”, “Phoenix”, “Sensititre”).</p></li>
+<li><p><code>guideline</code>: The testing standard recorded in the
+input file as being used to make the provided phenotype interpretations
+(e.g. “CLSI”, “EUCAST”)</p></li>
+<li><p><code>source</code>: An identifier for the dataset from which
+each data point was sourced (e.g. study or hospital name, pubmed ID,
+bioproject accession).</p></li>
+</ul>
 </div>
 <div class="section level3">
 <h3 id="plot-phenotype-data-distribution">3. Plot phenotype data distribution<a class="anchor" aria-label="anchor" href="#plot-phenotype-data-distribution"></a>
@@ -249,7 +275,7 @@ assay values as string, using
 that we have to work with. The function <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code> can
 be used to plot the distribution of MIC or disk measurements, coloured
 by a variable.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example E. coli AST data from NCBI</span></span>
 <span></span>
 <span><span class="co"># Plot MIC distribution, coloured by CLSI S/I/R call</span></span>
@@ -266,7 +292,7 @@ look up breakpoints in the <code>AMR</code> package. Or, if you provide
 the function <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code> with a species and guideline,
 it can look up the breakpoints and ECOFF and annotate these directly on
 the plot.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look up breakpoints recorded in the AMR package</span></span>
 <span><span class="fu"><a href="../reference/checkBreakpoints.html">checkBreakpoints</a></span><span class="op">(</span>species<span class="op">=</span><span class="st">"E. coli"</span>, guide<span class="op">=</span><span class="st">"CLSI 2025"</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, assay<span class="op">=</span><span class="st">"MIC"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span></span>
@@ -293,20 +319,112 @@ good idea to check the distributions broken down by method or source.
 This can be done easily by passing the <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code>
 function a variable name to facet by, which means a separate
 distribution will be plotted for each value of that variable (e.g. each
-type of ‘method’ in our AST test data).</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+type of ‘method’ in our AST test data). Note that this public data from
+NCBI includes non-standard values in the platform (Sensititre /
+Sensititer) in the platform</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># specify facet_var="method" to generate facet plots by assay method</span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table<span class="op">=</span><span class="va">ecoli_ast</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>, species<span class="op">=</span><span class="st">"E. coli"</span>, guideline<span class="op">=</span><span class="st">"CLSI 2025"</span>, facet_var <span class="op">=</span><span class="st">"method"</span><span class="op">)</span></span>
+<span><span class="va">mic_by_platform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table<span class="op">=</span><span class="va">ecoli_ast</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>, species<span class="op">=</span><span class="st">"E. coli"</span>, guideline<span class="op">=</span><span class="st">"CLSI 2025"</span>, facet_var <span class="op">=</span><span class="st">"method"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span></span>
-<span><span class="co">#&gt; $plot_nomarkers</span></span>
-<span><span class="co">#&gt; NULL</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $plot</span></span></code></pre></div>
+<span></span>
+<span><span class="va">mic_by_platform</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints_method-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
-<h3 id="combine-genotype-and-phenotype-data-for-a-given-drug">4. Combine genotype and phenotype data for a given drug<a class="anchor" aria-label="anchor" href="#combine-genotype-and-phenotype-data-for-a-given-drug"></a>
+<h3 id="download-reference-assay-distributions-and-compare-to-your-data">4. Download reference assay distributions and compare to your
+data<a class="anchor" aria-label="anchor" href="#download-reference-assay-distributions-and-compare-to-your-data"></a>
+</h3>
+<p>It can also be helpful to check how your MIC or disk zone
+distribution compares to the reference distributions, to get a sense of
+whether your assays were calibrated correctly or if there may be some
+issues with a given dataset. AMRgen has functions to download the latest
+reference distributions from EUCAST (mic.eucast.org), and plot them on
+their own or with your data overlaid.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get MIC distribution for ciprofloxacin, for all organisms</span></span>
+<span><span class="fu"><a href="../reference/get_eucast_amr_distribution.html">get_eucast_mic_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,033 × 4</span></span></span>
+<span><span class="co">#&gt;    microorganism              microorganism_code   mic count</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;mo&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.002     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.004     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.008     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.016     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.03<span style="color: #555555;">0</span>     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.06<span style="color: #555555;">0</span>     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.125     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.25<span style="color: #555555;">0</span>     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.5<span style="color: #555555;">00</span>     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      1<span style="color: #555555;">.000</span>     6</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,023 more rows</span></span></span>
+<span></span>
+<span><span class="co"># specify microorganism to only get results for that pathogen</span></span>
+<span><span class="va">ecoli_cip_mic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">get_eucast_mic_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"E. coli"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get disk diffusion data instead</span></span>
+<span><span class="va">ecoli_cip_disk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">get_eucast_disk_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"E. coli"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot the MIC data</span></span>
+<span><span class="va">mics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">ecoli_cip_mic_data</span><span class="op">$</span><span class="va">mic</span>, <span class="va">ecoli_cip_mic_data</span><span class="op">$</span><span class="va">count</span><span class="op">)</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span></span>
+<span>  <span class="va">mics</span>,</span>
+<span>  ab <span class="op">=</span> <span class="st">"cipro"</span>,</span>
+<span>  mo <span class="op">=</span> <span class="st">"E. coli"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"E. coli cipro reference distribution"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/get_eucast_distribution-1.png" class="r-plt" alt="" width="100%"></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Compare reference distribution to random test data</span></span>
+<span><span class="va">my_mic_values</span> <span class="op">&lt;-</span> <span class="fu">AMR</span><span class="fu">::</span><span class="fu"><a href="https://amr-for-r.org/reference/random.html" class="external-link">random_mic</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
+<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">my_mic_values</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
+<span><span class="va">comparison</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 25 × 3</span></span></span>
+<span><span class="co">#&gt;    value     user eucast</span></span>
+<span><span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> &lt;=0.0005    47      0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 0.001       29      0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 0.002       44     14</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 0.004       33    189</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 0.008       28   <span style="text-decoration: underline;">3</span>952</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 0.016       34   <span style="text-decoration: underline;">7</span>238</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 0.03         0   <span style="text-decoration: underline;">1</span>355</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 0.032       24      0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 0.06         0    356</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 0.064       32      0</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more rows</span></span></span>
+<span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise.</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-1.png" class="r-plt" alt="" width="100%"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span></span>
+<span><span class="co"># Compare reference distribution to example E. coli data</span></span>
+<span><span class="va">ecoli_cip</span> <span class="op">&lt;-</span> <span class="va">ecoli_ast</span><span class="op">$</span><span class="va">mic</span><span class="op">[</span><span class="va">ecoli_ast</span><span class="op">$</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CIP"</span><span class="op">]</span></span>
+<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ecoli_cip</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
+<span><span class="va">comparison</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 34 × 3</span></span></span>
+<span><span class="co">#&gt;    value    user eucast</span></span>
+<span><span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 0.002       0     14</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 0.004       0    189</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 0.008       0   <span style="text-decoration: underline;">3</span>952</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> &lt;0.015     41      0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> &lt;=0.015  <span style="text-decoration: underline;">2</span>642      0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 0.016       0   <span style="text-decoration: underline;">7</span>238</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 0.03       69   <span style="text-decoration: underline;">1</span>355</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> &lt;=0.06     11      0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 0.06        5    356</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 0.12       34      0</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 24 more rows</span></span></span>
+<span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise.</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-2.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="combine-genotype-and-phenotype-data-for-a-given-drug">5. Combine genotype and phenotype data for a given drug<a class="anchor" aria-label="anchor" href="#combine-genotype-and-phenotype-data-for-a-given-drug"></a>
 </h3>
 <p>The genotype and phenotype tables can include data related to many
 different drugs, but we need to analyse things one drug at a time. The
@@ -319,7 +437,7 @@ strain, both the phenotypes (with SIR column, any assay columns if
 desired, and boolean 1/0 coding of R and NWT status) and the genotypes
 (one column per marker, with boolean 1/0 coding of marker
 presence/absence).</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get matrix combining phenotype data for ciprofloxacin, binary calls for R/NWT phenotype,</span></span>
 <span><span class="co">#    and genotype presence/absence data for all markers associated with the relevant drug</span></span>
 <span><span class="co">#    class (which are labelled "Quinolones" in AMRFinderPlus).</span></span>
@@ -370,7 +488,7 @@ presence/absence).</p>
 <span><span class="co">#&gt; [49] "qnrB"           "acrR_R45C"</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="model-a-binary-drug-phenotype-using-genetic-marker-presenceabsence-data">5. Model a binary drug phenotype using genetic marker
+<h3 id="model-a-binary-drug-phenotype-using-genetic-marker-presenceabsence-data">6. Model a binary drug phenotype using genetic marker
 presence/absence data<a class="anchor" aria-label="anchor" href="#model-a-binary-drug-phenotype-using-genetic-marker-presenceabsence-data"></a>
 </h3>
 <p>Logistic regression models can be informative to get an overview of
@@ -406,7 +524,7 @@ marker and phenotype call of R and NWT is a strong indication that
 marker does not contribute to resistance. Note however that a positive
 association between a marker and R or NWT does not necessarily imply the
 marker is independently contributing to the resistance phenotype, as
-there may be non-independence between markersthat is not adequately
+there may be non-independence between markers that is not adequately
 adjusted for by the model.</p>
 <p>The function returns 4 objects:</p>
 <ul>
@@ -421,7 +539,7 @@ output using <code><a href="../reference/logistf_details.html">logistf_details()
 <li><p><code>bin_mat</code>: the binary matrix used as input to the
 regression models</p></li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Manually run Firth's logistic regression model using the binary matrix produced above</span></span>
 <span><span class="va">dataR</span> <span class="op">&lt;-</span> <span class="va">cip_bin</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cip_bin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"pheno"</span>, <span class="st">"ecoff"</span>, <span class="st">"mic"</span>, <span class="st">"NWT"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">dataR</span> <span class="op">&lt;-</span> <span class="va">dataR</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">dataR</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">5</span><span class="op">]</span></span>
@@ -515,7 +633,7 @@ regression models</p></li>
 <span><span class="co"># Plot the point estimates and 95% confidence intervals of the model</span></span>
 <span><span class="fu"><a href="../reference/plot_estimates.html">plot_estimates</a></span><span class="op">(</span><span class="va">modelR_summary</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/manual_logistic-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Alternatively, use the amr_logistic() function to model R and NWT and plot the results together</span></span>
 <span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
 <span>  geno_table <span class="op">=</span> <span class="va">ecoli_geno</span>,</span>
@@ -540,7 +658,7 @@ regression models</p></li>
 <span><span class="co">#&gt; maxstep=...)' to parameter control</span></span>
 <span><span class="co">#&gt; Generating plots</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/amr_logistic-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output tables</span></span>
 <span><span class="va">models</span><span class="op">$</span><span class="va">modelR</span></span>
@@ -620,7 +738,7 @@ regression models</p></li>
 <span><span class="co">#&gt; <span style="color: #949494;">#   parC..Glu84Val &lt;dbl&gt;, parE..Ile529Leu &lt;dbl&gt;, parE..Ser458Thr &lt;dbl&gt;, …</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="assess-solo-positive-predictive-value-of-genetic-markers">6. Assess solo positive predictive value of genetic markers<a class="anchor" aria-label="anchor" href="#assess-solo-positive-predictive-value-of-genetic-markers"></a>
+<h3 id="assess-solo-positive-predictive-value-of-genetic-markers">7. Assess solo positive predictive value of genetic markers<a class="anchor" aria-label="anchor" href="#assess-solo-positive-predictive-value-of-genetic-markers"></a>
 </h3>
 <p>The strongest evidence of the effect of an individual genetic marker
 on a drug phenotype is its positive predictive value (PPV) for
@@ -654,7 +772,7 @@ to calculate PPV</p></li>
 S/I/R calls and the solo PPV for R and NWT, for each solo
 marker</p></li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run a solo PPV analysis</span></span>
 <span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
 <span>  <span class="va">ecoli_geno</span>,</span>
@@ -665,7 +783,7 @@ marker</p></li>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/solo_ppv_analysis-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">solo_stats</span></span>
@@ -724,7 +842,7 @@ marker</p></li>
 <span><span class="co">#&gt; <span style="color: #949494;">#   parC_E84G &lt;dbl&gt;, qnrS1 &lt;dbl&gt;, marR_S3N &lt;dbl&gt;, `aac(6')-Ib-cr` &lt;dbl&gt;, …</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="compare-markers-with-assay-data">7. Compare markers with assay data<a class="anchor" aria-label="anchor" href="#compare-markers-with-assay-data"></a>
+<h3 id="compare-markers-with-assay-data">8. Compare markers with assay data<a class="anchor" aria-label="anchor" href="#compare-markers-with-assay-data"></a>
 </h3>
 <p>So far we have considered only the impact of individual markers, and
 their association with categorical S/I/R or WT/NWT calls.</p>
@@ -745,7 +863,7 @@ associated with each combination of markers</p></li>
 assay values, and breakdown of S/I/R calls, for each observed marker
 combination</p></li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare ciprofloxacin MIC data with quinolone marker combinations,</span></span>
 <span><span class="co">#    using the binary matrix we constructed earlier via get_binary_matrix()</span></span>
 <span><span class="va">cipro_mic_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
@@ -755,7 +873,7 @@ combination</p></li>
 <span>  order <span class="op">=</span> <span class="st">"value"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/amr_upset-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">cipro_mic_upset</span><span class="op">$</span><span class="va">summary</span></span>
@@ -777,92 +895,6 @@ combination</p></li>
 <span><span class="co">#&gt; <span style="color: #949494;">#   q25_excludeRangeValues &lt;dbl&gt;, q75_excludeRangeValues &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   n_excludeRangeValues &lt;int&gt;, median_ignoreRanges &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   q25_ignoreRanges &lt;dbl&gt;, q75_ignoreRanges &lt;dbl&gt;</span></span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="download-reference-mic-distributions-and-compare-to-your-data">8. Download reference MIC distributions and compare to your
-data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distributions-and-compare-to-your-data"></a>
-</h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># get MIC distribution for ciprofloxacin, for all organisms</span></span>
-<span><span class="fu"><a href="../reference/get_eucast_amr_distribution.html">get_eucast_mic_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,033 × 4</span></span></span>
-<span><span class="co">#&gt;    microorganism              microorganism_code   mic count</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;mo&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.002     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.004     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.008     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.016     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.03<span style="color: #555555;">0</span>     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.06<span style="color: #555555;">0</span>     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.125     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.25<span style="color: #555555;">0</span>     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      0.5<span style="color: #555555;">00</span>     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Achromobacter xylosoxidans <span style="color: #949494;">B_</span>ACHRMB<span style="color: #949494;">_</span>XYLS      1<span style="color: #555555;">.000</span>     6</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,023 more rows</span></span></span>
-<span></span>
-<span><span class="co"># specify microorganism to only get results for that pathogen</span></span>
-<span><span class="va">ecoli_cip_mic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">get_eucast_mic_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"E. coli"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># get disk diffusion data instead</span></span>
-<span><span class="va">ecoli_cip_disk_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">get_eucast_disk_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"E. coli"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># plot the MIC data</span></span>
-<span><span class="va">mics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">ecoli_cip_mic_data</span><span class="op">$</span><span class="va">mic</span>, <span class="va">ecoli_cip_mic_data</span><span class="op">$</span><span class="va">count</span><span class="op">)</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span></span>
-<span>  <span class="va">mics</span>,</span>
-<span>  ab <span class="op">=</span> <span class="st">"cipro"</span>,</span>
-<span>  mo <span class="op">=</span> <span class="st">"E. coli"</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"E. coli cipro reference distribution"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/get_eucast_distribution-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Compare reference distribution to random test data</span></span>
-<span><span class="va">my_mic_values</span> <span class="op">&lt;-</span> <span class="fu">AMR</span><span class="fu">::</span><span class="fu"><a href="https://amr-for-r.org/reference/random.html" class="external-link">random_mic</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
-<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">my_mic_values</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
-<span><span class="va">comparison</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 25 × 3</span></span></span>
-<span><span class="co">#&gt;    value     user eucast</span></span>
-<span><span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> &lt;=0.0005    47      0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 0.001       29      0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 0.002       44     14</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 0.004       33    189</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 0.008       28   <span style="text-decoration: underline;">3</span>952</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 0.016       34   <span style="text-decoration: underline;">7</span>238</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 0.03         0   <span style="text-decoration: underline;">1</span>355</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 0.032       24      0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 0.06         0    356</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 0.064       32      0</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more rows</span></span></span>
-<span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise.</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span></span>
-<span><span class="co"># Compare reference distribution to example E. coli data</span></span>
-<span><span class="va">ecoli_cip</span> <span class="op">&lt;-</span> <span class="va">ecoli_ast</span><span class="op">$</span><span class="va">mic</span><span class="op">[</span><span class="va">ecoli_ast</span><span class="op">$</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CIP"</span><span class="op">]</span></span>
-<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ecoli_cip</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
-<span><span class="va">comparison</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 34 × 3</span></span></span>
-<span><span class="co">#&gt;    value    user eucast</span></span>
-<span><span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 0.002       0     14</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 0.004       0    189</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 0.008       0   <span style="text-decoration: underline;">3</span>952</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> &lt;0.015     41      0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> &lt;=0.015  <span style="text-decoration: underline;">2</span>642      0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 0.016       0   <span style="text-decoration: underline;">7</span>238</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 0.03       69   <span style="text-decoration: underline;">1</span>355</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> &lt;=0.06     11      0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 0.06        5    356</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 0.12       34      0</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 24 more rows</span></span></span>
-<span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise.</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-2.png" class="r-plt" alt="" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

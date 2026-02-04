@@ -8,7 +8,8 @@ to:
 
 - Import AMR genotype data (e.g. from AMRFinderPlus, hAMRonization)
 
-- Import AST phenotype data (e.g. from NCBI or EBI)
+- Import AST phenotype data (e.g. public data from NCBI or EBI, or your
+  own data in formats like Vitek or WHOnet)
 
 - Conduct genotype-phenotype analyses to explore the impact of genotypic
   markers on phenotype, including via logistic regression, solo marker
@@ -30,12 +31,12 @@ library(AMRgen)
 
 The
 [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
-function lets you load genotype data from AMRFinderPlus outputs, and
-process it to generate an object with the key columns needed to work
+function lets you load genotype data from AMRFinderPlus output files,
+and process it to generate an object with the key columns needed to work
 with the `AMRgen` package.
 
 ``` r
-# Example AMRFinderPlus genotyping output
+# Example AMRFinderPlus genotyping output (from Allthebacteria project)
 ecoli_geno_raw
 #> # A tibble: 45,228 × 28
 #>    Name      `Protein identifier` `Contig id`  Start   Stop Strand `Gene symbol`
@@ -126,9 +127,10 @@ function imports AST data from NCBI format files.
 ``` r
 # Example E. coli AST data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
-# You can make your own from NCBI of EBI antibiogram format data using e.g.:
-#    import_ast("filepath/AST.tsv", format="ncbi", interpret_clsi=T)
-#    import_ast("filepath/AST.tsv", format="ebi", interpret_eucast=T)
+# You can make your own from different file formats, and interpret against breakpoints, using:
+#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
+#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
+
 ecoli_ast
 #> # A tibble: 4,170 × 10
 #>    id           drug_agent     mic  disk pheno_clsi ecoff guideline method
@@ -159,9 +161,24 @@ head(ecoli_ast)
 #> # ℹ 2 more variables: pheno_provided <sir>, spp_pheno <mo>
 ```
 
-The phenotype table has one row for each assay measurement, i.e. one per
-strain/drug combination. If your assay data is not in NCBI AST format,
-you can wrangle other input data files into the necessary format.
+Data can be imported from various standard formats using the
+`import_ast` function, and re-interpreted using latest breakpoints
+and/or ECOFF. Use
+[`?import_ast`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
+to see the available formats and other options.
+
+If your assay data is not in a standard format, you can wrangle other
+input data files into the necessary format, manually and/or with the
+help of the `format_ast` function.
+
+``` r
+?import_ast
+
+?format_ast
+```
+
+The phenotype table is long form, with one row for each assay
+measurement, i.e. one per strain/drug combination.
 
 The essential columns for a phenotype table to work with `AMRgen`
 functions are:
@@ -197,6 +214,23 @@ will need that data in one or both of:
 - `disk`: disk diffusion zone diameter in the form of an AMR package
   `disk` class (can be created from a column with assay values as
   string, using `AMR::as.disk(disk_string)`)
+
+The import functions also standardise names for the following common
+fields:
+
+- `method`: The laboratory testing method (e.g., “MIC”, “disk
+  diffusion”, “Etest”, “agar dilution”)
+
+- `platform`: The laboratory testing platform/instrument if relevant
+  (e.g., “Vitek”, “Phoenix”, “Sensititre”).
+
+- `guideline`: The testing standard recorded in the input file as being
+  used to make the provided phenotype interpretations (e.g. “CLSI”,
+  “EUCAST”)
+
+- `source`: An identifier for the dataset from which each data point was
+  sourced (e.g. study or hospital name, pubmed ID, bioproject
+  accession).
 
 ### 3. Plot phenotype data distribution
 
@@ -260,22 +294,121 @@ This can be done easily by passing the
 [`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
 function a variable name to facet by, which means a separate
 distribution will be plotted for each value of that variable (e.g. each
-type of ‘method’ in our AST test data).
+type of ‘method’ in our AST test data). Note that this public data from
+NCBI includes non-standard values in the platform (Sensititre /
+Sensititer) in the platform
 
 ``` r
 # specify facet_var="method" to generate facet plots by assay method
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025", facet_var ="method")
+mic_by_platform <- assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025", facet_var ="method")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
-#> $plot_nomarkers
-#> NULL
-#> 
-#> $plot
+
+mic_by_platform$plot
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints_method-1.png)
 
-### 4. Combine genotype and phenotype data for a given drug
+### 4. Download reference assay distributions and compare to your data
+
+It can also be helpful to check how your MIC or disk zone distribution
+compares to the reference distributions, to get a sense of whether your
+assays were calibrated correctly or if there may be some issues with a
+given dataset. AMRgen has functions to download the latest reference
+distributions from EUCAST (mic.eucast.org), and plot them on their own
+or with your data overlaid.
+
+``` r
+# get MIC distribution for ciprofloxacin, for all organisms
+get_eucast_mic_distribution("cipro")
+#> # A tibble: 2,033 × 4
+#>    microorganism              microorganism_code   mic count
+#>    <chr>                      <mo>               <mic> <int>
+#>  1 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.002     0
+#>  2 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.004     0
+#>  3 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.008     0
+#>  4 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.016     0
+#>  5 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.030     0
+#>  6 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.060     0
+#>  7 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.125     0
+#>  8 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.250     1
+#>  9 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.500     0
+#> 10 Achromobacter xylosoxidans B_ACHRMB_XYLS      1.000     6
+#> # ℹ 2,023 more rows
+
+# specify microorganism to only get results for that pathogen
+ecoli_cip_mic_data <- get_eucast_mic_distribution("cipro", "E. coli")
+
+# get disk diffusion data instead
+ecoli_cip_disk_data <- get_eucast_disk_distribution("cipro", "E. coli")
+
+# plot the MIC data
+mics <- rep(ecoli_cip_mic_data$mic, ecoli_cip_mic_data$count)
+ggplot2::autoplot(
+  mics,
+  ab = "cipro",
+  mo = "E. coli",
+  title = "E. coli cipro reference distribution"
+)
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/get_eucast_distribution-1.png)
+
+``` r
+# Compare reference distribution to random test data
+my_mic_values <- AMR::random_mic(500)
+comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "E. coli")
+#> Joining with `by = join_by(value)`
+comparison
+#> # A tibble: 25 × 3
+#>    value     user eucast
+#>  * <fct>    <int>  <int>
+#>  1 <=0.0005    47      0
+#>  2 0.001       29      0
+#>  3 0.002       44     14
+#>  4 0.004       33    189
+#>  5 0.008       28   3952
+#>  6 0.016       34   7238
+#>  7 0.03         0   1355
+#>  8 0.032       24      0
+#>  9 0.06         0    356
+#> 10 0.064       32      0
+#> # ℹ 15 more rows
+#> Use ggplot2::autoplot() on this output to visualise.
+ggplot2::autoplot(comparison)
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-1.png)
+
+``` r
+
+
+# Compare reference distribution to example E. coli data
+ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
+comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
+#> Joining with `by = join_by(value)`
+comparison
+#> # A tibble: 34 × 3
+#>    value    user eucast
+#>  * <fct>   <int>  <int>
+#>  1 0.002       0     14
+#>  2 0.004       0    189
+#>  3 0.008       0   3952
+#>  4 <0.015     41      0
+#>  5 <=0.015  2642      0
+#>  6 0.016       0   7238
+#>  7 0.03       69   1355
+#>  8 <=0.06     11      0
+#>  9 0.06        5    356
+#> 10 0.12       34      0
+#> # ℹ 24 more rows
+#> Use ggplot2::autoplot() on this output to visualise.
+ggplot2::autoplot(comparison)
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-2.png)
+
+### 5. Combine genotype and phenotype data for a given drug
 
 The genotype and phenotype tables can include data related to many
 different drugs, but we need to analyse things one drug at a time. The
@@ -341,7 +474,7 @@ colnames(cip_bin)
 #> [49] "qnrB"           "acrR_R45C"
 ```
 
-### 5. Model a binary drug phenotype using genetic marker presence/absence data
+### 6. Model a binary drug phenotype using genetic marker presence/absence data
 
 Logistic regression models can be informative to get an overview of the
 association between a drug resistance phenotype, and each marker thought
@@ -384,7 +517,7 @@ marker and phenotype call of R and NWT is a strong indication that
 marker does not contribute to resistance. Note however that a positive
 association between a marker and R or NWT does not necessarily imply the
 marker is independently contributing to the resistance phenotype, as
-there may be non-independence between markersthat is not adequately
+there may be non-independence between markers that is not adequately
 adjusted for by the model.
 
 The function returns 4 objects:
@@ -609,7 +742,7 @@ models$bin_mat
 #> #   parC..Glu84Val <dbl>, parE..Ile529Leu <dbl>, parE..Ser458Thr <dbl>, …
 ```
 
-### 6. Assess solo positive predictive value of genetic markers
+### 7. Assess solo positive predictive value of genetic markers
 
 The strongest evidence of the effect of an individual genetic marker on
 a drug phenotype is its positive predictive value (PPV) for resistance
@@ -721,7 +854,7 @@ soloPPV_cipro$amr_binary
 #> #   parC_E84G <dbl>, qnrS1 <dbl>, marR_S3N <dbl>, `aac(6')-Ib-cr` <dbl>, …
 ```
 
-### 7. Compare markers with assay data
+### 8. Compare markers with assay data
 
 So far we have considered only the impact of individual markers, and
 their association with categorical S/I/R or WT/NWT calls.
@@ -783,95 +916,3 @@ cipro_mic_upset$summary
 #> #   n_excludeRangeValues <int>, median_ignoreRanges <dbl>,
 #> #   q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
 ```
-
-### 8. Download reference MIC distributions and compare to your data
-
-``` r
-# get MIC distribution for ciprofloxacin, for all organisms
-get_eucast_mic_distribution("cipro")
-#> # A tibble: 2,033 × 4
-#>    microorganism              microorganism_code   mic count
-#>    <chr>                      <mo>               <mic> <int>
-#>  1 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.002     0
-#>  2 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.004     0
-#>  3 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.008     0
-#>  4 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.016     0
-#>  5 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.030     0
-#>  6 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.060     0
-#>  7 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.125     0
-#>  8 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.250     1
-#>  9 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.500     0
-#> 10 Achromobacter xylosoxidans B_ACHRMB_XYLS      1.000     6
-#> # ℹ 2,023 more rows
-
-# specify microorganism to only get results for that pathogen
-ecoli_cip_mic_data <- get_eucast_mic_distribution("cipro", "E. coli")
-
-# get disk diffusion data instead
-ecoli_cip_disk_data <- get_eucast_disk_distribution("cipro", "E. coli")
-
-# plot the MIC data
-mics <- rep(ecoli_cip_mic_data$mic, ecoli_cip_mic_data$count)
-ggplot2::autoplot(
-  mics,
-  ab = "cipro",
-  mo = "E. coli",
-  title = "E. coli cipro reference distribution"
-)
-```
-
-![](AnalysingGenoPhenoData_files/figure-html/get_eucast_distribution-1.png)
-
-``` r
-# Compare reference distribution to random test data
-my_mic_values <- AMR::random_mic(500)
-comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "E. coli")
-#> Joining with `by = join_by(value)`
-comparison
-#> # A tibble: 25 × 3
-#>    value     user eucast
-#>  * <fct>    <int>  <int>
-#>  1 <=0.0005    47      0
-#>  2 0.001       29      0
-#>  3 0.002       44     14
-#>  4 0.004       33    189
-#>  5 0.008       28   3952
-#>  6 0.016       34   7238
-#>  7 0.03         0   1355
-#>  8 0.032       24      0
-#>  9 0.06         0    356
-#> 10 0.064       32      0
-#> # ℹ 15 more rows
-#> Use ggplot2::autoplot() on this output to visualise.
-ggplot2::autoplot(comparison)
-```
-
-![](AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-1.png)
-
-``` r
-
-
-# Compare reference distribution to example E. coli data
-ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
-comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
-#> Joining with `by = join_by(value)`
-comparison
-#> # A tibble: 34 × 3
-#>    value    user eucast
-#>  * <fct>   <int>  <int>
-#>  1 0.002       0     14
-#>  2 0.004       0    189
-#>  3 0.008       0   3952
-#>  4 <0.015     41      0
-#>  5 <=0.015  2642      0
-#>  6 0.016       0   7238
-#>  7 0.03       69   1355
-#>  8 <=0.06     11      0
-#>  9 0.06        5    356
-#> 10 0.12       34      0
-#> # ℹ 24 more rows
-#> Use ggplot2::autoplot() on this output to visualise.
-ggplot2::autoplot(comparison)
-```
-
-![](AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-2.png)

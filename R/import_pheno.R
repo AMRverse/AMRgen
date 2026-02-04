@@ -33,7 +33,8 @@
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST platform recorded in the input file as the source of the measurement.
+#' - `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest", "agar dilution").
+#' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
 #' - `pheno_clsi`: The phenotype newly interpreted against CLSI human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -68,9 +69,16 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
   }
 
   if ("Laboratory typing platform" %in% colnames(ast)) {
-    ast <- ast %>% mutate(method = `Laboratory typing platform`)
+    ast <- ast %>% mutate(platform = `Laboratory typing platform`)
   } else {
     cat("Warning: Expected AST platform column 'Laboratory typing platform' not found in input\n")
+  }
+
+  # parse method column
+  if ("Laboratory typing method" %in% colnames(ast)) {
+    ast <- ast %>% mutate(method = `Laboratory typing method`)
+  } else {
+    cat("Warning: Expected AST method column 'Laboratory typing method' not found in input\n")
   }
 
   # parse guideline column
@@ -137,7 +145,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 
   ast <- interpret_ast(ast, interpret_ecoff = interpret_ecoff, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, species = species, ab = ab)
 
-  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "source", "pheno_provided", "spp_pheno")))
+  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "platform", "source", "pheno_provided", "spp_pheno")))
 
   return(ast)
 }
@@ -165,7 +173,8 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST platform recorded in the input file as the source of the measurement.
+#' - `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest", "agar dilution").
+#' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
 #' - `pheno_clsi`: The phenotype newly interpreted against CLSI human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -238,10 +247,13 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
   }
 
   if ("phenotype-platform" %in% colnames(ast)) {
-    ast <- ast %>% mutate(method = `phenotype-platform`)
+    ast <- ast %>% mutate(platform = `phenotype-platform`)
   } else {
     cat("Warning: Expected AST platform column 'phenotype-platform' not found in input\n")
   }
+
+  # Note: EBI web format doesn't have a separate method column, so we leave method unset
+  # Users can infer method from mic/disk columns
 
   if ("phenotype-ast_standard" %in% colnames(ast)) {
     ast <- ast %>% mutate(guideline = `phenotype-ast_standard`)
@@ -266,7 +278,7 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
 
   ast <- interpret_ast(ast, interpret_ecoff = interpret_ecoff, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, species = species, ab = ab)
 
-  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "source", "pheno_provided", "spp_pheno")))
+  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "platform", "source", "pheno_provided", "spp_pheno")))
 
   return(ast)
 }
@@ -420,7 +432,8 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST platform recorded in the input file as the source of the measurement.
+#' - `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest", "agar dilution").
+#' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
 #' - `pheno_clsi`: The phenotype newly interpreted against CLSI human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -476,7 +489,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   }
 
   if (!is.null(source)) { ast <- ast %>% mutate(source=source)}
-  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "source", "pheno_provided", "spp_pheno")))
+  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "platform", "source", "pheno_provided", "spp_pheno")))
 
   return(ast)
 }
@@ -624,9 +637,9 @@ format_ast <- function(input,
   
   if (rename_cols) {ast <- ast %>% rename(id=!!sym(sample_col))}
   
-  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", ab_col, mic_col, disk_col, pheno_cols, 
-                                   "pheno_eucast", "pheno_clsi", "ecoff", "guideline", 
-                                   "method", "source", "pheno_provided", "spp_pheno", species_col
+  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", ab_col, mic_col, disk_col, pheno_cols,
+                                   "pheno_eucast", "pheno_clsi", "ecoff", "guideline",
+                                   "method", "platform", "source", "pheno_provided", "spp_pheno", species_col
   )))
   
   return(ast)
@@ -661,17 +674,17 @@ import_ebi_ast_ftp <- function(input,
   
   ast <- process_input(input)
   
-  ast <- ast %>% 
-    mutate(mic=if_else(measurement_units=="mg/L", 
+  ast <- ast %>%
+    mutate(mic=if_else(measurement_units=="mg/L",
                        paste0(measurement_sign, measurement),
                        NA)) %>%
-    mutate(disk=if_else(laboratory_typing_method=="disk diffusion", 
+    mutate(disk=if_else(laboratory_typing_method=="disk diffusion",
                         paste0(measurement_sign, measurement),
                         NA)) %>%
-    mutate(pheno_provided=if_else(resistance_phenotype=="intermediate", 
-                                  "I", 
+    mutate(pheno_provided=if_else(resistance_phenotype=="intermediate",
+                                  "I",
                                   resistance_phenotype)) %>%
-    rename(method=platform, source=AMR_associated_publications, guideline=ast_standard) %>%
+    rename(method=laboratory_typing_method, platform=platform, source=AMR_associated_publications, guideline=ast_standard) %>%
     mutate(source=if_else(is.na(source), "EBI", paste0("EBI:",source))) %>%
     format_ast(sample_col="BioSample_ID", 
                species_col="species", 
@@ -835,7 +848,8 @@ import_vitek_ast <- function(input,
   # Rename sample column and add standard columns
   ast_long <- ast_long %>%
     rename(id = !!sym(sample_col)) %>%
-    mutate(method = "Vitek")
+    mutate(method = "MIC") %>%
+    mutate(platform = "Vitek")
 
   # Add guideline if specified
   if (!is.null(instrument_guideline)) {
@@ -868,7 +882,7 @@ import_vitek_ast <- function(input,
   ast_long <- ast_long %>%
     relocate(any_of(c("id", "drug_agent", "mic",
                       "pheno_eucast", "pheno_clsi", "ecoff",
-                      "guideline", "method", "source",
+                      "guideline", "method", "platform", "source",
                       "pheno_provided", "spp_pheno")))
 
   return(ast_long)
@@ -948,32 +962,59 @@ import_whonet_ast <- function(input,
     mutate(drug_agent = as.ab(ab_col))
 
 
-  # Parse method and guideline from column name suffix
+  # Parse method, platform, and guideline from column name suffix
+  #
+  # Format: [GUIDELINE/PLATFORM][METHOD][POTENCY] where:
 
-  # Format: [GUIDELINE][METHOD][POTENCY] where:
-  # - Guideline: N = CLSI/NCCLS, E = EUCAST, D = DIN
-  # - Method: D = Disk diffusion, M = MIC, E = Etest
-  # - Potency: disk strength in µg (for disk diffusion only)
+  # Standard codes (guideline-based):
+  #   - Guideline: N = CLSI/NCCLS, E = EUCAST, D = DIN
+  #   - Method: D = Disk diffusion, M = MIC, E = Etest
+  #   - Potency: disk strength in µg (for disk diffusion only)
+  #   e.g., ND10 = CLSI disk 10µg, EM = EUCAST MIC, EE = EUCAST Etest
+  #
+  # Platform codes (instrument-specific):
+  #   - Platform: V = Vitek, P = Phoenix, M = Microscan, S = Sensititre, K = Trek
+  #   - Method: M = MIC, D = Disk, K = Kirby-Bauer disk
+  #   e.g., VM = Vitek MIC, PD = Phoenix Disk
+  #
   # Reference: https://whonet.org/WebDocs/WHONET%202.Laboratory%20configuration.html
   ast_long <- ast_long %>%
     mutate(method_code = stringr::str_match(ab_col, "^[A-Z]{2,4}_(.*)$")[,2]) %>%
+    # Parse guideline (for standard codes N/E/D)
     mutate(guideline = case_when(
       grepl("^N", method_code) ~ "CLSI",
       grepl("^E", method_code) ~ "EUCAST",
-      grepl("^D", method_code) ~ "DIN",
+      grepl("^D[DM]", method_code) ~ "DIN",  # DD or DM for DIN (not platform codes like VD)
       TRUE ~ NA_character_
     )) %>%
+    # Parse platform (for platform codes V/P/M/S/K)
+    mutate(platform = case_when(
+      grepl("^V", method_code) ~ "Vitek",
+      grepl("^P", method_code) ~ "Phoenix",
+      grepl("^M[MD]", method_code) ~ "Microscan",  # MM or MD
+      grepl("^S", method_code) ~ "Sensititre",
+      grepl("^K", method_code) ~ "Trek",
+      TRUE ~ NA_character_
+    )) %>%
+    # Parse method (D=disk, M=MIC, E=Etest, K=Kirby-Bauer)
     mutate(method = case_when(
-      grepl("^ND", method_code) ~ paste0("Disk diffusion (CLSI ", gsub("^ND", "", method_code), "µg)"),
-      grepl("^ED", method_code) ~ paste0("Disk diffusion (EUCAST ", gsub("^ED", "", method_code), "µg)"),
-      grepl("^DD", method_code) ~ paste0("Disk diffusion (DIN ", gsub("^DD", "", method_code), "µg)"),
-      grepl("^NM", method_code) ~ "MIC (CLSI)",
-      grepl("^EM", method_code) ~ "MIC (EUCAST)",
-      grepl("^DM", method_code) ~ "MIC (DIN)",
-      grepl("^NE", method_code) ~ "Etest (CLSI)",
-      grepl("^DE", method_code) ~ "Etest (DIN)",
-      grepl("^EE", method_code) ~ "Etest (EUCAST)",
-      TRUE ~ method_code
+      # Standard disk diffusion with potency
+      grepl("^[NED]D[0-9]", method_code) ~ "disk diffusion",
+      # Platform disk
+      grepl("^[VPMSK]D", method_code) ~ "disk diffusion",
+      grepl("^[VPMSK]K", method_code) ~ "disk diffusion",
+      # Standard MIC
+      grepl("^[NED]M", method_code) ~ "MIC",
+      # Platform MIC
+      grepl("^[VPMSK]M", method_code) ~ "MIC",
+      # Etest
+      grepl("^[NED]E", method_code) ~ "Etest",
+      TRUE ~ NA_character_
+    )) %>%
+    # Extract disk potency for disk diffusion
+    mutate(disk_potency = case_when(
+      grepl("^[NED]D[0-9]", method_code) ~ gsub("^[NED]D", "", method_code),
+      TRUE ~ NA_character_
     ))
 
   # Parse SIR values
@@ -1014,7 +1055,7 @@ import_whonet_ast <- function(input,
   ast_long <- ast_long %>%
     relocate(any_of(c("id", "drug_agent",
                       "pheno_eucast", "pheno_clsi", "ecoff",
-                      "method", "source",
+                      "guideline", "method", "platform", "disk_potency", "source",
                       "pheno_provided", "spp_pheno")))
 
   return(ast_long)

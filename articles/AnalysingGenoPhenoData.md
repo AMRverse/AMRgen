@@ -8,7 +8,7 @@ to:
 
 - Import AMR genotype data (e.g. from AMRFinderPlus, hAMRonization)
 
-- Import AST phenotype data (e.g. from NCBI)
+- Import AST phenotype data (e.g. from NCBI or EBI)
 
 - Conduct genotype-phenotype analyses to explore the impact of genotypic
   markers on phenotype, including via logistic regression, solo marker

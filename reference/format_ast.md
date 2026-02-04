@@ -24,6 +24,10 @@ format_ast(
   mic_col = "mic",
   disk_col = "disk",
   pheno_cols = c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided"),
+  method_col = "method",
+  platform_col = "platform",
+  source_col = "source",
+  guideline_col = "guideline",
   interpret_eucast = FALSE,
   interpret_clsi = FALSE,
   interpret_ecoff = FALSE,
@@ -113,6 +117,34 @@ format_ast(
   (as a character vector, or single string for a single column). If
   provided, these columns will be converted to SIR class 'sir' via
   `as.sir()`.
+
+- method_col:
+
+  (optional, default 'method') Name of the input data column that
+  indicates the testing method used (e.g. MIC, disk diffusion). If the
+  'rename' parameter is set to TRUE, this column will also be renamed as
+  'method'.
+
+- platform_col:
+
+  (optional, default 'platform') Name of the input data column that
+  indicates the testing platform used (e.g. Vitek, Sensititre). If the
+  'rename' parameter is set to TRUE, this column will also be renamed as
+  'platform'.
+
+- source_col:
+
+  (optional, default 'source') Name of the input data column that
+  indicates the source of the dataset (e.g. BioProject, PMID). If the
+  'rename' parameter is set to TRUE, this column will also be renamed as
+  'source'.
+
+- guideline_col:
+
+  (optional, default 'guideline') Name of the input data column that
+  indicates the guideline used for testing (e.g. EUCAST, CLSI). If the
+  'rename' parameter is set to TRUE, this column will also be renamed as
+  'guideline'.
 
 - interpret_eucast:
 

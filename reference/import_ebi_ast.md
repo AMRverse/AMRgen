@@ -106,8 +106,11 @@ A data frame with the processed AST data, including additional columns:
 - `disk`: The disk diffusion measurement (in mm), formatted using the
   `as.disk` function.
 
-- `method`: The AST platform recorded in the input file as the source of
-  the measurement.
+- `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest",
+  "agar dilution").
+
+- `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix",
+  "Sensititre").
 
 - `guideline`: The AST standard recorded in the input file as being used
   for the AST assay.

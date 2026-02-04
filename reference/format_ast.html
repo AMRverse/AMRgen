@@ -47,6 +47,10 @@
 <span>  mic_col <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  disk_col <span class="op">=</span> <span class="st">"disk"</span>,</span>
 <span>  pheno_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ecoff"</span>, <span class="st">"pheno_eucast"</span>, <span class="st">"pheno_clsi"</span>, <span class="st">"pheno_provided"</span><span class="op">)</span>,</span>
+<span>  method_col <span class="op">=</span> <span class="st">"method"</span>,</span>
+<span>  platform_col <span class="op">=</span> <span class="st">"platform"</span>,</span>
+<span>  source_col <span class="op">=</span> <span class="st">"source"</span>,</span>
+<span>  guideline_col <span class="op">=</span> <span class="st">"guideline"</span>,</span>
 <span>  interpret_eucast <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  interpret_clsi <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  interpret_ecoff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -92,6 +96,22 @@
 
 <dt id="arg-pheno-cols">pheno_cols<a class="anchor" aria-label="anchor" href="#arg-pheno-cols"></a></dt>
 <dd><p>(optional, default <code>c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")</code>) Name of the input data column/s that provides disk diffusion zone measurements (as a character vector, or single string for a single column). If provided, these columns will be converted to SIR class 'sir' via <code>as.sir()</code>.</p></dd>
+
+
+<dt id="arg-method-col">method_col<a class="anchor" aria-label="anchor" href="#arg-method-col"></a></dt>
+<dd><p>(optional, default 'method') Name of the input data column that indicates the testing method used (e.g. MIC, disk diffusion). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'method'.</p></dd>
+
+
+<dt id="arg-platform-col">platform_col<a class="anchor" aria-label="anchor" href="#arg-platform-col"></a></dt>
+<dd><p>(optional, default 'platform') Name of the input data column that indicates the testing platform used (e.g. Vitek, Sensititre). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'platform'.</p></dd>
+
+
+<dt id="arg-source-col">source_col<a class="anchor" aria-label="anchor" href="#arg-source-col"></a></dt>
+<dd><p>(optional, default 'source') Name of the input data column that indicates the source of the dataset (e.g. BioProject, PMID). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'source'.</p></dd>
+
+
+<dt id="arg-guideline-col">guideline_col<a class="anchor" aria-label="anchor" href="#arg-guideline-col"></a></dt>
+<dd><p>(optional, default 'guideline') Name of the input data column that indicates the guideline used for testing (e.g. EUCAST, CLSI). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'guideline'.</p></dd>
 
 
 <dt id="arg-interpret-eucast">interpret_eucast<a class="anchor" aria-label="anchor" href="#arg-interpret-eucast"></a></dt>

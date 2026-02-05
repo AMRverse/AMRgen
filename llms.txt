@@ -178,6 +178,8 @@ from public repositories or internal formats.
   : Convert mutation string based on method
 - [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
   : Get Binary Matrix of Genotype and Phenotype Data
+- [`get_combo_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_combo_matrix.md)
+  : Generate matrix of marker combinations
 - [`as.gene()`](https://AMRverse.github.io/AMRgen/reference/as.gene.md)
   : Gene Class and AMR Parsing Functions
 - [`gtdb.mo()`](https://AMRverse.github.io/AMRgen/reference/gtdb.mo.md)

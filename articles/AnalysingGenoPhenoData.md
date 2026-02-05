@@ -474,6 +474,34 @@ colnames(cip_bin)
 #> [49] "qnrB"           "acrR_R45C"
 ```
 
+This binary matrix can be used as the starting a lot of downstream
+analyses.
+
+For example, we can use it as input to `assay_by_var` to plot the assay
+distribution coloured by presence of a particular genetic marker
+
+``` r
+assay_by_var(cip_bin %>% dplyr::mutate(drug_agent="CIP"), measure="mic", colour_by="parC_S80I", antibiotic="CIP")$plot
+
+# count the number of gyrA mutations per genome, and colour by that count
+gyrA_mut <- cip_bin %>% 
+  dplyr::mutate(gyrA_mut = rowSums(across(contains("gyrA_") & where(is.numeric)), na.rm=T)) %>% 
+  select(mic, gyrA_mut)
+
+mic_by_gyrA_count <- assay_by_var(gyrA_mut %>% dplyr::mutate(drug_agent="CIP"), measure="mic", colour_by="gyrA_mut", antibiotic="CIP")
+
+mic_by_gyrA_count$plot
+
+# count the number of genetic determinants per genome, and colour by that count
+marker_count <- cip_bin %>% 
+  mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R","NWT"))), na.rm=T)) %>% 
+  select(mic, marker_count)
+
+mic_by_marker_count <- assay_by_var(marker_count %>% dplyr::mutate(drug_agent="CIP"), measure="mic", colour_by="marker_count", antibiotic="CIP", cols=viridisLite::viridis(max(marker_count$marker_count)+1))
+
+mic_by_marker_count$plot
+```
+
 ### 6. Model a binary drug phenotype using genetic marker presence/absence data
 
 Logistic regression models can be informative to get an overview of the
@@ -512,7 +540,7 @@ too many markers and combinations have very few observations, and you
 might try increasing the `maf` value to ensure that rare markers are
 excluded prior to model fitting.
 
-Using this modelling approach, a negative assocation with a single
+Using this modelling approach, a negative association with a single
 marker and phenotype call of R and NWT is a strong indication that
 marker does not contribute to resistance. Note however that a positive
 association between a marker and R or NWT does not necessarily imply the

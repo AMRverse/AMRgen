@@ -486,6 +486,31 @@ presence/absence).</p>
 <span><span class="co">#&gt; [41] "parE_D475E"     "parC_A108V"     "qepA1"          "parE_E460K"    </span></span>
 <span><span class="co">#&gt; [45] "gyrA_S83W"      "marR_R77C"      "parE_L445H"     "parE_I464F"    </span></span>
 <span><span class="co">#&gt; [49] "qnrB"           "acrR_R45C"</span></span></code></pre></div>
+<p>This binary matrix can be used as the starting a lot of downstream
+analyses.</p>
+<p>For example, we can use it as input to <code>assay_by_var</code> to
+plot the assay distribution coloured by presence of a particular genetic
+marker</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">cip_bin</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>drug_agent<span class="op">=</span><span class="st">"CIP"</span><span class="op">)</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by<span class="op">=</span><span class="st">"parC_S80I"</span>, antibiotic<span class="op">=</span><span class="st">"CIP"</span><span class="op">)</span><span class="op">$</span><span class="va">plot</span></span>
+<span></span>
+<span><span class="co"># count the number of gyrA mutations per genome, and colour by that count</span></span>
+<span><span class="va">gyrA_mut</span> <span class="op">&lt;-</span> <span class="va">cip_bin</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>gyrA_mut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">contains</span><span class="op">(</span><span class="st">"gyrA_"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">where</span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">mic</span>, <span class="va">gyrA_mut</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mic_by_gyrA_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">gyrA_mut</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>drug_agent<span class="op">=</span><span class="st">"CIP"</span><span class="op">)</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by<span class="op">=</span><span class="st">"gyrA_mut"</span>, antibiotic<span class="op">=</span><span class="st">"CIP"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mic_by_gyrA_count</span><span class="op">$</span><span class="va">plot</span></span>
+<span></span>
+<span><span class="co"># count the number of genetic determinants per genome, and colour by that count</span></span>
+<span><span class="va">marker_count</span> <span class="op">&lt;-</span> <span class="va">cip_bin</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>marker_count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">where</span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu">any_of</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R"</span>,<span class="st">"NWT"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">mic</span>, <span class="va">marker_count</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mic_by_marker_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">marker_count</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>drug_agent<span class="op">=</span><span class="st">"CIP"</span><span class="op">)</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by<span class="op">=</span><span class="st">"marker_count"</span>, antibiotic<span class="op">=</span><span class="st">"CIP"</span>, cols<span class="op">=</span><span class="fu">viridisLite</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">marker_count</span><span class="op">$</span><span class="va">marker_count</span><span class="op">)</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mic_by_marker_count</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-a-binary-drug-phenotype-using-genetic-marker-presenceabsence-data">6. Model a binary drug phenotype using genetic marker
@@ -519,7 +544,7 @@ this can be changed using the <code>maf</code> parameter (maf stands for
 may be because too many markers and combinations have very few
 observations, and you might try increasing the <code>maf</code> value to
 ensure that rare markers are excluded prior to model fitting.</p>
-<p>Using this modelling approach, a negative assocation with a single
+<p>Using this modelling approach, a negative association with a single
 marker and phenotype call of R and NWT is a strong indication that
 marker does not contribute to resistance. Note however that a positive
 association between a marker and R or NWT does not necessarily imply the
@@ -539,7 +564,7 @@ output using <code><a href="../reference/logistf_details.html">logistf_details()
 <li><p><code>bin_mat</code>: the binary matrix used as input to the
 regression models</p></li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Manually run Firth's logistic regression model using the binary matrix produced above</span></span>
 <span><span class="va">dataR</span> <span class="op">&lt;-</span> <span class="va">cip_bin</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cip_bin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"pheno"</span>, <span class="st">"ecoff"</span>, <span class="st">"mic"</span>, <span class="st">"NWT"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">dataR</span> <span class="op">&lt;-</span> <span class="va">dataR</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">dataR</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">5</span><span class="op">]</span></span>
@@ -633,7 +658,7 @@ regression models</p></li>
 <span><span class="co"># Plot the point estimates and 95% confidence intervals of the model</span></span>
 <span><span class="fu"><a href="../reference/plot_estimates.html">plot_estimates</a></span><span class="op">(</span><span class="va">modelR_summary</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/manual_logistic-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Alternatively, use the amr_logistic() function to model R and NWT and plot the results together</span></span>
 <span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
 <span>  geno_table <span class="op">=</span> <span class="va">ecoli_geno</span>,</span>
@@ -658,7 +683,7 @@ regression models</p></li>
 <span><span class="co">#&gt; maxstep=...)' to parameter control</span></span>
 <span><span class="co">#&gt; Generating plots</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/amr_logistic-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output tables</span></span>
 <span><span class="va">models</span><span class="op">$</span><span class="va">modelR</span></span>
@@ -772,7 +797,7 @@ to calculate PPV</p></li>
 S/I/R calls and the solo PPV for R and NWT, for each solo
 marker</p></li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run a solo PPV analysis</span></span>
 <span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
 <span>  <span class="va">ecoli_geno</span>,</span>
@@ -783,7 +808,7 @@ marker</p></li>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/solo_ppv_analysis-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">solo_stats</span></span>
@@ -863,7 +888,7 @@ associated with each combination of markers</p></li>
 assay values, and breakdown of S/I/R calls, for each observed marker
 combination</p></li>
 </ul>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare ciprofloxacin MIC data with quinolone marker combinations,</span></span>
 <span><span class="co">#    using the binary matrix we constructed earlier via get_binary_matrix()</span></span>
 <span><span class="va">cipro_mic_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
@@ -873,7 +898,7 @@ combination</p></li>
 <span>  order <span class="op">=</span> <span class="st">"value"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/amr_upset-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">cipro_mic_upset</span><span class="op">$</span><span class="va">summary</span></span>

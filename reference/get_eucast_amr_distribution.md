@@ -204,18 +204,18 @@ comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "K. pneu
 #> Joining with `by = join_by(value)`
 comparison
 #> # A tibble: 27 × 3
-#>    value   user eucast
-#>  * <fct>  <int>  <int>
-#>  1 0.0002    43      0
-#>  2 0.0005    31      0
-#>  3 0.001     42      0
-#>  4 0.002     30      0
-#>  5 0.004     23      4
-#>  6 0.008     37    116
-#>  7 0.016     22    545
-#>  8 0.03       0   1456
-#>  9 0.032     24      0
-#> 10 0.06       0    692
+#>    value     user eucast
+#>  * <fct>    <int>  <int>
+#>  1 <=0.0001    43      0
+#>  2 0.0002      32      0
+#>  3 0.0005      43      0
+#>  4 0.001       29      0
+#>  5 0.002       22      0
+#>  6 0.004       37      4
+#>  7 0.008       22    116
+#>  8 0.016       24    545
+#>  9 0.03         0   1456
+#> 10 0.032       26      0
 #> # ℹ 17 more rows
 #> Use ggplot2::autoplot() on this output to visualise.
 ggplot2::autoplot(comparison)

@@ -25,6 +25,15 @@ Start by loading the package:
 
 ``` r
 library(AMRgen)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 ```
 
 ### 1. Genotype table
@@ -482,6 +491,11 @@ distribution coloured by presence of a particular genetic marker
 
 ``` r
 assay_by_var(cip_bin %>% dplyr::mutate(drug_agent="CIP"), measure="mic", colour_by="parC_S80I", antibiotic="CIP")$plot
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-1.png)
+
+``` r
 
 # count the number of gyrA mutations per genome, and colour by that count
 gyrA_mut <- cip_bin %>% 
@@ -491,6 +505,11 @@ gyrA_mut <- cip_bin %>%
 mic_by_gyrA_count <- assay_by_var(gyrA_mut %>% dplyr::mutate(drug_agent="CIP"), measure="mic", colour_by="gyrA_mut", antibiotic="CIP")
 
 mic_by_gyrA_count$plot
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-2.png)
+
+``` r
 
 # count the number of genetic determinants per genome, and colour by that count
 marker_count <- cip_bin %>% 
@@ -501,6 +520,8 @@ mic_by_marker_count <- assay_by_var(marker_count %>% dplyr::mutate(drug_agent="C
 
 mic_by_marker_count$plot
 ```
+
+![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-3.png)
 
 ### 6. Model a binary drug phenotype using genetic marker presence/absence data
 

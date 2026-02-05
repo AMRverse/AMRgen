@@ -15,18 +15,22 @@ plot.
 ``` r
 assay_by_var(
   pheno_table,
-  antibiotic,
+  antibiotic = NULL,
   measure = "mic",
+  colour_by = NULL,
+  bar_cols = NULL,
   facet_var = NULL,
-  species = NULL,
   bp_site = NULL,
   bp_S = NULL,
   bp_R = NULL,
-  ecoff = NULL,
+  bp_ecoff = NULL,
+  species = NULL,
   guideline = "EUCAST 2025",
-  marker_free_strains = NULL,
-  colour_by = NULL,
-  cols = NULL
+  bp_cols = c(S = "#3CAEA3", R = "#ED553B", E = "grey"),
+  x_axis_label = "Measurement",
+  y_axis_label = "Count",
+  colour_legend_label = NULL,
+  plot_title = NULL
 )
 ```
 
@@ -38,77 +42,85 @@ assay_by_var(
 
 - antibiotic:
 
-  Name of the antibiotic.
+  (optional) Name of an antibiotic to filter the 'drug_agent' column,
+  and to retrieve breakpoints for.
 
 - measure:
 
-  Field name containing the assay measurements to plot (default "mic").
+  Name of the column with assay measurements to plot (default "mic").
+
+- colour_by:
+
+  (optional) Field name containing a variable to colour bars by (default
+  NULL, which will colour each bar to indicate whether the value is
+  expressed as a range or not).
+
+- bar_cols:
+
+  (optional) Manual colour scale to use for bar plot. If NULL,
+  `colour_by` variable is of class 'sir', bars will by default be
+  coloured using standard SIR colours.
 
 - facet_var:
 
-  (optional) Field name containing a field to facet on (default NULL).
+  (optional) Column name containing a variable to facet on (default
+  NULL).
+
+- bp_site:
+
+  (optional) Breakpoint site to retrieve (only relevant if also
+  supplying `species` and `antibiotic` to retrieve breakpoints, and not
+  supplying breakpoints via `bp_S`, `bp_R`, `ecoff`).
+
+- bp_S:
+
+  (optional) S breakpoint to plot.
+
+- bp_R:
+
+  (optional) R breakpoint to plot.
+
+- bp_ecoff:
+
+  (optional) ECOFF breakpoint to plot.
 
 - species:
 
   (optional) Name of species, so we can retrieve breakpoints to print at
   the top of the plot to help interpret it.
 
-- bp_site:
-
-  (optional) Breakpoint site to retrieve (only relevant if also
-  supplying `species` to retrieve breakpoints, and not supplying
-  breakpoints via `bp_S`, `bp_R`, `ecoff`).
-
-- bp_S:
-
-  (optional) S breakpoint
-
-- bp_R:
-
-  (optional) R breakpoint
-
-- ecoff:
-
-  (optional) ECOFF breakpoint
-
 - guideline:
 
   (optional) Guideline to use when looking up breakpoints (default
-  'EUCAST 2025')
+  'EUCAST 2025').
 
-- marker_free_strains:
+- bp_cols:
 
-  (optional) Vector of sample names to select to get their own plot.
-  Most useful for defining the set of strains with no known markers
-  associated with the given antibiotic, so you can view the distribution
-  of assay values for strains expected to be wildtype, which can help to
-  identify issues with the assay.
+  (optional) Manual colour scale for breakpoint lines.
 
-- colour_by:
+- x_axis_label:
 
-  (optional) Field name containing a field to colour bars by (default
-  NULL, which will colour each bar to indicate whether the value is
-  expressed as a range or not)
+  (optional) String to label the x-axis (default "Measurement").
 
-- cols:
+- y_axis_label:
 
-  (optional) Manual colour scale to use for plot. If NULL, `colour_by`
-  variable is of class 'sir', bars will by default be coloured using
-  standard SIR colours.
+  (optional) String to label the y-axis (default "Count").
+
+- colour_legend_label:
+
+  (optional) String to label the barplot fill colour legend (default
+  NULL, which results in plotting the variable name specified via the
+  'colour_by' parameter).
+
+- plot_title:
+
+  (optional) String to title the plot (default indicates whether MIC or
+  disk distribution is plotted, prefixed with the antibiotic name if
+  provided, e.g. 'Ciprofloxacin MIC distribution')
 
 ## Value
 
-A list containing
-
-- plot:
-
-  Main plot with all samples that have assay data for the given
-  antibiotic
-
-- plot_nomarkers:
-
-  Additional plot showing only those samples listed in
-  `marker_free_strains`
+The stacked bar plot
 
 ## Examples
 
@@ -116,35 +128,25 @@ A list containing
 # plot MIC distribution, highlighting values expressed as ranges
 assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
                 measure="mic")
-#> $plot_nomarkers
-#> NULL
-#> 
-#> $plot
 
-#> 
 
-# colour by SIR interpretion recorded in column 'pheno_clsi'
+# colour by SIR interpretation recorded in column 'pheno_clsi'
 assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
                 measure="mic", colour_by = "pheno_clsi")
-#> $plot_nomarkers
-#> NULL
-#> 
-#> $plot
 
-#> 
+                
+# manually specify colours for the barplot
+assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
+                measure="mic", colour_by = "pheno_clsi",
+                bar_cols=c(S="skyblue", I="orange", R="maroon"))
+
 
 # look up ECOFF and CLSI breakpoints and annotate these on the plot
 assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
                 measure="mic", colour_by = "pheno_clsi", 
                 species="E. coli", guideline="CLSI 2025")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
-#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
-#> $plot_nomarkers
-#> NULL
-#> 
-#> $plot
 
-#> 
 
 # facet by method
 assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
@@ -152,11 +154,5 @@ assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin",
                 species="E. coli", guideline="CLSI 2025", 
                 facet_var ="method")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
-#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
-#> $plot_nomarkers
-#> NULL
-#> 
-#> $plot
 
-#> 
 ```

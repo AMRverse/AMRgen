@@ -254,10 +254,6 @@ coloured by a variable.
 
 # Plot MIC distribution, coloured by CLSI S/I/R call
 assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi")
-#> $plot_nomarkers
-#> NULL
-#> 
-#> $plot
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/plot_mic-1.png)
@@ -288,11 +284,6 @@ checkBreakpoints(species="E. coli", guide="CLSI 2025", antibiotic="Ciprofloxacin
 # Specify species and guideline, to annotate with CLSI breakpoints
 assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
-#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
-#> $plot_nomarkers
-#> NULL
-#> 
-#> $plot
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints-1.png)
@@ -311,12 +302,10 @@ Sensititer) in the platform
 # specify facet_var="method" to generate facet plots by assay method
 mic_by_platform <- assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025", facet_var ="method")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
-#>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 
 mic_by_platform$plot
+#> NULL
 ```
-
-![](AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints_method-1.png)
 
 ### 4. Download reference assay distributions and compare to your data
 
@@ -490,35 +479,37 @@ For example, we can use it as input to `assay_by_var` to plot the assay
 distribution coloured by presence of a particular genetic marker
 
 ``` r
-assay_by_var(cip_bin %>% dplyr::mutate(drug_agent="CIP"), measure="mic", colour_by="parC_S80I", antibiotic="CIP")$plot
+assay_by_var(cip_bin, measure="mic", colour_by="parC_S80I", antibiotic="Ciprofloxacin")
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-1.png)
 
 ``` r
 
-# count the number of gyrA mutations per genome, and colour by that count
+# count the number of gyrA mutations per genome
 gyrA_mut <- cip_bin %>% 
   dplyr::mutate(gyrA_mut = rowSums(across(contains("gyrA_") & where(is.numeric)), na.rm=T)) %>% 
   select(mic, gyrA_mut)
 
-mic_by_gyrA_count <- assay_by_var(gyrA_mut %>% dplyr::mutate(drug_agent="CIP"), measure="mic", colour_by="gyrA_mut", antibiotic="CIP")
+# plot the MIC distribution, coloured by count of gyrA mutations
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure="mic", colour_by="gyrA_mut", colour_legend_label="No. gyrA mutations", antibiotic="Ciprofloxacin")
 
-mic_by_gyrA_count$plot
+mic_by_gyrA_count
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-2.png)
 
 ``` r
 
-# count the number of genetic determinants per genome, and colour by that count
+# count the number of genetic determinants per genome
 marker_count <- cip_bin %>% 
   mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R","NWT"))), na.rm=T)) %>% 
   select(mic, marker_count)
 
-mic_by_marker_count <- assay_by_var(marker_count %>% dplyr::mutate(drug_agent="CIP"), measure="mic", colour_by="marker_count", antibiotic="CIP", cols=viridisLite::viridis(max(marker_count$marker_count)+1))
+# plot the MIC distribution, coloured by count of associated genetic markers
+mic_by_marker_count <- assay_by_var(marker_count, measure="mic", colour_by="marker_count", colour_legend_label="No. markers detected", antibiotic="Ciprofloxacin", bar_cols=viridisLite::viridis(max(marker_count$marker_count)+1))
 
-mic_by_marker_count$plot
+mic_by_marker_count
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-3.png)

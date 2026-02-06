@@ -21,8 +21,7 @@ export_ebi_antibiogram(
 - data:
 
   A data frame in AMRgen long format (e.g. output of
-  [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md),
-  [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md),
+  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
   or
   [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)).
   Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least one

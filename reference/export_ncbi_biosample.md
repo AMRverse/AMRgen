@@ -20,8 +20,7 @@ export_ncbi_biosample(
 - data:
 
   A data frame in AMRgen long format (e.g. output of
-  [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md),
-  [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md),
+  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
   or
   [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)).
   Expected columns: `id`, `drug_agent`, and at least one phenotype
@@ -57,3 +56,16 @@ MIC strings (e.g. `"<=0.5"`, `">=32"`, `"4"`) are split into a sign
 Antibiotic names are converted to lowercase with combination separators
 replaced by `"-"` (NCBI convention, e.g.
 `"amoxicillin-clavulanic acid"`).
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Write out the ecoli_ast data to file in NCBI format
+export_ncbi_biosample(ecoli_ast, "Ec_NCBI.tsv")
+
+# Download data from EBI, then write it out to file in NCBI format
+ebi_kleb_quasipneumoniae <- download_ebi(species="Klebsiella quasipneumoniae", reformat=T)
+export_ncbi_biosample(ebi_kq, "Kq_NCBI.tsv")
+} # }
+```

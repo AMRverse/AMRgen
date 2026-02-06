@@ -58,6 +58,13 @@ Antibiogram and EBI Antibiogram formats.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
+<dd><p>A data frame in AMRgen long format (e.g. output of
+<code><a href="import_ast.html">import_ast()</a></code> or <code><a href="format_ast.html">format_ast()</a></code>).
+Expected columns: <code>id</code>, <code>drug_agent</code>, <code>spp_pheno</code>, and at least
+one phenotype column (see <code>pheno_col</code>). Optional columns: <code>mic</code>,
+<code>disk</code>, <code>method</code>, <code>guideline</code>, <code>platform</code>.</p></dd>
+
+<dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A data frame in AMRgen long format.</p></dd>
 
 

@@ -21,6 +21,16 @@ export_ast(
 
 - data:
 
+  A data frame in AMRgen long format (e.g. output of
+  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
+  or
+  [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)).
+  Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least one
+  phenotype column (see `pheno_col`). Optional columns: `mic`, `disk`,
+  `method`, `guideline`, `platform`.
+
+- data:
+
   A data frame in AMRgen long format.
 
 - file:

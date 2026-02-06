@@ -23,8 +23,12 @@ from public repositories or internal formats.
   : Import and Process AST Data from Vitek Output Files
 - [`import_whonet_ast()`](https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.md)
   : Import and Process AST Data from WHONET Output Files
+- [`export_ast()`](https://AMRverse.github.io/AMRgen/reference/export_ast.md)
+  : Export AST Data
+- [`export_ebi_antibiogram()`](https://AMRverse.github.io/AMRgen/reference/export_ebi_antibiogram.md)
+  : Export EBI Antibiogram
 - [`export_ncbi_biosample()`](https://AMRverse.github.io/AMRgen/reference/export_ncbi_biosample.md)
-  : Import/Export BioSample Antibiograms
+  : Export NCBI BioSample Antibiogram
 - [`convert_aa_code()`](https://AMRverse.github.io/AMRgen/reference/convert_aa_code.md)
   : Convert single-letter amino acid code(s) to three-letter code(s)
 - [`convert_mutation()`](https://AMRverse.github.io/AMRgen/reference/convert_mutation.md)

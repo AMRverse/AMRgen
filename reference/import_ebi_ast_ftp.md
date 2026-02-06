@@ -60,7 +60,7 @@ A data frame with the processed AST data, including additional columns:
 ``` r
 if (FALSE) { # \dontrun{
 # download Salmonella phenotype data from EBI
-pheno_salmonella <- download_ebi(genus="Salmonella")
+pheno_salmonella <- download_ebi(genus = "Salmonella")
 
 # reformat to simplify use with AMRgen functions
 pheno_salmonella <- import_ebi_ast_ftp(pheno_salmonella)

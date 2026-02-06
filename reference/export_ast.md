@@ -29,10 +29,6 @@ export_ast(
   phenotype column (see `pheno_col`). Optional columns: `mic`, `disk`,
   `method`, `guideline`, `platform`.
 
-- data:
-
-  A data frame in AMRgen long format.
-
 - file:
 
   File path for the output file.

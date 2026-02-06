@@ -91,8 +91,10 @@ breakpoint.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">checkBreakpoints</span><span class="op">(</span>species<span class="op">=</span><span class="st">"Escherichia coli"</span>, guide<span class="op">=</span><span class="st">"EUCAST 2024"</span>, </span></span>
-<span class="r-in"><span>                      antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, assay<span class="op">=</span><span class="st">"MIC"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">checkBreakpoints</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  species <span class="op">=</span> <span class="st">"Escherichia coli"</span>, guide <span class="op">=</span> <span class="st">"EUCAST 2024"</span>,</span></span>
+<span class="r-in"><span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, assay <span class="op">=</span> <span class="st">"MIC"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $breakpoint_S</span>

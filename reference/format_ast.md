@@ -188,15 +188,19 @@ A data frame with the processed AST data, including additional columns:
 if (FALSE) { # \dontrun{
 # import and process AST data from EBI, write formatted data to file for later use
 pheno <- import_ebi_ast("EBI_AMR_data.csv.gz")
-write_tsv(pheno, file="EBI_AMR_data_processed.tsv.gz", 
-            interpret_eucast = TRUE, interpret_ecoff = TRUE)
+write_tsv(pheno,
+  file = "EBI_AMR_data_processed.tsv.gz",
+  interpret_eucast = TRUE, interpret_ecoff = TRUE
+)
 
 # read stored data and format the columns to the correct classes
 pheno <- format_ast("EBI_AMR_data_processed.tsv.gz")
 
 # read in unprocessed E. coli AST data from non-standard format and interpret
-pheno <- format_ast("AMR_data.tsv", sample_col="STRAIN", species="E. coli",
-            ab_col="Antibiotic", mic_col="MIC (mg/L)", 
-            interpret_eucast=TRUE, interpret_ecoff=TRUE)
+pheno <- format_ast("AMR_data.tsv",
+  sample_col = "STRAIN", species = "E. coli",
+  ab_col = "Antibiotic", mic_col = "MIC (mg/L)",
+  interpret_eucast = TRUE, interpret_ecoff = TRUE
+)
 } # }
 ```

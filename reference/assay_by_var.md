@@ -126,33 +126,43 @@ The stacked bar plot
 
 ``` r
 # plot MIC distribution, highlighting values expressed as ranges
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
-                measure="mic")
+assay_by_var(
+  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  measure = "mic"
+)
 
 
 # colour by SIR interpretation recorded in column 'pheno_clsi'
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
-                measure="mic", colour_by = "pheno_clsi")
+assay_by_var(
+  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  measure = "mic", colour_by = "pheno_clsi"
+)
 
-                
+
 # manually specify colours for the barplot
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
-                measure="mic", colour_by = "pheno_clsi",
-                bar_cols=c(S="skyblue", I="orange", R="maroon"))
+assay_by_var(
+  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  measure = "mic", colour_by = "pheno_clsi",
+  bar_cols = c(S = "skyblue", I = "orange", R = "maroon")
+)
 
 
 # look up ECOFF and CLSI breakpoints and annotate these on the plot
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
-                measure="mic", colour_by = "pheno_clsi", 
-                species="E. coli", guideline="CLSI 2025")
+assay_by_var(
+  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  measure = "mic", colour_by = "pheno_clsi",
+  species = "E. coli", guideline = "CLSI 2025"
+)
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 
 
 # facet by method
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", 
-                measure="mic", colour_by = "pheno_clsi", 
-                species="E. coli", guideline="CLSI 2025", 
-                facet_var ="method")
+assay_by_var(
+  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  measure = "mic", colour_by = "pheno_clsi",
+  species = "E. coli", guideline = "CLSI 2025",
+  facet_var = "method"
+)
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 
 ```

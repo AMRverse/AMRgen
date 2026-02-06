@@ -175,7 +175,7 @@ ecoli_ast_raw
 #> #   pheno_clsi_disk <sir>, ecoff_mic <sir>, ecoff_disk <sir>
 
 # import without re-interpreting resistance
-pheno <- import_ast(ecoli_ast_raw, format="ncbi")
+pheno <- import_ast(ecoli_ast_raw, format = "ncbi")
 #> Reading in as NCBI AST format
 #> Warning: Expected AST method column 'Laboratory typing method' not found in input
 #> Warning: Expected column 'BioProject' not found in input
@@ -198,7 +198,7 @@ head(pheno)
 #> #   `Testing standard` <chr>, `Create date` <dttm>, pheno_clsi_mic <sir>, …
 
 # import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-pheno <- import_ast(ecoli_ast_raw, format="ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
+pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
 #> Reading in as NCBI AST format
 #> Warning: Expected AST method column 'Laboratory typing method' not found in input
 #> Warning: Expected column 'BioProject' not found in input

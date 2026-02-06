@@ -74,8 +74,10 @@ handles the situation by:
 ## Examples
 
 ``` r
-checkBreakpoints(species="Escherichia coli", guide="EUCAST 2024", 
-                      antibiotic="Ciprofloxacin", assay="MIC")
+checkBreakpoints(
+  species = "Escherichia coli", guide = "EUCAST 2024",
+  antibiotic = "Ciprofloxacin", assay = "MIC"
+)
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 0.5
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
 #> $breakpoint_S

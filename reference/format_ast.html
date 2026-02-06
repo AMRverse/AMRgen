@@ -140,16 +140,20 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># import and process AST data from EBI, write formatted data to file for later use</span></span></span>
 <span class="r-in"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_ebi_ast.html">import_ebi_ast</a></span><span class="op">(</span><span class="st">"EBI_AMR_data.csv.gz"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">write_tsv</span><span class="op">(</span><span class="va">pheno</span>, file<span class="op">=</span><span class="st">"EBI_AMR_data_processed.tsv.gz"</span>, </span></span>
-<span class="r-in"><span>            interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>, interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">write_tsv</span><span class="op">(</span><span class="va">pheno</span>,</span></span>
+<span class="r-in"><span>  file <span class="op">=</span> <span class="st">"EBI_AMR_data_processed.tsv.gz"</span>,</span></span>
+<span class="r-in"><span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>, interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># read stored data and format the columns to the correct classes</span></span></span>
 <span class="r-in"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">format_ast</span><span class="op">(</span><span class="st">"EBI_AMR_data_processed.tsv.gz"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># read in unprocessed E. coli AST data from non-standard format and interpret</span></span></span>
-<span class="r-in"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">format_ast</span><span class="op">(</span><span class="st">"AMR_data.tsv"</span>, sample_col<span class="op">=</span><span class="st">"STRAIN"</span>, species<span class="op">=</span><span class="st">"E. coli"</span>,</span></span>
-<span class="r-in"><span>            ab_col<span class="op">=</span><span class="st">"Antibiotic"</span>, mic_col<span class="op">=</span><span class="st">"MIC (mg/L)"</span>, </span></span>
-<span class="r-in"><span>            interpret_eucast<span class="op">=</span><span class="cn">TRUE</span>, interpret_ecoff<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">format_ast</span><span class="op">(</span><span class="st">"AMR_data.tsv"</span>,</span></span>
+<span class="r-in"><span>  sample_col <span class="op">=</span> <span class="st">"STRAIN"</span>, species <span class="op">=</span> <span class="st">"E. coli"</span>,</span></span>
+<span class="r-in"><span>  ab_col <span class="op">=</span> <span class="st">"Antibiotic"</span>, mic_col <span class="op">=</span> <span class="st">"MIC (mg/L)"</span>,</span></span>
+<span class="r-in"><span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>, interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

@@ -121,36 +121,36 @@ Optionally, the function can also reformat the phenotype data for easy use with 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># download phenotype data from Dec 2025 release, and filter to Salmonella</span></span></span>
 <span class="r-in"><span><span class="va">pheno_salmonella</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    genus<span class="op">=</span><span class="st">"Salmonella"</span>,</span></span>
-<span class="r-in"><span>    user_release<span class="op">=</span><span class="st">"2025-12"</span></span></span>
+<span class="r-in"><span>  genus <span class="op">=</span> <span class="st">"Salmonella"</span>,</span></span>
+<span class="r-in"><span>  user_release <span class="op">=</span> <span class="st">"2025-12"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># reformat downloaded phenotype data to simplify use with AMRgen functions</span></span></span>
 <span class="r-in"><span><span class="va">pheno_salmonella</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_ebi_ast_ftp.html">import_ebi_ast_ftp</a></span><span class="op">(</span><span class="va">pheno_salmonella</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># download phenotype data for Staphylococcus aureus and reformat </span></span></span>
+<span class="r-in"><span><span class="co"># download phenotype data for Staphylococcus aureus and reformat</span></span></span>
 <span class="r-in"><span><span class="co"># for use with AMRgen functions</span></span></span>
 <span class="r-in"><span><span class="va">pheno_staph</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    species<span class="op">=</span><span class="st">"Staphylococcus aureus"</span>,</span></span>
-<span class="r-in"><span>    reformat<span class="op">=</span><span class="cn">T</span></span></span>
+<span class="r-in"><span>  species <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span></span>
+<span class="r-in"><span>  reformat <span class="op">=</span> <span class="cn">T</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># download phenotype data for Klebsiella quasipneumoniae, reformat </span></span></span>
+<span class="r-in"><span><span class="co"># download phenotype data for Klebsiella quasipneumoniae, reformat</span></span></span>
 <span class="r-in"><span><span class="co"># for use with AMRgen functions, and re-interpret phenotypes</span></span></span>
 <span class="r-in"><span><span class="va">pheno_kquasi_reinterpreted</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    species<span class="op">=</span><span class="st">"Klebsiella quasipneumoniae"</span>,</span></span>
-<span class="r-in"><span>    reformat<span class="op">=</span><span class="cn">T</span>,</span></span>
-<span class="r-in"><span>    interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>, </span></span>
-<span class="r-in"><span>    interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span>, </span></span>
-<span class="r-in"><span>    interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  species <span class="op">=</span> <span class="st">"Klebsiella quasipneumoniae"</span>,</span></span>
+<span class="r-in"><span>  reformat <span class="op">=</span> <span class="cn">T</span>,</span></span>
+<span class="r-in"><span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">ebi_geno</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span>data<span class="op">=</span><span class="st">"genotype"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    </span></span>
+<span class="r-in"><span><span class="va">ebi_geno</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span>data <span class="op">=</span> <span class="st">"genotype"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">geno_kpn_tmp</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    data<span class="op">=</span><span class="st">"genotype"</span>,</span></span>
-<span class="r-in"><span>    species<span class="op">=</span><span class="st">"Klebsiella pneumoniae"</span>,</span></span>
-<span class="r-in"><span>    geno_subclass<span class="op">=</span><span class="st">"TRIMETHOPRIM"</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="st">"genotype"</span>,</span></span>
+<span class="r-in"><span>  species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span></span>
+<span class="r-in"><span>  geno_subclass <span class="op">=</span> <span class="st">"TRIMETHOPRIM"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>

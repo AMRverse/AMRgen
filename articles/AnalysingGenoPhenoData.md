@@ -253,7 +253,7 @@ coloured by a variable.
 # Example E. coli AST data from NCBI
 
 # Plot MIC distribution, coloured by CLSI S/I/R call
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi")
+assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi")
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/plot_mic-1.png)
@@ -270,7 +270,7 @@ and annotate these directly on the plot.
 
 ``` r
 # Look up breakpoints recorded in the AMR package
-checkBreakpoints(species="E. coli", guide="CLSI 2025", antibiotic="Ciprofloxacin", assay="MIC")
+checkBreakpoints(species = "E. coli", guide = "CLSI 2025", antibiotic = "Ciprofloxacin", assay = "MIC")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 #> $breakpoint_S
 #> [1] 0.25
@@ -282,7 +282,7 @@ checkBreakpoints(species="E. coli", guide="CLSI 2025", antibiotic="Ciprofloxacin
 #> [1] "-"
 
 # Specify species and guideline, to annotate with CLSI breakpoints
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025")
+assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 ```
 
@@ -300,7 +300,7 @@ Sensititer) in the platform
 
 ``` r
 # specify facet_var="method" to generate facet plots by assay method
-mic_by_platform <- assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025", facet_var ="method")
+mic_by_platform <- assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 
 mic_by_platform$plot
@@ -479,7 +479,7 @@ For example, we can use it as input to `assay_by_var` to plot the assay
 distribution coloured by presence of a particular genetic marker
 
 ``` r
-assay_by_var(cip_bin, measure="mic", colour_by="parC_S80I", antibiotic="Ciprofloxacin")
+assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", antibiotic = "Ciprofloxacin")
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-1.png)
@@ -487,12 +487,12 @@ assay_by_var(cip_bin, measure="mic", colour_by="parC_S80I", antibiotic="Ciproflo
 ``` r
 
 # count the number of gyrA mutations per genome
-gyrA_mut <- cip_bin %>% 
-  dplyr::mutate(gyrA_mut = rowSums(across(contains("gyrA_") & where(is.numeric)), na.rm=T)) %>% 
+gyrA_mut <- cip_bin %>%
+  dplyr::mutate(gyrA_mut = rowSums(across(contains("gyrA_") & where(is.numeric)), na.rm = T)) %>%
   select(mic, gyrA_mut)
 
 # plot the MIC distribution, coloured by count of gyrA mutations
-mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure="mic", colour_by="gyrA_mut", colour_legend_label="No. gyrA mutations", antibiotic="Ciprofloxacin")
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin")
 
 mic_by_gyrA_count
 ```
@@ -502,12 +502,12 @@ mic_by_gyrA_count
 ``` r
 
 # count the number of genetic determinants per genome
-marker_count <- cip_bin %>% 
-  mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R","NWT"))), na.rm=T)) %>% 
+marker_count <- cip_bin %>%
+  mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R", "NWT"))), na.rm = T)) %>%
   select(mic, marker_count)
 
 # plot the MIC distribution, coloured by count of associated genetic markers
-mic_by_marker_count <- assay_by_var(marker_count, measure="mic", colour_by="marker_count", colour_legend_label="No. markers detected", antibiotic="Ciprofloxacin", bar_cols=viridisLite::viridis(max(marker_count$marker_count)+1))
+mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1))
 
 mic_by_marker_count
 ```

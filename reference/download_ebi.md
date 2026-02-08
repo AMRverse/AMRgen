@@ -17,6 +17,7 @@ and re-interpret assay measures using the latest breakpoints/ECOFF.
 download_ebi(
   data = "phenotype",
   antibiotic = NULL,
+  force_antibiotic = FALSE,
   genus = NULL,
   species = NULL,
   geno_subclass = NULL,
@@ -39,8 +40,16 @@ download_ebi(
 
 - antibiotic:
 
-  (Optional) String specifying an antibiotic to to filter on (default
-  NULL). Not used if class or subclass is specified.
+  (Optional) String (or vector of strings) specifying the antibiotic
+  name/s to filter on (default NULL). Uses the AMR package to try to fix
+  typos, and format to lower-case for EBI files. Not used if class or
+  subclass is specified.
+
+- force_antibiotic:
+
+  (Optional) Logical indicating whether to turn off parsing of
+  antibiotic names and match exactly on the input strings (default
+  FALSE).
 
 - genus:
 
@@ -139,7 +148,7 @@ pheno_ebi <- download_ebi()
 # download phenotype data from Dec 2025 release, and filter to Salmonella
 pheno_salmonella <- download_ebi(
   genus = "Salmonella",
-  user_release = "2025-12"
+  release = "2025-12"
 )
 
 # reformat downloaded phenotype data to simplify use with AMRgen functions

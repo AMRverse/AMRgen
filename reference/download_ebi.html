@@ -43,6 +43,7 @@ Optionally, the function can also reformat the phenotype data for easy use with 
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">download_ebi</span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="st">"phenotype"</span>,</span>
 <span>  antibiotic <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  force_antibiotic <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  genus <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  species <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geno_subclass <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -65,7 +66,11 @@ Optionally, the function can also reformat the phenotype data for easy use with 
 
 
 <dt id="arg-antibiotic">antibiotic<a class="anchor" aria-label="anchor" href="#arg-antibiotic"></a></dt>
-<dd><p>(Optional) String specifying an antibiotic to to filter on (default NULL). Not used if class or subclass is specified.</p></dd>
+<dd><p>(Optional) String (or vector of strings) specifying the antibiotic name/s to filter on (default NULL). Uses the AMR package to try to fix typos, and format to lower-case for EBI files. Not used if class or subclass is specified.</p></dd>
+
+
+<dt id="arg-force-antibiotic">force_antibiotic<a class="anchor" aria-label="anchor" href="#arg-force-antibiotic"></a></dt>
+<dd><p>(Optional) Logical indicating whether to turn off parsing of antibiotic names and match exactly on the input strings (default FALSE).</p></dd>
 
 
 <dt id="arg-genus">genus<a class="anchor" aria-label="anchor" href="#arg-genus"></a></dt>
@@ -122,7 +127,7 @@ Optionally, the function can also reformat the phenotype data for easy use with 
 <span class="r-in"><span><span class="co"># download phenotype data from Dec 2025 release, and filter to Salmonella</span></span></span>
 <span class="r-in"><span><span class="va">pheno_salmonella</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  genus <span class="op">=</span> <span class="st">"Salmonella"</span>,</span></span>
-<span class="r-in"><span>  user_release <span class="op">=</span> <span class="st">"2025-12"</span></span></span>
+<span class="r-in"><span>  release <span class="op">=</span> <span class="st">"2025-12"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># reformat downloaded phenotype data to simplify use with AMRgen functions</span></span></span>

@@ -3,11 +3,9 @@
 This function will retrieve genotype or phenotype data from the EBI AMR
 Portal, via FTP. The portal uses AMRfinderplus to identify
 AMR-associated genotypes, but the results are processed and not all
-fields returned by AMRfinderplus are included. See
-https://www.ebi.ac.uk/amr/about/#AMR-Genotypes for more information, and
-https://github.com/ncbi/amr/wiki/class-subclass for valid class and
-subclass terms. Optionally, the function can also reformat the phenotype
-data for easy use with AMRgen functions (using
+fields returned by AMRfinderplus are included. Optionally, the function
+can also reformat the phenotype data for easy use with AMRgen functions
+(using
 [`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md))
 and re-interpret assay measures using the latest breakpoints/ECOFF.
 
@@ -42,8 +40,8 @@ download_ebi(
 
   (Optional) String (or vector of strings) specifying the antibiotic
   name/s to filter on (default NULL). Uses the AMR package to try to fix
-  typos, and format to lower-case for EBI files. Not used if class or
-  subclass is specified.
+  typos, and format to lower-case for EBI files. Not used if
+  `data`="genotype" and `class` or \`subclass“ is specified.
 
 - force_antibiotic:
 
@@ -67,16 +65,17 @@ download_ebi(
   data on (default NULL). Filter is based on string match, not identity,
   so e.g. subclass="TRIMETHOPRIM" will return all rows where the string
   "TRIMETHOPRIM" is included in the subclass field. Only used if
-  `data`="genotype". Check NCBI Subclass for valid terms.
+  `data`="genotype". Check NCBI Subclass list for valid terms
+  (https://github.com/ncbi/amr/wiki/class-subclass).
 
 - geno_class:
 
-  (Optional) String specifying an antibiotic subclass to filter on
-  (default NULL). Filter is based on string match, not identity, so e.g.
-  class="TRIMETHOPRIM" will return all rows where the string
+  (Optional) String specifying an antibiotic subclass to filter genotype
+  data on (default NULL). Filter is based on string match, not identity,
+  so e.g. class="TRIMETHOPRIM" will return all rows where the string
   "TRIMETHOPRIM" is included in the class field. Only used if
-  `data`="genotype" and subclass is not specified. Check NCBI Class for
-  valid terms.
+  `data`="genotype" and subclass is not specified. Check NCBI Class list
+  for valid terms (https://github.com/ncbi/amr/wiki/class-subclass).
 
 - remove_dup:
 
@@ -138,45 +137,18 @@ download_ebi(
 
 A data frame containing EBI genotype data
 
+## Details
+
+See https://www.ebi.ac.uk/amr/about/ for more information on what is
+available in the portal, and
+https://github.com/ncbi/amr/wiki/class-subclass for valid class and
+subclass terms.
+
+Note the function downloads the full genotype or phenotype data table
+before filtering on the provided parameters, so if you are having
+trouble with drug/class names not matching then just run without
+specifying any genus/species/antibiotic/class filters, to get the full
+unfiltered table and explore the field values to filter manually to get
+what you want.
+
 ## Examples
-
-``` r
-if (FALSE) { # \dontrun{
-# download all phenotype data from EBI
-pheno_ebi <- download_ebi()
-
-# download phenotype data from Dec 2025 release, and filter to Salmonella
-pheno_salmonella <- download_ebi(
-  genus = "Salmonella",
-  release = "2025-12"
-)
-
-# reformat downloaded phenotype data to simplify use with AMRgen functions
-pheno_salmonella <- import_ebi_ast_ftp(pheno_salmonella)
-
-# download phenotype data for Staphylococcus aureus and reformat
-# for use with AMRgen functions
-pheno_staph <- download_ebi(
-  species = "Staphylococcus aureus",
-  reformat = T
-)
-
-# download phenotype data for Klebsiella quasipneumoniae, reformat
-# for use with AMRgen functions, and re-interpret phenotypes
-pheno_kquasi_reinterpreted <- download_ebi(
-  species = "Klebsiella quasipneumoniae",
-  reformat = T,
-  interpret_eucast = TRUE,
-  interpret_clsi = TRUE,
-  interpret_ecoff = TRUE
-)
-
-ebi_geno <- download_ebi(data = "genotype")
-
-geno_kpn_tmp <- download_ebi(
-  data = "genotype",
-  species = "Klebsiella pneumoniae",
-  geno_subclass = "TRIMETHOPRIM"
-)
-} # }
-```

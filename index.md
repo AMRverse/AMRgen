@@ -132,6 +132,39 @@ comparison
 ggplot2::autoplot(comparison)
 ```
 
+### Download phenotype or genotype data from EBI’s AMR portal
+
+``` r
+# Get phenotype data for ciprofloxacin in E. coli
+ebi_pheno_ecoli_cip <- download_ebi(species = "Escherichia coli", antibiotic="Cipro", reformat=T)
+
+# Check how many observations we have for MIC data
+ebi_pheno_ecoli_cip %>% filter(!is.na(mic)) %>% nrow()
+
+# Plot MIC distribution, stratified by platform
+assay_by_var(ebi_pheno_ecoli_cip, measure="mic", colour_by = "pheno_provided", facet_var = "platform")
+
+# Compare MIC values with reference distribution from EUCAST
+compare_mics <- compare_mic_with_eucast(ebi_pheno_ecoli_cip$mic, ab = "cipro", mo = "E. coli")
+compare_mics
+ggplot2::autoplot(compare_mics)
+
+# Compare disk diffusion zone values with reference distribution from EUCAST
+compare_disk <- compare_disk_with_eucast(ebi_pheno_ecoli_cip$disk, ab = "cipro", mo = "E. coli")
+compare_disk
+ggplot2::autoplot(compare_disk)
+```
+
+### Import and export
+
+``` r
+# Import phenotype data in NCBI, EBI, Vitek, WHOnet formats
+?import_ast
+
+# Export phenotype data in NCBI or EBI formats
+?export_ast
+```
+
 For more see the
 [Vignette](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
 

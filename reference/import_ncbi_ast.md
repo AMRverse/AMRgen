@@ -189,10 +189,10 @@ head(pheno)
 #>   id       drug_agent     mic  disk pheno_eucast ecoff guideline method platform
 #>   <chr>    <ab>         <mic> <dsk> <sir>        <sir> <chr>     <chr>  <chr>   
 #> 1 SAMN360… CIP        <128.00    NA   NI           NI  CLSI      MIC    NA      
-#> 2 SAMN116… CIP         256.00    NA   R            R   CLSI      MIC    NA      
-#> 3 SAMN057… CIP          64.00    NA   R            R   CLSI      Etest  Etest   
-#> 4 SAMN106… CIP         >=4.00    NA   R            R   CLSI      MIC    NA      
-#> 5 SAMN106… CIP         >=4.00    NA   R            R   CLSI      MIC    NA      
+#> 2 SAMN116… CIP         256.00    NA   R           NWT  CLSI      MIC    NA      
+#> 3 SAMN057… CIP          64.00    NA   R           NWT  CLSI      Etest  Etest   
+#> 4 SAMN106… CIP         >=4.00    NA   R           NWT  CLSI      MIC    NA      
+#> 5 SAMN106… CIP         >=4.00    NA   R           NWT  CLSI      MIC    NA      
 #> 6 SAMN106… CIP         <=0.25    NA   S            NI  CLSI      MIC    NA      
 #> # ℹ 24 more variables: pheno_provided <sir>, spp_pheno <mo>,
 #> #   `Organism group` <chr>, `Scientific name` <chr>, `Isolation type` <chr>,

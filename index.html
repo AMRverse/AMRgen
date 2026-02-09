@@ -152,6 +152,39 @@
 <span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ecoli_cip</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
 <span><span class="va">comparison</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="download-phenotype-or-genotype-data-from-ebis-amr-portal">Download phenotype or genotype data from EBI’s AMR portal<a class="anchor" aria-label="anchor" href="#download-phenotype-or-genotype-data-from-ebis-amr-portal"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get phenotype data for ciprofloxacin in E. coli</span></span>
+<span><span class="va">ebi_pheno_ecoli_cip</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ebi.html">download_ebi</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"Escherichia coli"</span>, antibiotic<span class="op">=</span><span class="st">"Cipro"</span>, reformat<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check how many observations we have for MIC data</span></span>
+<span><span class="va">ebi_pheno_ecoli_cip</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Plot MIC distribution, stratified by platform</span></span>
+<span><span class="fu"><a href="reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">ebi_pheno_ecoli_cip</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_provided"</span>, facet_var <span class="op">=</span> <span class="st">"platform"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Compare MIC values with reference distribution from EUCAST</span></span>
+<span><span class="va">compare_mics</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ebi_pheno_ecoli_cip</span><span class="op">$</span><span class="va">mic</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
+<span><span class="va">compare_mics</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">compare_mics</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Compare disk diffusion zone values with reference distribution from EUCAST</span></span>
+<span><span class="va">compare_disk</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">compare_disk_with_eucast</a></span><span class="op">(</span><span class="va">ebi_pheno_ecoli_cip</span><span class="op">$</span><span class="va">disk</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
+<span><span class="va">compare_disk</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">compare_disk</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="import-and-export">Import and export<a class="anchor" aria-label="anchor" href="#import-and-export"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Import phenotype data in NCBI, EBI, Vitek, WHOnet formats</span></span>
+<span><span class="op">?</span><span class="va">import_ast</span></span>
+<span></span>
+<span><span class="co"># Export phenotype data in NCBI or EBI formats</span></span>
+<span><span class="op">?</span><span class="va">export_ast</span></span></code></pre></div>
 <p>For more see the <a href="https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html">Vignette</a>.</p>
 </div>
 </div>

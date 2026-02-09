@@ -177,7 +177,14 @@
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">compare_disk</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get genotype data for ciprofloxacin in E. coli</span></span>
-<span><span class="va">ebi_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ebi.html">download_ebi</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"Escherichia coli"</span>, geno_subclass<span class="op">=</span><span class="st">"QUINOLONE"</span>, reformat<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">ebi_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ebi.html">download_ebi</a></span><span class="op">(</span>data<span class="op">=</span><span class="st">"genotype"</span>, species <span class="op">=</span> <span class="st">"Escherichia coli"</span>, geno_subclass<span class="op">=</span><span class="st">"QUINOLONE"</span>, reformat<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create binary matrix summarising cipro geno and pheno data from EBI</span></span>
+<span><span class="va">cipro_ebi_geno_pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ebi_pheno_ecoli_cip</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, drug_class_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno_provided"</span>, keep_assay_values<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations</span></span>
+<span><span class="co">#  (for combinations observed at least 5 times)</span></span>
+<span><span class="va">cip_upset_ebi_mic</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">cipro_ebi_geno_pheno</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span>, order<span class="op">=</span><span class="st">"value"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="import-and-export">Import and export<a class="anchor" aria-label="anchor" href="#import-and-export"></a>

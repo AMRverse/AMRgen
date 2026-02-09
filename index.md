@@ -153,6 +153,9 @@ ggplot2::autoplot(compare_mics)
 compare_disk <- compare_disk_with_eucast(ebi_pheno_ecoli_cip$disk, ab = "cipro", mo = "E. coli")
 compare_disk
 ggplot2::autoplot(compare_disk)
+
+# Get genotype data for ciprofloxacin in E. coli
+ebi_geno <- download_ebi(species = "Escherichia coli", geno_subclass="QUINOLONE", reformat=T)
 ```
 
 ### Import and export

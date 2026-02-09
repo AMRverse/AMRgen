@@ -75,7 +75,7 @@
 
 
 <dt id="arg-species-col">species_col<a class="anchor" aria-label="anchor" href="#arg-species-col"></a></dt>
-<dd><p>(optional, default 'species') Name of the input data column that provides a species name. If provided, this column will be converted to micro-organism class 'mo' via <code>as.mo()</code>. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'spp_pheno'. If interpretation is switched on, this column will be used to identify the appropriate  breakpoints for interpretation of each row in the data table.</p></dd>
+<dd><p>(optional, default 'species') Name of the input data column that provides a species name. If provided, this column will be converted to micro-organism class 'mo' via <code><a href="https://amr-for-r.org/reference/as.mo.html" class="external-link">AMR::as.mo()</a></code>. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'spp_pheno'. If interpretation is switched on, this column will be used to identify the appropriate  breakpoints for interpretation of each row in the data table.</p></dd>
 
 
 <dt id="arg-ab">ab<a class="anchor" aria-label="anchor" href="#arg-ab"></a></dt>
@@ -83,19 +83,19 @@
 
 
 <dt id="arg-ab-col">ab_col<a class="anchor" aria-label="anchor" href="#arg-ab-col"></a></dt>
-<dd><p>(optional, default 'drug_agent') Name of the input data column that provides a drug name. If provided, this column will be converted to antibiotic class 'ab' via <code>as.ab()</code>. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'drug_agent'. If interpretation is switched on, this column will be used to identify the appropriate breakpoints for interpretation of each row in the data table.</p></dd>
+<dd><p>(optional, default 'drug_agent') Name of the input data column that provides a drug name. If provided, this column will be converted to antibiotic class 'ab' via <code><a href="https://amr-for-r.org/reference/as.ab.html" class="external-link">AMR::as.ab()</a></code>. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'drug_agent'. If interpretation is switched on, this column will be used to identify the appropriate breakpoints for interpretation of each row in the data table.</p></dd>
 
 
 <dt id="arg-mic-col">mic_col<a class="anchor" aria-label="anchor" href="#arg-mic-col"></a></dt>
-<dd><p>(optional, default 'mic') Name of the input data column that provides MIC measurements. If provided, this column will be converted to MIC class 'mic' via <code>as.mic()</code>. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'mic'. If interpretation is switched on, the MIC values will be interpreted against clinical breakpoints.</p></dd>
+<dd><p>(optional, default 'mic') Name of the input data column that provides MIC measurements. If provided, this column will be converted to MIC class 'mic' via <code><a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">AMR::as.mic()</a></code>. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'mic'. If interpretation is switched on, the MIC values will be interpreted against clinical breakpoints.</p></dd>
 
 
 <dt id="arg-disk-col">disk_col<a class="anchor" aria-label="anchor" href="#arg-disk-col"></a></dt>
-<dd><p>(optional, default 'disk') Name of the input data column that provides disk diffusion zone measurements. If provided, this column will be converted to disk diffusion class 'disk' via <code>as.disk()</code>. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'disk'. If interpretation is switched on, the zone values will be interpreted against clinical breakpoints.</p></dd>
+<dd><p>(optional, default 'disk') Name of the input data column that provides disk diffusion zone measurements. If provided, this column will be converted to disk diffusion class 'disk' via <code><a href="https://amr-for-r.org/reference/as.disk.html" class="external-link">AMR::as.disk()</a></code>. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'disk'. If interpretation is switched on, the zone values will be interpreted against clinical breakpoints.</p></dd>
 
 
 <dt id="arg-pheno-cols">pheno_cols<a class="anchor" aria-label="anchor" href="#arg-pheno-cols"></a></dt>
-<dd><p>(optional, default <code>c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")</code>) Name of the input data column/s that provides disk diffusion zone measurements (as a character vector, or single string for a single column). If provided, these columns will be converted to SIR class 'sir' via <code>as.sir()</code>.</p></dd>
+<dd><p>(optional, default <code>c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")</code>) Name of the input data column/s that provides disk diffusion zone measurements (as a character vector, or single string for a single column). If provided, these columns will be converted to SIR class 'sir' via <code><a href="https://amr-for-r.org/reference/as.sir.html" class="external-link">AMR::as.sir()</a></code>.</p></dd>
 
 
 <dt id="arg-method-col">method_col<a class="anchor" aria-label="anchor" href="#arg-method-col"></a></dt>

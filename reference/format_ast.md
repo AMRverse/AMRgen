@@ -67,11 +67,12 @@ format_ast(
 
   (optional, default 'species') Name of the input data column that
   provides a species name. If provided, this column will be converted to
-  micro-organism class 'mo' via `as.mo()`. If the 'rename' parameter is
-  set to TRUE, this column will also be renamed as 'spp_pheno'. If
-  interpretation is switched on, this column will be used to identify
-  the appropriate breakpoints for interpretation of each row in the data
-  table.
+  micro-organism class 'mo' via
+  [`AMR::as.mo()`](https://amr-for-r.org/reference/as.mo.html). If the
+  'rename' parameter is set to TRUE, this column will also be renamed as
+  'spp_pheno'. If interpretation is switched on, this column will be
+  used to identify the appropriate breakpoints for interpretation of
+  each row in the data table.
 
 - ab:
 
@@ -85,29 +86,32 @@ format_ast(
 
   (optional, default 'drug_agent') Name of the input data column that
   provides a drug name. If provided, this column will be converted to
-  antibiotic class 'ab' via `as.ab()`. If the 'rename' parameter is set
-  to TRUE, this column will also be renamed as 'drug_agent'. If
-  interpretation is switched on, this column will be used to identify
-  the appropriate breakpoints for interpretation of each row in the data
-  table.
+  antibiotic class 'ab' via
+  [`AMR::as.ab()`](https://amr-for-r.org/reference/as.ab.html). If the
+  'rename' parameter is set to TRUE, this column will also be renamed as
+  'drug_agent'. If interpretation is switched on, this column will be
+  used to identify the appropriate breakpoints for interpretation of
+  each row in the data table.
 
 - mic_col:
 
   (optional, default 'mic') Name of the input data column that provides
   MIC measurements. If provided, this column will be converted to MIC
-  class 'mic' via `as.mic()`. If the 'rename' parameter is set to TRUE,
-  this column will also be renamed as 'mic'. If interpretation is
-  switched on, the MIC values will be interpreted against clinical
-  breakpoints.
+  class 'mic' via
+  [`AMR::as.mic()`](https://amr-for-r.org/reference/as.mic.html). If the
+  'rename' parameter is set to TRUE, this column will also be renamed as
+  'mic'. If interpretation is switched on, the MIC values will be
+  interpreted against clinical breakpoints.
 
 - disk_col:
 
   (optional, default 'disk') Name of the input data column that provides
   disk diffusion zone measurements. If provided, this column will be
-  converted to disk diffusion class 'disk' via `as.disk()`. If the
-  'rename' parameter is set to TRUE, this column will also be renamed as
-  'disk'. If interpretation is switched on, the zone values will be
-  interpreted against clinical breakpoints.
+  converted to disk diffusion class 'disk' via
+  [`AMR::as.disk()`](https://amr-for-r.org/reference/as.disk.html). If
+  the 'rename' parameter is set to TRUE, this column will also be
+  renamed as 'disk'. If interpretation is switched on, the zone values
+  will be interpreted against clinical breakpoints.
 
 - pheno_cols:
 
@@ -116,7 +120,7 @@ format_ast(
   the input data column/s that provides disk diffusion zone measurements
   (as a character vector, or single string for a single column). If
   provided, these columns will be converted to SIR class 'sir' via
-  `as.sir()`.
+  [`AMR::as.sir()`](https://amr-for-r.org/reference/as.sir.html).
 
 - method_col:
 

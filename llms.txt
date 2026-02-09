@@ -197,6 +197,8 @@ from public repositories or internal formats.
 
 - [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
   : Import and Process AMRFinderPlus Results
+- [`import_amrfp_ebi_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.md)
+  : Import EBI-processed AMRFinderPlus Genotypes
 - [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
   : Import and Process AST Data from an EBI or NCBI antibiogram File
 - [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)

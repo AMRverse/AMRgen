@@ -7,8 +7,12 @@ from public repositories or internal formats.
 
 - [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
   : Import and Process AMRFinderPlus Results
-- [`import_amrfp_ebi_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.md)
+- [`import_amrfp_ebi()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi.md)
   : Import EBI-processed AMRFinderPlus Genotypes
+- [`import_amrfp_ebi_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.md)
+  : Import EBI-processed AMRFinderPlus Genotypes from FTP
+- [`import_amrfp_ebi_web()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_web.md)
+  : Import EBI-processed AMRFinderPlus Genotypes from Web
 - [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
   : Import and Process AST Data from an EBI or NCBI antibiogram File
 - [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
@@ -38,7 +42,9 @@ from public repositories or internal formats.
 - [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
   : Get Binary Matrix of Genotype and Phenotype Data
 - [`get_combo_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_combo_matrix.md)
-  : Generate matrix of marker combinations
+  : Add marker combinations to a binary geno-pheno matrix
+- [`combo_stats()`](https://AMRverse.github.io/AMRgen/reference/combo_stats.md)
+  : Generate a Series of Plots for AMR Gene and Combination Analysis
 - [`as.gene()`](https://AMRverse.github.io/AMRgen/reference/as.gene.md)
   : Gene Class and AMR Parsing Functions
 - [`gtdb.mo()`](https://AMRverse.github.io/AMRgen/reference/gtdb.mo.md)
@@ -76,8 +82,12 @@ breakpoints and custom models.
 Statistical models for resistance prediction and inference, including
 logistic regression and Firth regression.
 
+- [`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
+  : Generate Upset Plot
 - [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md)
   : Perform Solo PPV Analysis for AMR Markers
+- [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md) :
+  Generate Upset Plot
 - [`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md)
   : AMR Logistic Regression Analysis
 - [`glm_details()`](https://AMRverse.github.io/AMRgen/reference/glm_details.md)
@@ -100,8 +110,6 @@ and genotype-phenotype relationships.
   : Plot Estimates from a Table of Results
 - [`plot_solo_logReg()`](https://AMRverse.github.io/AMRgen/reference/plot_solo_logReg.md)
   : Plot Combined Statistics of Logistic Regression and Solo PPV
-- [`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
-  : Generate a Series of Plots for AMR Gene and Combination Analysis
 - [`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
   : Generate a Stacked Bar Plot of Assay Values Colored by a Variable
 

@@ -1,20 +1,17 @@
-# Import EBI-processed AMRFinderPlus Genotypes from FTP
+# Import EBI-processed AMRFinderPlus Genotypes
 
-This function imports processed EBI-processed AMRFinderPlus genotyping
-results. The expected input is genotype data retrieved from the [EBI AMR
-Portal FTP
+This function imports EBI-processed AMRFinderPlus genotyping results.
+The expected input is genotype data downloaded from the [EBI AMR Portal
+web browser](https://www.ebi.ac.uk/amr/data/?view=predictions), or the
+[EBI AMR Portal FTP
 site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either
 directly or via the function
 [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md).
-Note that files downloaded from the [EBI AMR Portal web
-browser](https://www.ebi.ac.uk/amr/data/?view=predictions) are formatted
-differently and can be imported using
-[import_amrfp_ebi_web](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_web.md).
 
 ## Usage
 
 ``` r
-import_amrfp_ebi_ftp(input_table)
+import_amrfp_ebi(input_table, web = FALSE)
 ```
 
 ## Arguments
@@ -23,6 +20,12 @@ import_amrfp_ebi_ftp(input_table)
 
   R object or file path for the input EBI genotype table (R object, or
   file path to a TSV or CSV file).
+
+- web:
+
+  Logical indicating whether the data is from the web portal (default
+  `FALSE`). If `FALSE` input is assumed to be from FTP or
+  [download_ebi](https://AMRverse.github.io/AMRgen/reference/download_ebi.md).
 
 ## Value
 
@@ -65,6 +68,9 @@ ebi_geno_raw <- download_ebi(data="genotype", species = "Escherichia coli",
                         geno_subclass="QUINOLONE")
 
 # Format the file for import
-ebi_geno <- import_amrfp_ebi_ftp(ebi_geno_raw)
+ebi_geno <- import_amrfp_ebi(ebi_geno_raw)
+
+# Download data from EBI web portal and import the file
+ebi_geno_from_web <- import_amrfp_ebi("amr_records.csv", web=TRUE)
 } # }
 ```

@@ -37,7 +37,18 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">import_amrfp</span><span class="op">(</span><span class="va">input_table</span>, sample_col <span class="op">=</span> <span class="st">"Name"</span>, amrfp_drugs <span class="op">=</span> <span class="va">amrfp_drugs_table</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">import_amrfp</span><span class="op">(</span></span>
+<span>  <span class="va">input_table</span>,</span>
+<span>  sample_col <span class="op">=</span> <span class="st">"Name"</span>,</span>
+<span>  element_symbol_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  element_type_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  element_subtype_col <span class="op">=</span> <span class="st">"Element subtype"</span>,</span>
+<span>  method_col <span class="op">=</span> <span class="st">"Method"</span>,</span>
+<span>  node_col <span class="op">=</span> <span class="st">"Hierarchy node"</span>,</span>
+<span>  subclass_col <span class="op">=</span> <span class="st">"Subclass"</span>,</span>
+<span>  class_col <span class="op">=</span> <span class="st">"Class"</span>,</span>
+<span>  amrfp_drugs <span class="op">=</span> <span class="va">amrfp_drugs_table</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -45,11 +56,39 @@
 
 
 <dl><dt id="arg-input-table">input_table<a class="anchor" aria-label="anchor" href="#arg-input-table"></a></dt>
-<dd><p>A character string specifying the path to the AMRFinderPlus results table (TSV format).</p></dd>
+<dd><p>A character string specifying a dataframe or path to the AMRFinderPlus results table (TSV format).</p></dd>
 
 
 <dt id="arg-sample-col">sample_col<a class="anchor" aria-label="anchor" href="#arg-sample-col"></a></dt>
 <dd><p>A character string specifying the column that identifies samples in the dataset (default <code>Name</code>).</p></dd>
+
+
+<dt id="arg-element-symbol-col">element_symbol_col<a class="anchor" aria-label="anchor" href="#arg-element-symbol-col"></a></dt>
+<dd><p>Optional character string specifying the column containing gene or element symbols if non-standard column names are used.</p></dd>
+
+
+<dt id="arg-element-type-col">element_type_col<a class="anchor" aria-label="anchor" href="#arg-element-type-col"></a></dt>
+<dd><p>Optional character string specifying the column indicating element type (e.g. AMR).</p></dd>
+
+
+<dt id="arg-element-subtype-col">element_subtype_col<a class="anchor" aria-label="anchor" href="#arg-element-subtype-col"></a></dt>
+<dd><p>Character string specifying the column used to detect mutation subtypes.</p></dd>
+
+
+<dt id="arg-method-col">method_col<a class="anchor" aria-label="anchor" href="#arg-method-col"></a></dt>
+<dd><p>Character string specifying the AMRFinderPlus method column.</p></dd>
+
+
+<dt id="arg-node-col">node_col<a class="anchor" aria-label="anchor" href="#arg-node-col"></a></dt>
+<dd><p>Character string specifying the hierarchy node column.</p></dd>
+
+
+<dt id="arg-subclass-col">subclass_col<a class="anchor" aria-label="anchor" href="#arg-subclass-col"></a></dt>
+<dd><p>Character string specifying the AMRFinderPlus subclass column.</p></dd>
+
+
+<dt id="arg-class-col">class_col<a class="anchor" aria-label="anchor" href="#arg-class-col"></a></dt>
+<dd><p>Character string specifying the AMRFinderPlus class column.</p></dd>
 
 
 <dt id="arg-amrfp-drugs">amrfp_drugs<a class="anchor" aria-label="anchor" href="#arg-amrfp-drugs"></a></dt>
@@ -75,6 +114,7 @@ This processing ensures compatibility with downstream AMR analysis workflows.</p
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># small example E. coli AMRFinderPlus data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ecoli_geno_raw</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># import first few rows of this data frame and parse it as AMRfp data</span></span></span>

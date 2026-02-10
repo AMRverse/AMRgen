@@ -173,7 +173,7 @@ soloPPV_cipro <- solo_ppv_analysis(
   pheno_table = ecoli_ast,
   antibiotic = "Ciprofloxacin",
   drug_class_list = c("Quinolones"),
-  sir_col = "Resistance phenotype"
+  sir_col = "pheno_clsi"
 )
 soloPPV_cipro$solo_stats
 soloPPV_cipro$combined_plot

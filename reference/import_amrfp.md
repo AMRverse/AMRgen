@@ -9,20 +9,62 @@ package.
 ## Usage
 
 ``` r
-import_amrfp(input_table, sample_col = "Name", amrfp_drugs = amrfp_drugs_table)
+import_amrfp(
+  input_table,
+  sample_col = "Name",
+  element_symbol_col = NULL,
+  element_type_col = NULL,
+  element_subtype_col = "Element subtype",
+  method_col = "Method",
+  node_col = "Hierarchy node",
+  subclass_col = "Subclass",
+  class_col = "Class",
+  amrfp_drugs = amrfp_drugs_table
+)
 ```
 
 ## Arguments
 
 - input_table:
 
-  A character string specifying the path to the AMRFinderPlus results
-  table (TSV format).
+  A character string specifying a dataframe or path to the AMRFinderPlus
+  results table (TSV format).
 
 - sample_col:
 
   A character string specifying the column that identifies samples in
   the dataset (default `Name`).
+
+- element_symbol_col:
+
+  Optional character string specifying the column containing gene or
+  element symbols if non-standard column names are used.
+
+- element_type_col:
+
+  Optional character string specifying the column indicating element
+  type (e.g. AMR).
+
+- element_subtype_col:
+
+  Character string specifying the column used to detect mutation
+  subtypes.
+
+- method_col:
+
+  Character string specifying the AMRFinderPlus method column.
+
+- node_col:
+
+  Character string specifying the hierarchy node column.
+
+- subclass_col:
+
+  Character string specifying the AMRFinderPlus subclass column.
+
+- class_col:
+
+  Character string specifying the AMRFinderPlus class column.
 
 - amrfp_drugs:
 
@@ -62,6 +104,7 @@ The function performs the following steps:
 ``` r
 if (FALSE) { # \dontrun{
 # small example E. coli AMRFinderPlus data
+data(ecoli_geno_raw)
 ecoli_geno_raw
 
 # import first few rows of this data frame and parse it as AMRfp data

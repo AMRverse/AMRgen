@@ -1,20 +1,19 @@
-# Import EBI-processed AMRFinderPlus Genotypes from FTP
+# Import EBI-processed AMRFinderPlus Genotypes from Web
 
-This function imports processed EBI-processed AMRFinderPlus genotyping
-results. The expected input is genotype data retrieved from the [EBI AMR
-Portal FTP
-site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either
+This function imports EBI-processed AMRFinderPlus genotyping results.
+The expected input is genotype data downloaded from the [EBI AMR Portal
+web browser](https://www.ebi.ac.uk/amr/data/?view=predictions). Note
+that files downloaded from the [EBI AMR Portal FTP
+site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), either
 directly or via the function
-[`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md).
-Note that files downloaded from the [EBI AMR Portal web
-browser](https://www.ebi.ac.uk/amr/data/?view=predictions) are formatted
-differently and can be imported using
-[import_amrfp_ebi_web](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_web.md).
+[`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md),
+are formatted differently and can be imported using
+[import_amrfp_ebi_ftp](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.md).
 
 ## Usage
 
 ``` r
-import_amrfp_ebi_ftp(input_table)
+import_amrfp_ebi_web(input_table)
 ```
 
 ## Arguments
@@ -60,11 +59,7 @@ The function performs the following steps:
 
 ``` r
 if (FALSE) { # \dontrun{
-# Download quinolone-related genotype data for E. coli, from EBI
-ebi_geno_raw <- download_ebi(data="genotype", species = "Escherichia coli", 
-                        geno_subclass="QUINOLONE")
-
-# Format the file for import
-ebi_geno <- import_amrfp_ebi_ftp(ebi_geno_raw)
+# Download data from EBI web portal and import the file
+ebi_geno <- import_amrfp_ebi_web("amr_records.csv")
 } # }
 ```

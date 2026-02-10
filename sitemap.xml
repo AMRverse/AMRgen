@@ -11,6 +11,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/as.gene.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/assay_by_var.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/checkBreakpoints.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/combo_stats.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/compare_estimates.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/compare_geno_pheno_id.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/convert_aa_code.html</loc></url>
@@ -32,7 +33,9 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/gtdb.mo.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/harmonize_data.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_amrfp.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_web.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.html</loc></url>
@@ -47,6 +50,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_combined_stats.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_estimates.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_solo_logReg.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/ppv.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/reexports.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.html</loc></url>
 </urlset>

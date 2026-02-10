@@ -75,19 +75,19 @@ ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 # Check the format of the processed genotype table
 head(ecoli_geno)
 #> # A tibble: 6 × 36
-#>   Name      gene  mutation node  `variation type` marker marker.label drug_agent
-#>   <chr>     <chr> <chr>    <chr> <chr>            <chr>  <chr>        <ab>      
-#> 1 SAMN0317… blaEC NA       blaEC Gene presence d… blaEC  blaEC        NA        
-#> 2 SAMN0317… acrF  NA       acrF  Gene presence d… acrF   acrF         NA        
-#> 3 SAMN0317… glpT  Glu448L… glpT  Protein variant… glpT_… glpT:Glu448… FOS       
-#> 4 SAMN0317… floR  NA       floR  Gene presence d… floR   floR         CHL       
-#> 5 SAMN0317… floR  NA       floR  Gene presence d… floR   floR         FLR       
-#> 6 SAMN0317… mdtM  NA       mdtM  Gene presence d… mdtM   mdtM         NA        
-#> # ℹ 28 more variables: drug_class <chr>, `Protein identifier` <lgl>,
-#> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
-#> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,
-#> #   `Element type` <chr>, `Element subtype` <chr>, Class <chr>, Subclass <chr>,
-#> #   Method <chr>, `Target length` <dbl>, `Reference sequence length` <dbl>,
+#>   Name         gene  mutation  node  marker   marker.label drug_agent drug_class
+#>   <chr>        <chr> <chr>     <chr> <chr>    <chr>        <ab>       <chr>     
+#> 1 SAMN03177615 blaEC NA        blaEC blaEC    blaEC        NA         Beta-lact…
+#> 2 SAMN03177615 acrF  NA        acrF  acrF     acrF         NA         Efflux    
+#> 3 SAMN03177615 glpT  Glu448Lys glpT  glpT_E4… glpT:Glu448… FOS        Other ant…
+#> 4 SAMN03177615 floR  NA        floR  floR     floR         CHL        Amphenico…
+#> 5 SAMN03177615 floR  NA        floR  floR     floR         FLR        Other ant…
+#> 6 SAMN03177615 mdtM  NA        mdtM  mdtM     mdtM         NA         Efflux    
+#> # ℹ 28 more variables: `Protein identifier` <lgl>, `Contig id` <chr>,
+#> #   Start <dbl>, Stop <dbl>, Strand <chr>, `Gene symbol` <chr>,
+#> #   `Sequence name` <chr>, Scope <chr>, `Element type` <chr>,
+#> #   `Element subtype` <chr>, Class <chr>, Subclass <chr>, Method <chr>,
+#> #   `Target length` <dbl>, `Reference sequence length` <dbl>,
 #> #   `% Coverage of reference sequence` <dbl>,
 #> #   `% Identity to reference sequence` <dbl>, `Alignment length` <dbl>, …
 ```
@@ -937,21 +937,22 @@ cipro_mic_upset <- amr_upset(
 
 # Output table
 cipro_mic_upset$summary
-#> # A tibble: 103 × 14
-#>    marker_list             marker_count     n   R.ppv     R NWT.ppv   NWT
-#>    <chr>                          <dbl> <int>   <dbl> <dbl>   <dbl> <dbl>
-#>  1 ""                                 0  2590 0.00386    10  0.0197    51
-#>  2 "qnrB"                             1     1 1           1  1          1
-#>  3 "parE_E460K, gyrA_S83W"            2     1 1           1  1          1
-#>  4 "parE_D475E"                       1    61 0           0  0          0
-#>  5 "qnrA1"                            1     2 0           0  1          2
-#>  6 "gyrA_S83A"                        1     3 0           0  0.667      2
-#>  7 "qnrB4"                            1     2 1           2  1          2
-#>  8 "parE_I355T"                       1    24 0           0  0          0
-#>  9 "marR_S3N"                         1    38 0.105       4  0.263     10
-#> 10 "marR_S3N, parE_D475E"             2     4 0           0  0.25       1
+#> # A tibble: 103 × 19
+#>    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower
+#>    <chr>                     <dbl> <int> <chr>          <dbl>   <dbl>      <dbl>
+#>  1 ""                            0  2590 0_0_0_0_0_0_0…    10 0.00386    0.00147
+#>  2 "qnrB"                        1     1 0_0_0_0_0_0_0…     1 1          1      
+#>  3 "parE_E460K, gyrA…            2     1 0_0_0_0_0_0_0…     1 1          1      
+#>  4 "parE_D475E"                  1    61 0_0_0_0_0_0_0…     0 0          0      
+#>  5 "qnrA1"                       1     2 0_0_0_0_0_0_0…     0 0          0      
+#>  6 "gyrA_S83A"                   1     3 0_0_0_0_0_0_0…     0 0          0      
+#>  7 "qnrB4"                       1     2 0_0_0_0_0_0_0…     2 1          1      
+#>  8 "parE_I355T"                  1    24 0_0_0_0_0_0_0…     0 0          0      
+#>  9 "marR_S3N"                    1    38 0_0_0_0_0_0_0…     4 0.105      0.00769
+#> 10 "marR_S3N, parE_D…            2     4 0_0_0_0_0_0_0…     0 0          0      
 #> # ℹ 93 more rows
-#> # ℹ 7 more variables: median_excludeRangeValues <dbl>,
+#> # ℹ 12 more variables: R.ci_upper <dbl>, NWT.n <dbl>, NWT.ppv <dbl>,
+#> #   NWT.ci_lower <dbl>, NWT.ci_upper <dbl>, median_excludeRangeValues <dbl>,
 #> #   q25_excludeRangeValues <dbl>, q75_excludeRangeValues <dbl>,
 #> #   n_excludeRangeValues <int>, median_ignoreRanges <dbl>,
 #> #   q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>

@@ -8,24 +8,28 @@ in the data.
 ## Usage
 
 ``` r
-amr_upset(
+ppv(
   binary_matrix,
   min_set_size = 2,
   order = "",
-  plot_set_size = FALSE,
-  plot_category = TRUE,
-  print_category_counts = FALSE,
-  print_set_size = FALSE,
-  boxplot_col = "grey",
-  assay = "mic",
+  colours_ppv = c(R = "maroon", NWT = "navy"),
   SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
+  upset_grid = FALSE,
+  marker_label_space = NULL,
+  plot_category = TRUE,
+  print_category_counts = TRUE,
+  plot_ppv = TRUE,
+  plot_assay = FALSE,
+  assay = NULL,
+  boxplot_col = "grey",
   antibiotic = NULL,
   species = NULL,
   bp_site = NULL,
   guideline = "EUCAST 2025",
   bp_S = NULL,
   bp_R = NULL,
-  ecoff_bp = NULL
+  ecoff_bp = NULL,
+  pd = position_dodge(width = 0.8)
 )
 ```
 
@@ -58,51 +62,70 @@ amr_upset(
   - "value": order by the median assay value (MIC or disk zone) for each
     combination.
 
-- plot_set_size:
+- colours_ppv:
 
-  Logical indicating whether to include a bar plot showing the set size
-  (i.e., number of times each combination of markers is observed).
-  Default is FALSE.
+  A named vector of colours for the plot of PPV estimates. The names
+  should be "R", "I" and "NWT", and the values should be valid color
+  names or hexadecimal color codes.
+
+- SIR_col:
+
+  A named vector of colours for the percentage bar plot and/or assay
+  plot. The names should be the phenotype categories (e.g., "R", "I",
+  "S"), and the values should be valid color names or hexadecimal color
+  codes. Default values are those used in the AMR package
+  `scale_colour_sir()`.
+
+- upset_grid:
+
+  Logical indicating whether to show marker combinations as an upset
+  plot-style grid (default `FALSE`, so that each row is instead labelled
+  with a printed list of markers).
+
+- marker_label_space:
+
+  Relative width of plotting area to provide to the marker list/grid.
+  (Default `NULL`, which results in a default value of 3 when
+  `upset_grid=FALSE` and 1 otherwise).
 
 - plot_category:
 
   Logical indicating whether to include a stacked bar plot showing, for
   each marker combination, the proportion of samples with each phenotype
-  classification (specified by the `pheno` column in the input file).
-  Default is TRUE.
+  classification. Default is `TRUE`.
 
 - print_category_counts:
 
   Logical indicating whether, if `plot_category` is TRUE, to print the
   number of strains in each resistance category for each marker
-  combination in the plot. Default is FALSE.
+  combination in the plot. Default is `FALSE`.
 
-- print_set_size:
+- plot_ppv:
 
-  Logical indicating whether, if `plot_set_size` is TRUE, to print the
-  number of strains with each marker combination on the plot. Default is
-  FALSE.
+  Logical indicating whether to plot the estimates for positive
+  predictive value, for each marker combination (default `TRUE`).
 
-- boxplot_col:
+- plot_assay:
 
-  Colour for lines of the box plots summarising the MIC distribution for
-  each marker combination. Default is "grey".
+  Logical indicating whether to plot the distribution of MIC/disk assay
+  values, for each marker combination (default `FALSE`).
 
 - assay:
 
   A character string indicating whether to plot MIC or disk diffusion
   data. Must be one of:
 
+  - NULL: (default) if no assay data is to be plotted
+
   - "mic": plot MIC data stored in column `mic`
 
   - "disk": plot disk diffusion data stored in column `disk`
 
-- SIR_col:
+- boxplot_col:
 
-  A named vector of colours for the percentage bar plot. The names
-  should be the phenotype categories (e.g., "R", "I", "S"), and the
-  values should be valid color names or hexadecimal color codes. Default
-  values are those used in the AMR package `scale_colour_sir()`.
+  Colour for lines of the box plots summarising the MIC distribution for
+  each marker combination. Default is "grey". Only used if
+  `plot_assay=TRUE`.
 
 - antibiotic:
 
@@ -116,9 +139,10 @@ amr_upset(
 
 - bp_site:
 
-  (optional) Breakpoint site to retrieve (only relevant if also
-  supplying `species` and `antibiotic` to retrieve breakpoints to plot,
-  and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff_bp`).
+  (optional) Breakpoint site to retrieve (only relevant if plot_assay
+  set to `TRUE` and also supplying `species` and `antibiotic` to
+  retrieve breakpoints to plot, and not supplying breakpoints via
+  `bp_S`, `bp_R`, `ecoff_bp`).
 
 - guideline:
 
@@ -127,28 +151,32 @@ amr_upset(
 
 - bp_S:
 
-  (optional) S breakpoint to add to plot (numerical).
+  (optional) S breakpoint to add to assay distribution plot (numerical).
 
 - bp_R:
 
-  (optional) R breakpoint to add to plot (numerical).
+  (optional) R breakpoint to add to assay distribution plot (numerical).
 
 - ecoff_bp:
 
-  (optional) ECOFF breakpoint to add to plot (numerical).
+  (optional) ECOFF breakpoint to add to assay distribution plot
+  (numerical).
+
+- pd:
+
+  Position dodge, i.e. spacing for the R/NWT values to be positioned
+  above/below the line in the PPV plot. Default 'position_dodge(width =
+  0.8)'.
 
 ## Value
 
 A list containing the following elements:
 
-- `plot`: A grid of plots displaying: (i) grid showing the marker
-  combinations observed, MIC distribution per marker combination,
-  frequency per marker and (optionally) phenotype classification and/or
-  number of samples for each marker combination.
+- `plot`: A grid of the requested plots
 
 - `summary`: A data frame summarizing each marker combination observed,
-  including median MIC (and interquartile range), number of resistant
-  isolates, and positive predictive value for resistance.
+  including number of resistant isolates, positive predictive values,
+  and median assay values (and interquartile range) where relevant.
 
 ## Examples
 
@@ -166,7 +194,7 @@ binary_matrix <- get_binary_matrix(
 )
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff 
 
-amr_upset(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
+ppv(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
 
 #> $plot
 

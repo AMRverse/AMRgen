@@ -1,31 +1,36 @@
-# Generate Upset Plot
+# Generate a Series of Plots for AMR Gene and Combination Analysis
 
-This function generates an upset plot showing summaries of phenotype
-results (assay distributions, phenotype category percentages, and/or
-predictive value for phenotype) for each combination of markers observed
-in the data.
+This function generates a set of visualizations to analyze AMR gene
+combinations, MIC values, and gene prevalence from an input geno-pheno
+binary matrix. It creates several plots, including assay distributions,
+phenotype breakdown and positive predictive values for each marker
+combination. The
+[amr_upset](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
+and [ppv](https://AMRverse.github.io/AMRgen/reference/ppv.md) functions
+can be used to generate standard data visualisations using the component
+plots.
 
 ## Usage
 
 ``` r
-amr_upset(
+combo_stats(
   binary_matrix,
   min_set_size = 2,
   order = "",
-  plot_set_size = FALSE,
-  plot_category = TRUE,
-  print_category_counts = FALSE,
-  print_set_size = FALSE,
-  boxplot_col = "grey",
   assay = "mic",
+  print_set_size = FALSE,
+  print_category_counts = FALSE,
   SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
+  boxplot_col = "grey",
+  colours_ppv = c(R = "maroon", NWT = "navy"),
   antibiotic = NULL,
   species = NULL,
   bp_site = NULL,
   guideline = "EUCAST 2025",
   bp_S = NULL,
   bp_R = NULL,
-  ecoff_bp = NULL
+  ecoff_bp = NULL,
+  pd = position_dodge(width = 0.8)
 )
 ```
 
@@ -58,36 +63,6 @@ amr_upset(
   - "value": order by the median assay value (MIC or disk zone) for each
     combination.
 
-- plot_set_size:
-
-  Logical indicating whether to include a bar plot showing the set size
-  (i.e., number of times each combination of markers is observed).
-  Default is FALSE.
-
-- plot_category:
-
-  Logical indicating whether to include a stacked bar plot showing, for
-  each marker combination, the proportion of samples with each phenotype
-  classification (specified by the `pheno` column in the input file).
-  Default is TRUE.
-
-- print_category_counts:
-
-  Logical indicating whether, if `plot_category` is TRUE, to print the
-  number of strains in each resistance category for each marker
-  combination in the plot. Default is FALSE.
-
-- print_set_size:
-
-  Logical indicating whether, if `plot_set_size` is TRUE, to print the
-  number of strains with each marker combination on the plot. Default is
-  FALSE.
-
-- boxplot_col:
-
-  Colour for lines of the box plots summarising the MIC distribution for
-  each marker combination. Default is "grey".
-
 - assay:
 
   A character string indicating whether to plot MIC or disk diffusion
@@ -97,12 +72,35 @@ amr_upset(
 
   - "disk": plot disk diffusion data stored in column `disk`
 
+- print_set_size:
+
+  Logical indicating whether, if `plot_set_size` is TRUE, to print the
+  number of strains with each marker combination on the plot. Default is
+  FALSE.
+
+- print_category_counts:
+
+  Logical indicating whether, if `plot_category` is TRUE, to print the
+  number of strains in each resistance category for each marker
+  combination in the plot. Default is FALSE.
+
 - SIR_col:
 
   A named vector of colours for the percentage bar plot. The names
   should be the phenotype categories (e.g., "R", "I", "S"), and the
   values should be valid color names or hexadecimal color codes. Default
   values are those used in the AMR package `scale_colour_sir()`.
+
+- boxplot_col:
+
+  Colour for lines of the box plots summarising the MIC distribution for
+  each marker combination. Default is "grey".
+
+- colours_ppv:
+
+  A named vector of colours for the plot of PPV estimates. The names
+  should be "R", "I" and "NWT", and the values should be valid color
+  names or hexadecimal color codes.
 
 - antibiotic:
 
@@ -137,6 +135,12 @@ amr_upset(
 
   (optional) ECOFF breakpoint to add to plot (numerical).
 
+- pd:
+
+  Position dodge, i.e. spacing for the R/NWT values to be positioned
+  above/below the line in the PPV plot. Default 'position_dodge(width =
+  0.8)'.
+
 ## Value
 
 A list containing the following elements:
@@ -166,11 +170,7 @@ binary_matrix <- get_binary_matrix(
 )
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff 
 
-amr_upset(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
-
-#> $plot
-
-#> 
+combo_stats(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
 #> $summary
 #> # A tibble: 103 × 19
 #>    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower
@@ -191,5 +191,23 @@ amr_upset(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
 #> #   q25_excludeRangeValues <dbl>, q75_excludeRangeValues <dbl>,
 #> #   n_excludeRangeValues <int>, median_ignoreRanges <dbl>,
 #> #   q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
+#> 
+#> $assay_plot
+
+#> 
+#> $setsize_plot
+
+#> 
+#> $marker_grid_plot
+
+#> 
+#> $marker_count_plot
+
+#> 
+#> $category_plot
+
+#> 
+#> $ppv_plot
+
 #> 
 ```

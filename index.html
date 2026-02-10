@@ -122,13 +122,16 @@
 <span><span class="co"># Import matching E. coli AMRFinderPlus data from AllTheBacteria</span></span>
 <span><span class="va">ecoli_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Calculate positive predictive value for ciprofloxacin resistance</span></span>
+<span><span class="co"># Calculate solo positive predictive value for ciprofloxacin resistance, for individual markers found solo</span></span>
 <span><span class="co">#  (for all quinolone-associated genotype markers)</span></span>
 <span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_ast</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, drug_class_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno_clsi"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations</span></span>
 <span><span class="co">#  (for combinations observed at least 5 times)</span></span>
 <span><span class="va">cip_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span>, order<span class="op">=</span><span class="st">"value"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate positive predictive value for individual markers and combinations</span></span>
+<span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span>, order<span class="op">=</span><span class="st">"value"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers</span></span>
 <span><span class="co">#  (for markers observed at least 10 times)</span></span>

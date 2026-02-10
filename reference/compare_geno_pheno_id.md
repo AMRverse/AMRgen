@@ -1512,24 +1512,24 @@ print(result$overlap_ids)
 #> [3629] "SAMN28235834" "SAMN03892121"
 print(result$geno_matched)
 #> # A tibble: 36,111 × 36
-#>    Name     gene  mutation node  `variation type` marker marker.label drug_agent
-#>    <chr>    <chr> <chr>    <chr> <chr>            <chr>  <chr>        <ab>      
-#>  1 SAMN031… blaEC NA       blaEC Gene presence d… blaEC  blaEC        NA        
-#>  2 SAMN031… acrF  NA       acrF  Gene presence d… acrF   acrF         NA        
-#>  3 SAMN031… glpT  Glu448L… glpT  Protein variant… glpT_… glpT:Glu448… FOS       
-#>  4 SAMN031… floR  NA       floR  Gene presence d… floR   floR         CHL       
-#>  5 SAMN031… floR  NA       floR  Gene presence d… floR   floR         FLR       
-#>  6 SAMN031… mdtM  NA       mdtM  Gene presence d… mdtM   mdtM         NA        
-#>  7 SAMN031… blaT… NA       blaT… Gene presence d… blaTE… blaTEM-1     NA        
-#>  8 SAMN031… sul2  NA       sul2  Gene presence d… sul2   sul2         SSS       
-#>  9 SAMN031… aph(… NA       aph(… Gene presence d… aph(3… aph(3'')-Ib  STR1      
-#> 10 SAMN031… aph(… NA       aph(… Gene presence d… aph(6… aph(6)-Id    STR1      
+#>    Name         gene    mutation node  marker marker.label drug_agent drug_class
+#>    <chr>        <chr>   <chr>    <chr> <chr>  <chr>        <ab>       <chr>     
+#>  1 SAMN03177615 blaEC   NA       blaEC blaEC  blaEC        NA         Beta-lact…
+#>  2 SAMN03177615 acrF    NA       acrF  acrF   acrF         NA         Efflux    
+#>  3 SAMN03177615 glpT    Glu448L… glpT  glpT_… glpT:Glu448… FOS        Other ant…
+#>  4 SAMN03177615 floR    NA       floR  floR   floR         CHL        Amphenico…
+#>  5 SAMN03177615 floR    NA       floR  floR   floR         FLR        Other ant…
+#>  6 SAMN03177615 mdtM    NA       mdtM  mdtM   mdtM         NA         Efflux    
+#>  7 SAMN03177615 blaTEM… NA       blaT… blaTE… blaTEM-1     NA         Beta-lact…
+#>  8 SAMN03177615 sul2    NA       sul2  sul2   sul2         SSS        Other ant…
+#>  9 SAMN03177615 aph(3'… NA       aph(… aph(3… aph(3'')-Ib  STR1       Aminoglyc…
+#> 10 SAMN03177615 aph(6)… NA       aph(… aph(6… aph(6)-Id    STR1       Aminoglyc…
 #> # ℹ 36,101 more rows
-#> # ℹ 28 more variables: drug_class <chr>, `Protein identifier` <lgl>,
-#> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
-#> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,
-#> #   `Element type` <chr>, `Element subtype` <chr>, Class <chr>, Subclass <chr>,
-#> #   Method <chr>, `Target length` <dbl>, `Reference sequence length` <dbl>,
+#> # ℹ 28 more variables: `Protein identifier` <lgl>, `Contig id` <chr>,
+#> #   Start <dbl>, Stop <dbl>, Strand <chr>, `Gene symbol` <chr>,
+#> #   `Sequence name` <chr>, Scope <chr>, `Element type` <chr>,
+#> #   `Element subtype` <chr>, Class <chr>, Subclass <chr>, Method <chr>,
+#> #   `Target length` <dbl>, `Reference sequence length` <dbl>,
 #> #   `% Coverage of reference sequence` <dbl>, …
 print(result$pheno_matched)
 #> # A tibble: 3,630 × 10

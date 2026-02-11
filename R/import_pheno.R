@@ -557,37 +557,21 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   if (format == "microscan") {
     cat("Reading in as MicroScan AST format\n")
     ast <- import_microscan_ast(input,
-                                interpret_eucast = interpret_eucast,
-                                interpret_clsi = interpret_clsi,
-                                interpret_ecoff = interpret_ecoff,
-                                species = species, ab = ab, source = source)
+      interpret_eucast = interpret_eucast,
+      interpret_clsi = interpret_clsi,
+      interpret_ecoff = interpret_ecoff,
+      species = species, ab = ab, source = source
+    )
   }
 
   if (format == "sensititre") {
     cat("Reading in as Sensititre AST format\n")
     ast <- import_sensititre_ast(input,
-                                  interpret_eucast = interpret_eucast,
-                                  interpret_clsi = interpret_clsi,
-                                  interpret_ecoff = interpret_ecoff,
-                                  species = species, ab = ab, source = source)
-  }
-
-  if (format == "microscan") {
-    cat("Reading in as MicroScan AST format\n")
-    ast <- import_microscan_ast(input,
-                                interpret_eucast = interpret_eucast,
-                                interpret_clsi = interpret_clsi,
-                                interpret_ecoff = interpret_ecoff,
-                                species = species, ab = ab, source = source)
-  }
-
-  if (format == "sensititre") {
-    cat("Reading in as Sensititre AST format\n")
-    ast <- import_sensititre_ast(input,
-                                  interpret_eucast = interpret_eucast,
-                                  interpret_clsi = interpret_clsi,
-                                  interpret_ecoff = interpret_ecoff,
-                                  species = species, ab = ab, source = source)
+      interpret_eucast = interpret_eucast,
+      interpret_clsi = interpret_clsi,
+      interpret_ecoff = interpret_ecoff,
+      species = species, ab = ab, source = source
+    )
   }
 
   if (format == "whonet") {
@@ -1152,10 +1136,12 @@ import_vitek_ast <- function(input,
 
   # Reorder columns
   ast_long <- ast_long %>%
-    relocate(any_of(c("id", "drug_agent", "mic", "disk",
-                      "pheno_eucast", "pheno_clsi", "ecoff",
-                      "guideline", "method", "platform", "source",
-                      "pheno_provided", "spp_pheno")))
+    relocate(any_of(c(
+      "id", "drug_agent", "mic", "disk",
+      "pheno_eucast", "pheno_clsi", "ecoff",
+      "guideline", "method", "platform", "source",
+      "pheno_provided", "spp_pheno"
+    )))
 
   return(ast_long)
 }
@@ -1184,15 +1170,14 @@ import_vitek_ast <- function(input,
 #' @return Standardised AST data frame
 #' @export
 import_microscan_ast <- function(input,
-                                  sample_col = NULL,
-                                  source = NULL,
-                                  species = NULL,
-                                  ab = NULL,
-                                  instrument_guideline = NULL,
-                                  interpret_eucast = FALSE,
-                                  interpret_clsi = FALSE,
-                                  interpret_ecoff = FALSE) {
-
+                                 sample_col = NULL,
+                                 source = NULL,
+                                 species = NULL,
+                                 ab = NULL,
+                                 instrument_guideline = NULL,
+                                 interpret_eucast = FALSE,
+                                 interpret_clsi = FALSE,
+                                 interpret_ecoff = FALSE) {
   # MicroScan files may have .txt extension but be comma-separated
   # Try process_input first, fall back to read_csv if only 1 column detected
   ast <- process_input(input)
@@ -1214,31 +1199,39 @@ import_microscan_ast <- function(input,
   lang_markers <- list(
     spanish = list(
       detect = "Muestra",
-      meta = c("Muestra" = "Sample", "Origen" = "Source",
-               "Aislamiento" = "Isolation", "Microorganismo" = "Microorganism"),
+      meta = c(
+        "Muestra" = "Sample", "Origen" = "Source",
+        "Aislamiento" = "Isolation", "Microorganismo" = "Microorganism"
+      ),
       mic_suffix = " CIM",
       sir_suffixes = c(" Interpretaci\u00f3n", " Interpretacion")
     ),
     french = list(
       detect = c("\u00c9chantillon", "Echantillon"),
-      meta = c("\u00c9chantillon" = "Sample", "Echantillon" = "Sample",
-               "Origine" = "Source", "Isolement" = "Isolation",
-               "Micro-organisme" = "Microorganism", "Microorganisme" = "Microorganism"),
+      meta = c(
+        "\u00c9chantillon" = "Sample", "Echantillon" = "Sample",
+        "Origine" = "Source", "Isolement" = "Isolation",
+        "Micro-organisme" = "Microorganism", "Microorganisme" = "Microorganism"
+      ),
       mic_suffix = " CMI",
       sir_suffixes = c(" Interpr\u00e9tation", " Interpretation")
     ),
     german = list(
       detect = "Probe",
-      meta = c("Probe" = "Sample", "Herkunft" = "Source", "Quelle" = "Source",
-               "Isolierung" = "Isolation", "Mikroorganismus" = "Microorganism"),
+      meta = c(
+        "Probe" = "Sample", "Herkunft" = "Source", "Quelle" = "Source",
+        "Isolierung" = "Isolation", "Mikroorganismus" = "Microorganism"
+      ),
       mic_suffix = " MHK",
       sir_suffixes = c(" Interpretation")
     ),
     portuguese = list(
       detect = "Amostra",
-      meta = c("Amostra" = "Sample", "Origem" = "Source",
-               "Isolamento" = "Isolation", "Microrganismo" = "Microorganism",
-               "Microorganismo" = "Microorganism"),
+      meta = c(
+        "Amostra" = "Sample", "Origem" = "Source",
+        "Isolamento" = "Isolation", "Microrganismo" = "Microorganism",
+        "Microorganismo" = "Microorganism"
+      ),
       mic_suffix = " CIM",
       sir_suffixes = c(" Interpreta\u00e7\u00e3o", " Interpretacao")
     )
@@ -1265,20 +1258,26 @@ import_microscan_ast <- function(input,
     }
 
     # Translate MIC suffix
-    colnames(ast) <- gsub(paste0(gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", lang$mic_suffix), "$"),
-                          " MIC", colnames(ast))
+    colnames(ast) <- gsub(
+      paste0(gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", lang$mic_suffix), "$"),
+      " MIC", colnames(ast)
+    )
 
     # Translate Interpretation suffixes
     for (suf in lang$sir_suffixes) {
-      colnames(ast) <- gsub(paste0(gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", suf), "$"),
-                            " Interpretation", colnames(ast))
+      colnames(ast) <- gsub(
+        paste0(gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", suf), "$"),
+        " Interpretation", colnames(ast)
+      )
     }
   }
 
   # Determine sample column (after translation, non-English names should be "Sample")
   if (is.null(sample_col)) {
-    sample_candidates <- c("Sample", "Muestra", "\u00c9chantillon", "Echantillon",
-                           "Probe", "Amostra")
+    sample_candidates <- c(
+      "Sample", "Muestra", "\u00c9chantillon", "Echantillon",
+      "Probe", "Amostra"
+    )
     found <- sample_candidates[sample_candidates %in% colnames(ast)]
     if (length(found) > 0) {
       sample_col <- found[1]
@@ -1382,17 +1381,20 @@ import_microscan_ast <- function(input,
 
   # Interpret phenotypes
   ast_long <- interpret_ast(ast_long,
-                            interpret_ecoff = interpret_ecoff,
-                            interpret_eucast = interpret_eucast,
-                            interpret_clsi = interpret_clsi,
-                            species = species, ab = ab)
+    interpret_ecoff = interpret_ecoff,
+    interpret_eucast = interpret_eucast,
+    interpret_clsi = interpret_clsi,
+    species = species, ab = ab
+  )
 
   # Reorder columns
   ast_long <- ast_long %>%
-    relocate(any_of(c("id", "drug_agent", "mic", "disk",
-                      "pheno_eucast", "pheno_clsi", "ecoff",
-                      "guideline", "method", "platform", "source",
-                      "pheno_provided", "spp_pheno")))
+    relocate(any_of(c(
+      "id", "drug_agent", "mic", "disk",
+      "pheno_eucast", "pheno_clsi", "ecoff",
+      "guideline", "method", "platform", "source",
+      "pheno_provided", "spp_pheno"
+    )))
 
   return(ast_long)
 }
@@ -1416,14 +1418,13 @@ import_microscan_ast <- function(input,
 #' @return Standardised AST data frame
 #' @export
 import_sensititre_ast <- function(input,
-                                   source = NULL,
-                                   species = NULL,
-                                   ab = NULL,
-                                   instrument_guideline = NULL,
-                                   interpret_eucast = FALSE,
-                                   interpret_clsi = FALSE,
-                                   interpret_ecoff = FALSE) {
-
+                                  source = NULL,
+                                  species = NULL,
+                                  ab = NULL,
+                                  instrument_guideline = NULL,
+                                  interpret_eucast = FALSE,
+                                  interpret_clsi = FALSE,
+                                  interpret_ecoff = FALSE) {
   # Sensititre files are UTF-16LE encoded, tab-separated, with no header row
   # Cannot use process_input() - needs custom reading
   if (!is.character(input) || !file.exists(input)) {
@@ -1431,14 +1432,17 @@ import_sensititre_ast <- function(input,
   }
 
   # Read as UTF-16LE via file connection, fall back to UTF-8
-  raw_lines <- tryCatch({
-    con <- file(input, encoding = "UTF-16LE")
-    lines <- readLines(con, warn = FALSE)
-    close(con)
-    lines
-  }, error = function(e) {
-    readLines(input, warn = FALSE)
-  })
+  raw_lines <- tryCatch(
+    {
+      con <- file(input, encoding = "UTF-16LE")
+      lines <- readLines(con, warn = FALSE)
+      close(con)
+      lines
+    },
+    error = function(e) {
+      readLines(input, warn = FALSE)
+    }
+  )
 
   # Remove BOM character and empty lines
   raw_lines <- sub("^\ufeff", "", raw_lines)
@@ -1514,7 +1518,8 @@ import_sensititre_ast <- function(input,
     stop("No drug data found in Sensititre file")
   }
 
-  ast_long <- dplyr::bind_rows(all_rows)
+
+  ast_long <- dplyr::bind_rows(all_rows) %>% as_tibble()
 
   # Clean MIC values: remove leading/trailing spaces, normalise signs
   ast_long <- ast_long %>%
@@ -1535,8 +1540,8 @@ import_sensititre_ast <- function(input,
     mutate(pheno_provided = case_when(
       interp_raw == "SUSC" ~ "S",
       interp_raw == "RESIST" ~ "R",
-      interp_raw == "SUSIE" ~ "I",   # EUCAST "susceptible, increased exposure"
-      interp_raw == "SC" ~ "I",      # SDD (susceptible dose-dependent)
+      interp_raw == "SUSIE" ~ "I", # EUCAST "susceptible, increased exposure"
+      interp_raw == "SC" ~ "I", # SDD (susceptible dose-dependent)
       interp_raw %in% c("NOINTP", "NOIMAT") ~ NA_character_,
       TRUE ~ NA_character_
     )) %>%
@@ -1570,17 +1575,14 @@ import_sensititre_ast <- function(input,
 
   # Interpret phenotypes
   ast_long <- interpret_ast(ast_long,
-                            interpret_ecoff = interpret_ecoff,
-                            interpret_eucast = interpret_eucast,
-                            interpret_clsi = interpret_clsi,
-                            species = species, ab = ab)
+    interpret_ecoff = interpret_ecoff,
+    interpret_eucast = interpret_eucast,
+    interpret_clsi = interpret_clsi,
+    species = species, ab = ab
+  )
 
   # Reorder columns
   ast_long <- ast_long %>%
-    relocate(any_of(c("id", "drug_agent", "mic", "disk",
-                      "pheno_eucast", "pheno_clsi", "ecoff",
-                      "guideline", "method", "platform", "source",
-                      "pheno_provided", "spp_pheno")))
     relocate(any_of(c(
       "id", "drug_agent", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",

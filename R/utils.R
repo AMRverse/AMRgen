@@ -183,7 +183,6 @@ utils::globalVariables(c(
   "value",
   "variation type",
   "x",
-  "site"
   "site",
   "element_symbol_col",
   "element_type_col",

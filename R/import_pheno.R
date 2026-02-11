@@ -572,6 +572,24 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
                                   species = species, ab = ab, source = source)
   }
 
+  if (format == "microscan") {
+    cat("Reading in as MicroScan AST format\n")
+    ast <- import_microscan_ast(input,
+                                interpret_eucast = interpret_eucast,
+                                interpret_clsi = interpret_clsi,
+                                interpret_ecoff = interpret_ecoff,
+                                species = species, ab = ab, source = source)
+  }
+
+  if (format == "sensititre") {
+    cat("Reading in as Sensititre AST format\n")
+    ast <- import_sensititre_ast(input,
+                                  interpret_eucast = interpret_eucast,
+                                  interpret_clsi = interpret_clsi,
+                                  interpret_ecoff = interpret_ecoff,
+                                  species = species, ab = ab, source = source)
+  }
+
   if (format == "whonet") {
     cat("Reading in as WHONET AST format\n")
     ast <- import_whonet_ast(input,
@@ -1134,6 +1152,435 @@ import_vitek_ast <- function(input,
 
   # Reorder columns
   ast_long <- ast_long %>%
+    relocate(any_of(c("id", "drug_agent", "mic", "disk",
+                      "pheno_eucast", "pheno_clsi", "ecoff",
+                      "guideline", "method", "platform", "source",
+                      "pheno_provided", "spp_pheno")))
+
+  return(ast_long)
+}
+
+
+#' Import and Process AST Data from MicroScan Output Files
+#'
+#' This function imports AST data from MicroScan instrument output files (wide CSV format)
+#' and converts it to the standardised long-format used by AMRgen. Supports English,
+#' Spanish, French, German, and Portuguese column names (auto-detected from metadata columns).
+#'
+#' @param input A dataframe or path to a CSV/TSV file containing MicroScan AST output data
+#' @param sample_col Column name for sample identifiers. Default: NULL (auto-detected from language-specific column names)
+#' @param source Optional source value to record for all data points
+#' @param species Optional species override for phenotype interpretation
+#' @param ab Optional antibiotic override for phenotype interpretation
+#' @param instrument_guideline Optional guideline used by the instrument for SIR interpretation
+#' @param interpret_eucast Interpret against EUCAST breakpoints
+#' @param interpret_clsi Interpret against CLSI breakpoints
+#' @param interpret_ecoff Interpret against ECOFF values
+#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom dplyr across any_of case_when coalesce filter mutate relocate rename select
+#' @importFrom tidyr pivot_longer
+#' @importFrom stringr str_match
+#' @importFrom rlang sym
+#' @return Standardised AST data frame
+#' @export
+import_microscan_ast <- function(input,
+                                  sample_col = NULL,
+                                  source = NULL,
+                                  species = NULL,
+                                  ab = NULL,
+                                  instrument_guideline = NULL,
+                                  interpret_eucast = FALSE,
+                                  interpret_clsi = FALSE,
+                                  interpret_ecoff = FALSE) {
+
+  # MicroScan files may have .txt extension but be comma-separated
+  # Try process_input first, fall back to read_csv if only 1 column detected
+  ast <- process_input(input)
+  if (ncol(ast) <= 1 && is.character(input) && file.exists(input)) {
+    cat("Re-reading as CSV (file appears to be comma-separated despite .txt extension)\n")
+    ast <- readr::read_csv(input, show_col_types = FALSE)
+    ast <- ast %>% dplyr::rename_with(~ stringr::str_remove(.x, "#"))
+  }
+
+  # Strip leading/trailing single quotes from column names (some MicroScan exports)
+  colnames(ast) <- gsub("^'|'$", "", colnames(ast))
+
+  # Strip leading/trailing single quotes from all character columns
+  ast <- ast %>%
+    mutate(across(where(is.character), ~ gsub("^'|'$", "", .x)))
+
+  # Detect language and translate metadata column names + drug suffixes
+  # Supported: Spanish, French, German, Portuguese
+  lang_markers <- list(
+    spanish = list(
+      detect = "Muestra",
+      meta = c("Muestra" = "Sample", "Origen" = "Source",
+               "Aislamiento" = "Isolation", "Microorganismo" = "Microorganism"),
+      mic_suffix = " CIM",
+      sir_suffixes = c(" Interpretaci\u00f3n", " Interpretacion")
+    ),
+    french = list(
+      detect = c("\u00c9chantillon", "Echantillon"),
+      meta = c("\u00c9chantillon" = "Sample", "Echantillon" = "Sample",
+               "Origine" = "Source", "Isolement" = "Isolation",
+               "Micro-organisme" = "Microorganism", "Microorganisme" = "Microorganism"),
+      mic_suffix = " CMI",
+      sir_suffixes = c(" Interpr\u00e9tation", " Interpretation")
+    ),
+    german = list(
+      detect = "Probe",
+      meta = c("Probe" = "Sample", "Herkunft" = "Source", "Quelle" = "Source",
+               "Isolierung" = "Isolation", "Mikroorganismus" = "Microorganism"),
+      mic_suffix = " MHK",
+      sir_suffixes = c(" Interpretation")
+    ),
+    portuguese = list(
+      detect = "Amostra",
+      meta = c("Amostra" = "Sample", "Origem" = "Source",
+               "Isolamento" = "Isolation", "Microrganismo" = "Microorganism",
+               "Microorganismo" = "Microorganism"),
+      mic_suffix = " CIM",
+      sir_suffixes = c(" Interpreta\u00e7\u00e3o", " Interpretacao")
+    )
+  )
+
+  detected_lang <- NULL
+  for (lang_name in names(lang_markers)) {
+    markers <- lang_markers[[lang_name]]$detect
+    if (any(markers %in% colnames(ast))) {
+      detected_lang <- lang_name
+      break
+    }
+  }
+
+  if (!is.null(detected_lang)) {
+    lang <- lang_markers[[detected_lang]]
+    cat(paste0("Detected ", detected_lang, "-language MicroScan export, translating column names\n"))
+
+    # Translate metadata column names
+    for (orig in names(lang$meta)) {
+      if (orig %in% colnames(ast)) {
+        colnames(ast)[colnames(ast) == orig] <- lang$meta[orig]
+      }
+    }
+
+    # Translate MIC suffix
+    colnames(ast) <- gsub(paste0(gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", lang$mic_suffix), "$"),
+                          " MIC", colnames(ast))
+
+    # Translate Interpretation suffixes
+    for (suf in lang$sir_suffixes) {
+      colnames(ast) <- gsub(paste0(gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", suf), "$"),
+                            " Interpretation", colnames(ast))
+    }
+  }
+
+  # Determine sample column (after translation, non-English names should be "Sample")
+  if (is.null(sample_col)) {
+    sample_candidates <- c("Sample", "Muestra", "\u00c9chantillon", "Echantillon",
+                           "Probe", "Amostra")
+    found <- sample_candidates[sample_candidates %in% colnames(ast)]
+    if (length(found) > 0) {
+      sample_col <- found[1]
+    } else {
+      stop("Could not auto-detect sample column. Please specify via sample_col parameter.")
+    }
+  }
+  if (!(sample_col %in% colnames(ast))) {
+    stop(paste("Invalid column name:", sample_col))
+  }
+
+  # Identify drug columns by ' MIC' suffix
+  all_cols <- colnames(ast)
+  mic_cols <- all_cols[grepl(" MIC$", all_cols)]
+  if (length(mic_cols) == 0) {
+    stop("No antibiotic MIC columns found in MicroScan format")
+  }
+
+  # Extract drug names from column headers
+  drug_names <- gsub(" MIC$", "", mic_cols)
+
+  # Rename columns for pivoting: "DrugName MIC" -> "drugname___mic", "DrugName Interpretation" -> "drugname___sir"
+  for (drug in drug_names) {
+    mic_col_name <- paste0(drug, " MIC")
+    sir_col_name <- paste0(drug, " Interpretation")
+    safe_drug <- gsub("[^A-Za-z0-9]", "_", drug)
+    if (mic_col_name %in% colnames(ast)) {
+      colnames(ast)[colnames(ast) == mic_col_name] <- paste0(safe_drug, "___mic")
+    }
+    if (sir_col_name %in% colnames(ast)) {
+      colnames(ast)[colnames(ast) == sir_col_name] <- paste0(safe_drug, "___sir")
+    }
+  }
+
+  # Convert all drug columns to character
+  drug_pattern_cols <- colnames(ast)[grepl("___mic$|___sir$", colnames(ast))]
+  ast <- ast %>% mutate(across(any_of(drug_pattern_cols), as.character))
+
+  # Pivot to long format
+  ast_long <- ast %>%
+    tidyr::pivot_longer(
+      cols = tidyr::matches("^.+___(mic|sir)$"),
+      names_to = c("drug_name_raw", ".value"),
+      names_pattern = "^(.+)___(mic|sir)$"
+    )
+
+  # Restore drug name from safe version
+  drug_lookup <- setNames(drug_names, gsub("[^A-Za-z0-9]", "_", drug_names))
+  ast_long <- ast_long %>%
+    mutate(drug_name_raw = drug_lookup[drug_name_raw])
+
+  # Clean SIR values: strip asterisks (R* -> R, S* -> S, I* -> I)
+  if ("sir" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>%
+      mutate(sir_raw = sir) %>%
+      mutate(sir = gsub("\\*$", "", sir)) %>%
+      mutate(pheno_provided = case_when(
+        sir %in% c("S", "I", "R") ~ sir,
+        TRUE ~ NA_character_
+      )) %>%
+      mutate(pheno_provided = as.sir(pheno_provided))
+  } else {
+    ast_long <- ast_long %>% mutate(pheno_provided = as.sir(NA))
+  }
+
+  # Handle special MIC values
+  ast_long <- ast_long %>%
+    mutate(mic = case_when(
+      is.na(mic) | mic == "" | mic == "(-)" ~ NA_character_,
+      mic == "N/R" ~ NA_character_,
+      mic == "ESBL" ~ NA_character_,
+      TRUE ~ mic
+    )) %>%
+    mutate(mic = as.mic(mic))
+
+  # Parse organism
+  if ("Microorganism" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>% mutate(spp_pheno = as.mo(Microorganism))
+  }
+
+  # Parse drug_agent (drug names may be in Spanish; as.ab supports this)
+  ast_long <- ast_long %>%
+    mutate(drug_agent = as.ab(drug_name_raw))
+
+  # Rename sample column and add standard columns
+  ast_long <- ast_long %>%
+    rename(id = !!sym(sample_col)) %>%
+    mutate(method = "MIC") %>%
+    mutate(platform = "MicroScan") %>%
+    mutate(disk = as.disk(NA))
+
+  # Add guideline if specified
+  if (!is.null(instrument_guideline)) {
+    ast_long <- ast_long %>% mutate(guideline = instrument_guideline)
+  }
+
+  # Add source only if specified
+  if (!is.null(source)) {
+    ast_long <- ast_long %>% mutate(source = source)
+  }
+
+  # Interpret phenotypes
+  ast_long <- interpret_ast(ast_long,
+                            interpret_ecoff = interpret_ecoff,
+                            interpret_eucast = interpret_eucast,
+                            interpret_clsi = interpret_clsi,
+                            species = species, ab = ab)
+
+  # Reorder columns
+  ast_long <- ast_long %>%
+    relocate(any_of(c("id", "drug_agent", "mic", "disk",
+                      "pheno_eucast", "pheno_clsi", "ecoff",
+                      "guideline", "method", "platform", "source",
+                      "pheno_provided", "spp_pheno")))
+
+  return(ast_long)
+}
+
+
+#' Import and Process AST Data from Sensititre Output Files
+#'
+#' This function imports AST data from Sensititre instrument output files (UTF-16LE encoded,
+#' tab-separated, no header row) and converts it to the standardised long-format used by AMRgen.
+#'
+#' @param input Path to a Sensititre output text file
+#' @param source Optional source value to record for all data points
+#' @param species Optional species override for phenotype interpretation
+#' @param ab Optional antibiotic override for phenotype interpretation
+#' @param instrument_guideline Optional guideline used by the instrument for SIR interpretation
+#' @param interpret_eucast Interpret against EUCAST breakpoints
+#' @param interpret_clsi Interpret against CLSI breakpoints
+#' @param interpret_ecoff Interpret against ECOFF values
+#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom dplyr any_of bind_rows case_when filter mutate relocate
+#' @return Standardised AST data frame
+#' @export
+import_sensititre_ast <- function(input,
+                                   source = NULL,
+                                   species = NULL,
+                                   ab = NULL,
+                                   instrument_guideline = NULL,
+                                   interpret_eucast = FALSE,
+                                   interpret_clsi = FALSE,
+                                   interpret_ecoff = FALSE) {
+
+  # Sensititre files are UTF-16LE encoded, tab-separated, with no header row
+  # Cannot use process_input() - needs custom reading
+  if (!is.character(input) || !file.exists(input)) {
+    stop("import_sensititre_ast requires a file path as input")
+  }
+
+  # Read as UTF-16LE via file connection, fall back to UTF-8
+  raw_lines <- tryCatch({
+    con <- file(input, encoding = "UTF-16LE")
+    lines <- readLines(con, warn = FALSE)
+    close(con)
+    lines
+  }, error = function(e) {
+    readLines(input, warn = FALSE)
+  })
+
+  # Remove BOM character and empty lines
+  raw_lines <- sub("^\ufeff", "", raw_lines)
+  raw_lines <- raw_lines[nchar(trimws(raw_lines)) > 0]
+
+  if (length(raw_lines) == 0) {
+    stop("No data found in Sensititre file")
+  }
+
+  cat(paste0("Reading ", length(raw_lines), " rows from Sensititre file\n"))
+
+  # Parse each line as tab-separated fields, extract drug triplets
+  all_rows <- list()
+  for (row_idx in seq_along(raw_lines)) {
+    fields <- strsplit(raw_lines[row_idx], "\t")[[1]]
+
+    # Find the timestamp field (YYYY-MM-DD HH:MM:SS) to locate where metadata ends
+    ts_idx <- which(grepl("\\d{4}-\\d{2}-\\d{2}", fields))[1]
+    if (is.na(ts_idx)) {
+      cat(paste0("Warning: No timestamp found in row ", row_idx, ", skipping\n"))
+      next
+    }
+
+    # Extract metadata
+    sample_id <- trimws(fields[2])
+    panel_code <- if (length(fields) >= 8) trimws(fields[8]) else NA_character_
+    organism_code <- if (length(fields) >= 10) trimws(fields[10]) else NA_character_
+    specimen <- if (length(fields) >= 11) trimws(fields[11]) else NA_character_
+    timestamp <- trimws(fields[ts_idx])
+
+    # Parse drug data starting after the timestamp
+    # Fields are in triplets (drug_name, mic_value, interpretation) but
+    # empty positions may have irregular numbers of blank fields.
+    # Strategy: scan for non-blank fields that look like drug names (all uppercase letters),
+    # then take the next two fields as MIC and interpretation.
+    drug_start <- ts_idx + 1
+    if (drug_start > length(fields)) next
+    remaining <- fields[drug_start:length(fields)]
+
+    i <- 1
+    while (i <= length(remaining) - 2) {
+      field_val <- trimws(remaining[i])
+      # Skip blank/empty fields
+      if (field_val == "" || field_val == " " || is.na(field_val)) {
+        i <- i + 1
+        next
+      }
+      # This should be a drug name (uppercase letters/digits, 3-6 chars)
+      if (grepl("^[A-Z][A-Z0-9]{1,5}$", field_val)) {
+        drug_abbrev <- field_val
+        mic_raw <- trimws(remaining[i + 1])
+        interp_raw <- trimws(remaining[i + 2])
+
+        all_rows[[length(all_rows) + 1]] <- data.frame(
+          id = sample_id,
+          panel = panel_code,
+          organism_code = organism_code,
+          specimen = specimen,
+          testing_date = timestamp,
+          drug_name_raw = drug_abbrev,
+          mic_raw = mic_raw,
+          interp_raw = interp_raw,
+          stringsAsFactors = FALSE
+        )
+        i <- i + 3
+      } else {
+        i <- i + 1
+      }
+    }
+  }
+
+  if (length(all_rows) == 0) {
+    stop("No drug data found in Sensititre file")
+  }
+
+  ast_long <- dplyr::bind_rows(all_rows)
+
+  # Clean MIC values: remove leading/trailing spaces, normalise signs
+  ast_long <- ast_long %>%
+    mutate(mic_raw = trimws(mic_raw)) %>%
+    mutate(mic_raw = gsub("\\s+", " ", mic_raw)) %>%
+    mutate(mic = case_when(
+      is.na(mic_raw) | mic_raw == "" | mic_raw == " " ~ NA_character_,
+      # Convert " = 4" -> "4", "<= 8" -> "<=8", " > 16" -> ">16"
+      grepl("^[<>= ]+", mic_raw) ~ gsub("\\s+", "", mic_raw),
+      TRUE ~ mic_raw
+    )) %>%
+    # Remove bare "=" prefix (just means exact value)
+    mutate(mic = gsub("^=", "", mic)) %>%
+    mutate(mic = as.mic(mic))
+
+  # Map interpretation codes to S/I/R
+  ast_long <- ast_long %>%
+    mutate(pheno_provided = case_when(
+      interp_raw == "SUSC" ~ "S",
+      interp_raw == "RESIST" ~ "R",
+      interp_raw == "SUSIE" ~ "I",   # EUCAST "susceptible, increased exposure"
+      interp_raw == "SC" ~ "I",      # SDD (susceptible dose-dependent)
+      interp_raw %in% c("NOINTP", "NOIMAT") ~ NA_character_,
+      TRUE ~ NA_character_
+    )) %>%
+    mutate(pheno_provided = as.sir(pheno_provided))
+
+  # Parse drug_agent from abbreviation
+  ast_long <- ast_long %>%
+    mutate(drug_agent = as.ab(drug_name_raw))
+
+  # Add standard columns
+  ast_long <- ast_long %>%
+    mutate(method = "MIC") %>%
+    mutate(platform = "Sensititre") %>%
+    mutate(disk = as.disk(NA))
+
+  # Add guideline if specified
+  if (!is.null(instrument_guideline)) {
+    ast_long <- ast_long %>% mutate(guideline = instrument_guideline)
+  }
+
+  # Add source only if specified
+  if (!is.null(source)) {
+    ast_long <- ast_long %>% mutate(source = source)
+  }
+
+  # Parse organism if present
+  if ("organism_code" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>%
+      mutate(spp_pheno = as.mo(organism_code))
+  }
+
+  # Interpret phenotypes
+  ast_long <- interpret_ast(ast_long,
+                            interpret_ecoff = interpret_ecoff,
+                            interpret_eucast = interpret_eucast,
+                            interpret_clsi = interpret_clsi,
+                            species = species, ab = ab)
+
+  # Reorder columns
+  ast_long <- ast_long %>%
+    relocate(any_of(c("id", "drug_agent", "mic", "disk",
+                      "pheno_eucast", "pheno_clsi", "ecoff",
+                      "guideline", "method", "platform", "source",
+                      "pheno_provided", "spp_pheno")))
     relocate(any_of(c(
       "id", "drug_agent", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",

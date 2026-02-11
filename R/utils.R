@@ -57,6 +57,7 @@ utils::globalVariables(c(
   "drug_agent",
   "drug_agent_code",
   "drug_agent_name",
+  "drug_name_raw",
   "drug_class",
   "ecoff",
   "ecoff_disk",
@@ -182,6 +183,7 @@ utils::globalVariables(c(
   "value",
   "variation type",
   "x",
+  "site"
   "site",
   "element_symbol_col",
   "element_type_col",

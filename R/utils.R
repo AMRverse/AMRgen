@@ -193,7 +193,8 @@ utils::globalVariables(c(
   "count_label",
   "pd",
   "Type",
-  "organism"
+  "organism",
+  "Measurement"
 ))
 
 

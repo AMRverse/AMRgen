@@ -847,6 +847,68 @@ import_ebi_ast_ftp <- function(input,
 }
 
 
+
+#' Import and Process AST Data data retrieved from NCBI BioSamples
+#'
+#' This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function `download_ncbi_ast()`.
+#' Note that files downloaded from the NCBI AST web browser <https://www.ncbi.nlm.nih.gov/pathogens/ast> are formatted differently and can be imported with the function [import_ncbi_ast()].
+#' @param input A string representing the input dataframe, or a path to an input file, to be processed.
+#' @param interpret_eucast A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
+#' @param interpret_clsi A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
+#' @param interpret_ecoff A logical value (default is FALSE). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).
+#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom dplyr any_of mutate relocate
+#' @importFrom rlang is_string :=
+#' @return A data frame with the processed AST data, including additional columns:
+#' @export
+#' @examples
+#' \dontrun{
+#' # Download Klebsiella quasipneumoniae data, filter to amikacin
+#' ast <- download_ncbi_ast(
+#'   "Klebsiella quasipneumoniae",
+#'   antibiotic = "amikacin"
+#' )
+#'
+#' # Reformat to simplify use with AMRgen functions
+#' ast <- import_ncbi_biosample(ast, interpret_eucast = T)
+#' }
+import_ncbi_biosample <- function(input,
+                                  interpret_eucast = FALSE,
+                                  interpret_clsi = FALSE,
+                                  interpret_ecoff = FALSE) {
+  ast <- process_input(input)
+
+  ast <- ast %>%
+    mutate(mic = if_else(`Laboratory typing method` == "MIC",
+      paste0(`Measurement sign`, Measurement),
+      NA
+    )) %>%
+    mutate(disk = if_else(`Laboratory typing method` == "disk diffusion",
+      paste0(`Measurement sign`, Measurement),
+      NA
+    )) %>%
+    mutate(pheno_provided = if_else(`Resistance phenotype` == "intermediate",
+      "I",
+      `Resistance phenotype`
+    )) %>%
+    format_ast(
+      sample_col = "id",
+      species_col = "organism",
+      ab_col = "Antibiotic",
+      pheno_cols = "pheno_provided",
+      method_col = "Laboratory typing method",
+      platform_col = "Laboratory typing platform",
+      source_col = "BioProject",
+      guideline_col = "Testing standard",
+      interpret_eucast = interpret_eucast,
+      interpret_clsi = interpret_clsi,
+      interpret_ecoff = interpret_ecoff
+    )
+
+  return(ast)
+}
+
+
 #' Import and Process AST Data from Vitek Output Files
 #'
 #' This function imports AST data from Vitek instrument output files (wide CSV format)

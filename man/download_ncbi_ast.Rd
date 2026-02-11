@@ -42,19 +42,22 @@ antibiotic name using the \pkg{AMR} package before filtering, so that
 matching is done exactly on the input string/s. Default is \code{FALSE}.}
 
 \item{reformat}{Logical. If \code{TRUE}, reformats the output using
-\link{import_ncbi_ast} for compatibility with AMR analysis workflows.
+\link{import_ncbi_biosample} for compatibility with AMR analysis workflows.
 Default is \code{FALSE}. When set to \code{TRUE}, the data can also be interpreted
 against breakpoints/ECOFF by setting the \verb{interpret_*=TRUE}.}
 
-\item{interpret_eucast}{Logical. Passed to \link{import_ncbi_ast}.
+\item{interpret_eucast}{Logical. Passed to \link{interpret_ast} via
+\link{import_ncbi_biosample}.
 If \code{TRUE}, interprets MIC values using EUCAST breakpoints. Default is
 \code{FALSE}. Only used if \code{reformat}=\code{TRUE}.}
 
-\item{interpret_clsi}{Logical. Passed to \link{import_ncbi_ast}.
+\item{interpret_clsi}{Logical. Passed to \link{interpret_ast} via
+\link{import_ncbi_biosample}.
 If \code{TRUE}, interprets MIC values using CLSI breakpoints. Default is
 \code{FALSE}. Only used if \code{reformat}=\code{TRUE}.}
 
-\item{interpret_ecoff}{Logical. Passed to \link{import_ncbi_ast}.
+\item{interpret_ecoff}{Logical. Passed to \link{interpret_ast} via
+\link{import_ncbi_biosample}.
 If \code{TRUE}, interprets MIC values using ECOFF cutoffs. Default is \code{FALSE}.
 Only used if \code{reformat}=\code{TRUE}.}
 }
@@ -96,7 +99,7 @@ comply with NCBI usage policies.
 \examples{
 \dontrun{
 # Download AST data for Klebsiella quasipneumoniae
-kq_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
+ast <- download_ncbi_ast("Klebsiella quasipneumoniae")
 
 # Download Klebsiella quasipneumoniae data, filter to amikacin and ampicillin
 ast <- download_ncbi_ast(
@@ -104,7 +107,7 @@ ast <- download_ncbi_ast(
   antibiotic = c("amikacin", "Amp")
 )
 
-# Reformat for AMRgen workflow with EUCAST interpretation
+# Download and reformat for AMRgen workflow with EUCAST interpretation
 ast <- download_ncbi_ast(
   "Klebsiella quasipneumoniae",
   reformat = TRUE,

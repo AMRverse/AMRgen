@@ -38,16 +38,19 @@
 #'   antibiotic name using the \pkg{AMR} package before filtering, so that
 #'   matching is done exactly on the input string/s. Default is `FALSE`.
 #' @param reformat Logical. If `TRUE`, reformats the output using
-#'   [import_ncbi_ast] for compatibility with AMR analysis workflows.
+#'   [import_ncbi_biosample] for compatibility with AMR analysis workflows.
 #'   Default is `FALSE`. When set to `TRUE`, the data can also be interpreted
 #'   against breakpoints/ECOFF by setting the `interpret_*=TRUE`.
-#' @param interpret_eucast Logical. Passed to [import_ncbi_ast].
+#' @param interpret_eucast Logical. Passed to [interpret_ast] via
+#'   [import_ncbi_biosample].
 #'   If `TRUE`, interprets MIC values using EUCAST breakpoints. Default is
 #'   `FALSE`. Only used if `reformat`=`TRUE`.
-#' @param interpret_clsi Logical. Passed to [import_ncbi_ast].
+#' @param interpret_clsi Logical. Passed to [interpret_ast] via
+#'   [import_ncbi_biosample].
 #'   If `TRUE`, interprets MIC values using CLSI breakpoints. Default is
 #'   `FALSE`. Only used if `reformat`=`TRUE`.
-#' @param interpret_ecoff Logical. Passed to [import_ncbi_ast].
+#' @param interpret_ecoff Logical. Passed to [interpret_ast] via
+#'   [import_ncbi_biosample].
 #'   If `TRUE`, interprets MIC values using ECOFF cutoffs. Default is `FALSE`.
 #'   Only used if `reformat`=`TRUE`.
 #'
@@ -80,7 +83,7 @@
 #' @examples
 #' \dontrun{
 #' # Download AST data for Klebsiella quasipneumoniae
-#' kq_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
+#' ast <- download_ncbi_ast("Klebsiella quasipneumoniae")
 #'
 #' # Download Klebsiella quasipneumoniae data, filter to amikacin and ampicillin
 #' ast <- download_ncbi_ast(
@@ -88,7 +91,7 @@
 #'   antibiotic = c("amikacin", "Amp")
 #' )
 #'
-#' # Reformat for AMRgen workflow with EUCAST interpretation
+#' # Download and reformat for AMRgen workflow with EUCAST interpretation
 #' ast <- download_ncbi_ast(
 #'   "Klebsiella quasipneumoniae",
 #'   reformat = TRUE,
@@ -118,7 +121,7 @@ download_ncbi_ast <- function(species,
   }
 
   # Build query term for entrez
-  entrez_term <- paste0(tolower(species), " AND antibiogram[filter]")
+  entrez_term <- paste0(stringr::str_trim(tolower(species)), "[orgn] AND antibiogram[filter]")
 
   # Search for AST entries by pathogen
   search <- rentrez::entrez_search(
@@ -209,11 +212,19 @@ download_ncbi_ast <- function(species,
           bioproj <- NA # when no data listed - very rare
         }
 
+        # Extract organism name while accounting for two varied flattened
+        # xml node structures
+        organism_name <- purrr::pluck(data_list[record], "BioSample", "Description", "Organism", "OrganismName", .default = NA)
+
+        if (is.na(organism_name)) {
+          organism_name <- purrr::pluck(data_list[record], "BioSample", "Description", "Organism", "taxonomy_name", .default = NA)
+        }
+
         # Add accessions and organism cols to AST data
         temp_entry <- temp_entry %>%
           mutate(id = data_list[record]$BioSample$Ids$Id$text) %>%
           mutate(BioProject = bioproj) %>%
-          mutate(organism = data_list[record]$BioSample$Description$Organism$OrganismName)
+          mutate(organism = organism_name)
 
         # combine records
         all_ast_data <- bind_rows(all_ast_data, temp_entry)
@@ -248,8 +259,7 @@ download_ncbi_ast <- function(species,
   if (reformat) {
     cat(paste("Reformatting phenotype data for easy use with AMRgen functions \n"))
 
-    all_ast_data <- AMRgen::import_ncbi_ast(all_ast_data,
-      sample_col = "id",
+    all_ast_data <- import_ncbi_biosample(all_ast_data,
       interpret_eucast = interpret_eucast,
       interpret_clsi = interpret_clsi,
       interpret_ecoff = interpret_ecoff

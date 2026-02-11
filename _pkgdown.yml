@@ -67,7 +67,7 @@ reference:
     contents:
       - starts_with("import")
       - starts_with("export")
-      - starts_with("convert")
+      - starts_with("download")
       - get_binary_matrix
       - get_combo_matrix
       - combo_stats

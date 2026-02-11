@@ -43,8 +43,8 @@ import_ast(
 - format:
 
   A string indicating the format of the data: "ebi" (default),
-  "ebi_web", "ebi_ftp", "ncbi", "vitek", or "whonet". This determines
-  whether the data is passed on to the
+  "ebi_web", "ebi_ftp", "ncbi", "vitek", "microscan", "sensititre", or
+  "whonet". This determines whether the data is passed on to the
   [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
   (ebi/ebi_web),
   [`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
@@ -52,7 +52,11 @@ import_ast(
   [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
   (ncbi),
   [`import_vitek_ast()`](https://AMRverse.github.io/AMRgen/reference/import_vitek_ast.md)
-  (vitek), or
+  (vitek),
+  [`import_microscan_ast()`](https://AMRverse.github.io/AMRgen/reference/import_microscan_ast.md)
+  (microscan),
+  [`import_sensititre_ast()`](https://AMRverse.github.io/AMRgen/reference/import_sensititre_ast.md)
+  (sensititre), or
   [`import_whonet_ast()`](https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.md)
   (whonet) function to process.
 

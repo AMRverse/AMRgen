@@ -70,7 +70,7 @@ Optionally, the function can also reformat the phenotype data for easy use with 
 
 
 <dt id="arg-force-antibiotic">force_antibiotic<a class="anchor" aria-label="anchor" href="#arg-force-antibiotic"></a></dt>
-<dd><p>(Optional) Logical indicating whether to turn off parsing of antibiotic names and match exactly on the input strings (default FALSE).</p></dd>
+<dd><p>(Optional) Logical indicating whether to turn off parsing of antibiotic names and match exactly on the input strings (default <code>FALSE</code>).</p></dd>
 
 
 <dt id="arg-genus">genus<a class="anchor" aria-label="anchor" href="#arg-genus"></a></dt>
@@ -165,7 +165,7 @@ Optionally, the function can also reformat the phenotype data for easy use with 
 <span class="r-in"><span><span class="co"># download all available genotype data</span></span></span>
 <span class="r-in"><span><span class="va">ebi_geno</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span>data <span class="op">=</span> <span class="st">"genotype"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># download genotype data for Klebsiella pneumoniae, and filter to </span></span></span>
+<span class="r-in"><span><span class="co"># download genotype data for Klebsiella pneumoniae, and filter to</span></span></span>
 <span class="r-in"><span><span class="co"># markers assigned to NCBI class 'TRIMETHOPRIM'</span></span></span>
 <span class="r-in"><span><span class="va">geno_kpn_tmp</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="st">"genotype"</span>,</span></span>
@@ -173,7 +173,7 @@ Optionally, the function can also reformat the phenotype data for easy use with 
 <span class="r-in"><span>  geno_subclass <span class="op">=</span> <span class="st">"TRIMETHOPRIM"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># download genotype data for Klebsiella pneumoniae, and filter to </span></span></span>
+<span class="r-in"><span><span class="co"># download genotype data for Klebsiella pneumoniae, and filter to</span></span></span>
 <span class="r-in"><span><span class="co"># markers assigned to NCBI class 'TRIMETHOPRIM' or 'QUINOLONE'</span></span></span>
 <span class="r-in"><span><span class="va">geno_kpn_tmp</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="st">"genotype"</span>,</span></span>
@@ -181,14 +181,13 @@ Optionally, the function can also reformat the phenotype data for easy use with 
 <span class="r-in"><span>  geno_subclass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRIMETHOPRIM"</span>, <span class="st">"QUINOLONE"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># download genotype data for Klebsiella pneumoniae, and filter to </span></span></span>
+<span class="r-in"><span><span class="co"># download genotype data for Klebsiella pneumoniae, and filter to</span></span></span>
 <span class="r-in"><span><span class="co"># markers associated with CARD drug term 'trimethoprim'</span></span></span>
 <span class="r-in"><span><span class="va">geno_kpn_tmp</span> <span class="op">&lt;-</span> <span class="fu">download_ebi</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="st">"genotype"</span>,</span></span>
 <span class="r-in"><span>  species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span></span>
 <span class="r-in"><span>  antibiotic <span class="op">=</span> <span class="st">"trimethoprim"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

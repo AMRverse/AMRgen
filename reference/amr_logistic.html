@@ -40,18 +40,19 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">amr_logistic</span><span class="op">(</span></span>
 <span>  <span class="va">geno_table</span>,</span>
 <span>  <span class="va">pheno_table</span>,</span>
-<span>  <span class="va">antibiotic</span>,</span>
-<span>  <span class="va">drug_class_list</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geno_sample_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pheno_sample_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno"</span>,</span>
 <span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span>,</span>
+<span>  binary_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  maf <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  fit_glm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  single_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"maroon"</span>, <span class="st">"blue4"</span><span class="op">)</span>,</span>
-<span>  axis_label_size <span class="op">=</span> <span class="fl">9</span>,</span>
-<span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span></span>
+<span>  axis_label_size <span class="op">=</span> <span class="fl">9</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -60,43 +61,51 @@
 
 
 <dl><dt id="arg-geno-table">geno_table<a class="anchor" aria-label="anchor" href="#arg-geno-table"></a></dt>
-<dd><p>A data frame containing the genotype data.</p></dd>
+<dd><p>(Required if <code>binary_matrix</code> not provided) A data frame containing genotype data, formatted with <code><a href="import_amrfp.html">import_amrfp()</a></code>. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-pheno-table">pheno_table<a class="anchor" aria-label="anchor" href="#arg-pheno-table"></a></dt>
-<dd><p>A data frame containing the phenotypic data.</p></dd>
+<dd><p>(Required if <code>binary_matrix</code> not provided) A data frame containing phenotype data, formatted with <code><a href="import_ast.html">import_ast()</a></code>. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-antibiotic">antibiotic<a class="anchor" aria-label="anchor" href="#arg-antibiotic"></a></dt>
-<dd><p>A character string specifying the antibiotic to model using logistic regression.</p></dd>
+<dd><p>(Required if <code>binary_matrix</code> not provided) A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the <code>drug_agent</code> column of <code>pheno_table</code>. Only used if <code>binary_matrix</code> not provided or if breakpoints required.</p></dd>
 
 
 <dt id="arg-drug-class-list">drug_class_list<a class="anchor" aria-label="anchor" href="#arg-drug-class-list"></a></dt>
-<dd><p>A vector of drug class names. Used to subset the relevant markers for analysis.</p></dd>
+<dd><p>(Required if <code>binary_matrix</code> not provided) A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in <code>geno_table</code> will be filtered based on whether their <code>drug_class</code> matches any value in this list. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-geno-sample-col">geno_sample_col<a class="anchor" aria-label="anchor" href="#arg-geno-sample-col"></a></dt>
-<dd><p>(Optional) A character string specifying the column in <code>geno_table</code> that identifies the sample IDs. Defaults to <code>NULL</code>.</p></dd>
+<dd><p>A character string (optional) specifying the column name in <code>geno_table</code> containing sample identifiers. Defaults to <code>NULL</code>, in which case it is assumed the first column contains identifiers. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-pheno-sample-col">pheno_sample_col<a class="anchor" aria-label="anchor" href="#arg-pheno-sample-col"></a></dt>
-<dd><p>(Optional) A character string specifying the column in <code>pheno_table</code> that identifies the sample IDs. Defaults to <code>NULL</code>.</p></dd>
+<dd><p>A character string (optional) specifying the column name in <code>pheno_table</code> containing sample identifiers. Defaults to <code>NULL</code>, in which case it is assumed the first column contains identifiers. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-sir-col">sir_col<a class="anchor" aria-label="anchor" href="#arg-sir-col"></a></dt>
-<dd><p>(Optional) A character string specifying the column in <code>pheno_table</code> that contains the phenotype values (e.g., resistance/susceptibility). Defaults to <code>"pheno"</code>.</p></dd>
+<dd><p>A character string specifying the column name in <code>pheno_table</code> that contains the resistance interpretation (SIR) data. The values should be <code>"S"</code>, <code>"I"</code>, <code>"R"</code> or otherwise interpretable by <code><a href="https://amr-for-r.org/reference/as.sir.html" class="external-link">AMR::as.sir()</a></code>. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-ecoff-col">ecoff_col<a class="anchor" aria-label="anchor" href="#arg-ecoff-col"></a></dt>
-<dd><p>(Optional) A character string specifying the column in <code>pheno_table</code> containing the ECOFF (epidemiological cutoff) values. Defaults to <code>"ecoff"</code>.</p></dd>
+<dd><p>A character string specifying the column name in <code>pheno_table</code> that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be <code>"S"</code>, <code>"I"</code>, <code>"R"</code> or otherwise interpretable by <code><a href="https://amr-for-r.org/reference/as.sir.html" class="external-link">AMR::as.sir()</a></code>. Default <code>ecoff</code>. Set to <code>NULL</code> if not available.  Only used if <code>binary_matrix</code> not provided.</p></dd>
+
+
+<dt id="arg-marker-col">marker_col<a class="anchor" aria-label="anchor" href="#arg-marker-col"></a></dt>
+<dd><p>(Optional) Name of the column containing the marker identifiers, whose unique values will be treated as predictors in the regression. Defaults to <code>"marker"</code>.</p></dd>
+
+
+<dt id="arg-binary-matrix">binary_matrix<a class="anchor" aria-label="anchor" href="#arg-binary-matrix"></a></dt>
+<dd><p>A data frame containing the original binary matrix output from the <code><a href="get_binary_matrix.html">get_binary_matrix()</a></code> function. If not provided (or set to <code>NULL</code>), user must specify <code>geno_table</code>, <code>pheno_table</code>, <code>antibiotic</code>, <code>drug_class_list</code> and optionally <code>geno_sample_col</code>, <code>pheno_sample_col</code>, <code>sir_col</code>, <code>ecoff_col</code>, <code>marker_col</code> to pass to <code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>.</p></dd>
 
 
 <dt id="arg-maf">maf<a class="anchor" aria-label="anchor" href="#arg-maf"></a></dt>
-<dd><p>(Optional) An integer specifying the minimum allele frequency (MAF) threshold. Markers with a MAF lower than this value will be excluded. Defaults to 10.</p></dd>
+<dd><p>(Optional) An integer specifying the minimum allele frequency (MAF) threshold. Markers with a MAF lower than this value will be excluded. Defaults to <code>10</code>.</p></dd>
 
 
 <dt id="arg-fit-glm">fit_glm<a class="anchor" aria-label="anchor" href="#arg-fit-glm"></a></dt>
-<dd><p>(Optional) Change to TRUE to fit model with glm. Otherwise fit model with logistf (default).</p></dd>
+<dd><p>(Optional) Change to <code>TRUE</code> to fit model with glm. Otherwise fit model with logistf (default <code>FALSE</code>).</p></dd>
 
 
 <dt id="arg-single-plot">single_plot<a class="anchor" aria-label="anchor" href="#arg-single-plot"></a></dt>
@@ -108,16 +117,12 @@
 
 
 <dt id="arg-axis-label-size">axis_label_size<a class="anchor" aria-label="anchor" href="#arg-axis-label-size"></a></dt>
-<dd><p>(Optional) A numeric value controlling the size of axis labels in the plot. Defaults to 9.</p></dd>
-
-
-<dt id="arg-marker-col">marker_col<a class="anchor" aria-label="anchor" href="#arg-marker-col"></a></dt>
-<dd><p>(Optional) Name of the column containing the marker identifiers, whose unique values will be treate as predictors in the regression. Defaults to <code>"marker"</code>.</p></dd>
+<dd><p>(Optional) A numeric value controlling the size of axis labels in the plot. Defaults to <code>9</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with the following components:</p><ul><li><p><code>bin_mat</code>: The binary matrix of genetic data and phenotypic resistance information.</p></li>
+    <p>A list with the following components:</p><ul><li><p><code>binary_matrix</code>: The binary matrix of genetic data and phenotypic resistance information (either provided as input or generated by the function).</p></li>
 <li><p><code>modelR</code>: The fitted logistic regression model for resistance (<code>R</code>).</p></li>
 <li><p><code>modelNWT</code>: The fitted logistic regression model for non-resistance (<code>NWT</code>).</p></li>
 <li><p><code>plot</code>: A ggplot object comparing the estimates for resistance and non-resistance with corresponding statistical significance indicators.</p></li>
@@ -134,6 +139,7 @@
 <span class="r-in"><span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  maf <span class="op">=</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Generating geno-pheno binary matrix</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Defining NWT in binary matrix using ecoff column provided: ecoff </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ...Fitting logistic regression model to R using logistf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Filtered data contains 3630 samples (793 =&gt; 1, 2837 =&gt; 0) and 19 variables.</span>

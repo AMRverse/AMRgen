@@ -61,8 +61,10 @@ The function performs the following steps:
 ``` r
 if (FALSE) { # \dontrun{
 # Download quinolone-related genotype data for E. coli, from EBI
-ebi_geno_raw <- download_ebi(data="genotype", species = "Escherichia coli", 
-                        geno_subclass="QUINOLONE")
+ebi_geno_raw <- download_ebi(
+  data = "genotype", species = "Escherichia coli",
+  geno_subclass = "QUINOLONE"
+)
 
 # Format the file for import
 ebi_geno <- import_amrfp_ebi_ftp(ebi_geno_raw)

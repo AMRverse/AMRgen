@@ -684,6 +684,7 @@ models <- amr_logistic(
   drug_class_list = c("Quinolones"),
   maf = 10
 )
+#> Generating geno-pheno binary matrix
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff 
 #> ...Fitting logistic regression model to R using logistf
 #>    Filtered data contains 3630 samples (793 => 1, 2837 => 0) and 19 variables.
@@ -760,26 +761,7 @@ models$modelNWT
 # Note the matrix output is the same as cip_bin, but without the MIC data as this is not required
 #    for logistic regression.
 models$bin_mat
-#> # A tibble: 3,630 × 49
-#>    id       pheno ecoff     R   NWT gyrA..Ser83Leu gyrA..Asp87Tyr gyrA..Asp87Asn
-#>    <chr>    <sir> <sir> <dbl> <dbl>          <dbl>          <dbl>          <dbl>
-#>  1 SAMN031…   S     S       0     0              0              0              0
-#>  2 SAMN031…   S     S       0     0              0              0              0
-#>  3 SAMN031…   S     S       0     0              0              0              0
-#>  4 SAMN031…   S     R       0     1              1              0              0
-#>  5 SAMN031…   S     R       0     1              0              1              0
-#>  6 SAMN031…   S     S       0     0              0              0              0
-#>  7 SAMN031…   S     S       0     0              0              0              0
-#>  8 SAMN031…   R     R       1     1              1              0              1
-#>  9 SAMN031…   S     R       0     1              1              0              0
-#> 10 SAMN031…   R     R       1     1              1              0              1
-#> # ℹ 3,620 more rows
-#> # ℹ 41 more variables: parC..Ser80Ile <dbl>, parE..Ser458Ala <dbl>,
-#> #   parC..Ser80Arg <dbl>, parE..Leu416Phe <dbl>, qnrB6 <dbl>,
-#> #   gyrA..Asp87Gly <dbl>, parC..Ser57Thr <dbl>, parC..Glu84Ala <dbl>,
-#> #   soxS..Ala12Ser <dbl>, qnrB2 <dbl>, qnrS2 <dbl>, parC..Glu84Lys <dbl>,
-#> #   parC..Ala56Thr <dbl>, qnrB19 <dbl>, `aac(6')-Ib-cr5` <dbl>,
-#> #   parC..Glu84Val <dbl>, parE..Ile529Leu <dbl>, parE..Ser458Thr <dbl>, …
+#> NULL
 ```
 
 ### 7. Assess solo positive predictive value of genetic markers
@@ -830,6 +812,7 @@ soloPPV_cipro <- solo_ppv_analysis(
   antibiotic = "Ciprofloxacin",
   drug_class_list = "Quinolones"
 )
+#> Generating geno-pheno binary matrix
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff
 ```
 
@@ -839,7 +822,7 @@ soloPPV_cipro <- solo_ppv_analysis(
 
 # Output table
 soloPPV_cipro$solo_stats
-#> # A tibble: 36 × 8
+#> # A tibble: 40 × 8
 #>    marker         category     x     n   ppv     se ci.lower ci.upper
 #>    <chr>          <chr>    <dbl> <int> <dbl>  <dbl>    <dbl>    <dbl>
 #>  1 aac(6')-Ib-cr5 R            0     1 0     0       0          0    
@@ -852,7 +835,7 @@ soloPPV_cipro$solo_stats
 #>  8 parC_S57T      R            0    23 0     0       0          0    
 #>  9 parE_D475E     R            0    61 0     0       0          0    
 #> 10 parE_I355T     R            0    24 0     0       0          0    
-#> # ℹ 26 more rows
+#> # ℹ 30 more rows
 
 # Interim matrices with data used to compute stats and plots
 soloPPV_cipro$solo_binary
@@ -939,7 +922,7 @@ cipro_mic_upset <- amr_upset(
 cipro_mic_upset$summary
 #> # A tibble: 103 × 19
 #>    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower
-#>    <chr>                     <dbl> <int> <chr>          <dbl>   <dbl>      <dbl>
+#>    <chr>                     <dbl> <int> <fct>          <dbl>   <dbl>      <dbl>
 #>  1 ""                            0  2590 0_0_0_0_0_0_0…    10 0.00386    0.00147
 #>  2 "qnrB"                        1     1 0_0_0_0_0_0_0…     1 1          1      
 #>  3 "parE_E460K, gyrA…            2     1 0_0_0_0_0_0_0…     1 1          1      

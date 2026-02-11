@@ -128,16 +128,14 @@
 <span></span>
 <span><span class="co"># Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations</span></span>
 <span><span class="co">#  (for combinations observed at least 5 times)</span></span>
-<span><span class="va">cip_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span>, order<span class="op">=</span><span class="st">"value"</span><span class="op">)</span></span>
+<span><span class="va">cip_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate positive predictive value for individual markers and combinations</span></span>
-<span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span>, order<span class="op">=</span><span class="st">"value"</span><span class="op">)</span></span>
+<span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ppv.html">ppv</a></span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers</span></span>
 <span><span class="co">#  (for markers observed at least 10 times)</span></span>
-<span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="fu"><a href="reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span>,</span>
-<span>                       pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>, sir_col<span class="op">=</span><span class="st">"pheno_clsi"</span>,</span>
-<span>                       antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, maf<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, maf<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="download-reference-mic-distribution-from-eucastorg-and-compare-to-example-data">Download reference MIC distribution from eucast.org and compare to example data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distribution-from-eucastorg-and-compare-to-example-data"></a>
@@ -182,18 +180,34 @@
 <span><span class="co"># Get genotype data for ciprofloxacin in E. coli</span></span>
 <span><span class="va">ebi_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ebi.html">download_ebi</a></span><span class="op">(</span>data<span class="op">=</span><span class="st">"genotype"</span>, species <span class="op">=</span> <span class="st">"Escherichia coli"</span>, geno_subclass<span class="op">=</span><span class="st">"QUINOLONE"</span>, reformat<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Create binary matrix summarising cipro geno and pheno data from EBI</span></span>
-<span><span class="va">cipro_ebi_geno_pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ebi_pheno_ecoli_cip</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, drug_class_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno_provided"</span>, keep_assay_values<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations</span></span>
 <span><span class="co">#  (for combinations observed at least 5 times)</span></span>
-<span><span class="va">cip_upset_ebi_mic</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">cipro_ebi_geno_pheno</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span>, order<span class="op">=</span><span class="st">"value"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">cip_upset_ebi_mic</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>geno_table<span class="op">=</span><span class="va">ecoli_geno</span>, pheno_table<span class="op">=</span><span class="va">ebi_pheno_ecoli_cip</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, drug_class_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno_provided"</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span>, order<span class="op">=</span><span class="st">"value"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="download-phenotype-data-from-ncbi-biosample">Download phenotype data from NCBI BioSample<a class="anchor" aria-label="anchor" href="#download-phenotype-data-from-ncbi-biosample"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get all available phenotype data for Klebsiella quasipneumoniae</span></span>
+<span><span class="co"># (note this is a small example with &lt;100 samples, as this function queries NCBI BioSample via rentrez and is quite slow)</span></span>
+<span><span class="va">ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ncbi_ast.html">download_ncbi_ast</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Klebsiella quasipneumoniae"</span>,</span>
+<span>  reformat <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Plot MIC distribution, stratified by platform</span></span>
+<span><span class="fu"><a href="reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">ast</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_provided"</span>, facet_var <span class="op">=</span> <span class="st">"platform"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The downloaded S/I/R calls look odd, so re-interpret direct with latest EUCAST breakpoints and review</span></span>
+<span><span class="va">ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/interpret_ast.html">interpret_ast</a></span><span class="op">(</span><span class="va">ast</span>, interpret_eucast <span class="op">=</span> <span class="cn">T</span>, interpret_clsi<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">ast</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span>, facet_var <span class="op">=</span> <span class="st">"platform"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">ast</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>, facet_var <span class="op">=</span> <span class="st">"platform"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="import-and-export">Import and export<a class="anchor" aria-label="anchor" href="#import-and-export"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Import phenotype data in NCBI, EBI, Vitek, WHOnet formats</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Import phenotype data in NCBI, EBI, Vitek, Sensititre, MicroScan, WHOnet formats</span></span>
 <span><span class="op">?</span><span class="va">import_ast</span></span>
 <span></span>
 <span><span class="co"># Export phenotype data in NCBI or EBI formats</span></span>

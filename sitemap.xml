@@ -17,6 +17,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/convert_aa_code.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/convert_mutation.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/download_ebi.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/ecoli_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/ecoli_ast_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/ecoli_geno_raw.html</loc></url>
@@ -40,7 +41,10 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_gtdb.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/import_microscan_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/import_sensititre_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_vitek_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/index.html</loc></url>

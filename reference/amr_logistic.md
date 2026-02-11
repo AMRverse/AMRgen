@@ -9,18 +9,19 @@ markers and phenotype (R, and NWT) for a specified antibiotic.
 amr_logistic(
   geno_table,
   pheno_table,
-  antibiotic,
-  drug_class_list,
+  antibiotic = NULL,
+  drug_class_list = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = "pheno",
   ecoff_col = "ecoff",
+  marker_col = "marker.label",
+  binary_matrix = NULL,
   maf = 10,
   fit_glm = FALSE,
   single_plot = TRUE,
   colors = c("maroon", "blue4"),
-  axis_label_size = 9,
-  marker_col = "marker.label"
+  axis_label_size = 9
 )
 ```
 
@@ -28,54 +29,94 @@ amr_logistic(
 
 - geno_table:
 
-  A data frame containing the genotype data.
+  (Required if `binary_matrix` not provided) A data frame containing
+  genotype data, formatted with
+  [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
+  Only used if `binary_matrix` not provided.
 
 - pheno_table:
 
-  A data frame containing the phenotypic data.
+  (Required if `binary_matrix` not provided) A data frame containing
+  phenotype data, formatted with
+  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
+  Only used if `binary_matrix` not provided.
 
 - antibiotic:
 
-  A character string specifying the antibiotic to model using logistic
-  regression.
+  (Required if `binary_matrix` not provided) A character string
+  specifying the antibiotic of interest to filter phenotype data. The
+  value must match one of the entries in the `drug_agent` column of
+  `pheno_table`. Only used if `binary_matrix` not provided or if
+  breakpoints required.
 
 - drug_class_list:
 
-  A vector of drug class names. Used to subset the relevant markers for
-  analysis.
+  (Required if `binary_matrix` not provided) A character vector of drug
+  classes to filter genotype data for markers related to the specified
+  antibiotic. Markers in `geno_table` will be filtered based on whether
+  their `drug_class` matches any value in this list. Only used if
+  `binary_matrix` not provided.
 
 - geno_sample_col:
 
-  (Optional) A character string specifying the column in `geno_table`
-  that identifies the sample IDs. Defaults to `NULL`.
+  A character string (optional) specifying the column name in
+  `geno_table` containing sample identifiers. Defaults to `NULL`, in
+  which case it is assumed the first column contains identifiers. Only
+  used if `binary_matrix` not provided.
 
 - pheno_sample_col:
 
-  (Optional) A character string specifying the column in `pheno_table`
-  that identifies the sample IDs. Defaults to `NULL`.
+  A character string (optional) specifying the column name in
+  `pheno_table` containing sample identifiers. Defaults to `NULL`, in
+  which case it is assumed the first column contains identifiers. Only
+  used if `binary_matrix` not provided.
 
 - sir_col:
 
-  (Optional) A character string specifying the column in `pheno_table`
-  that contains the phenotype values (e.g., resistance/susceptibility).
-  Defaults to `"pheno"`.
+  A character string specifying the column name in `pheno_table` that
+  contains the resistance interpretation (SIR) data. The values should
+  be `"S"`, `"I"`, `"R"` or otherwise interpretable by
+  [`AMR::as.sir()`](https://amr-for-r.org/reference/as.sir.html). If not
+  provided, the first column prefixed with "phenotype\*" will be used if
+  present, otherwise an error is thrown. Only used if `binary_matrix`
+  not provided.
 
 - ecoff_col:
 
-  (Optional) A character string specifying the column in `pheno_table`
-  containing the ECOFF (epidemiological cutoff) values. Defaults to
-  `"ecoff"`.
+  A character string specifying the column name in `pheno_table` that
+  contains resistance interpretations (SIR) made against the ECOFF
+  rather than a clinical breakpoint. The values should be `"S"`, `"I"`,
+  `"R"` or otherwise interpretable by
+  [`AMR::as.sir()`](https://amr-for-r.org/reference/as.sir.html).
+  Default `ecoff`. Set to `NULL` if not available. Only used if
+  `binary_matrix` not provided.
+
+- marker_col:
+
+  (Optional) Name of the column containing the marker identifiers, whose
+  unique values will be treated as predictors in the regression.
+  Defaults to `"marker"`.
+
+- binary_matrix:
+
+  A data frame containing the original binary matrix output from the
+  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+  function. If not provided (or set to `NULL`), user must specify
+  `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and
+  optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`,
+  `ecoff_col`, `marker_col` to pass to
+  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md).
 
 - maf:
 
   (Optional) An integer specifying the minimum allele frequency (MAF)
   threshold. Markers with a MAF lower than this value will be excluded.
-  Defaults to 10.
+  Defaults to `10`.
 
 - fit_glm:
 
-  (Optional) Change to TRUE to fit model with glm. Otherwise fit model
-  with logistf (default).
+  (Optional) Change to `TRUE` to fit model with glm. Otherwise fit model
+  with logistf (default `FALSE`).
 
 - single_plot:
 
@@ -92,20 +133,15 @@ amr_logistic(
 - axis_label_size:
 
   (Optional) A numeric value controlling the size of axis labels in the
-  plot. Defaults to 9.
-
-- marker_col:
-
-  (Optional) Name of the column containing the marker identifiers, whose
-  unique values will be treate as predictors in the regression. Defaults
-  to `"marker"`.
+  plot. Defaults to `9`.
 
 ## Value
 
 A list with the following components:
 
-- `bin_mat`: The binary matrix of genetic data and phenotypic resistance
-  information.
+- `binary_matrix`: The binary matrix of genetic data and phenotypic
+  resistance information (either provided as input or generated by the
+  function).
 
 - `modelR`: The fitted logistic regression model for resistance (`R`).
 
@@ -127,6 +163,7 @@ result <- amr_logistic(
   drug_class_list = c("Quinolones"),
   maf = 10
 )
+#> Generating geno-pheno binary matrix
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff 
 #> ...Fitting logistic regression model to R using logistf
 #>    Filtered data contains 3630 samples (793 => 1, 2837 => 0) and 19 variables.

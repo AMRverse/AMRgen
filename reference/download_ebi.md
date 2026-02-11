@@ -47,7 +47,7 @@ download_ebi(
 
   (Optional) Logical indicating whether to turn off parsing of
   antibiotic names and match exactly on the input strings (default
-  FALSE).
+  `FALSE`).
 
 - genus:
 
@@ -203,7 +203,7 @@ pheno_kquasi_reinterpreted <- download_ebi(
 # download all available genotype data
 ebi_geno <- download_ebi(data = "genotype")
 
-# download genotype data for Klebsiella pneumoniae, and filter to 
+# download genotype data for Klebsiella pneumoniae, and filter to
 # markers assigned to NCBI class 'TRIMETHOPRIM'
 geno_kpn_tmp <- download_ebi(
   data = "genotype",
@@ -211,7 +211,7 @@ geno_kpn_tmp <- download_ebi(
   geno_subclass = "TRIMETHOPRIM"
 )
 
-# download genotype data for Klebsiella pneumoniae, and filter to 
+# download genotype data for Klebsiella pneumoniae, and filter to
 # markers assigned to NCBI class 'TRIMETHOPRIM' or 'QUINOLONE'
 geno_kpn_tmp <- download_ebi(
   data = "genotype",
@@ -219,13 +219,12 @@ geno_kpn_tmp <- download_ebi(
   geno_subclass = c("TRIMETHOPRIM", "QUINOLONE")
 )
 
-# download genotype data for Klebsiella pneumoniae, and filter to 
+# download genotype data for Klebsiella pneumoniae, and filter to
 # markers associated with CARD drug term 'trimethoprim'
 geno_kpn_tmp <- download_ebi(
   data = "genotype",
   species = "Klebsiella pneumoniae",
   antibiotic = "trimethoprim"
 )
-
 } # }
 ```

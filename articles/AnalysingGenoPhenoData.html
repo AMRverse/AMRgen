@@ -674,6 +674,7 @@ regression models</p></li>
 <span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>,</span>
 <span>  maf <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Generating geno-pheno binary matrix</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff </span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to R using logistf</span></span>
 <span><span class="co">#&gt;    Filtered data contains 3630 samples (793 =&gt; 1, 2837 =&gt; 0) and 19 variables.</span></span>
@@ -747,26 +748,7 @@ regression models</p></li>
 <span><span class="co"># Note the matrix output is the same as cip_bin, but without the MIC data as this is not required</span></span>
 <span><span class="co">#    for logistic regression.</span></span>
 <span><span class="va">models</span><span class="op">$</span><span class="va">bin_mat</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,630 × 49</span></span></span>
-<span><span class="co">#&gt;    id       pheno ecoff     R   NWT gyrA..Ser83Leu gyrA..Asp87Tyr gyrA..Asp87Asn</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     0     1              1              0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     0     1              0              1              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>     0     0              0              0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN031… <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     1     1              1              0              1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN031… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     0     1              1              0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN031… <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>     1     1              1              0              1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3,620 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 more variables: parC..Ser80Ile &lt;dbl&gt;, parE..Ser458Ala &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   parC..Ser80Arg &lt;dbl&gt;, parE..Leu416Phe &lt;dbl&gt;, qnrB6 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   gyrA..Asp87Gly &lt;dbl&gt;, parC..Ser57Thr &lt;dbl&gt;, parC..Glu84Ala &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   soxS..Ala12Ser &lt;dbl&gt;, qnrB2 &lt;dbl&gt;, qnrS2 &lt;dbl&gt;, parC..Glu84Lys &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   parC..Ala56Thr &lt;dbl&gt;, qnrB19 &lt;dbl&gt;, `aac(6')-Ib-cr5` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   parC..Glu84Val &lt;dbl&gt;, parE..Ile529Leu &lt;dbl&gt;, parE..Ser458Thr &lt;dbl&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="assess-solo-positive-predictive-value-of-genetic-markers">7. Assess solo positive predictive value of genetic markers<a class="anchor" aria-label="anchor" href="#assess-solo-positive-predictive-value-of-genetic-markers"></a>
@@ -812,13 +794,14 @@ marker</p></li>
 <span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
 <span>  drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Generating geno-pheno binary matrix</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/solo_ppv_analysis-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">solo_stats</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 36 × 8</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 40 × 8</span></span></span>
 <span><span class="co">#&gt;    marker         category     x     n   ppv     se ci.lower ci.upper</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> aac(6')-Ib-cr5 R            0     1 0     0       0          0    </span></span>
@@ -831,7 +814,7 @@ marker</p></li>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parC_S57T      R            0    23 0     0       0          0    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parE_D475E     R            0    61 0     0       0          0    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> parE_I355T     R            0    24 0     0       0          0    </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 26 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30 more rows</span></span></span>
 <span></span>
 <span><span class="co"># Interim matrices with data used to compute stats and plots</span></span>
 <span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">solo_binary</span></span>
@@ -910,7 +893,7 @@ combination</p></li>
 <span><span class="va">cipro_mic_upset</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 103 × 19</span></span></span>
 <span><span class="co">#&gt;    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> <span style="color: #949494;">""</span>                            0  <span style="text-decoration: underline;">2</span>590 0_0_0_0_0_0_0…    10 0.003<span style="text-decoration: underline;">86</span>    0.001<span style="text-decoration: underline;">47</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> <span style="color: #949494;">"</span>qnrB<span style="color: #949494;">"</span>                        1     1 0_0_0_0_0_0_0…     1 1          1      </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> <span style="color: #949494;">"</span>parE_E460K, gyrA…            2     1 0_0_0_0_0_0_0…     1 1          1      </span></span>

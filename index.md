@@ -106,16 +106,14 @@ soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_ast, antibiotic="Ciprofloxa
 
 # Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
 #  (for combinations observed at least 5 times)
-cip_upset <- amr_upset(soloPPV_cipro$amr_binary, min_set_size=5, assay="mic", order="value")
+cip_upset <- amr_upset(binary_matrix=soloPPV_cipro$amr_binary, min_set_size=5, assay="mic")
 
 # Calculate positive predictive value for individual markers and combinations
-cip_ppv <- ppv(soloPPV_cipro$amr_binary, min_set_size=5, assay="mic", order="value")
+cip_ppv <- ppv(binary_matrix=soloPPV_cipro$amr_binary, min_set_size=5)
 
 # Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers
 #  (for markers observed at least 10 times)
-models <- amr_logistic(geno_table = import_amrfp(ecoli_geno_raw, "Name"),
-                       pheno_table = ecoli_ast, sir_col="pheno_clsi",
-                       antibiotic = "Ciprofloxacin", drug_class_list = c("Quinolones"), maf=10)
+models <- amr_logistic(binary_matrix=soloPPV_cipro$amr_binary, maf=10)
 ```
 
 ### Download reference MIC distribution from eucast.org and compare to example data
@@ -160,18 +158,34 @@ ggplot2::autoplot(compare_disk)
 # Get genotype data for ciprofloxacin in E. coli
 ebi_geno <- download_ebi(data="genotype", species = "Escherichia coli", geno_subclass="QUINOLONE", reformat=T)
 
-# Create binary matrix summarising cipro geno and pheno data from EBI
-cipro_ebi_geno_pheno <- get_binary_matrix(ecoli_geno, ebi_pheno_ecoli_cip, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_provided", keep_assay_values=TRUE)
-
 # Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
 #  (for combinations observed at least 5 times)
-cip_upset_ebi_mic <- amr_upset(cipro_ebi_geno_pheno, min_set_size=5, assay="mic", order="value")
+cip_upset_ebi_mic <- amr_upset(geno_table=ecoli_geno, pheno_table=ebi_pheno_ecoli_cip, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_provided", min_set_size=5, assay="mic", order="value")
+```
+
+### Download phenotype data from NCBI BioSample
+
+``` r
+# Get all available phenotype data for Klebsiella quasipneumoniae
+# (note this is a small example with <100 samples, as this function queries NCBI BioSample via rentrez and is quite slow)
+ast <- download_ncbi_ast(
+  "Klebsiella quasipneumoniae",
+  reformat = TRUE
+)
+
+# Plot MIC distribution, stratified by platform
+assay_by_var(ast, measure="mic", colour_by = "pheno_provided", facet_var = "platform")
+
+# The downloaded S/I/R calls look odd, so re-interpret direct with latest EUCAST breakpoints and review
+ast <- interpret_ast(ast, interpret_eucast = T, interpret_clsi=T)
+assay_by_var(ast, measure="mic", colour_by = "pheno_eucast", facet_var = "platform")
+assay_by_var(ast, measure="mic", colour_by = "pheno_clsi", facet_var = "platform")
 ```
 
 ### Import and export
 
 ``` r
-# Import phenotype data in NCBI, EBI, Vitek, WHOnet formats
+# Import phenotype data in NCBI, EBI, Vitek, Sensititre, MicroScan, WHOnet formats
 ?import_ast
 
 # Export phenotype data in NCBI or EBI formats

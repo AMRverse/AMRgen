@@ -23,8 +23,14 @@ from public repositories or internal formats.
   FTP site
 - [`import_gtdb()`](https://AMRverse.github.io/AMRgen/reference/import_gtdb.md)
   : Import GTDB Output
+- [`import_microscan_ast()`](https://AMRverse.github.io/AMRgen/reference/import_microscan_ast.md)
+  : Import and Process AST Data from MicroScan Output Files
 - [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
   : Import and Process AST Data from an NCBI File
+- [`import_ncbi_biosample()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.md)
+  : Import and Process AST Data data retrieved from NCBI BioSamples
+- [`import_sensititre_ast()`](https://AMRverse.github.io/AMRgen/reference/import_sensititre_ast.md)
+  : Import and Process AST Data from Sensititre Output Files
 - [`import_vitek_ast()`](https://AMRverse.github.io/AMRgen/reference/import_vitek_ast.md)
   : Import and Process AST Data from Vitek Output Files
 - [`import_whonet_ast()`](https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.md)
@@ -39,6 +45,11 @@ from public repositories or internal formats.
   : Convert single-letter amino acid code(s) to three-letter code(s)
 - [`convert_mutation()`](https://AMRverse.github.io/AMRgen/reference/convert_mutation.md)
   : Convert mutation string based on method
+- [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
+  : Download antimicrobial genotype or phenotype data from the EBI AMR
+  Portal
+- [`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md)
+  : Download NCBI antimicrobial susceptibility testing (AST) data
 - [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
   : Get Binary Matrix of Genotype and Phenotype Data
 - [`get_combo_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_combo_matrix.md)
@@ -51,9 +62,6 @@ from public repositories or internal formats.
   : Get Microorganism from GTDB Species Name
 - [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
   : Import and Process AST Data from a generic format
-- [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
-  : Download antimicrobial genotype or phenotype data from the EBI AMR
-  Portal
 
 ## Resistance Interpretation
 
@@ -87,7 +95,7 @@ logistic regression and Firth regression.
 - [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md)
   : Perform Solo PPV Analysis for AMR Markers
 - [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md) :
-  Generate Upset Plot
+  Generate PPV Plot
 - [`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md)
   : AMR Logistic Regression Analysis
 - [`glm_details()`](https://AMRverse.github.io/AMRgen/reference/glm_details.md)

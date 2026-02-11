@@ -1,14 +1,14 @@
 # Generate a Series of Plots for AMR Gene and Combination Analysis
 
 This function generates a set of visualizations to analyze AMR gene
-combinations, MIC values, and gene prevalence from an input geno-pheno
-binary matrix. It creates several plots, including assay distributions,
-phenotype breakdown and positive predictive values for each marker
-combination. The
-[amr_upset](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
-and [ppv](https://AMRverse.github.io/AMRgen/reference/ppv.md) functions
-can be used to generate standard data visualisations using the component
-plots.
+combinations, MIC values, and gene prevalence from an input
+genotype-phenotype binary matrix. It creates several plots, including
+assay distributions, phenotype breakdown, and positive predictive values
+for each marker combination. The
+[`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
+and [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md)
+functions can be used to generate standard data visualisations using the
+component plots.
 
 ## Usage
 
@@ -39,89 +39,91 @@ combo_stats(
 - binary_matrix:
 
   A data frame containing the original binary matrix output from the
-  `get_binary_matrix` function. Expected columns are an identifier
-  (column 1, any name), `pheno` (class sir, with S/I/R categories to
-  colour points), `mic` (class mic, with MIC values to plot), and other
-  columns representing gene presence/absence (binary coded, i.e., 1 =
-  present, 0 = absent).
+  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+  function. Expected columns are an identifier (column 1, any name),
+  `pheno` (class sir, with S/I/R categories to colour points), `mic`
+  (class mic, with MIC values to plot), and other columns representing
+  gene presence/absence (binary coded, i.e., 1 = present, 0 = absent).
 
 - min_set_size:
 
   An integer specifying the minimum size for a gene set to be included
-  in the analysis and plots. Default is 2. Only genes with at least this
-  number of occurrences are included in the plots.
+  in the analysis and plots. Default is 2. Only marker combinations with
+  at least this number of occurrences are included in the plots.
 
 - order:
 
   A character string indicating the order of the combinations on the
   x-axis. Options are:
 
-  - "" (default): decreasing frequency of combinations
+  - `""` (default): decreasing frequency of combinations
 
-  - "genes": order by the number of genes in each combination
+  - `"genes"`: order by the number of genes in each combination
 
-  - "value": order by the median assay value (MIC or disk zone) for each
-    combination.
+  - `"value"`: order by the median assay value (MIC or disk zone) for
+    each combination
+
+  - `"ppv"`: order by the PPV estimated for each combination
 
 - assay:
 
   A character string indicating whether to plot MIC or disk diffusion
   data. Must be one of:
 
-  - "mic": plot MIC data stored in column `mic`
+  - `"mic"` (default): plot MIC data stored in column `mic`
 
-  - "disk": plot disk diffusion data stored in column `disk`
+  - `"disk"`: plot disk diffusion data stored in column `disk`
+
+  - `NULL`: don't plot or summarise assay data
 
 - print_set_size:
 
-  Logical indicating whether, if `plot_set_size` is TRUE, to print the
+  Logical indicating whether, if `plot_set_size=TRUE`, to print the
   number of strains with each marker combination on the plot. Default is
-  FALSE.
+  `FALSE`.
 
 - print_category_counts:
 
-  Logical indicating whether, if `plot_category` is TRUE, to print the
+  Logical indicating whether, if `plot_category=TRUE`, to print the
   number of strains in each resistance category for each marker
-  combination in the plot. Default is FALSE.
+  combination in the plot. Default is `FALSE`.
 
 - SIR_col:
 
   A named vector of colours for the percentage bar plot. The names
-  should be the phenotype categories (e.g., "R", "I", "S"), and the
-  values should be valid color names or hexadecimal color codes. Default
-  values are those used in the AMR package `scale_colour_sir()`.
+  should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and
+  the values should be valid color names or hexadecimal color codes.
+  Default values are those used in the AMR package
+  [`AMR::scale_colour_sir()`](https://amr-for-r.org/reference/plot.html).
 
 - boxplot_col:
 
   Colour for lines of the box plots summarising the MIC distribution for
-  each marker combination. Default is "grey".
+  each marker combination. Default is `"grey"`.
 
 - colours_ppv:
 
   A named vector of colours for the plot of PPV estimates. The names
-  should be "R", "I" and "NWT", and the values should be valid color
-  names or hexadecimal color codes.
+  should be `"R"`, `"I"` and `"NWT"`, and the values should be valid
+  color names or hexadecimal color codes.
 
 - antibiotic:
 
-  (optional) Name of antibiotic, so we can retrieve breakpoints to the
-  assay value distribution plot.
+  Optional. Antibiotic name used to retrieve clinical breakpoints for
+  annotation of the assay distribution plot.
 
 - species:
 
-  (optional) Name of species, so we can retrieve breakpoints to add to
-  the assay value distribution plot.
+  Optional. Species name used for breakpoint lookup.
 
 - bp_site:
 
-  (optional) Breakpoint site to retrieve (only relevant if also
-  supplying `species` and `antibiotic` to retrieve breakpoints to plot,
-  and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff_bp`).
+  Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving
+  clinical breakpoints.
 
 - guideline:
 
-  (optional) Guideline to use when looking up breakpoints (default
-  'EUCAST 2025')
+  Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
 
 - bp_S:
 
@@ -137,26 +139,44 @@ combo_stats(
 
 - pd:
 
-  Position dodge, i.e. spacing for the R/NWT values to be positioned
-  above/below the line in the PPV plot. Default 'position_dodge(width =
-  0.8)'.
+  A
+  [`ggplot2::position_dodge()`](https://ggplot2.tidyverse.org/reference/position_dodge.html)
+  object controlling horizontal spacing of points and confidence
+  intervals in the PPV plot. Default is `position_dodge(width = 0.8)`.
 
 ## Value
 
 A list containing the following elements:
 
-- `plot`: A grid of plots displaying: (i) grid showing the marker
-  combinations observed, MIC distribution per marker combination,
-  frequency per marker and (optionally) phenotype classification and/or
-  number of samples for each marker combination.
-
 - `summary`: A data frame summarizing each marker combination observed,
   including median MIC (and interquartile range), number of resistant
   isolates, and positive predictive value for resistance.
 
+- `assay_plot`: MIC or disk diffusion distribution per combination.
+
+- `setsize_plot`: Bar plot showing number of isolates per combination.
+
+- `marker_grid_plot`: Dot plot showing gene combinations.
+
+- `marker_count_plot`: Gene prevalence plot.
+
+- `category_plot`: Stacked phenotype proportion plot.
+
+- `ppv_plot`: Positive predictive value plot with confidence intervals.
+
+## Details
+
+Marker combinations are defined as unique patterns of gene
+presence/absence across isolates. Only combinations observed in at least
+`min_set_size` isolates are included in the analysis. Median and
+interquartile range are calculated per combination. For MIC data,
+medians may optionally exclude values expressed as ranges (e.g.
+"\<=0.25").
+
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 
 binary_matrix <- get_binary_matrix(
@@ -168,46 +188,7 @@ binary_matrix <- get_binary_matrix(
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
 )
-#>  Defining NWT in binary matrix using ecoff column provided: ecoff 
 
 combo_stats(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
-#> $summary
-#> # A tibble: 103 × 19
-#>    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower
-#>    <chr>                     <dbl> <int> <chr>          <dbl>   <dbl>      <dbl>
-#>  1 ""                            0  2590 0_0_0_0_0_0_0…    10 0.00386    0.00147
-#>  2 "qnrB"                        1     1 0_0_0_0_0_0_0…     1 1          1      
-#>  3 "parE_E460K, gyrA…            2     1 0_0_0_0_0_0_0…     1 1          1      
-#>  4 "parE_D475E"                  1    61 0_0_0_0_0_0_0…     0 0          0      
-#>  5 "qnrA1"                       1     2 0_0_0_0_0_0_0…     0 0          0      
-#>  6 "gyrA_S83A"                   1     3 0_0_0_0_0_0_0…     0 0          0      
-#>  7 "qnrB4"                       1     2 0_0_0_0_0_0_0…     2 1          1      
-#>  8 "parE_I355T"                  1    24 0_0_0_0_0_0_0…     0 0          0      
-#>  9 "marR_S3N"                    1    38 0_0_0_0_0_0_0…     4 0.105      0.00769
-#> 10 "marR_S3N, parE_D…            2     4 0_0_0_0_0_0_0…     0 0          0      
-#> # ℹ 93 more rows
-#> # ℹ 12 more variables: R.ci_upper <dbl>, NWT.n <dbl>, NWT.ppv <dbl>,
-#> #   NWT.ci_lower <dbl>, NWT.ci_upper <dbl>, median_excludeRangeValues <dbl>,
-#> #   q25_excludeRangeValues <dbl>, q75_excludeRangeValues <dbl>,
-#> #   n_excludeRangeValues <int>, median_ignoreRanges <dbl>,
-#> #   q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
-#> 
-#> $assay_plot
-
-#> 
-#> $setsize_plot
-
-#> 
-#> $marker_grid_plot
-
-#> 
-#> $marker_count_plot
-
-#> 
-#> $category_plot
-
-#> 
-#> $ppv_plot
-
-#> 
+} # }
 ```

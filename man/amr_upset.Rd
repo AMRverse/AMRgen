@@ -5,17 +5,25 @@
 \title{Generate Upset Plot}
 \usage{
 amr_upset(
-  binary_matrix,
+  binary_matrix = NULL,
   assay = "mic",
   min_set_size = 2,
   order = "value",
+  geno_table,
+  pheno_table,
+  antibiotic = NULL,
+  drug_class_list,
+  geno_sample_col = NULL,
+  pheno_sample_col = NULL,
+  sir_col = NULL,
+  ecoff_col = "ecoff",
+  marker_col = "marker",
   plot_set_size = FALSE,
   plot_category = TRUE,
   print_category_counts = FALSE,
   print_set_size = FALSE,
   boxplot_col = "grey",
   SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
-  antibiotic = NULL,
   species = NULL,
   bp_site = NULL,
   guideline = "EUCAST 2025",
@@ -25,7 +33,7 @@ amr_upset(
 )
 }
 \arguments{
-\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. Expected columns are an identifier (column 1, any name), \code{pheno} (class sir, with S/I/R categories to colour points), \code{mic} (class mic, with MIC values to plot), and other columns representing gene presence/absence (binary coded, i.e., 1 = present, 0 = absent).}
+\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{antibiotic}, \code{drug_class_list} and optionally \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
 
 \item{assay}{A character string indicating whether to plot MIC or disk diffusion data. Must be one of:
 \itemize{
@@ -43,6 +51,24 @@ amr_upset(
 \item \code{"ppv"}: order by the PPV estimated for each combination
 }}
 
+\item{geno_table}{(Required if \code{binary_matrix} not provided) A data frame containing genotype data, formatted with \code{\link[=import_amrfp]{import_amrfp()}}. Only used if \code{binary_matrix} not provided.}
+
+\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_ast]{import_ast()}}. Only used if \code{binary_matrix} not provided.}
+
+\item{antibiotic}{Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.}
+
+\item{drug_class_list}{(Required if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. Only used if \code{binary_matrix} not provided.}
+
+\item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
+
+\item{pheno_sample_col}{A character string (optional) specifying the column name in \code{pheno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
+
+\item{sir_col}{A character string specifying the column name in \code{pheno_table} that contains the resistance interpretation (SIR) data. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if \code{binary_matrix} not provided.}
+
+\item{ecoff_col}{A character string specifying the column name in \code{pheno_table} that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. Default \code{ecoff}. Set to \code{NULL} if not available.  Only used if \code{binary_matrix} not provided.}
+
+\item{marker_col}{A character string specifying the column name in \code{geno_table} containing the marker identifiers. Default \code{"marker"}. Only used if \code{binary_matrix} not provided.}
+
 \item{plot_set_size}{Logical indicating whether to include a bar plot showing the set size (i.e., number of times each combination of markers is observed). Default is \code{FALSE}.}
 
 \item{plot_category}{Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the \code{pheno} column in the input file). Default is \code{TRUE}.}
@@ -54,8 +80,6 @@ amr_upset(
 \item{boxplot_col}{Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is \code{"grey"}.}
 
 \item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
-
-\item{antibiotic}{Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.}
 
 \item{species}{Optional. Species name used for breakpoint lookup.}
 
@@ -73,6 +97,7 @@ amr_upset(
 A list containing the following elements:
 \itemize{
 \item \code{plot}: A grid of plots displaying: (i) grid showing the marker combinations observed, MIC distribution per marker combination, frequency per marker and (optionally) phenotype classification and/or number of samples for each marker combination.
+\item \code{binary_matrix}: A copy of the genotype-phenotype binary matrix (either provided as input or generated by the function)
 \item \code{summary}: A data frame summarizing each marker combination observed, including median MIC (and interquartile range), number of resistant isolates, and positive predictive value for resistance.
 }
 }
@@ -83,6 +108,7 @@ This function generates an upset plot showing summaries of phenotype results (as
 \dontrun{
 ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 
+# Generate binary matrix
 binary_matrix <- get_binary_matrix(
   geno_table = ecoli_geno,
   pheno_table = ecoli_ast,
@@ -93,6 +119,17 @@ binary_matrix <- get_binary_matrix(
   keep_assay_values_from = "mic"
 )
 
-amr_upset(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
+# Run upset plot analysis using this binary_matrix
+amr_upset(binary_matrix, assay = "mic")
+
+# Alternatively, generate binary matrix and run ppv() in one step
+amr_upset(
+  assay = "mic",
+  geno_table = ecoli_geno,
+  pheno_table = ecoli_ast,
+  antibiotic = "Ciprofloxacin",
+  drug_class_list = c("Quinolones"),
+  sir_col = "pheno_clsi"
+)
 }
 }

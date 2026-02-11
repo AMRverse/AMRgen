@@ -7,53 +7,56 @@
 amr_logistic(
   geno_table,
   pheno_table,
-  antibiotic,
-  drug_class_list,
+  antibiotic = NULL,
+  drug_class_list = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = "pheno",
   ecoff_col = "ecoff",
+  marker_col = "marker.label",
+  binary_matrix = NULL,
   maf = 10,
   fit_glm = FALSE,
   single_plot = TRUE,
   colors = c("maroon", "blue4"),
-  axis_label_size = 9,
-  marker_col = "marker.label"
+  axis_label_size = 9
 )
 }
 \arguments{
-\item{geno_table}{A data frame containing the genotype data.}
+\item{geno_table}{(Required if \code{binary_matrix} not provided) A data frame containing genotype data, formatted with \code{\link[=import_amrfp]{import_amrfp()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{pheno_table}{A data frame containing the phenotypic data.}
+\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_ast]{import_ast()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{antibiotic}{A character string specifying the antibiotic to model using logistic regression.}
+\item{antibiotic}{(Required if \code{binary_matrix} not provided) A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the \code{drug_agent} column of \code{pheno_table}. Only used if \code{binary_matrix} not provided or if breakpoints required.}
 
-\item{drug_class_list}{A vector of drug class names. Used to subset the relevant markers for analysis.}
+\item{drug_class_list}{(Required if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. Only used if \code{binary_matrix} not provided.}
 
-\item{geno_sample_col}{(Optional) A character string specifying the column in \code{geno_table} that identifies the sample IDs. Defaults to \code{NULL}.}
+\item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
 
-\item{pheno_sample_col}{(Optional) A character string specifying the column in \code{pheno_table} that identifies the sample IDs. Defaults to \code{NULL}.}
+\item{pheno_sample_col}{A character string (optional) specifying the column name in \code{pheno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
 
-\item{sir_col}{(Optional) A character string specifying the column in \code{pheno_table} that contains the phenotype values (e.g., resistance/susceptibility). Defaults to \code{"pheno"}.}
+\item{sir_col}{A character string specifying the column name in \code{pheno_table} that contains the resistance interpretation (SIR) data. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if \code{binary_matrix} not provided.}
 
-\item{ecoff_col}{(Optional) A character string specifying the column in \code{pheno_table} containing the ECOFF (epidemiological cutoff) values. Defaults to \code{"ecoff"}.}
+\item{ecoff_col}{A character string specifying the column name in \code{pheno_table} that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. Default \code{ecoff}. Set to \code{NULL} if not available.  Only used if \code{binary_matrix} not provided.}
 
-\item{maf}{(Optional) An integer specifying the minimum allele frequency (MAF) threshold. Markers with a MAF lower than this value will be excluded. Defaults to 10.}
+\item{marker_col}{(Optional) Name of the column containing the marker identifiers, whose unique values will be treated as predictors in the regression. Defaults to \code{"marker"}.}
 
-\item{fit_glm}{(Optional) Change to TRUE to fit model with glm. Otherwise fit model with logistf (default).}
+\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{antibiotic}, \code{drug_class_list} and optionally \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
+
+\item{maf}{(Optional) An integer specifying the minimum allele frequency (MAF) threshold. Markers with a MAF lower than this value will be excluded. Defaults to \code{10}.}
+
+\item{fit_glm}{(Optional) Change to \code{TRUE} to fit model with glm. Otherwise fit model with logistf (default \code{FALSE}).}
 
 \item{single_plot}{(Optional) A logical value. If \code{TRUE}, a single plot is produced comparing the estimates for resistance (\code{R}) and non-resistance (\code{NWT}). Otherwise, two plots are printed side-by-side. Defaults to \code{TRUE}.}
 
 \item{colors}{(Optional) A vector of two colors, to use for R and NWT models in the plots. Defaults to \code{c("maroon", "blue4")}.}
 
-\item{axis_label_size}{(Optional) A numeric value controlling the size of axis labels in the plot. Defaults to 9.}
-
-\item{marker_col}{(Optional) Name of the column containing the marker identifiers, whose unique values will be treate as predictors in the regression. Defaults to \code{"marker"}.}
+\item{axis_label_size}{(Optional) A numeric value controlling the size of axis labels in the plot. Defaults to \code{9}.}
 }
 \value{
 A list with the following components:
 \itemize{
-\item \code{bin_mat}: The binary matrix of genetic data and phenotypic resistance information.
+\item \code{binary_matrix}: The binary matrix of genetic data and phenotypic resistance information (either provided as input or generated by the function).
 \item \code{modelR}: The fitted logistic regression model for resistance (\code{R}).
 \item \code{modelNWT}: The fitted logistic regression model for non-resistance (\code{NWT}).
 \item \code{plot}: A ggplot object comparing the estimates for resistance and non-resistance with corresponding statistical significance indicators.

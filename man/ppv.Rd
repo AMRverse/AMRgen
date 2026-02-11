@@ -5,9 +5,18 @@
 \title{Generate PPV Plot}
 \usage{
 ppv(
-  binary_matrix,
+  binary_matrix = NULL,
   min_set_size = 2,
   order = "ppv",
+  geno_table,
+  pheno_table,
+  antibiotic = NULL,
+  drug_class_list,
+  geno_sample_col = NULL,
+  pheno_sample_col = NULL,
+  sir_col = NULL,
+  ecoff_col = "ecoff",
+  marker_col = "marker",
   colours_ppv = c(R = "maroon", NWT = "navy"),
   SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
   upset_grid = FALSE,
@@ -18,7 +27,6 @@ ppv(
   plot_assay = FALSE,
   assay = NULL,
   boxplot_col = "grey",
-  antibiotic = NULL,
   species = NULL,
   bp_site = NULL,
   guideline = "EUCAST 2025",
@@ -29,7 +37,7 @@ ppv(
 )
 }
 \arguments{
-\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. Expected columns are an identifier (column 1, any name), \code{pheno} (class sir, with S/I/R categories to colour points), \code{mic} (class mic, with MIC values to plot), and other columns representing gene presence/absence (binary coded, i.e., 1 = present, 0 = absent).}
+\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{antibiotic}, \code{drug_class_list} and optionally \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
 
 \item{min_set_size}{An integer specifying the minimum size for a gene set to be included in the analysis and plots. Default is 2. Only marker combinations with at least this number of occurrences are included in the plots.}
 
@@ -40,6 +48,24 @@ ppv(
 \item \code{"value"}: order by the median assay value (MIC or disk zone) for each combination.
 \item \code{"ppv"} (default): order by the PPV estimated for each combination
 }}
+
+\item{geno_table}{(Required if \code{binary_matrix} not provided) A data frame containing genotype data, formatted with \code{\link[=import_amrfp]{import_amrfp()}}. Only used if \code{binary_matrix} not provided.}
+
+\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_ast]{import_ast()}}. Only used if \code{binary_matrix} not provided.}
+
+\item{antibiotic}{(Required if \code{binary_matrix} not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the \code{drug_agent} column of \code{pheno_table}. Only used if \code{binary_matrix} not provided or if breakpoints required.}
+
+\item{drug_class_list}{(Required if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. Only used if \code{binary_matrix} not provided.}
+
+\item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
+
+\item{pheno_sample_col}{A character string (optional) specifying the column name in \code{pheno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
+
+\item{sir_col}{A character string specifying the column name in \code{pheno_table} that contains the resistance interpretation (SIR) data. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if \code{binary_matrix} not provided.}
+
+\item{ecoff_col}{A character string specifying the column name in \code{pheno_table} that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. Default \code{ecoff}. Set to \code{NULL} if not available.  Only used if \code{binary_matrix} not provided.}
+
+\item{marker_col}{A character string specifying the column name in \code{geno_table} containing the marker identifiers. Default \code{"marker"}. Only used if \code{binary_matrix} not provided.}
 
 \item{colours_ppv}{A named vector of colours for the plot of PPV estimates. The names should be \code{"R"}, \code{"I"} and \code{"NWT"}, and the values should be valid color names or hexadecimal color codes.}
 
@@ -66,9 +92,7 @@ ppv(
 
 \item{boxplot_col}{Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is \code{"grey"}.}
 
-\item{antibiotic}{Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.}
-
-\item{species}{Optional. Species name used for breakpoint lookup.}
+\item{species}{Optional. Species name used to retrieve clinical breakpoints for annotation of the assay distribution plot.}
 
 \item{bp_site}{Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.}
 
@@ -86,6 +110,7 @@ ppv(
 A list containing the following elements:
 \itemize{
 \item \code{plot}: A grid of the requested plots
+\item \code{binary_matrix}: A copy of the genotype-phenotype binary matrix (either provided as input or generated by the function)
 \item \code{summary}: A data frame summarizing each marker combination observed, including number of resistant isolates, positive predictive values, and median assay values (and interquartile range) where relevant.
 }
 }
@@ -96,6 +121,7 @@ This function generates a plot showing summaries of phenotype results (assay dis
 \dontrun{
 ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 
+# Generate binary matrix
 binary_matrix <- get_binary_matrix(
   geno_table = ecoli_geno,
   pheno_table = ecoli_ast,
@@ -106,6 +132,16 @@ binary_matrix <- get_binary_matrix(
   keep_assay_values_from = "mic"
 )
 
-ppv(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
+# Run ppv analysis using this binary_matrix
+ppv(binary_matrix)
+
+# Alternatively, generate binary matrix and run ppv() in one step
+ppv(
+  geno_table = ecoli_geno,
+  pheno_table = ecoli_ast,
+  antibiotic = "Ciprofloxacin",
+  drug_class_list = c("Quinolones"),
+  sir_col = "pheno_clsi"
+)
 }
 }

@@ -144,6 +144,13 @@ ast <- download_ncbi_ast(
   reformat = TRUE
 )
 
+# Plot MIC distribution, stratified by platform
+assay_by_var(ast, measure="mic", colour_by = "pheno_provided", facet_var = "platform")
+
+# The downloaded S/I/R calls look odd, so re-interpret direct with latest EUCAST breakpoints and review
+ast <- interpret_ast(ast, interpret_eucast = T, interpret_clsi=T)
+assay_by_var(ast, measure="mic", colour_by = "pheno_eucast", facet_var = "platform")
+assay_by_var(ast, measure="mic", colour_by = "pheno_clsi", facet_var = "platform")
 ```
 
 ### Import and export 

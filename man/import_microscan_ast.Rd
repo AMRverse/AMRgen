@@ -40,6 +40,6 @@ Standardised AST data frame
 }
 \description{
 This function imports AST data from MicroScan instrument output files (wide CSV format)
-and converts it to the standardised long-format used by AMRgen. Supports both English
-and Spanish column names (auto-detected).
+and converts it to the standardised long-format used by AMRgen. Supports English,
+Spanish, French, German, and Portuguese column names (auto-detected from metadata columns).
 }

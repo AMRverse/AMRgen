@@ -999,11 +999,11 @@ import_vitek_ast <- function(input,
 #' Import and Process AST Data from MicroScan Output Files
 #'
 #' This function imports AST data from MicroScan instrument output files (wide CSV format)
-#' and converts it to the standardised long-format used by AMRgen. Supports both English
-#' and Spanish column names (auto-detected).
+#' and converts it to the standardised long-format used by AMRgen. Supports English,
+#' Spanish, French, German, and Portuguese column names (auto-detected from metadata columns).
 #'
 #' @param input A dataframe or path to a CSV/TSV file containing MicroScan AST output data
-#' @param sample_col Column name for sample identifiers. Default: NULL (auto-detected as "Sample" or "Muestra")
+#' @param sample_col Column name for sample identifiers. Default: NULL (auto-detected from language-specific column names)
 #' @param source Optional source value to record for all data points
 #' @param species Optional species override for phenotype interpretation
 #' @param ab Optional antibiotic override for phenotype interpretation
@@ -1044,26 +1044,82 @@ import_microscan_ast <- function(input,
   ast <- ast %>%
     mutate(across(where(is.character), ~ gsub("^'|'$", "", .x)))
 
-  # Detect Spanish and translate metadata column names
-  is_spanish <- "Muestra" %in% colnames(ast)
-  if (is_spanish) {
-    cat("Detected Spanish-language MicroScan export, translating column names\n")
-    spanish_meta <- c("Muestra" = "Sample", "Origen" = "Source",
-                      "Aislamiento" = "Isolation", "Microorganismo" = "Microorganism")
-    for (es in names(spanish_meta)) {
-      if (es %in% colnames(ast)) {
-        colnames(ast)[colnames(ast) == es] <- spanish_meta[es]
-      }
+  # Detect language and translate metadata column names + drug suffixes
+  # Supported: Spanish, French, German, Portuguese
+  lang_markers <- list(
+    spanish = list(
+      detect = "Muestra",
+      meta = c("Muestra" = "Sample", "Origen" = "Source",
+               "Aislamiento" = "Isolation", "Microorganismo" = "Microorganism"),
+      mic_suffix = " CIM",
+      sir_suffixes = c(" Interpretaci\u00f3n", " Interpretacion")
+    ),
+    french = list(
+      detect = c("\u00c9chantillon", "Echantillon"),
+      meta = c("\u00c9chantillon" = "Sample", "Echantillon" = "Sample",
+               "Origine" = "Source", "Isolement" = "Isolation",
+               "Micro-organisme" = "Microorganism", "Microorganisme" = "Microorganism"),
+      mic_suffix = " CMI",
+      sir_suffixes = c(" Interpr\u00e9tation", " Interpretation")
+    ),
+    german = list(
+      detect = "Probe",
+      meta = c("Probe" = "Sample", "Herkunft" = "Source", "Quelle" = "Source",
+               "Isolierung" = "Isolation", "Mikroorganismus" = "Microorganism"),
+      mic_suffix = " MHK",
+      sir_suffixes = c(" Interpretation")
+    ),
+    portuguese = list(
+      detect = "Amostra",
+      meta = c("Amostra" = "Sample", "Origem" = "Source",
+               "Isolamento" = "Isolation", "Microrganismo" = "Microorganism",
+               "Microorganismo" = "Microorganism"),
+      mic_suffix = " CIM",
+      sir_suffixes = c(" Interpreta\u00e7\u00e3o", " Interpretacao")
+    )
+  )
+
+  detected_lang <- NULL
+  for (lang_name in names(lang_markers)) {
+    markers <- lang_markers[[lang_name]]$detect
+    if (any(markers %in% colnames(ast))) {
+      detected_lang <- lang_name
+      break
     }
-    # Translate column suffixes: CIM -> MIC, Interpretacion/Interpretación -> Interpretation
-    colnames(ast) <- gsub(" CIM$", " MIC", colnames(ast))
-    colnames(ast) <- gsub(" Interpretaci\u00f3n$", " Interpretation", colnames(ast))
-    colnames(ast) <- gsub(" Interpretacion$", " Interpretation", colnames(ast))
   }
 
-  # Determine sample column
+  if (!is.null(detected_lang)) {
+    lang <- lang_markers[[detected_lang]]
+    cat(paste0("Detected ", detected_lang, "-language MicroScan export, translating column names\n"))
+
+    # Translate metadata column names
+    for (orig in names(lang$meta)) {
+      if (orig %in% colnames(ast)) {
+        colnames(ast)[colnames(ast) == orig] <- lang$meta[orig]
+      }
+    }
+
+    # Translate MIC suffix
+    colnames(ast) <- gsub(paste0(gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", lang$mic_suffix), "$"),
+                          " MIC", colnames(ast))
+
+    # Translate Interpretation suffixes
+    for (suf in lang$sir_suffixes) {
+      colnames(ast) <- gsub(paste0(gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", suf), "$"),
+                            " Interpretation", colnames(ast))
+    }
+  }
+
+  # Determine sample column (after translation, non-English names should be "Sample")
   if (is.null(sample_col)) {
-    sample_col <- if ("Sample" %in% colnames(ast)) "Sample" else "Muestra"
+    sample_candidates <- c("Sample", "Muestra", "\u00c9chantillon", "Echantillon",
+                           "Probe", "Amostra")
+    found <- sample_candidates[sample_candidates %in% colnames(ast)]
+    if (length(found) > 0) {
+      sample_col <- found[1]
+    } else {
+      stop("Could not auto-detect sample column. Please specify via sample_col parameter.")
+    }
   }
   if (!(sample_col %in% colnames(ast))) {
     stop(paste("Invalid column name:", sample_col))

@@ -67,9 +67,10 @@ reference:
     contents:
       - starts_with("import")
       - starts_with("export")
-      - starts_with("convert")
+      - starts_with("download")
       - get_binary_matrix
       - get_combo_matrix
+      - combo_stats
       - as.gene
       - gtdb.mo
       - format_ast
@@ -88,7 +89,9 @@ reference:
     desc: >
       Statistical models for resistance prediction and inference, including logistic regression and Firth regression.
     contents:
+      - amr_upset
       - solo_ppv_analysis
+      - ppv
       - amr_logistic
       - glm_details
       - logistf_details
@@ -100,7 +103,6 @@ reference:
       Tools to visualise results, including MIC distributions, model outputs, and genotype-phenotype relationships.
     contents:
       - matches("plot")
-      - amr_upset
       - assay_by_var
 
   - title: "Data"

@@ -58,10 +58,10 @@ This function imports an antibiotic susceptibility testing (AST) dataset in eith
 ecoli_ast_raw
 
 # import without re-interpreting resistance
-pheno <- import_ast(ecoli_ast_raw, format="ncbi")
+pheno <- import_ast(ecoli_ast_raw, format = "ncbi")
 head(pheno)
 
 # import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-pheno <- import_ast(ecoli_ast_raw, format="ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
+pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
 head(pheno)
 }

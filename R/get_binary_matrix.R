@@ -247,27 +247,14 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
 }
 
 
-
-#' Generate matrix of marker combinations
+#' Add marker combinations to a binary geno-pheno matrix
 #'
-#' Given a geno-phenot binary marker matrix, output by `get_binary_matrix`,
-#' this function constructs identifies marker combination, reshapes
-#' the data to long format, and computes frequencies of marker
-#' combinations and individual markers.
+#' Given a geno-pheno binary marker matrix, output by `get_binary_matrix`,
+#' this function identifies marker combination, and adds combination ids,
+#' and the count of markers detected per sample, as new columns.
 #'
 #' @param binary_matrix A geno-pheno binary matrix, output by `get_binary_matrix`
 #' @param assay (optional) Name of an assay column to filter on, so that the matrix returned only includes samples with assay data of this type available
-#'
-#' @return A named list with three elements:
-#' \describe{
-#'   \item{combination_matrix}{A long-format data frame with one row per
-#'   sample–marker combination, including the marker presence/absence
-#'   and a combination identifier.}
-#'   \item{combination_freq}{A data frame summarising the frequency and
-#'   percentage of each unique marker combination.}
-#'   \item{marker_freq}{A data frame giving the prevalence (count) of
-#'   each individual marker across all samples.}
-#' }
 #'
 #'
 #' @examples
@@ -276,14 +263,13 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
 #' }
 #'
 #' @export
-get_combo_matrix <- function(binary_matrix, assay="mic") {
-  
+get_combo_matrix <- function(binary_matrix, assay = NULL) {
   # marker names
   markers <- binary_matrix %>%
     dplyr::select(-any_of(c("id", "pheno", "ecoff", "R", "I", "NWT", "mic", "disk"))) %>%
     colnames()
-  
-  # check w have the expected assay column, with data
+
+  # check we have the expected assay column, with data
   if (!is.null(assay)) {
     if (!(assay %in% colnames(binary_matrix))) {
       stop(paste("input", deparse(substitute(binary_matrix)), "has no column labelled ", assay))
@@ -295,36 +281,17 @@ get_combo_matrix <- function(binary_matrix, assay="mic") {
       stop(paste("input", deparse(substitute(binary_matrix)), "has no non-NA values in column ", assay))
     }
   }
-  
+
   # Add in a combination column and filter to samples with the required assay data (MIC or disk) only
   if (!is.null(assay)) {
-    binary_matrix <- binary_matrix %>% filter(!is.na(get(assay))) 
+    binary_matrix <- binary_matrix %>% filter(!is.na(get(assay)))
   }
-  
-  binary_matrix_wide <- binary_matrix %>%
-    mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R","NWT"))), na.rm=T)) %>%
-    unite("combination_id", markers[1]:markers[length(markers)], remove = FALSE) # add in combinations
-  
-  # Make matrix longer (note this has one row per strain/gene combination regardless of gene presence)
-  combo_matrix <- binary_matrix_wide %>%
-    pivot_longer(cols = markers[1]:markers[length(markers)], names_to = "markers") %>%
-    mutate(markers = gsub("\\.\\.", ":", markers)) %>%
-    mutate(markers = gsub("`", "", markers))
-  
-  ### Counts per combination
-  combination_freq <- binary_matrix_wide %>%
-    group_by(combination_id) %>%
-    summarise(n = n()) %>%
-    mutate(perc = 100 * n / sum(n)) # count number with each combination
-  
-  ### Gene prevalence
-  marker_freq <- combo_matrix %>%
-    group_by(markers) %>%
-    summarise(marker_freq = sum(value)) %>%
-    arrange(desc(marker_freq))
-  
-  return(list(combination_matrix=combo_matrix, 
-              combination_freq=combination_freq,
-              marker_freq=marker_freq))
-  
+
+  # input matrix with combinations added
+  binary_matrix_combo <- binary_matrix %>%
+    mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R", "NWT", "mic", "disk"))), na.rm = T)) %>%
+    unite("combination_id", markers[1]:markers[length(markers)], remove = FALSE) %>% # add in combinations
+    relocate(marker_count, .after = "combination_id")
+
+  return(binary_matrix_combo)
 }

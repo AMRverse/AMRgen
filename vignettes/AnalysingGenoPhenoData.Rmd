@@ -127,25 +127,23 @@ It is always a good idea to check the distribution of raw AST data that we have 
 # Example E. coli AST data from NCBI
 
 # Plot MIC distribution, coloured by CLSI S/I/R call
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi")
-
+assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi")
 ```
 
 It's a good idea to make sure that the `SIR` field in the input data file has been interpreted correctly against the breakpoints. The AMRgen function `checkBreakpoints()` can be used to help look up breakpoints in the `AMR` package. Or, if you provide the function `assay_by_var()` with a species and guideline, it can look up the breakpoints and ECOFF and annotate these directly on the plot.
 
 ``` {r plot_mic_breakpoints}
 # Look up breakpoints recorded in the AMR package
-checkBreakpoints(species="E. coli", guide="CLSI 2025", antibiotic="Ciprofloxacin", assay="MIC")
+checkBreakpoints(species = "E. coli", guide = "CLSI 2025", antibiotic = "Ciprofloxacin", assay = "MIC")
 
 # Specify species and guideline, to annotate with CLSI breakpoints
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025")
-
+assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025")
 ```
 
 When aggregating AST data from different methods and sources, it is a good idea to check the distributions broken down by method or source. This can be done easily by passing the `assay_by_var()` function a variable name to facet by, which means a separate distribution will be plotted for each value of that variable (e.g. each type of 'method' in our AST test data). Note that this public data from NCBI includes non-standard values in the platform (Sensititre / Sensititer) in the platform
 ``` {r plot_mic_breakpoints_method, fig.height=8}
 # specify facet_var="method" to generate facet plots by assay method
-mic_by_platform <- assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025", facet_var ="method")
+mic_by_platform <- assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
 
 mic_by_platform$plot
 ```
@@ -217,25 +215,25 @@ This binary matrix can be used as the starting a lot of downstream analyses.
 
 For example, we can use it as input to `assay_by_var` to plot the assay distribution coloured by presence of a particular genetic marker
 ``` {r assay_by_genotype}
-assay_by_var(cip_bin, measure="mic", colour_by="parC_S80I", antibiotic="Ciprofloxacin")
+assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", antibiotic = "Ciprofloxacin")
 
 # count the number of gyrA mutations per genome
-gyrA_mut <- cip_bin %>% 
-  dplyr::mutate(gyrA_mut = rowSums(across(contains("gyrA_") & where(is.numeric)), na.rm=T)) %>% 
+gyrA_mut <- cip_bin %>%
+  dplyr::mutate(gyrA_mut = rowSums(across(contains("gyrA_") & where(is.numeric)), na.rm = T)) %>%
   select(mic, gyrA_mut)
 
 # plot the MIC distribution, coloured by count of gyrA mutations
-mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure="mic", colour_by="gyrA_mut", colour_legend_label="No. gyrA mutations", antibiotic="Ciprofloxacin")
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin")
 
 mic_by_gyrA_count
 
 # count the number of genetic determinants per genome
-marker_count <- cip_bin %>% 
-  mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R","NWT"))), na.rm=T)) %>% 
+marker_count <- cip_bin %>%
+  mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R", "NWT"))), na.rm = T)) %>%
   select(mic, marker_count)
 
 # plot the MIC distribution, coloured by count of associated genetic markers
-mic_by_marker_count <- assay_by_var(marker_count, measure="mic", colour_by="marker_count", colour_legend_label="No. markers detected", antibiotic="Ciprofloxacin", bar_cols=viridisLite::viridis(max(marker_count$marker_count)+1))
+mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1))
 
 mic_by_marker_count
 ```

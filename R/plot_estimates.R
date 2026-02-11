@@ -125,7 +125,6 @@ compare_estimates <- function(tbl1, tbl2,
                               single_plot = TRUE,
                               pd = position_dodge(width = 0.8),
                               marker_order = NULL) {
-  
   if (!single_plot | is.null(tbl2)) { # need a solo plot for table 1
     plot1 <- plot_estimates(tbl1,
       sig = sig,
@@ -215,7 +214,6 @@ autoplot.model_summary <- function(object,
     axis_label_size = axis_label_size
   )
 }
-
 
 
 #' Extract Details from a logistf Model

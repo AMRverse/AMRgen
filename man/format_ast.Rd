@@ -25,23 +25,23 @@ format_ast(
 )
 }
 \arguments{
-\item{input}{A string representing a dataframe, or a path to an input file, containing the AST data in long-form antibiogram format (one row per sample and test). This might be a file containing the content of an EBI/NCBI AST dataset previously processed using \code{import_ebi_ast()}, \code{import_ncbi_ast()}, or \code{import_ast()} functions, or files with a similar format/structure but with different column names.}
+\item{input}{A string representing a dataframe, or a path to an input file, containing the AST data in long-form antibiogram format (one row per sample and test). This might be a file containing the content of an EBI/NCBI AST dataset previously processed using \code{\link[=import_ebi_ast]{import_ebi_ast()}}, \code{\link[=import_ncbi_ast]{import_ncbi_ast()}}, or \code{\link[=import_ast]{import_ast()}} functions, or files with a similar format/structure but with different column names.}
 
 \item{sample_col}{(optional, default 'id') Name of the input data column that provides the sample name. If the 'rename' parameter is set to TRUE, this column will be renamed as 'id'.}
 
 \item{species}{(optional) Name of the single species to which all samples belong. Use this if you want to interpret assay measurements but the input file does not contain a column indicating the species for each sample (called 'species' or a name specified by the \code{species_col} parameter).}
 
-\item{species_col}{(optional, default 'species') Name of the input data column that provides a species name. If provided, this column will be converted to micro-organism class 'mo' via \code{as.mo()}. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'spp_pheno'. If interpretation is switched on, this column will be used to identify the appropriate  breakpoints for interpretation of each row in the data table.}
+\item{species_col}{(optional, default 'species') Name of the input data column that provides a species name. If provided, this column will be converted to micro-organism class 'mo' via \code{\link[AMR:as.mo]{AMR::as.mo()}}. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'spp_pheno'. If interpretation is switched on, this column will be used to identify the appropriate  breakpoints for interpretation of each row in the data table.}
 
 \item{ab}{(optional) Name of a single antibiotic to use for phenotype interpretation. Use this if you want to interpret assay measurements but the input file does not contain a column indicating the drug for each sample (called 'drug_agent' or a name specified by the \code{ab_col} parameter).}
 
-\item{ab_col}{(optional, default 'drug_agent') Name of the input data column that provides a drug name. If provided, this column will be converted to antibiotic class 'ab' via \code{as.ab()}. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'drug_agent'. If interpretation is switched on, this column will be used to identify the appropriate breakpoints for interpretation of each row in the data table.}
+\item{ab_col}{(optional, default 'drug_agent') Name of the input data column that provides a drug name. If provided, this column will be converted to antibiotic class 'ab' via \code{\link[AMR:as.ab]{AMR::as.ab()}}. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'drug_agent'. If interpretation is switched on, this column will be used to identify the appropriate breakpoints for interpretation of each row in the data table.}
 
-\item{mic_col}{(optional, default 'mic') Name of the input data column that provides MIC measurements. If provided, this column will be converted to MIC class 'mic' via \code{as.mic()}. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'mic'. If interpretation is switched on, the MIC values will be interpreted against clinical breakpoints.}
+\item{mic_col}{(optional, default 'mic') Name of the input data column that provides MIC measurements. If provided, this column will be converted to MIC class 'mic' via \code{\link[AMR:as.mic]{AMR::as.mic()}}. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'mic'. If interpretation is switched on, the MIC values will be interpreted against clinical breakpoints.}
 
-\item{disk_col}{(optional, default 'disk') Name of the input data column that provides disk diffusion zone measurements. If provided, this column will be converted to disk diffusion class 'disk' via \code{as.disk()}. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'disk'. If interpretation is switched on, the zone values will be interpreted against clinical breakpoints.}
+\item{disk_col}{(optional, default 'disk') Name of the input data column that provides disk diffusion zone measurements. If provided, this column will be converted to disk diffusion class 'disk' via \code{\link[AMR:as.disk]{AMR::as.disk()}}. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'disk'. If interpretation is switched on, the zone values will be interpreted against clinical breakpoints.}
 
-\item{pheno_cols}{(optional, default \code{c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")}) Name of the input data column/s that provides disk diffusion zone measurements (as a character vector, or single string for a single column). If provided, these columns will be converted to SIR class 'sir' via \code{as.sir()}.}
+\item{pheno_cols}{(optional, default \code{c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")}) Name of the input data column/s that provides disk diffusion zone measurements (as a character vector, or single string for a single column). If provided, these columns will be converted to SIR class 'sir' via \code{\link[AMR:as.sir]{AMR::as.sir()}}.}
 
 \item{method_col}{(optional, default 'method') Name of the input data column that indicates the testing method used (e.g. MIC, disk diffusion). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'method'.}
 
@@ -69,15 +69,19 @@ This function attempts to import antibiotic susceptibility testing (AST) data in
 \dontrun{
 # import and process AST data from EBI, write formatted data to file for later use
 pheno <- import_ebi_ast("EBI_AMR_data.csv.gz")
-write_tsv(pheno, file="EBI_AMR_data_processed.tsv.gz", 
-            interpret_eucast = TRUE, interpret_ecoff = TRUE)
+write_tsv(pheno,
+  file = "EBI_AMR_data_processed.tsv.gz",
+  interpret_eucast = TRUE, interpret_ecoff = TRUE
+)
 
 # read stored data and format the columns to the correct classes
 pheno <- format_ast("EBI_AMR_data_processed.tsv.gz")
 
 # read in unprocessed E. coli AST data from non-standard format and interpret
-pheno <- format_ast("AMR_data.tsv", sample_col="STRAIN", species="E. coli",
-						ab_col="Antibiotic", mic_col="MIC (mg/L)", 
-						interpret_eucast=TRUE, interpret_ecoff=TRUE)
+pheno <- format_ast("AMR_data.tsv",
+  sample_col = "STRAIN", species = "E. coli",
+  ab_col = "Antibiotic", mic_col = "MIC (mg/L)",
+  interpret_eucast = TRUE, interpret_ecoff = TRUE
+)
 }
 }

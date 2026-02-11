@@ -2,32 +2,19 @@
 % Please edit documentation in R/get_binary_matrix.R
 \name{get_combo_matrix}
 \alias{get_combo_matrix}
-\title{Generate matrix of marker combinations}
+\title{Add marker combinations to a binary geno-pheno matrix}
 \usage{
-get_combo_matrix(binary_matrix, assay = "mic")
+get_combo_matrix(binary_matrix, assay = NULL)
 }
 \arguments{
 \item{binary_matrix}{A geno-pheno binary matrix, output by \code{get_binary_matrix}}
 
 \item{assay}{(optional) Name of an assay column to filter on, so that the matrix returned only includes samples with assay data of this type available}
 }
-\value{
-A named list with three elements:
-\describe{
-\item{combination_matrix}{A long-format data frame with one row per
-sample–marker combination, including the marker presence/absence
-and a combination identifier.}
-\item{combination_freq}{A data frame summarising the frequency and
-percentage of each unique marker combination.}
-\item{marker_freq}{A data frame giving the prevalence (count) of
-each individual marker across all samples.}
-}
-}
 \description{
-Given a geno-phenot binary marker matrix, output by \code{get_binary_matrix},
-this function constructs identifies marker combination, reshapes
-the data to long format, and computes frequencies of marker
-combinations and individual markers.
+Given a geno-pheno binary marker matrix, output by \code{get_binary_matrix},
+this function identifies marker combination, and adds combination ids,
+and the count of markers detected per sample, as new columns.
 }
 \examples{
 \dontrun{

@@ -20,7 +20,6 @@ Depends: R (>= 3.6.0)
 Imports:
     AMR (>= 3.0.1),
     arrow,
-    bigrquery,
     cli (>= 3.6.0),
     dplyr (>= 1.1.0),
     forcats (>= 1.0.0),
@@ -39,6 +38,7 @@ Imports:
     tidyr (>= 1.1.0),
     XML
 Suggests:
+    bigrquery,
     devtools,
     knitr,
     rmarkdown,

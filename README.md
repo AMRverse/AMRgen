@@ -76,16 +76,14 @@ soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_ast, antibiotic="Ciprofloxa
 
 # Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
 #  (for combinations observed at least 5 times)
-cip_upset <- amr_upset(soloPPV_cipro$amr_binary, min_set_size=5, assay="mic", order="value")
+cip_upset <- amr_upset(binary_matrix=soloPPV_cipro$amr_binary, min_set_size=5, assay="mic")
 
 # Calculate positive predictive value for individual markers and combinations
-cip_ppv <- ppv(soloPPV_cipro$amr_binary, min_set_size=5, assay="mic", order="value")
+cip_ppv <- ppv(binary_matrix=soloPPV_cipro$amr_binary, min_set_size=5)
 
 # Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers
 #  (for markers observed at least 10 times)
-models <- amr_logistic(geno_table = import_amrfp(ecoli_geno_raw, "Name"),
-                       pheno_table = ecoli_ast, sir_col="pheno_clsi",
-                       antibiotic = "Ciprofloxacin", drug_class_list = c("Quinolones"), maf=10)
+models <- amr_logistic(binary_matrix=soloPPV_cipro$amr_binary, maf=10)
 
 ```
 

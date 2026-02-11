@@ -491,7 +491,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 #'
 #' This function imports an antibiotic susceptibility testing (AST) dataset in either EBI or NCBI antibiogram format, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
 #' @param input A string representing a dataframe, or a path to an input file, containing the AST data in EBI or NCBI antibiogram format. These files can be downloaded from the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa), or from EBI using the function `download_ebi()`.
-#' @param format A string indicating the format of the data: "ebi" (default), "ebi_web", "ebi_ftp", "ncbi", "vitek", or "whonet". This determines whether the data is passed on to the `import_ebi_ast()` (ebi/ebi_web), `import_ebi_ast_ftp()` (ebi_ftp), `import_ncbi_ast()` (ncbi), `import_vitek_ast()` (vitek), or `import_whonet_ast()` (whonet) function to process.
+#' @param format A string indicating the format of the data: "ebi" (default), "ebi_web", "ebi_ftp", "ncbi", "vitek", "microscan", "sensititre", or "whonet". This determines whether the data is passed on to the `import_ebi_ast()` (ebi/ebi_web), `import_ebi_ast_ftp()` (ebi_ftp), `import_ncbi_ast()` (ncbi), `import_vitek_ast()` (vitek), `import_microscan_ast()` (microscan), `import_sensititre_ast()` (sensititre), or `import_whonet_ast()` (whonet) function to process.
 #' @param interpret_eucast A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
 #' @param interpret_clsi A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
 #' @param interpret_ecoff A logical value (default is FALSE). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).
@@ -552,6 +552,24 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
       interpret_ecoff = interpret_ecoff,
       species = species, ab = ab, source = source
     )
+  }
+
+  if (format == "microscan") {
+    cat("Reading in as MicroScan AST format\n")
+    ast <- import_microscan_ast(input,
+                                interpret_eucast = interpret_eucast,
+                                interpret_clsi = interpret_clsi,
+                                interpret_ecoff = interpret_ecoff,
+                                species = species, ab = ab, source = source)
+  }
+
+  if (format == "sensititre") {
+    cat("Reading in as Sensititre AST format\n")
+    ast <- import_sensititre_ast(input,
+                                  interpret_eucast = interpret_eucast,
+                                  interpret_clsi = interpret_clsi,
+                                  interpret_ecoff = interpret_ecoff,
+                                  species = species, ab = ab, source = source)
   }
 
   if (format == "whonet") {
@@ -950,8 +968,17 @@ import_vitek_ast <- function(input,
     stop(paste("Invalid column name:", sample_col))
   }
 
-  # Identify antibiotic MIC columns (CODE-Name pattern, excluding -Other-*)
   all_cols <- colnames(ast)
+
+  # Drop 'Family -...' columns (resistance mechanism descriptions in lab VITEK files)
+  family_cols <- all_cols[grepl("^Family -", all_cols)]
+  if (length(family_cols) > 0) {
+    cat(paste0("Dropping ", length(family_cols), " 'Family -...' resistance mechanism columns\n"))
+    ast <- ast %>% dplyr::select(-any_of(family_cols))
+    all_cols <- colnames(ast)
+  }
+
+  # Identify antibiotic MIC columns (CODE-Name pattern, excluding -Other-*)
   mic_cols <- all_cols[grepl("^[A-Z0-9]+-", all_cols) &
     !grepl("-Other-Instrument$|-Other-Expertized$", all_cols)]
 
@@ -1019,11 +1046,21 @@ import_vitek_ast <- function(input,
       names_pattern = "^([A-Z0-9]+)_(mic|sir_inst|sir_exp)$"
     )
 
-  # Add antibiotic full name and parse values
+  # Add antibiotic full name and parse special values
+  # (-) = not tested; TRM = too resistant to measure; POS/NEG = qualitative screening
   ast_long <- ast_long %>%
     mutate(ab_name = ab_lookup[ab_code]) %>%
+    mutate(method = "MIC") %>%
+    mutate(is_screening = mic %in% c("POS", "NEG")) %>%
+    mutate(pheno_screening = case_when(
+      mic == "POS" ~ "R",
+      mic == "NEG" ~ "S",
+      TRUE ~ NA_character_
+    )) %>%
+    mutate(pheno_trm = if_else(!is.na(mic) & mic == "TRM", "R", NA_character_)) %>%
     mutate(mic = case_when(
-      is.na(mic) | mic == "" | mic == "-" | mic == "NEG" ~ NA_character_,
+      is.na(mic) | mic == "" | mic == "-" | mic == "(-)" ~ NA_character_,
+      mic %in% c("NEG", "POS", "TRM") ~ NA_character_,
       TRUE ~ mic
     )) %>%
     mutate(mic = as.mic(mic))
@@ -1044,7 +1081,11 @@ import_vitek_ast <- function(input,
   } else {
     ast_long <- ast_long %>% mutate(pheno_provided = NA_character_)
   }
-  ast_long <- ast_long %>% mutate(pheno_provided = as.sir(pheno_provided))
+  # Merge in screening and TRM results where no SIR was available
+  ast_long <- ast_long %>%
+    mutate(pheno_provided = coalesce(pheno_provided, pheno_screening, pheno_trm)) %>%
+    mutate(method = if_else(is_screening, "screening", method)) %>%
+    mutate(pheno_provided = as.sir(pheno_provided))
 
   # Parse organism and antibiotic
   if ("Organism Name" %in% colnames(ast_long)) {
@@ -1060,8 +1101,8 @@ import_vitek_ast <- function(input,
   # Rename sample column and add standard columns
   ast_long <- ast_long %>%
     rename(id = !!sym(sample_col)) %>%
-    mutate(method = "MIC") %>%
-    mutate(platform = "Vitek")
+    mutate(platform = "Vitek") %>%
+    mutate(disk = as.disk(NA))
 
   # Add guideline if specified
   if (!is.null(instrument_guideline)) {
@@ -1094,7 +1135,7 @@ import_vitek_ast <- function(input,
   # Reorder columns
   ast_long <- ast_long %>%
     relocate(any_of(c(
-      "id", "drug_agent", "mic",
+      "id", "drug_agent", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno"

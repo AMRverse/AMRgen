@@ -129,12 +129,20 @@ ggplot2::autoplot(compare_disk)
 # Get genotype data for ciprofloxacin in E. coli
 ebi_geno <- download_ebi(data="genotype", species = "Escherichia coli", geno_subclass="QUINOLONE", reformat=T)
 
-# Create binary matrix summarising cipro geno and pheno data from EBI
-cipro_ebi_geno_pheno <- get_binary_matrix(ecoli_geno, ebi_pheno_ecoli_cip, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_provided", keep_assay_values=TRUE)
-
 # Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
 #  (for combinations observed at least 5 times)
-cip_upset_ebi_mic <- amr_upset(cipro_ebi_geno_pheno, min_set_size=5, assay="mic", order="value")
+cip_upset_ebi_mic <- amr_upset(geno_table=ecoli_geno, pheno_table=ebi_pheno_ecoli_cip, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_provided", min_set_size=5, assay="mic", order="value")
+```
+
+### Download phenotype data from NCBI BioSample
+
+```r
+# Get all available phenotype data for Klebsiella quasipneumoniae
+# (note this is a small example with <100 samples, as this function queries NCBI BioSample via rentrez and is quite slow)
+ast <- download_ncbi_ast(
+  "Klebsiella quasipneumoniae",
+  reformat = TRUE
+)
 
 ```
 

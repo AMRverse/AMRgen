@@ -96,12 +96,9 @@ utils::globalVariables(c(
   "p",
   "perc",
   "pheno",
-<<<<<<< HEAD
-=======
   "pheno_provided",
   "pheno_screening",
   "pheno_trm",
->>>>>>> ad47046 (add import_microscan_ast, import_sensititre_ast and fix import_vitek_ast for lab files)
   "pheno_clsi_disk",
   "pheno_clsi_mic",
   "pheno_disk",
@@ -124,19 +121,14 @@ utils::globalVariables(c(
   "py_run_string",
   "R",
   "r_to_py",
-<<<<<<< HEAD
-=======
   "resistance_phenotype",
   "row_idx",
->>>>>>> ad47046 (add import_microscan_ast, import_sensititre_ast and fix import_vitek_ast for lab files)
   "Resistance phenotype",
   "Scientifi",
   "Scientific name",
   "se",
   "setNames",
   "sig_binary",
-<<<<<<< HEAD
-=======
   "Sample",
   "sir",
   "sir_exp",
@@ -144,7 +136,6 @@ utils::globalVariables(c(
   "sir_raw",
   "sir_value",
   "Specimen date",
->>>>>>> ad47046 (add import_microscan_ast, import_sensititre_ast and fix import_vitek_ast for lab files)
   "solo",
   "Source",
   "spp_pheno",

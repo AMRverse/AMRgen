@@ -17,19 +17,27 @@
 #' @importFrom AMR as.mo as.ab
 #' @importFrom dplyr filter
 #' @export
-getBreakpoints <- function(species, guide="EUCAST 2024", antibiotic, type_filter="human") {
-  bp <- AMR::clinical_breakpoints %>% filter(guideline==guide & mo==AMR::as.mo(species) & ab==AMR::as.ab(antibiotic)) %>% filter(type==type_filter)
-  if(nrow(bp)==0) {
+getBreakpoints <- function(species, guide = "EUCAST 2024", antibiotic, type_filter = "human") {
+  bp <- AMR::clinical_breakpoints %>%
+    filter(guideline == guide & mo == AMR::as.mo(species) & ab == AMR::as.ab(antibiotic)) %>%
+    filter(type == type_filter)
+  if (nrow(bp) == 0) {
     sp_mo <- AMR::as.mo(species)
-    this_mo <- AMR::microorganisms %>% filter(mo==sp_mo)
+    this_mo <- AMR::microorganisms %>% filter(mo == sp_mo)
     # try genus
-    bp <- AMR::clinical_breakpoints %>% filter(guideline==guide & mo==AMR::as.mo(this_mo$genus) & ab==AMR::as.ab(antibiotic)) %>% filter(type==type_filter)
-    if (nrow(bp)==0) {
+    bp <- AMR::clinical_breakpoints %>%
+      filter(guideline == guide & mo == AMR::as.mo(this_mo$genus) & ab == AMR::as.ab(antibiotic)) %>%
+      filter(type == type_filter)
+    if (nrow(bp) == 0) {
       # try family
-      bp <- AMR::clinical_breakpoints %>% filter(guideline==guide & mo==AMR::as.mo(this_mo$family) & ab==AMR::as.ab(antibiotic)) %>% filter(type==type_filter)
-      if (nrow(bp)==0) {
+      bp <- AMR::clinical_breakpoints %>%
+        filter(guideline == guide & mo == AMR::as.mo(this_mo$family) & ab == AMR::as.ab(antibiotic)) %>%
+        filter(type == type_filter)
+      if (nrow(bp) == 0) {
         # try order
-        bp <- AMR::clinical_breakpoints %>% filter(guideline==guide & mo==AMR::as.mo(this_mo$order) & ab==AMR::as.ab(antibiotic)) %>% filter(type==type_filter)
+        bp <- AMR::clinical_breakpoints %>%
+          filter(guideline == guide & mo == AMR::as.mo(this_mo$order) & ab == AMR::as.ab(antibiotic)) %>%
+          filter(type == type_filter)
       }
     }
   }
@@ -60,52 +68,64 @@ getBreakpoints <- function(species, guide="EUCAST 2024", antibiotic, type_filter
 #' - Returning a message about the selected site and breakpoint values.
 #'
 #' @examples
-#' checkBreakpoints(species="Escherichia coli", guide="EUCAST 2024", 
-#'                       antibiotic="Ciprofloxacin", assay="MIC")
+#' checkBreakpoints(
+#'   species = "Escherichia coli", guide = "EUCAST 2024",
+#'   antibiotic = "Ciprofloxacin", assay = "MIC"
+#' )
 #'
 #' @importFrom dplyr filter arrange first
 #' @export
-checkBreakpoints <- function(species, guide="EUCAST 2024", antibiotic, assay="MIC", bp_site=NULL) {
-  breakpoints <- getBreakpoints(species, guide, antibiotic) %>% filter(method==assay)
-  if (nrow(breakpoints)==0) {stop(paste("Could not determine",assay,"breakpoints using AMR package, please provide your own breakpoints"))}
-  else{
+checkBreakpoints <- function(species, guide = "EUCAST 2024", antibiotic, assay = "MIC", bp_site = NULL) {
+  breakpoints <- getBreakpoints(species, guide, antibiotic) %>% filter(method == assay)
+  if (nrow(breakpoints) == 0) {
+    stop(paste("Could not determine", assay, "breakpoints using AMR package, please provide your own breakpoints"))
+  } else {
     breakpoint_sites <- unique(breakpoints$site)
     breakpoint_message_multibp <- NA
-    bp_standard="-"
+    bp_standard <- "-"
     # handle multiple breakpoints (e.g. for different conditions)
-    if (length(breakpoint_sites)>1) {
-      breakpoint_message_multibp <- paste("NOTE: Multiple breakpoint entries, for different sites:", paste(breakpoint_sites, collapse="; "))
-      if (length(unique(breakpoints$breakpoint_R))==1 & length(unique(breakpoints$breakpoint_S))==1) {
-        breakpoints <- breakpoints %>% arrange(-breakpoint_S) %>% dplyr::first()
+    if (length(breakpoint_sites) > 1) {
+      breakpoint_message_multibp <- paste("NOTE: Multiple breakpoint entries, for different sites:", paste(breakpoint_sites, collapse = "; "))
+      if (length(unique(breakpoints$breakpoint_R)) == 1 & length(unique(breakpoints$breakpoint_S)) == 1) {
+        breakpoints <- breakpoints %>%
+          arrange(-breakpoint_S) %>%
+          dplyr::first()
         breakpoint_message_multibp <- paste0(breakpoint_message_multibp, ". However S and R breakpoints are the same.")
-        bp_standard<-breakpoints$site
-      }
-      else if (is.null(bp_site)) {
-        breakpoints <- breakpoints %>% arrange(-breakpoint_S) %>% dplyr::first()
-        breakpoint_message_multibp <- paste0(breakpoint_message_multibp, ". Using the one with the highest S breakpoint (", breakpoints$site,").")
-        bp_standard<-breakpoints$site
-      }
-      else {
+        bp_standard <- breakpoints$site
+      } else if (is.null(bp_site)) {
+        breakpoints <- breakpoints %>%
+          arrange(-breakpoint_S) %>%
+          dplyr::first()
+        breakpoint_message_multibp <- paste0(breakpoint_message_multibp, ". Using the one with the highest S breakpoint (", breakpoints$site, ").")
+        bp_standard <- breakpoints$site
+      } else {
         if (bp_site %in% breakpoint_sites) {
-          breakpoints <- breakpoints %>% filter(site==bp_site)
-          breakpoint_message_multibp <- paste0(breakpoint_message_multibp, ". Using the specified site (", bp_site,").")
-          bp_standard<-breakpoints$site
-        }
-        else {
-          breakpoints <- breakpoints %>% arrange(-breakpoint_S) %>% first()
-          breakpoint_message_multibp <- paste0(breakpoint_message_multibp, ". Could not find the specified site (", bp_site,"), so using the one with the highest S breakpoint (", breakpoints$site,").")
+          breakpoints <- breakpoints %>% filter(site == bp_site)
+          breakpoint_message_multibp <- paste0(breakpoint_message_multibp, ". Using the specified site (", bp_site, ").")
+          bp_standard <- breakpoints$site
+        } else {
+          breakpoints <- breakpoints %>%
+            arrange(-breakpoint_S) %>%
+            first()
+          breakpoint_message_multibp <- paste0(breakpoint_message_multibp, ". Could not find the specified site (", bp_site, "), so using the one with the highest S breakpoint (", breakpoints$site, ").")
           bp_standard <- breakpoints$site
         }
       }
     }
     breakpoint_S <- breakpoints$breakpoint_S
     breakpoint_R <- breakpoints$breakpoint_R
-    if (is.na(breakpoint_S) | is.na(breakpoint_R)) {stop(paste("Could not determine",assay,"breakpoints using AMR package, please provide your own breakpoints"))}
-    if (assay=="MIC") { breakpoint_message <- paste("MIC breakpoints determined using AMR package: S <=", breakpoint_S,"and R >", breakpoint_R) }
-    else { breakpoint_message <- paste("Disk diffusion breakpoints determined using AMR package: S >=", breakpoint_S,"and R <", breakpoint_R) }
-    cat(paste0("  ",breakpoint_message, "\n"))
-    if(!is.na(breakpoint_message_multibp)) {cat(paste0("  ",breakpoint_message_multibp, "\n"))}
+    if (is.na(breakpoint_S) | is.na(breakpoint_R)) {
+      stop(paste("Could not determine", assay, "breakpoints using AMR package, please provide your own breakpoints"))
+    }
+    if (assay == "MIC") {
+      breakpoint_message <- paste("MIC breakpoints determined using AMR package: S <=", breakpoint_S, "and R >", breakpoint_R)
+    } else {
+      breakpoint_message <- paste("Disk diffusion breakpoints determined using AMR package: S >=", breakpoint_S, "and R <", breakpoint_R)
+    }
+    cat(paste0("  ", breakpoint_message, "\n"))
+    if (!is.na(breakpoint_message_multibp)) {
+      cat(paste0("  ", breakpoint_message_multibp, "\n"))
+    }
   }
-  return(list(breakpoint_S=breakpoint_S,breakpoint_R=breakpoint_R, bp_standard=bp_standard))
+  return(list(breakpoint_S = breakpoint_S, breakpoint_R = breakpoint_R, bp_standard = bp_standard))
 }
-

@@ -35,6 +35,9 @@ vignettes/*.pdf
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
 
+# Claude Code
+.claude/
+
 # others
 .DS_Store
 *.Rproj

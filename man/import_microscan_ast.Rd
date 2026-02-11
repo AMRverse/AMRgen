@@ -19,7 +19,7 @@ import_microscan_ast(
 \arguments{
 \item{input}{A dataframe or path to a CSV/TSV file containing MicroScan AST output data}
 
-\item{sample_col}{Column name for sample identifiers. Default: NULL (auto-detected from language-specific column names)}
+\item{sample_col}{Column name for sample identifiers. Default: NULL (auto-detected as "Sample" or "Muestra")}
 
 \item{source}{Optional source value to record for all data points}
 

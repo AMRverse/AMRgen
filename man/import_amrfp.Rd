@@ -4,12 +4,37 @@
 \alias{import_amrfp}
 \title{Import and Process AMRFinderPlus Results}
 \usage{
-import_amrfp(input_table, sample_col = "Name", amrfp_drugs = amrfp_drugs_table)
+import_amrfp(
+  input_table,
+  sample_col = "Name",
+  element_symbol_col = NULL,
+  element_type_col = NULL,
+  element_subtype_col = "Element subtype",
+  method_col = "Method",
+  node_col = "Hierarchy node",
+  subclass_col = "Subclass",
+  class_col = "Class",
+  amrfp_drugs = amrfp_drugs_table
+)
 }
 \arguments{
-\item{input_table}{A character string specifying the path to the AMRFinderPlus results table (TSV format).}
+\item{input_table}{A character string specifying a dataframe or path to the AMRFinderPlus results table (TSV format).}
 
 \item{sample_col}{A character string specifying the column that identifies samples in the dataset (default \code{Name}).}
+
+\item{element_symbol_col}{Optional character string specifying the column containing gene or element symbols if non-standard column names are used.}
+
+\item{element_type_col}{Optional character string specifying the column indicating element type (e.g. AMR).}
+
+\item{element_subtype_col}{Character string specifying the column used to detect mutation subtypes.}
+
+\item{method_col}{Character string specifying the AMRFinderPlus method column.}
+
+\item{node_col}{Character string specifying the hierarchy node column.}
+
+\item{subclass_col}{Character string specifying the AMRFinderPlus subclass column.}
+
+\item{class_col}{Character string specifying the AMRFinderPlus class column.}
 
 \item{amrfp_drugs}{A tibble containing a reference table mapping AMRFinderPlus subclasses (\code{AFP_Subclass}) to standardised drug agents (\code{drug_agent}) and drug classes (\code{drug_class}). Defaults to \code{amrfp_drugs_table}, which is provided internally.}
 }
@@ -34,6 +59,7 @@ This processing ensures compatibility with downstream AMR analysis workflows.
 \examples{
 \dontrun{
 # small example E. coli AMRFinderPlus data
+data(ecoli_geno_raw)
 ecoli_geno_raw
 
 # import first few rows of this data frame and parse it as AMRfp data

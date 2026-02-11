@@ -70,19 +70,20 @@ ecoli_ast
 # Import matching E. coli AMRFinderPlus data from AllTheBacteria
 ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 
-# Calculate positive predictive value for ciprofloxacin resistance
+# Calculate solo positive predictive value for ciprofloxacin resistance, for individual markers found solo
 #  (for all quinolone-associated genotype markers)
 soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_ast, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_clsi")
 
 # Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
 #  (for combinations observed at least 5 times)
-cip_upset <- amr_upset(soloPPV_cipro$amr_binary, min_set_size=5, assay="mic", order="value")
+cip_upset <- amr_upset(binary_matrix=soloPPV_cipro$amr_binary, min_set_size=5, assay="mic")
+
+# Calculate positive predictive value for individual markers and combinations
+cip_ppv <- ppv(binary_matrix=soloPPV_cipro$amr_binary, min_set_size=5)
 
 # Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers
 #  (for markers observed at least 10 times)
-models <- amr_logistic(geno_table = import_amrfp(ecoli_geno_raw, "Name"),
-                       pheno_table = ecoli_ast, sir_col="pheno_clsi",
-                       antibiotic = "Ciprofloxacin", drug_class_list = c("Quinolones"), maf=10)
+models <- amr_logistic(binary_matrix=soloPPV_cipro$amr_binary, maf=10)
 
 ```
 
@@ -101,6 +102,65 @@ ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent=="CIP"]
 comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
 comparison
 ggplot2::autoplot(comparison)
+```
+
+### Download phenotype or genotype data from EBI's AMR portal
+
+```r
+# Get phenotype data for ciprofloxacin in E. coli
+ebi_pheno_ecoli_cip <- download_ebi(species = "Escherichia coli", antibiotic="Cipro", reformat=T)
+
+# Check how many observations we have for MIC data
+ebi_pheno_ecoli_cip %>% filter(!is.na(mic)) %>% nrow()
+
+# Plot MIC distribution, stratified by platform
+assay_by_var(ebi_pheno_ecoli_cip, measure="mic", colour_by = "pheno_provided", facet_var = "platform")
+
+# Compare MIC values with reference distribution from EUCAST
+compare_mics <- compare_mic_with_eucast(ebi_pheno_ecoli_cip$mic, ab = "cipro", mo = "E. coli")
+compare_mics
+ggplot2::autoplot(compare_mics)
+
+# Compare disk diffusion zone values with reference distribution from EUCAST
+compare_disk <- compare_disk_with_eucast(ebi_pheno_ecoli_cip$disk, ab = "cipro", mo = "E. coli")
+compare_disk
+ggplot2::autoplot(compare_disk)
+
+# Get genotype data for ciprofloxacin in E. coli
+ebi_geno <- download_ebi(data="genotype", species = "Escherichia coli", geno_subclass="QUINOLONE", reformat=T)
+
+# Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
+#  (for combinations observed at least 5 times)
+cip_upset_ebi_mic <- amr_upset(geno_table=ecoli_geno, pheno_table=ebi_pheno_ecoli_cip, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_provided", min_set_size=5, assay="mic", order="value")
+```
+
+### Download phenotype data from NCBI BioSample
+
+```r
+# Get all available phenotype data for Klebsiella quasipneumoniae
+# (note this is a small example with <100 samples, as this function queries NCBI BioSample via rentrez and is quite slow)
+ast <- download_ncbi_ast(
+  "Klebsiella quasipneumoniae",
+  reformat = TRUE
+)
+
+# Plot MIC distribution, stratified by platform
+assay_by_var(ast, measure="mic", colour_by = "pheno_provided", facet_var = "platform")
+
+# The downloaded S/I/R calls look odd, so re-interpret direct with latest EUCAST breakpoints and review
+ast <- interpret_ast(ast, interpret_eucast = T, interpret_clsi=T)
+assay_by_var(ast, measure="mic", colour_by = "pheno_eucast", facet_var = "platform")
+assay_by_var(ast, measure="mic", colour_by = "pheno_clsi", facet_var = "platform")
+```
+
+### Import and export 
+
+```r
+# Import phenotype data in NCBI, EBI, Vitek, WHOnet formats
+?import_ast
+
+# Export phenotype data in NCBI or EBI formats
+?export_ast
 ```
 
 For more see the [Vignette](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).

@@ -2,20 +2,57 @@
 % Please edit documentation in R/export_ncbi.R
 \name{export_ncbi_biosample}
 \alias{export_ncbi_biosample}
-\title{Import/Export BioSample Antibiograms}
+\title{Export NCBI BioSample Antibiogram}
 \usage{
-export_ncbi_biosample(data, file, overwrite = FALSE)
+export_ncbi_biosample(
+  data,
+  file,
+  overwrite = FALSE,
+  pheno_col = "pheno_provided"
+)
 }
 \arguments{
-\item{data}{Data set containing SIR results.}
+\item{data}{A data frame in AMRgen long format (e.g. output of
+\code{\link[=import_ast]{import_ast()}} or \code{\link[=format_ast]{format_ast()}}).
+Expected columns: \code{id}, \code{drug_agent}, and at least one phenotype
+column (see \code{pheno_col}). Optional columns: \code{mic}, \code{disk},
+\code{method}, \code{guideline}, \code{platform}.}
 
-\item{file}{File path to which the data will be exported.}
+\item{file}{File path for the output file (must end in \code{.txt} or \code{.tsv}).}
 
-\item{overwrite}{Logical indicating whether to overwrite an existing file.}
+\item{overwrite}{Logical; overwrite an existing file? Default \code{FALSE}.}
+
+\item{pheno_col}{Character string naming the column that contains
+SIR interpretations (class \code{sir}). Default \code{"pheno_provided"}.}
 }
 \value{
-A tab-delimited UTF-8 text file is written to disk in the format required by NCBI BioSample Antibiograms.
+The formatted data frame is returned invisibly. A
+tab-delimited UTF-8 text file is written to \code{file}.
 }
 \description{
-Output phenotype data to \href{https://www.ncbi.nlm.nih.gov/biosample/docs/antibiogram/}{NCBI BioSample Antibiograms}.
+Convert AMRgen long-format AST data to an
+\href{https://www.ncbi.nlm.nih.gov/biosample/docs/antibiogram/}{NCBI BioSample Antibiogram}
+submission file.
+}
+\details{
+When both \code{mic} and \code{disk} columns are present, MIC values are
+preferred (more precise). Disk values are only used for rows where
+MIC is \code{NA}.
+
+MIC strings (e.g. \code{"<=0.5"}, \code{">=32"}, \code{"4"}) are split into a
+sign (\code{<=}, \code{>=}, \code{<}, \code{>}, or \code{=}) and a numeric value.
+
+Antibiotic names are converted to lowercase with combination
+separators replaced by \code{"-"} (NCBI convention, e.g.
+\code{"amoxicillin-clavulanic acid"}).
+}
+\examples{
+\dontrun{
+# Write out the ecoli_ast data to file in NCBI format
+export_ncbi_biosample(ecoli_ast, "Ec_NCBI.tsv")
+
+# Download data from EBI, then write it out to file in NCBI format
+ebi_kleb_quasipneumoniae <- download_ebi(species = "Klebsiella quasipneumoniae", reformat = T)
+export_ncbi_biosample(ebi_kq, "Kq_NCBI.tsv")
+}
 }

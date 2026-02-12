@@ -1,4 +1,4 @@
-# Import and Process AST Data from a generic format
+# Import and process antimicrobial phenotype data from a generic format
 
 This function attempts to import antibiotic susceptibility testing (AST)
 data in long-form antibiogram format (one row per sample and test),

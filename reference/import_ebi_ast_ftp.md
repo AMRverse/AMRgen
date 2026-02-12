@@ -1,4 +1,4 @@
-# Import and Process AST Data files retrieved from the EBI AMR portal FTP site
+# Import and process antimicrobial phenotype data files retrieved from the EBI AMR portal FTP site
 
 This function will import antibiotic susceptibility testing (AST) data
 suitable for downstream use with AMRgen analysis functions. The expected

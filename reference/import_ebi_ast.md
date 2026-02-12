@@ -1,4 +1,4 @@
-# Import and Process AST Data from files downloaded from the EBI AMR portal website
+# Import and process antimicrobial susceptibility phenotype data from the EBI AMR web portal
 
 This function imports an antibiotic susceptibility testing (AST) dataset
 that has been downloaded from the EBI AMR portal website
@@ -107,10 +107,8 @@ A data frame with the processed AST data, including additional columns:
   `as.disk` function.
 
 - `method`: The AST method (e.g., "broth dilution", "disk diffusion",
-  "Etest", "agar dilution"). Method values are based on the NCBI
-  antibiogram specification for Laboratory typing method; note that
-  "MIC" is listed there as a synonym for "broth dilution" and is
-  converted to "broth dilution" on import.
+  "Etest", "agar dilution"). Expected values are based on the NCBI/EBI
+  antibiogram specification.
 
 - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix",
   "Sensititre").

@@ -14,27 +14,32 @@ from public repositories or internal formats.
 - [`import_amrfp_ebi_web()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_web.md)
   : Import EBI-processed AMRFinderPlus Genotypes from Web
 - [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
-  : Import and Process AST Data from an EBI or NCBI antibiogram File
+  : Import and process antimicrobial phenotype data from common sources
 - [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
-  : Import and Process AST Data from files downloaded from the EBI AMR
-  portal website
+  : Import and process antimicrobial susceptibility phenotype data from
+  the EBI AMR web portal
 - [`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
-  : Import and Process AST Data files retrieved from the EBI AMR portal
-  FTP site
+  : Import and process antimicrobial phenotype data files retrieved from
+  the EBI AMR portal FTP site
 - [`import_gtdb()`](https://AMRverse.github.io/AMRgen/reference/import_gtdb.md)
   : Import GTDB Output
 - [`import_microscan_ast()`](https://AMRverse.github.io/AMRgen/reference/import_microscan_ast.md)
-  : Import and Process AST Data from MicroScan Output Files
+  : Import and process antimicrobial phenotype data exported from
+  MicroScan instruments
 - [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
-  : Import and Process AST Data from an NCBI File
+  : Import and process antimicrobial susceptibility phenotype data from
+  the NCBI AST browser
 - [`import_ncbi_biosample()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.md)
-  : Import and Process AST Data data retrieved from NCBI BioSamples
+  : Import and process antimicrobial phenotype data retrieved from NCBI
+  BioSamples
 - [`import_sensititre_ast()`](https://AMRverse.github.io/AMRgen/reference/import_sensititre_ast.md)
-  : Import and Process AST Data from Sensititre Output Files
+  : Import and process antimicrobial phenotype data exported from
+  Sensititre instruments
 - [`import_vitek_ast()`](https://AMRverse.github.io/AMRgen/reference/import_vitek_ast.md)
-  : Import and Process AST Data from Vitek Output Files
+  : Import and process antimicrobial phenotype data exported from Vitek
+  instruments
 - [`import_whonet_ast()`](https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.md)
-  : Import and Process AST Data from WHONET Output Files
+  : Import and process antimicrobial phenotype data from WHONET files
 - [`export_ast()`](https://AMRverse.github.io/AMRgen/reference/export_ast.md)
   : Export AST Data
 - [`export_ebi_antibiogram()`](https://AMRverse.github.io/AMRgen/reference/export_ebi_antibiogram.md)
@@ -61,7 +66,8 @@ from public repositories or internal formats.
 - [`gtdb.mo()`](https://AMRverse.github.io/AMRgen/reference/gtdb.mo.md)
   : Get Microorganism from GTDB Species Name
 - [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
-  : Import and Process AST Data from a generic format
+  : Import and process antimicrobial phenotype data from a generic
+  format
 
 ## Resistance Interpretation
 
@@ -83,7 +89,8 @@ breakpoints and custom models.
 - [`merge_logreg_soloppv()`](https://AMRverse.github.io/AMRgen/reference/merge_logreg_soloppv.md)
   : Merge Logistic Regression and Solo PPV Statistics
 - [`interpret_ast()`](https://AMRverse.github.io/AMRgen/reference/interpret_ast.md)
-  : Interpret AST data in a standard format tibble
+  : Interpret antimicrobial susceptibility phenotype data in a standard
+  format tibble
 
 ## Modelling and analysis
 

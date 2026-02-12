@@ -1,8 +1,8 @@
-# Import and Process AST Data from Vitek Output Files
+# Import and process antimicrobial phenotype data exported from Vitek instruments
 
-This function imports AST data from Vitek instrument output files (wide
-CSV format) and converts it to the standardised long-format used by
-AMRgen.
+This function imports antimicrobial susceptibility testing (AST) data
+from Vitek instrument output files (wide CSV format) and converts it to
+the standardised long-format used by AMRgen.
 
 ## Usage
 

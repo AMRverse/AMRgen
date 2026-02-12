@@ -1,15 +1,15 @@
-# Import and Process AST Data from an EBI or NCBI antibiogram File
+# Import and process antimicrobial phenotype data from common sources
 
-This function imports an antibiotic susceptibility testing (AST) dataset
-in either EBI or NCBI antibiogram format, processes the data, and
-optionally interprets the results based on MIC or disk diffusion data.
-It assumes that the input file is a tab-delimited text file (e.g., TSV)
-or CSV (which may be compressed) and parses relevant columns (antibiotic
-names, species names, MIC or disk data) into suitable classes using the
-AMR package. It optionally can use the AMR package to interpret
-susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human
-breakpoints and/or ECOFF). If expected columns are not found warnings
-will be given, and interpretation may not be possible.
+This function imports an antibiotic susceptibility testing (AST)
+datasets in formats exported by EBI, NCBI, WHOnet and several automated
+AST instruments (Vitek, Microscan, Sensititre). It assumes that the
+input file is a tab-delimited text file (e.g., TSV) or CSV (which may be
+compressed) and parses relevant columns (antibiotic names, species
+names, MIC or disk data) into suitable classes using the AMR package. It
+optionally can use the AMR package to interpret susceptibility phenotype
+(SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or
+ECOFF). If expected columns are not found warnings will be given, and
+interpretation may not be possible.
 
 ## Usage
 
@@ -31,14 +31,17 @@ import_ast(
 - input:
 
   A string representing a dataframe, or a path to an input file,
-  containing the AST data in EBI or NCBI antibiogram format. These files
-  can be downloaded from the EBI AMR web browser
+  containing the AST data a supported format. These files may be
+  downloaded from public sources such as the EBI AMR web browser
   (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site
   (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI
   browser (e.g.
   https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa),
-  or from EBI using the function
-  [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md).
+  or using the functions
+  [download_ebi](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
+  or
+  [download_ncbi_ast](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md);
+  or the files may be exported from supported AST instruments.
 
 - format:
 
@@ -126,10 +129,8 @@ A data frame with the processed AST data, including additional columns:
   `as.disk` function.
 
 - `method`: The AST method (e.g., "broth dilution", "disk diffusion",
-  "Etest", "agar dilution"). Method values are based on the NCBI
-  antibiogram specification for Laboratory typing method; note that
-  "MIC" is listed there as a synonym for "broth dilution" and is
-  converted to "broth dilution" on import.
+  "Etest", "agar dilution"). Expected values are based on the NCBI/EBI
+  antibiogram specification.
 
 - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix",
   "Sensititre").

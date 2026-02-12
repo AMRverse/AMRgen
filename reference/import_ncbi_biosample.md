@@ -1,4 +1,4 @@
-# Import and Process AST Data data retrieved from NCBI BioSamples
+# Import and process antimicrobial phenotype data retrieved from NCBI BioSamples
 
 This function will import antibiotic susceptibility testing (AST) data
 suitable for downstream use with AMRgen analysis functions. The expected

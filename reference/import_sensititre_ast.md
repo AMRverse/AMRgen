@@ -1,8 +1,9 @@
-# Import and Process AST Data from Sensititre Output Files
+# Import and process antimicrobial phenotype data exported from Sensititre instruments
 
-This function imports AST data from Sensititre instrument output files
-(UTF-16LE encoded, tab-separated, no header row) and converts it to the
-standardised long-format used by AMRgen.
+This function imports antimicrobial susceptibility testing (AST) data
+from Sensititre instrument output files (UTF-16LE encoded,
+tab-separated, no header row) and converts it to the standardised
+long-format used by AMRgen.
 
 ## Usage
 

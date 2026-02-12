@@ -1,7 +1,7 @@
-# Interpret AST data in a standard format tibble
+# Interpret antimicrobial susceptibility phenotype data in a standard format tibble
 
 This function applies human EUCAST or CLSI breakpoints, and/or ECOFF, to
-interpret AST data.
+interpret antimicrobial susceptibility testing (AST) data.
 
 ## Usage
 

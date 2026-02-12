@@ -1,8 +1,8 @@
-# Import and Process AST Data from WHONET Output Files
+# Import and process antimicrobial phenotype data from WHONET files
 
-This function imports AST data from WHONET software output files (wide
-CSV format) and converts it to the standardised long-format used by
-AMRgen.
+This function imports antimicrobial susceptibility testing (AST) data
+from WHONET software output files (wide CSV format) and converts it to
+the standardised long-format used by AMRgen.
 
 ## Usage
 

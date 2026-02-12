@@ -1,4 +1,4 @@
-# Import and Process AST Data from an NCBI File
+# Import and process antimicrobial susceptibility phenotype data from the NCBI AST browser
 
 This function imports an antibiotic susceptibility testing (AST)
 dataset, processes the data, and optionally interprets the results based
@@ -106,10 +106,10 @@ A data frame with the processed AST data, including additional columns:
   `as.disk` function.
 
 - `method`: The AST method (e.g., "broth dilution", "disk diffusion",
-  "Etest", "agar dilution"). Method values are based on the NCBI
-  antibiogram specification for Laboratory typing method; note that
-  "MIC" is listed there as a synonym for "broth dilution" and is
-  converted to "broth dilution" on import.
+  "Etest", "agar dilution"). Expected values are based on the NCBI/EBI
+  antibiogram specification. Note that NCBI allows "MIC" as a synonym
+  for "broth dilution" but this function will convert "MIC" to "broth
+  dilution" on import.
 
 - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix",
   "Sensititre").

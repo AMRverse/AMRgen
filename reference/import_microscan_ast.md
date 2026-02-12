@@ -1,9 +1,10 @@
-# Import and Process AST Data from MicroScan Output Files
+# Import and process antimicrobial phenotype data exported from MicroScan instruments
 
-This function imports AST data from MicroScan instrument output files
-(wide CSV format) and converts it to the standardised long-format used
-by AMRgen. Supports English, Spanish, French, German, and Portuguese
-column names (auto-detected from metadata columns).
+This function imports antimicrobial susceptibility testing (AST) data
+from MicroScan instrument output files (wide CSV format) and converts it
+to the standardised long-format used by AMRgen. Supports English,
+Spanish, French, German, and Portuguese column names (auto-detected from
+metadata columns).
 
 ## Usage
 

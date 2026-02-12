@@ -169,9 +169,8 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
       cat(paste(" Defining NWT in binary matrix using ecoff column provided:", ecoff_col, "\n"))
       pheno_binary <- pheno_binary %>%
         mutate(NWT = case_when(
-          as.sir(get(ecoff_col)) == "R" ~ 1,
-          as.sir(get(ecoff_col)) == "I" ~ 1,
-          as.sir(get(ecoff_col)) == "S" ~ 0,
+          as.sir(get(ecoff_col)) == "NWT" ~ 1,
+          as.sir(get(ecoff_col)) == "WT" ~ 0,
           TRUE ~ NA
         ))
     } else {

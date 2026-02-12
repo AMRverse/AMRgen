@@ -106,8 +106,11 @@ A data frame with the processed AST data, including additional columns:
 - `disk`: The disk diffusion measurement (in mm), formatted using the
   `as.disk` function.
 
-- `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest",
-  "agar dilution").
+- `method`: The AST method (e.g., "broth dilution", "disk diffusion",
+  "Etest", "agar dilution"). Method values are based on the NCBI
+  antibiogram specification for Laboratory typing method; note that
+  "MIC" is listed there as a synonym for "broth dilution" and is
+  converted to "broth dilution" on import.
 
 - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix",
   "Sensititre").

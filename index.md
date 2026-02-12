@@ -185,7 +185,7 @@ assay_by_var(ast, measure="mic", colour_by = "pheno_clsi", facet_var = "platform
 ### Import and export
 
 ``` r
-# Import phenotype data in NCBI, EBI, Vitek, WHOnet formats
+# Import phenotype data in NCBI, EBI, Vitek, Sensititre, MicroScan, WHOnet formats
 ?import_ast
 
 # Export phenotype data in NCBI or EBI formats

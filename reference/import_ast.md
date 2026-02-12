@@ -125,8 +125,11 @@ A data frame with the processed AST data, including additional columns:
 - `disk`: The disk diffusion measurement (in mm), formatted using the
   `as.disk` function.
 
-- `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest",
-  "agar dilution").
+- `method`: The AST method (e.g., "broth dilution", "disk diffusion",
+  "Etest", "agar dilution"). Method values are based on the NCBI
+  antibiogram specification for Laboratory typing method; note that
+  "MIC" is listed there as a synonym for "broth dilution" and is
+  converted to "broth dilution" on import.
 
 - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix",
   "Sensititre").
@@ -187,12 +190,12 @@ head(pheno)
 #> # A tibble: 6 × 29
 #>   id           drug_agent     mic  disk guideline method platform pheno_provided
 #>   <chr>        <ab>         <mic> <dsk> <chr>     <chr>  <chr>    <sir>         
-#> 1 SAMN36015110 CIP        <128.00    NA CLSI      MIC    NA         R           
-#> 2 SAMN11638310 CIP         256.00    NA CLSI      MIC    NA         R           
+#> 1 SAMN36015110 CIP        <128.00    NA CLSI      broth… NA         R           
+#> 2 SAMN11638310 CIP         256.00    NA CLSI      broth… NA         R           
 #> 3 SAMN05729964 CIP          64.00    NA CLSI      Etest  Etest      R           
-#> 4 SAMN10620111 CIP         >=4.00    NA CLSI      MIC    NA         R           
-#> 5 SAMN10620168 CIP         >=4.00    NA CLSI      MIC    NA         R           
-#> 6 SAMN10620104 CIP         <=0.25    NA CLSI      MIC    NA         S           
+#> 4 SAMN10620111 CIP         >=4.00    NA CLSI      broth… NA         R           
+#> 5 SAMN10620168 CIP         >=4.00    NA CLSI      broth… NA         R           
+#> 6 SAMN10620104 CIP         <=0.25    NA CLSI      broth… NA         S           
 #> # ℹ 21 more variables: spp_pheno <mo>, `Organism group` <chr>,
 #> #   `Scientific name` <chr>, `Isolation type` <chr>, Location <chr>,
 #> #   `Isolation source` <chr>, Isolate <chr>, Antibiotic <chr>,
@@ -210,12 +213,12 @@ head(pheno)
 #> # A tibble: 6 × 33
 #>   id       drug_agent     mic  disk pheno_eucast ecoff guideline method platform
 #>   <chr>    <ab>         <mic> <dsk> <sir>        <sir> <chr>     <chr>  <chr>   
-#> 1 SAMN360… CIP        <128.00    NA   NI           NI  CLSI      MIC    NA      
-#> 2 SAMN116… CIP         256.00    NA   R           NWT  CLSI      MIC    NA      
+#> 1 SAMN360… CIP        <128.00    NA   NI           NI  CLSI      broth… NA      
+#> 2 SAMN116… CIP         256.00    NA   R           NWT  CLSI      broth… NA      
 #> 3 SAMN057… CIP          64.00    NA   R           NWT  CLSI      Etest  Etest   
-#> 4 SAMN106… CIP         >=4.00    NA   R           NWT  CLSI      MIC    NA      
-#> 5 SAMN106… CIP         >=4.00    NA   R           NWT  CLSI      MIC    NA      
-#> 6 SAMN106… CIP         <=0.25    NA   S            NI  CLSI      MIC    NA      
+#> 4 SAMN106… CIP         >=4.00    NA   R           NWT  CLSI      broth… NA      
+#> 5 SAMN106… CIP         >=4.00    NA   R           NWT  CLSI      broth… NA      
+#> 6 SAMN106… CIP         <=0.25    NA   S            NI  CLSI      broth… NA      
 #> # ℹ 24 more variables: pheno_provided <sir>, spp_pheno <mo>,
 #> #   `Organism group` <chr>, `Scientific name` <chr>, `Isolation type` <chr>,
 #> #   Location <chr>, `Isolation source` <chr>, Isolate <chr>, Antibiotic <chr>,

@@ -125,9 +125,9 @@ format_ast(
 - method_col:
 
   (optional, default 'method') Name of the input data column that
-  indicates the testing method used (e.g. MIC, disk diffusion). If the
-  'rename' parameter is set to TRUE, this column will also be renamed as
-  'method'.
+  indicates the testing method used (e.g. broth dilution, disk
+  diffusion). If the 'rename' parameter is set to TRUE, this column will
+  also be renamed as 'method'.
 
 - platform_col:
 

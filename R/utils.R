@@ -207,7 +207,12 @@ utils::globalVariables(c(
   "pd",
   "Type",
   "organism",
-  "Measurement"
+  "Measurement",
+  "geno_prediction",
+  "truth_value",
+  ".metric",
+  ".estimator",
+  ".estimate"
 ))
 
 

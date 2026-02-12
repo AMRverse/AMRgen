@@ -43,7 +43,7 @@ format_ast(
 
 \item{pheno_cols}{(optional, default \code{c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")}) Name of the input data column/s that provides disk diffusion zone measurements (as a character vector, or single string for a single column). If provided, these columns will be converted to SIR class 'sir' via \code{\link[AMR:as.sir]{AMR::as.sir()}}.}
 
-\item{method_col}{(optional, default 'method') Name of the input data column that indicates the testing method used (e.g. MIC, disk diffusion). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'method'.}
+\item{method_col}{(optional, default 'method') Name of the input data column that indicates the testing method used (e.g. broth dilution, disk diffusion). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'method'.}
 
 \item{platform_col}{(optional, default 'platform') Name of the input data column that indicates the testing platform used (e.g. Vitek, Sensititre). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'platform'.}
 

@@ -33,7 +33,7 @@
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest", "agar dilution").
+#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Method values are based on the NCBI antibiogram specification for Laboratory typing method; note that "MIC" is listed there as a synonym for "broth dilution" and is converted to "broth dilution" on import.
 #' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -75,14 +75,18 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
   }
 
   # parse method column
+  # Note: NCBI antibiogram spec lists "MIC" as a synonym for "broth dilution"
+  # (see https://www.ncbi.nlm.nih.gov/biosample/docs/antibiogram/);
+  # we convert "MIC" to "broth dilution" to align with EBI/CABBAGE terminology
   if ("Laboratory typing method" %in% colnames(ast)) {
-    ast <- ast %>% mutate(method = `Laboratory typing method`)
+    ast <- ast %>% mutate(method = `Laboratory typing method`) %>%
+      mutate(method = if_else(!is.na(method) & method == "MIC", "broth dilution", method))
   } else {
     cat("Warning: Expected AST method column 'Laboratory typing method' not found in input\n")
     # in old format there was no method field, guess from MIC/disk column values
     if ("MIC (mg/L)" %in% colnames(ast) & "Disk diffusion (mm)" %in% colnames(ast)) {
       ast <- ast %>% mutate(method = case_when(
-        !is.na(`MIC (mg/L)`) ~ "MIC",
+        !is.na(`MIC (mg/L)`) ~ "broth dilution",
         !is.na(`Disk diffusion (mm)`) ~ "disk diffusion",
         TRUE ~ NA
       ))
@@ -189,7 +193,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest", "agar dilution").
+#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Method values are based on the NCBI antibiogram specification for Laboratory typing method; note that "MIC" is listed there as a synonym for "broth dilution" and is converted to "broth dilution" on import.
 #' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -506,7 +510,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST method (e.g., "MIC", "disk diffusion", "Etest", "agar dilution").
+#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Method values are based on the NCBI antibiogram specification for Laboratory typing method; note that "MIC" is listed there as a synonym for "broth dilution" and is converted to "broth dilution" on import.
 #' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -605,7 +609,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
 #' @param mic_col (optional, default 'mic') Name of the input data column that provides MIC measurements. If provided, this column will be converted to MIC class 'mic' via [AMR::as.mic()]. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'mic'. If interpretation is switched on, the MIC values will be interpreted against clinical breakpoints.
 #' @param disk_col (optional, default 'disk') Name of the input data column that provides disk diffusion zone measurements. If provided, this column will be converted to disk diffusion class 'disk' via [AMR::as.disk()]. If the 'rename' parameter is set to TRUE, this column will also be renamed as 'disk'. If interpretation is switched on, the zone values will be interpreted against clinical breakpoints.
 #' @param pheno_cols (optional, default `c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")`) Name of the input data column/s that provides disk diffusion zone measurements (as a character vector, or single string for a single column). If provided, these columns will be converted to SIR class 'sir' via [AMR::as.sir()].
-#' @param method_col (optional, default 'method') Name of the input data column that indicates the testing method used (e.g. MIC, disk diffusion). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'method'.
+#' @param method_col (optional, default 'method') Name of the input data column that indicates the testing method used (e.g. broth dilution, disk diffusion). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'method'.
 #' @param platform_col (optional, default 'platform') Name of the input data column that indicates the testing platform used (e.g. Vitek, Sensititre). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'platform'.
 #' @param source_col (optional, default 'source') Name of the input data column that indicates the source of the dataset (e.g. BioProject, PMID). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'source'.
 #' @param guideline_col (optional, default 'guideline') Name of the input data column that indicates the guideline used for testing (e.g. EUCAST, CLSI). If the 'rename' parameter is set to TRUE, this column will also be renamed as 'guideline'.
@@ -898,6 +902,8 @@ import_ncbi_biosample <- function(input,
                                   interpret_ecoff = FALSE) {
   ast <- process_input(input)
 
+  # Note: NCBI antibiogram spec lists "MIC" as a synonym for "broth dilution";
+  # we convert to "broth dilution" to align with EBI/CABBAGE terminology
   ast <- ast %>%
     mutate(mic = if_else(`Laboratory typing method` == "MIC",
       paste0(`Measurement sign`, Measurement),
@@ -906,6 +912,11 @@ import_ncbi_biosample <- function(input,
     mutate(disk = if_else(`Laboratory typing method` == "disk diffusion",
       paste0(`Measurement sign`, Measurement),
       NA
+    )) %>%
+    mutate(`Laboratory typing method` = if_else(
+      !is.na(`Laboratory typing method`) & `Laboratory typing method` == "MIC",
+      "broth dilution",
+      `Laboratory typing method`
     )) %>%
     mutate(pheno_provided = if_else(`Resistance phenotype` == "intermediate",
       "I",
@@ -1052,7 +1063,7 @@ import_vitek_ast <- function(input,
   # (-) = not tested; TRM = too resistant to measure; POS/NEG = qualitative screening
   ast_long <- ast_long %>%
     mutate(ab_name = ab_lookup[ab_code]) %>%
-    mutate(method = "MIC") %>%
+    mutate(method = "broth dilution") %>%
     mutate(is_screening = mic %in% c("POS", "NEG")) %>%
     mutate(pheno_screening = case_when(
       mic == "POS" ~ "R",
@@ -1365,7 +1376,7 @@ import_microscan_ast <- function(input,
   # Rename sample column and add standard columns
   ast_long <- ast_long %>%
     rename(id = !!sym(sample_col)) %>%
-    mutate(method = "MIC") %>%
+    mutate(method = "broth dilution") %>%
     mutate(platform = "MicroScan") %>%
     mutate(disk = as.disk(NA))
 
@@ -1553,7 +1564,7 @@ import_sensititre_ast <- function(input,
 
   # Add standard columns
   ast_long <- ast_long %>%
-    mutate(method = "MIC") %>%
+    mutate(method = "broth dilution") %>%
     mutate(platform = "Sensititre") %>%
     mutate(disk = as.disk(NA))
 
@@ -1704,17 +1715,17 @@ import_whonet_ast <- function(input,
       grepl("^K", method_code) ~ "Trek",
       TRUE ~ NA_character_
     )) %>%
-    # Parse method (D=disk, M=MIC, E=Etest, K=Kirby-Bauer)
+    # Parse method (D=disk, M=MIC/broth dilution, E=Etest, K=Kirby-Bauer)
     mutate(method = case_when(
       # Standard disk diffusion with potency
       grepl("^[NED]D[0-9]", method_code) ~ "disk diffusion",
       # Platform disk
       grepl("^[VPMSK]D", method_code) ~ "disk diffusion",
       grepl("^[VPMSK]K", method_code) ~ "disk diffusion",
-      # Standard MIC
-      grepl("^[NED]M", method_code) ~ "MIC",
-      # Platform MIC
-      grepl("^[VPMSK]M", method_code) ~ "MIC",
+      # Standard MIC (broth dilution)
+      grepl("^[NED]M", method_code) ~ "broth dilution",
+      # Platform MIC (broth dilution)
+      grepl("^[VPMSK]M", method_code) ~ "broth dilution",
       # Etest
       grepl("^[NED]E", method_code) ~ "Etest",
       TRUE ~ NA_character_

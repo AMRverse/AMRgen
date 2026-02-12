@@ -102,12 +102,9 @@ query_ncbi_bq_ast <- function(taxgroup,
     }
     params$antibiotic <- antibiotic
   }
-  message("hello!")
-  message(query)
   # Execute query
   res <- bq_query_with_auth_check(project_id, query, params)
   # Rename columns to match import_ncbi_ast expectations
-  browser()
   res <- res %>%
     dplyr::rename(
       "BioSample" = biosample_acc,
@@ -239,6 +236,13 @@ get_bq_project_id <- function(project_id = NULL) {
     return(env_project)
   }
 
+  # 3. Fallback: Ask gcloud directly
+  tryCatch({
+    system("gcloud config get-value project", intern = TRUE)
+  }, error = function(e) {
+    stop("GCP Project ID must be provided via `project_id` argument or `GOOGLE_CLOUD_PROJECT` environment variable. \nSee https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects", call. = FALSE)
+  })
+
   stop("GCP Project ID must be provided via `project_id` argument or `GOOGLE_CLOUD_PROJECT` environment variable. \nSee https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects", call. = FALSE)
 }
 
@@ -251,9 +255,10 @@ bq_query_with_auth_check <- function(project_id, query, params) {
     },
     error = function(e) {
       if (grepl("authentication|credentials|401", e$message, ignore.case = TRUE)) {
-        stop("BigQuery authentication failed. Please run `bigrquery::bq_auth()` to authenticate, or ensure application default credentials are set.", call. = FALSE)
+        stop("BigQuery authentication failed. Please run `gcloud auth application-default login --no-launch-browser` at the command-line or use bq_auth() to authenticate.", call. = FALSE)
       }
       stop(e)
     }
   )
 }
+

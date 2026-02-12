@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_sensititre_ast}
 \alias{import_sensititre_ast}
-\title{Import and Process AST Data from Sensititre Output Files}
+\title{Import and process antimicrobial phenotype data exported from Sensititre instruments}
 \usage{
 import_sensititre_ast(
   input,
@@ -36,6 +36,6 @@ import_sensititre_ast(
 Standardised AST data frame
 }
 \description{
-This function imports AST data from Sensititre instrument output files (UTF-16LE encoded,
+This function imports antimicrobial susceptibility testing (AST) data from Sensititre instrument output files (UTF-16LE encoded,
 tab-separated, no header row) and converts it to the standardised long-format used by AMRgen.
 }

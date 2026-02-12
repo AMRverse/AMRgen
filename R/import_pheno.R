@@ -14,7 +14,7 @@
 #  the Free Software Foundation.                                        #
 # ===================================================================== #
 
-#' Import and Process AST Data from an NCBI File
+#' Import and process antimicrobial susceptibility phenotype data from the NCBI AST browser
 #'
 #' This function imports an antibiotic susceptibility testing (AST) dataset, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
 #' @param input A string representing a dataframe, or a path to an input file, containing the AST data in NCBI antibiogram format. These files can be downloaded from NCBI AST browser, e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa
@@ -33,7 +33,7 @@
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Method values are based on the NCBI antibiogram specification for Laboratory typing method; note that "MIC" is listed there as a synonym for "broth dilution" and is converted to "broth dilution" on import.
+#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Expected values are based on the NCBI/EBI antibiogram specification. Note that NCBI allows "MIC" as a synonym for "broth dilution" but this function will convert "MIC" to "broth dilution" on import.
 #' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -76,10 +76,9 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 
   # parse method column
   # Note: NCBI antibiogram spec lists "MIC" as a synonym for "broth dilution"
-  # (see https://www.ncbi.nlm.nih.gov/biosample/docs/antibiogram/);
-  # we convert "MIC" to "broth dilution" to align with EBI/CABBAGE terminology
   if ("Laboratory typing method" %in% colnames(ast)) {
-    ast <- ast %>% mutate(method = `Laboratory typing method`) %>%
+    ast <- ast %>%
+      mutate(method = `Laboratory typing method`) %>%
       mutate(method = if_else(!is.na(method) & method == "MIC", "broth dilution", method))
   } else {
     cat("Warning: Expected AST method column 'Laboratory typing method' not found in input\n")
@@ -171,7 +170,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 }
 
 
-#' Import and Process AST Data from files downloaded from the EBI AMR portal website
+#' Import and process antimicrobial susceptibility phenotype data from the EBI AMR web portal
 #'
 #' This function imports an antibiotic susceptibility testing (AST) dataset that has been downloaded from the EBI AMR portal website (https://www.ebi.ac.uk/amr/data/?view=experiments)
 #' Data downloaded from the EBI AMR Portal FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), either directly or via the function `download_ebi()`, is formatted differently and can instead be processed using the `import_ebi_ast_ftp()` function.
@@ -193,7 +192,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Method values are based on the NCBI antibiogram specification for Laboratory typing method; note that "MIC" is listed there as a synonym for "broth dilution" and is converted to "broth dilution" on import.
+#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Expected values are based on the NCBI/EBI antibiogram specification.
 #' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -306,9 +305,9 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
 }
 
 
-#' Interpret AST data in a standard format tibble
+#' Interpret antimicrobial susceptibility phenotype data in a standard format tibble
 #'
-#' This function applies human EUCAST or CLSI breakpoints, and/or ECOFF, to interpret AST data.
+#' This function applies human EUCAST or CLSI breakpoints, and/or ECOFF, to interpret antimicrobial susceptibility testing (AST) data.
 #' @param ast A tibble containing the AST measures in standard AMRgen format, as output by `import_ast`. It must contain assay measurements in columns 'mic' (class mic) and/or 'disk'. Interpretation requires an organism (column 'spp_pheno' of class 'mo', or a single value passed via the 'species' parameter) and an antibiotic (column 'drug_agent' of class 'ab', or a single value passed via the 'ab' parameter).
 #' @param interpret_eucast A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
 #' @param interpret_clsi A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
@@ -491,10 +490,10 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
   return(ast)
 }
 
-#' Import and Process AST Data from an EBI or NCBI antibiogram File
+#' Import and process antimicrobial phenotype data from common sources
 #'
-#' This function imports an antibiotic susceptibility testing (AST) dataset in either EBI or NCBI antibiogram format, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
-#' @param input A string representing a dataframe, or a path to an input file, containing the AST data in EBI or NCBI antibiogram format. These files can be downloaded from the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa), or from EBI using the function `download_ebi()`.
+#' This function imports an antibiotic susceptibility testing (AST) datasets in formats exported by EBI, NCBI, WHOnet and several automated AST instruments (Vitek, Microscan, Sensititre). It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
+#' @param input A string representing a dataframe, or a path to an input file, containing the AST data a supported format. These files may be downloaded from public sources such as the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa), or using the functions [download_ebi] or [download_ncbi_ast]; or the files may be exported from supported AST instruments.
 #' @param format A string indicating the format of the data: "ebi" (default), "ebi_web", "ebi_ftp", "ncbi", "vitek", "microscan", "sensititre", or "whonet". This determines whether the data is passed on to the `import_ebi_ast()` (ebi/ebi_web), `import_ebi_ast_ftp()` (ebi_ftp), `import_ncbi_ast()` (ncbi), `import_vitek_ast()` (vitek), `import_microscan_ast()` (microscan), `import_sensititre_ast()` (sensititre), or `import_whonet_ast()` (whonet) function to process.
 #' @param interpret_eucast A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
 #' @param interpret_clsi A logical value (default is FALSE). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
@@ -510,7 +509,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 #' - `drug_agent`: The antibiotic used in the test, formatted using the `as.ab` function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the `as.mic` function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the `as.disk` function.
-#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Method values are based on the NCBI antibiogram specification for Laboratory typing method; note that "MIC" is listed there as a synonym for "broth dilution" and is converted to "broth dilution" on import.
+#' - `method`: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Expected values are based on the NCBI/EBI antibiogram specification.
 #' - `platform`: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 #' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
 #' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -597,7 +596,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
 }
 
 
-#' Import and Process AST Data from a generic format
+#' Import and process antimicrobial phenotype data from a generic format
 #'
 #' This function attempts to import antibiotic susceptibility testing (AST) data in long-form antibiogram format (one row per sample and test), suitable for downstream use with AMRgen analysis functions. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data, S/I/R calls) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
 #' @param input A string representing a dataframe, or a path to an input file, containing the AST data in long-form antibiogram format (one row per sample and test). This might be a file containing the content of an EBI/NCBI AST dataset previously processed using [import_ebi_ast()], [import_ncbi_ast()], or [import_ast()] functions, or files with a similar format/structure but with different column names.
@@ -813,7 +812,7 @@ format_ast <- function(input,
 }
 
 
-#' Import and Process AST Data files retrieved from the EBI AMR portal FTP site
+#' Import and process antimicrobial phenotype data files retrieved from the EBI AMR portal FTP site
 #'
 #' This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from the [EBI AMR Portal FTP site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either directly or via the function `download_ebi()`.
 #' Note that files downloaded from the [EBI AMR Portal web browser](https://www.ebi.ac.uk/amr/data/?view=experiments) are formatted differently and can be imported with the function [import_ebi_ast()].
@@ -872,7 +871,7 @@ import_ebi_ast_ftp <- function(input,
 
 
 
-#' Import and Process AST Data data retrieved from NCBI BioSamples
+#' Import and process antimicrobial phenotype data retrieved from NCBI BioSamples
 #'
 #' This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function `download_ncbi_ast()`.
 #' Note that files downloaded from the NCBI AST web browser <https://www.ncbi.nlm.nih.gov/pathogens/ast> are formatted differently and can be imported with the function [import_ncbi_ast()].
@@ -902,8 +901,7 @@ import_ncbi_biosample <- function(input,
                                   interpret_ecoff = FALSE) {
   ast <- process_input(input)
 
-  # Note: NCBI antibiogram spec lists "MIC" as a synonym for "broth dilution";
-  # we convert to "broth dilution" to align with EBI/CABBAGE terminology
+  # Note: NCBI antibiogram spec lists "MIC" as a synonym for "broth dilution"
   ast <- ast %>%
     mutate(mic = if_else(`Laboratory typing method` == "MIC",
       paste0(`Measurement sign`, Measurement),
@@ -940,9 +938,9 @@ import_ncbi_biosample <- function(input,
 }
 
 
-#' Import and Process AST Data from Vitek Output Files
+#' Import and process antimicrobial phenotype data exported from Vitek instruments
 #'
-#' This function imports AST data from Vitek instrument output files (wide CSV format)
+#' This function imports antimicrobial susceptibility testing (AST) data from Vitek instrument output files (wide CSV format)
 #' and converts it to the standardised long-format used by AMRgen.
 #'
 #' @param input A dataframe or path to a CSV file containing Vitek AST output data
@@ -1158,9 +1156,9 @@ import_vitek_ast <- function(input,
 }
 
 
-#' Import and Process AST Data from MicroScan Output Files
+#' Import and process antimicrobial phenotype data exported from MicroScan instruments
 #'
-#' This function imports AST data from MicroScan instrument output files (wide CSV format)
+#' This function imports antimicrobial susceptibility testing (AST) data from MicroScan instrument output files (wide CSV format)
 #' and converts it to the standardised long-format used by AMRgen. Supports English,
 #' Spanish, French, German, and Portuguese column names (auto-detected from metadata columns).
 #'
@@ -1411,9 +1409,9 @@ import_microscan_ast <- function(input,
 }
 
 
-#' Import and Process AST Data from Sensititre Output Files
+#' Import and process antimicrobial phenotype data exported from Sensititre instruments
 #'
-#' This function imports AST data from Sensititre instrument output files (UTF-16LE encoded,
+#' This function imports antimicrobial susceptibility testing (AST) data from Sensititre instrument output files (UTF-16LE encoded,
 #' tab-separated, no header row) and converts it to the standardised long-format used by AMRgen.
 #'
 #' @param input Path to a Sensititre output text file
@@ -1605,9 +1603,9 @@ import_sensititre_ast <- function(input,
 }
 
 
-#' Import and Process AST Data from WHONET Output Files
+#' Import and process antimicrobial phenotype data from WHONET files
 #'
-#' This function imports AST data from WHONET software output files (wide CSV format)
+#' This function imports antimicrobial susceptibility testing (AST) data from WHONET software output files (wide CSV format)
 #' and converts it to the standardised long-format used by AMRgen.
 #'
 #' @param input A dataframe or path to a CSV file containing WHONET AST output data

@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_whonet_ast}
 \alias{import_whonet_ast}
-\title{Import and Process AST Data from WHONET Output Files}
+\title{Import and process antimicrobial phenotype data from WHONET files}
 \usage{
 import_whonet_ast(
   input,
@@ -39,6 +39,6 @@ import_whonet_ast(
 Standardised AST data frame
 }
 \description{
-This function imports AST data from WHONET software output files (wide CSV format)
+This function imports antimicrobial susceptibility testing (AST) data from WHONET software output files (wide CSV format)
 and converts it to the standardised long-format used by AMRgen.
 }

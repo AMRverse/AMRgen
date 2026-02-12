@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_ebi_ast}
 \alias{import_ebi_ast}
-\title{Import and Process AST Data from files downloaded from the EBI AMR portal website}
+\title{Import and process antimicrobial susceptibility phenotype data from the EBI AMR web portal}
 \usage{
 import_ebi_ast(
   input,
@@ -40,7 +40,7 @@ A data frame with the processed AST data, including additional columns:
 \item \code{drug_agent}: The antibiotic used in the test, formatted using the \code{as.ab} function.
 \item \code{mic}: The minimum inhibitory concentration (MIC) value, formatted using the \code{as.mic} function.
 \item \code{disk}: The disk diffusion measurement (in mm), formatted using the \code{as.disk} function.
-\item \code{method}: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Method values are based on the NCBI antibiogram specification for Laboratory typing method; note that "MIC" is listed there as a synonym for "broth dilution" and is converted to "broth dilution" on import.
+\item \code{method}: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Expected values are based on the NCBI/EBI antibiogram specification.
 \item \code{platform}: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 \item \code{guideline}: The AST standard recorded in the input file as being used for the AST assay.
 \item \code{pheno_eucast}: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.

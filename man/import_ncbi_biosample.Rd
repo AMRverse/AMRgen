@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_ncbi_biosample}
 \alias{import_ncbi_biosample}
-\title{Import and Process AST Data data retrieved from NCBI BioSamples}
+\title{Import and process antimicrobial phenotype data retrieved from NCBI BioSamples}
 \usage{
 import_ncbi_biosample(
   input,

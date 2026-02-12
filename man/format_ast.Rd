@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{format_ast}
 \alias{format_ast}
-\title{Import and Process AST Data from a generic format}
+\title{Import and process antimicrobial phenotype data from a generic format}
 \usage{
 format_ast(
   input,

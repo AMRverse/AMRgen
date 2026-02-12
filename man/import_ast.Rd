@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_ast}
 \alias{import_ast}
-\title{Import and Process AST Data from an EBI or NCBI antibiogram File}
+\title{Import and process antimicrobial phenotype data from common sources}
 \usage{
 import_ast(
   input,
@@ -16,7 +16,7 @@ import_ast(
 )
 }
 \arguments{
-\item{input}{A string representing a dataframe, or a path to an input file, containing the AST data in EBI or NCBI antibiogram format. These files can be downloaded from the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas\%20aeruginosa), or from EBI using the function \code{download_ebi()}.}
+\item{input}{A string representing a dataframe, or a path to an input file, containing the AST data a supported format. These files may be downloaded from public sources such as the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas\%20aeruginosa), or using the functions \link{download_ebi} or \link{download_ncbi_ast}; or the files may be exported from supported AST instruments.}
 
 \item{format}{A string indicating the format of the data: "ebi" (default), "ebi_web", "ebi_ftp", "ncbi", "vitek", "microscan", "sensititre", or "whonet". This determines whether the data is passed on to the \code{import_ebi_ast()} (ebi/ebi_web), \code{import_ebi_ast_ftp()} (ebi_ftp), \code{import_ncbi_ast()} (ncbi), \code{import_vitek_ast()} (vitek), \code{import_microscan_ast()} (microscan), \code{import_sensititre_ast()} (sensititre), or \code{import_whonet_ast()} (whonet) function to process.}
 
@@ -40,7 +40,7 @@ A data frame with the processed AST data, including additional columns:
 \item \code{drug_agent}: The antibiotic used in the test, formatted using the \code{as.ab} function.
 \item \code{mic}: The minimum inhibitory concentration (MIC) value, formatted using the \code{as.mic} function.
 \item \code{disk}: The disk diffusion measurement (in mm), formatted using the \code{as.disk} function.
-\item \code{method}: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Method values are based on the NCBI antibiogram specification for Laboratory typing method; note that "MIC" is listed there as a synonym for "broth dilution" and is converted to "broth dilution" on import.
+\item \code{method}: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Expected values are based on the NCBI/EBI antibiogram specification.
 \item \code{platform}: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").
 \item \code{guideline}: The AST standard recorded in the input file as being used for the AST assay.
 \item \code{pheno_eucast}: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
@@ -51,7 +51,7 @@ A data frame with the processed AST data, including additional columns:
 }
 }
 \description{
-This function imports an antibiotic susceptibility testing (AST) dataset in either EBI or NCBI antibiogram format, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
+This function imports an antibiotic susceptibility testing (AST) datasets in formats exported by EBI, NCBI, WHOnet and several automated AST instruments (Vitek, Microscan, Sensititre). It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
 }
 \examples{
 # small example E. coli AST data from NCBI

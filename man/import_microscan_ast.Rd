@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_microscan_ast}
 \alias{import_microscan_ast}
-\title{Import and Process AST Data from MicroScan Output Files}
+\title{Import and process antimicrobial phenotype data exported from MicroScan instruments}
 \usage{
 import_microscan_ast(
   input,
@@ -39,7 +39,7 @@ import_microscan_ast(
 Standardised AST data frame
 }
 \description{
-This function imports AST data from MicroScan instrument output files (wide CSV format)
+This function imports antimicrobial susceptibility testing (AST) data from MicroScan instrument output files (wide CSV format)
 and converts it to the standardised long-format used by AMRgen. Supports English,
 Spanish, French, German, and Portuguese column names (auto-detected from metadata columns).
 }

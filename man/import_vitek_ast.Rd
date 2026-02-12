@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_vitek_ast}
 \alias{import_vitek_ast}
-\title{Import and Process AST Data from Vitek Output Files}
+\title{Import and process antimicrobial phenotype data exported from Vitek instruments}
 \usage{
 import_vitek_ast(
   input,
@@ -45,6 +45,6 @@ import_vitek_ast(
 Standardised AST data frame
 }
 \description{
-This function imports AST data from Vitek instrument output files (wide CSV format)
+This function imports antimicrobial susceptibility testing (AST) data from Vitek instrument output files (wide CSV format)
 and converts it to the standardised long-format used by AMRgen.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_ebi_ast_ftp}
 \alias{import_ebi_ast_ftp}
-\title{Import and Process AST Data files retrieved from the EBI AMR portal FTP site}
+\title{Import and process antimicrobial phenotype data files retrieved from the EBI AMR portal FTP site}
 \usage{
 import_ebi_ast_ftp(
   input,

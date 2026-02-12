@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{interpret_ast}
 \alias{interpret_ast}
-\title{Interpret AST data in a standard format tibble}
+\title{Interpret antimicrobial susceptibility phenotype data in a standard format tibble}
 \usage{
 interpret_ast(
   ast,
@@ -37,7 +37,7 @@ A copy of the input table, with additional columns:
 }
 }
 \description{
-This function applies human EUCAST or CLSI breakpoints, and/or ECOFF, to interpret AST data.
+This function applies human EUCAST or CLSI breakpoints, and/or ECOFF, to interpret antimicrobial susceptibility testing (AST) data.
 }
 \examples{
 # import without re-interpreting resistance

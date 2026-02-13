@@ -12,5 +12,5 @@
 \item{...}{Additional arguments (ignored).}
 }
 \description{
-Displays the confusion matrix and key concordance metrics.
+Displays the confusion matrix and key concordance metrics for each outcome.
 }

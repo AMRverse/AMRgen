@@ -10,8 +10,11 @@ concordance(
   exclude_markers = NULL,
   ppv_threshold = NULL,
   solo_ppv_results = NULL,
-  truth = "R",
-  prediction_rule = "any"
+  truth = c("R", "NWT"),
+  prediction_rule = "any",
+  min_count = NULL,
+  logreg_results = NULL,
+  pval_threshold = NULL
 )
 }
 \arguments{
@@ -20,7 +23,7 @@ one row per sample, columns indicating binary phenotypes (\code{R}, \code{I}, \c
 and binary marker presence/absence.}
 
 \item{markers}{A character vector of marker column names to include in a
-summary binary outcome variable 'markers present'.
+new binary outcome variable \code{genotypic_prediction}.
 Default \code{NULL} includes all marker columns.}
 
 \item{exclude_markers}{A character vector of marker column names to exclude
@@ -32,25 +35,36 @@ below this value are excluded. Requires \code{solo_ppv_results}.}
 \item{solo_ppv_results}{Output of \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, used for PPV-based
 marker filtering when \code{ppv_threshold} is set.}
 
-\item{truth}{A character string specifying the phenotype column to use:
-\code{"R"} (R vs S/I classifications, default) or \code{"NWT"}
-(nonwildtype vs wildtype).}
+\item{truth}{A character vector specifying the phenotypic truth column(s) to
+evaluate: \code{"R"} (resistant vs susceptible/intermediate), \code{"NWT"}
+(non-wildtype vs wildtype), or \code{c("R", "NWT")} (default) to evaluate both.}
 
-\item{prediction_rule}{A character string specifying the rule for generating
-genotypic predictions. Currently only \code{"any"} is supported: a sample is
-predicted positive if any included marker is present (value of 1).}
+\item{prediction_rule}{The rule for generating genotypic predictions:
+\code{"any"} (default) predicts positive if any marker is present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
+\code{"all"} predicts positive only if all markers are present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
+a positive integer predicts positive if at least that many markers are present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
+\code{"logistic"} uses a logistic regression model from \code{logreg_results} to predict outcomes for each sample.}
+
+\item{min_count}{An integer or \code{NULL}. Exclude markers with total frequency
+(column sum in binary_matrix) below this value. Default \code{NULL} (no filtering).}
+
+\item{logreg_results}{Output of \code{\link[=amr_logistic]{amr_logistic()}}. Used for p-value filtering
+(when \code{pval_threshold} is set) and for \code{prediction_rule = "logistic"}.}
+
+\item{pval_threshold}{A numeric p-value threshold. Exclude markers with
+logistic regression p-value >= this value. Requires \code{logreg_results}.}
 }
 \value{
 An S3 object of class \code{"amr_concordance"}, a list containing:
 \itemize{
-\item \code{conf_mat}: A yardstick confusion matrix object.
-\item \code{metrics}: A tibble with columns \code{.metric}, \code{.estimator}, \code{.estimate}
-containing sensitivity, specificity, ppv, npv, accuracy, kap, f_meas, VME,
-and ME.
-\item \code{data}: The input binary matrix with an added \code{geno_prediction} column.
-\item \code{markers_used}: Character vector of markers included in the prediction.
-\item \code{truth_col}: Which truth column was used (\code{"R"} or \code{"NWT"}).
-\item \code{n}: Total number of samples with non-missing truth values.
+\item \code{conf_mat}: Named list of yardstick confusion matrix objects (e.g.
+\verb{list(R = <cm>, NWT = <cm>)}).
+\item \code{metrics}: A tibble with columns \code{outcome}, \code{metric}, \code{estimate}.
+\item \code{data}: The input binary matrix with added \code{R_pred} and/or \code{NWT_pred} columns.
+\item \code{markers_used}: Named list of character vectors of markers used per outcome.
+\item \code{truth_col}: Character vector of truth columns evaluated.
+\item \code{n}: Named integer vector of sample counts per outcome.
+\item \code{prediction_rule}: The prediction rule used.
 }
 }
 \description{
@@ -63,15 +77,17 @@ compared to the observed phenotypes using standard classification metrics
 (via the \code{yardstick} pkg) and AMR-specific error rates (major error, ME
 and very major error, VME) per ISO 20776-2 (and see
 \href{https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda}{FDA definitions}.
+Supports evaluating both R and NWT outcomes
+in a single call, with flexible prediction rules and marker inclusion options.
 }
 \details{
 The function identifies marker columns as all columns not in the reserved set
 (\code{id}, \code{pheno}, \code{ecoff}, \code{R}, \code{I}, \code{NWT}, \code{mic}, \code{disk}). It then applies
-filtering in order: inclusion list \code{markers}, exclusion list \code{exclude_markers},
-then \code{ppv_threshold} filtering.
+filtering in order: inclusion list \code{markers}, exclusion list \code{exclude_markers}, \code{min_count},
+\code{ppv_threshold} filtering, then \code{pval_threshold} filtering.
 
-Genotypic prediction is generated per sample: if \code{prediction_rule = "any"},
-then a sample is predicted positive (1) if any included marker equals 1.
+Marker filtering is performed per outcome (R, NWT), since PPV-based and
+p-value-based filters are category/outcome-specific.
 
 Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
 F-measure) are calculated using pkg \code{yardstick}. AMR-specific error rates are
@@ -95,9 +111,12 @@ binary_matrix <- get_binary_matrix(
   sir_col = "pheno_clsi"
 )
 
-# Basic concordance using all markers
+# Basic concordance for both R and NWT
 result <- concordance(binary_matrix)
 result
+
+# Single outcome
+result <- concordance(binary_matrix, truth = "R")
 
 # Exclude specific markers
 result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
@@ -110,12 +129,23 @@ result <- concordance(
   solo_ppv_results = solo_ppv
 )
 
+# Require at least 2 markers present for prediction
+result <- concordance(binary_matrix, prediction_rule = 2)
+
+# Use logistic regression model for prediction
+logreg <- amr_logistic(binary_matrix = binary_matrix)
+result <- concordance(
+  binary_matrix,
+  prediction_rule = "logistic",
+  logreg_results = logreg
+)
+
 # Access components
-result$conf_mat
+result$conf_mat$R
 result$metrics
 result$markers_used
 }
 }
 \seealso{
-\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, \link[yardstick:yardstick-package]{yardstick::yardstick}
+\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, \code{\link[=amr_logistic]{amr_logistic()}}, \link[yardstick:yardstick-package]{yardstick::yardstick}
 }

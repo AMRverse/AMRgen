@@ -212,7 +212,12 @@ utils::globalVariables(c(
   "truth_value",
   ".metric",
   ".estimator",
-  ".estimate"
+  ".estimate",
+  "R_pred",
+  "NWT_pred",
+  "outcome",
+  "metric",
+  "estimate"
 ))
 
 

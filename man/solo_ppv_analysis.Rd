@@ -39,7 +39,7 @@ solo_ppv_analysis(
 
 \item{sir_col}{A character string specifying the column name in \code{pheno_table} that contains the resistance interpretation (SIR) data. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if \code{binary_matrix} not provided.}
 
-\item{ecoff_col}{A character string specifying the column name in \code{pheno_table} that contains resistance interpretations made against the ECOFF rather than a clinical breakpoint. The values should be \code{"NWT"}, \code{"WT"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. Default \code{ecoff}. Set to \code{NULL} if not available.  Only used if \code{binary_matrix} not provided.}
+\item{ecoff_col}{A character string specifying the column name in \code{pheno_table} that contains the ECOFF interpretation of phenotype. The values should be interpretable as \code{"WT"} (wildtype) and \code{"NWT"} (nonwildtype), or \code{"S"} / \code{"I"} / \code{"R"}. Default \code{ecoff}. Set to \code{NULL} if not available.  Only used if \code{binary_matrix} not provided.}
 
 \item{icat}{A logical indicating whether to calculate PPV for \code{"I"} (if such a category exists in the phenotype column) (default \code{FALSE}).}
 

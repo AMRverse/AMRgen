@@ -16,18 +16,18 @@
 
 #' Get Binary Matrix of Genotype and Phenotype Data
 #'
-#' This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (R/I vs S) status for a given antibiotic, and presence or absence of genetic markers related to one or more specified drug classes. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified antibiotic and drug class criteria before creating a binary matrix. Suitable input files can be generated using `import_ncbi_ast` to import phenotype data from NCBI, and `parse_amrfp` to import genotype data from AMRFinderPlus.
-#' @param geno_table A data frame containing genotype data, including at least one column labeled `drug_class` for drug class information and one column for sample identifiers (specified via `geno_sample_col`, otherwise it is assumed the first column contains identifiers).
-#' @param pheno_table A data frame containing phenotype data, which must include a column `drug_agent` (with the antibiotic information), a column with the resistance interpretation (S/I/R, specified via `sir_col`), and optionally a column with the ECOFF interpretation (WT/NWT, specified via `ecoff_col`).
-#' @param antibiotic A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the `drug_agent` column of `pheno_table`.
+#' This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given antibiotic, and presence or absence of genetic markers related to one or more specified drug classes. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified antibiotic and drug class criteria before creating a binary matrix. Suitable input files can be generated using [import_ast()] to import phenotype data, and [import_amrfp()] to import genotype data from AMRFinderPlus.
+#' @param geno_table A data frame containing genotype data, in long form with one row per sample and genetic marker. Expected format is that output by [import_amrfp()] and must include a column labeled `drug_class` (indicating the antibiotic class associated with each marker), in addition to a column indicating the marker (column name specified via `marker_col`) and a column for sample identifiers (specified via `geno_sample_col`, otherwise it is assumed the first column contains identifiers).
+#' @param pheno_table A data frame containing phenotype data, in long form with one row per sample, drug and assay result. Expected format is that output by [import_ast()] and must include a column `drug_agent` (indicating the drug agent, interpretable as AMR pkg class `ab`), in addition to a column for sample identifiers (specified via `pheno_sample_col`, otherwise it is assumed the first column contains identifiers), a column with the resistance interpretation (S/I/R, specified via `sir_col`), and optionally a column with the ECOFF interpretation (WT/NWT or S/R, specified via `ecoff_col`).
+#' @param antibiotic A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the `drug_agent` column of `pheno_table` or be coercible to a match using [as.ab].
 #' @param drug_class_list A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list.
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers.
-#' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be interpretable as "R" (resistant), "I" (intermediate), or "S" (susceptible).
-#' @param ecoff_col A character string specifying the column name in `pheno_table` that contains the ECOFF interpretation of phenotype. The values should be interpretable as "WT" (wildtype) or "NWT" (nonwildtype).
+#' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be interpretable as `"R"`, `"I"`, `"S"`. Default `"pheno_clsi`.
+#' @param ecoff_col A character string specifying the column name in `pheno_table` that contains the ECOFF interpretation of phenotype. The values should be interpretable as `"WT"` (wildtype) and `"NWT"` (nonwildtype), or `"S"` / `"I"` / `"R"`. Default `"ecoff`.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Defaults to `"marker"`.
 #' @param keep_SIR A logical indicating whether to retain the full S/I/R phenotype column in the output. Defaults to `TRUE`.
-#' @param keep_assay_values A logical indicating whether to include columns with the raw phenotype assay data. Assumes there are columns labelled "mic" and "disk"; these will be added to the output table if present. Defaults to `FALSE`.
+#' @param keep_assay_values A logical indicating whether to include columns with the raw phenotype assay data. Assumes there are columns labelled `"mic"` and `"disk"`; these will be added to the output table if present. Defaults to `FALSE`.
 #' @param keep_assay_values_from A character vector specifying which assay values (e.g., `"mic"`, `"disk"`) to retain if `keep_assay_values` is `TRUE`. Defaults to `c("mic", "disk")`.
 #' @param most_resistant A logical indicating whether, when multiple phenotype entries are present for the same sample and drug, the most resistant should be kept (otherwise the least resistant is kept). Default is `TRUE`.
 #' @importFrom AMR as.ab as.disk as.mic as.sir is.ab
@@ -46,40 +46,22 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' geno_table <- parse_amrfp("testdata/Ecoli_AMRfinderplus_n50.tsv", "Name")
-#' pheno_table <- import_ncbi_ast("testdata/Ecoli_AST_NCBI_n50.tsv")
-#' get_binary_matrix(
-#'   geno_table,
-#'   pheno_table,
+#' # Import example E. coli AMRFinderPlus data from AllTheBacteria
+#' ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
+#' geno_pheno_cip <- get_binary_matrix(
+#'   ecoli_geno,
+#'   ecoli_ast,
 #'   antibiotic = "Ciprofloxacin",
 #'   drug_class_list = c("Quinolones"),
-#'   sir_col = "Resistance phenotype"
+#'   sir_col = "pheno_clsi"
 #' )
-#' get_binary_matrix(
-#'   geno_table,
-#'   pheno_table,
+#' geno_pheno_cip <- get_binary_matrix(
+#'   ecoli_geno,
+#'   ecoli_ast,
 #'   antibiotic = "Ciprofloxacin",
 #'   drug_class_list = c("Quinolones"),
 #'   sir_col = "Resistance phenotype",
 #'   keep_assay_values = TRUE
-#' )
-#' get_binary_matrix(
-#'   geno_table,
-#'   pheno_table,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
-#'   sir_col = "Resistance phenotype",
-#'   keep_assay_values = TRUE,
-#'   keep_assay_values_from = "mic"
-#' )
-#' get_binary_matrix(
-#'   geno_table,
-#'   pheno_table,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
-#'   sir_col = "Resistance phenotype",
-#'   keep_assay_values = TRUE,
-#'   keep_assay_values_from = "MIC (mg/L)"
 #' )
 #' }
 get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_list, keep_SIR = TRUE,
@@ -169,6 +151,8 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
       cat(paste(" Defining NWT in binary matrix using ecoff column provided:", ecoff_col, "\n"))
       pheno_binary <- pheno_binary %>%
         mutate(NWT = case_when(
+          as.sir(get(ecoff_col)) == "NWT" ~ 1,
+          as.sir(get(ecoff_col)) == "WT" ~ 0,
           as.sir(get(ecoff_col)) == "R" ~ 1,
           as.sir(get(ecoff_col)) == "I" ~ 1,
           as.sir(get(ecoff_col)) == "S" ~ 0,

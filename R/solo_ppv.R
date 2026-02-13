@@ -25,7 +25,7 @@
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
-#' @param ecoff_col A character string specifying the column name in `pheno_table` that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
+#' @param ecoff_col A character string specifying the column name in `pheno_table` that contains the ECOFF interpretation of phenotype. The values should be interpretable as `"WT"` (wildtype) and `"NWT"` (nonwildtype), or `"S"` / `"I"` / `"R"`. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Default `"marker"`. Only used if `binary_matrix` not provided.
 #' @param icat A logical indicating whether to calculate PPV for `"I"` (if such a category exists in the phenotype column) (default `FALSE`).
 #' @param min Minimum number of genomes with the solo marker, to include the marker in the plot (default `1`).
@@ -230,7 +230,7 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
       group_by(marker) %>%
       summarise(
         x = sum(NWT, na.rm = TRUE),
-        n = sum(ecoff %in% c("S", "I", "R", "SDD")),
+        n = sum(ecoff %in% c("WT", "NWT", "S", "I", "R", "SDD")),
         p = x / n,
         se = sqrt(p * (1 - p) / n),
         ci.lower = max(0, p - 1.96 * se),

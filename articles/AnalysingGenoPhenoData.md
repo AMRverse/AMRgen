@@ -69,17 +69,18 @@ ecoli_geno_raw
 #> #   `Accession of closest sequence` <chr>, `Name of closest sequence` <chr>, …
 
 # Load AMRFinderPlus output
-ecoli_geno <- import_amrfp(input_table = ecoli_geno_raw, # (replace 'ecoli_geno_raw' with the filepath for any AMRFinderPlus output)
-                           sample_col = "Name", 
-                           # you can optionally specify the below key column names if they differ in your dataframe to standard AMRFinderPlus outputs
-                           element_symbol_col = "Gene symbol", # or "Element symbol" 
-                           element_type_col = "Element type", # or "Type" 
-                           element_subtype_col = "Element subtype",
-                           method_col = "Method",
-                           node_col = "Hierarchy node",
-                           subclass_col = "Subclass",
-                           class_col = "Class"
-                           )
+ecoli_geno <- import_amrfp(
+  input_table = ecoli_geno_raw, # (replace 'ecoli_geno_raw' with the filepath for any AMRFinderPlus output)
+  sample_col = "Name",
+  # you can optionally specify the below key column names if they differ in your dataframe to standard AMRFinderPlus outputs
+  element_symbol_col = "Gene symbol", # or "Element symbol"
+  element_type_col = "Element type", # or "Type"
+  element_subtype_col = "Element subtype",
+  method_col = "Method",
+  node_col = "Hierarchy node",
+  subclass_col = "Subclass",
+  class_col = "Class"
+)
 
 # Check the format of the processed genotype table
 head(ecoli_geno)

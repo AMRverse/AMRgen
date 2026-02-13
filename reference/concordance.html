@@ -7,7 +7,9 @@ an input inclusion list or exclusion list). This genotypic prediction is then
 compared to the observed phenotypes using standard classification metrics
 (via the yardstick pkg) and AMR-specific error rates (major error, ME
 and very major error, VME) per ISO 20776-2 (and see
-FDA definitions."><meta property="og:description" content="Compares genotypes (presence of resistance markers) to observed phenotypes
+FDA definitions.
+Supports evaluating both R and NWT outcomes
+in a single call, with flexible prediction rules and marker inclusion options."><meta property="og:description" content="Compares genotypes (presence of resistance markers) to observed phenotypes
 (resistant vs susceptible) using a binary matrix from get_binary_matrix().
 A genotypic prediction variable is defined on the basis of presence of
 genotype markers (either any marker in the input table, or those defined by
@@ -15,7 +17,9 @@ an input inclusion list or exclusion list). This genotypic prediction is then
 compared to the observed phenotypes using standard classification metrics
 (via the yardstick pkg) and AMR-specific error rates (major error, ME
 and very major error, VME) per ISO 20776-2 (and see
-FDA definitions."><meta property="og:image" content="https://AMRverse.github.io/AMRgen/logo.png"></head><body>
+FDA definitions.
+Supports evaluating both R and NWT outcomes
+in a single call, with flexible prediction rules and marker inclusion options."><meta property="og:image" content="https://AMRverse.github.io/AMRgen/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -56,7 +60,9 @@ an input inclusion list or exclusion list). This genotypic prediction is then
 compared to the observed phenotypes using standard classification metrics
 (via the <code>yardstick</code> pkg) and AMR-specific error rates (major error, ME
 and very major error, VME) per ISO 20776-2 (and see
-<a href="https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda" class="external-link">FDA definitions</a>.</p>
+<a href="https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda" class="external-link">FDA definitions</a>.
+Supports evaluating both R and NWT outcomes
+in a single call, with flexible prediction rules and marker inclusion options.</p>
     </div>
 
     <div class="section level2">
@@ -67,8 +73,11 @@ and very major error, VME) per ISO 20776-2 (and see
 <span>  exclude_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ppv_threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  solo_ppv_results <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  truth <span class="op">=</span> <span class="st">"R"</span>,</span>
-<span>  prediction_rule <span class="op">=</span> <span class="st">"any"</span></span>
+<span>  truth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"NWT"</span><span class="op">)</span>,</span>
+<span>  prediction_rule <span class="op">=</span> <span class="st">"any"</span>,</span>
+<span>  min_count <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  logreg_results <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pval_threshold <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -84,7 +93,7 @@ and binary marker presence/absence.</p></dd>
 
 <dt id="arg-markers">markers<a class="anchor" aria-label="anchor" href="#arg-markers"></a></dt>
 <dd><p>A character vector of marker column names to include in a
-summary binary outcome variable 'markers present'.
+new binary outcome variable <code>genotypic_prediction</code>.
 Default <code>NULL</code> includes all marker columns.</p></dd>
 
 
@@ -104,36 +113,53 @@ marker filtering when <code>ppv_threshold</code> is set.</p></dd>
 
 
 <dt id="arg-truth">truth<a class="anchor" aria-label="anchor" href="#arg-truth"></a></dt>
-<dd><p>A character string specifying the phenotype column to use:
-<code>"R"</code> (R vs S/I classifications, default) or <code>"NWT"</code>
-(nonwildtype vs wildtype).</p></dd>
+<dd><p>A character vector specifying the phenotypic truth column(s) to
+evaluate: <code>"R"</code> (resistant vs susceptible/intermediate), <code>"NWT"</code>
+(non-wildtype vs wildtype), or <code>c("R", "NWT")</code> (default) to evaluate both.</p></dd>
 
 
 <dt id="arg-prediction-rule">prediction_rule<a class="anchor" aria-label="anchor" href="#arg-prediction-rule"></a></dt>
-<dd><p>A character string specifying the rule for generating
-genotypic predictions. Currently only <code>"any"</code> is supported: a sample is
-predicted positive if any included marker is present (value of 1).</p></dd>
+<dd><p>The rule for generating genotypic predictions:
+<code>"any"</code> (default) predicts positive if any marker is present (after applying filters as specified by <code>markers</code>, <code>exclude_markers</code>, <code>ppv_threshold</code>, <code>pval_threshold</code>, <code>min_count</code>);
+<code>"all"</code> predicts positive only if all markers are present (after applying filters as specified by <code>markers</code>, <code>exclude_markers</code>, <code>ppv_threshold</code>, <code>pval_threshold</code>, <code>min_count</code>);
+a positive integer predicts positive if at least that many markers are present (after applying filters as specified by <code>markers</code>, <code>exclude_markers</code>, <code>ppv_threshold</code>, <code>pval_threshold</code>, <code>min_count</code>);
+<code>"logistic"</code> uses a logistic regression model from <code>logreg_results</code> to predict outcomes for each sample.</p></dd>
+
+
+<dt id="arg-min-count">min_count<a class="anchor" aria-label="anchor" href="#arg-min-count"></a></dt>
+<dd><p>An integer or <code>NULL</code>. Exclude markers with total frequency
+(column sum in binary_matrix) below this value. Default <code>NULL</code> (no filtering).</p></dd>
+
+
+<dt id="arg-logreg-results">logreg_results<a class="anchor" aria-label="anchor" href="#arg-logreg-results"></a></dt>
+<dd><p>Output of <code><a href="amr_logistic.html">amr_logistic()</a></code>. Used for p-value filtering
+(when <code>pval_threshold</code> is set) and for <code>prediction_rule = "logistic"</code>.</p></dd>
+
+
+<dt id="arg-pval-threshold">pval_threshold<a class="anchor" aria-label="anchor" href="#arg-pval-threshold"></a></dt>
+<dd><p>A numeric p-value threshold. Exclude markers with
+logistic regression p-value &gt;= this value. Requires <code>logreg_results</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An S3 object of class <code>"amr_concordance"</code>, a list containing:</p><ul><li><p><code>conf_mat</code>: A yardstick confusion matrix object.</p></li>
-<li><p><code>metrics</code>: A tibble with columns <code>.metric</code>, <code>.estimator</code>, <code>.estimate</code>
-containing sensitivity, specificity, ppv, npv, accuracy, kap, f_meas, VME,
-and ME.</p></li>
-<li><p><code>data</code>: The input binary matrix with an added <code>geno_prediction</code> column.</p></li>
-<li><p><code>markers_used</code>: Character vector of markers included in the prediction.</p></li>
-<li><p><code>truth_col</code>: Which truth column was used (<code>"R"</code> or <code>"NWT"</code>).</p></li>
-<li><p><code>n</code>: Total number of samples with non-missing truth values.</p></li>
+    <p>An S3 object of class <code>"amr_concordance"</code>, a list containing:</p><ul><li><p><code>conf_mat</code>: Named list of yardstick confusion matrix objects (e.g.
+<code>list(R = &lt;cm&gt;, NWT = &lt;cm&gt;)</code>).</p></li>
+<li><p><code>metrics</code>: A tibble with columns <code>outcome</code>, <code>metric</code>, <code>estimate</code>.</p></li>
+<li><p><code>data</code>: The input binary matrix with added <code>R_pred</code> and/or <code>NWT_pred</code> columns.</p></li>
+<li><p><code>markers_used</code>: Named list of character vectors of markers used per outcome.</p></li>
+<li><p><code>truth_col</code>: Character vector of truth columns evaluated.</p></li>
+<li><p><code>n</code>: Named integer vector of sample counts per outcome.</p></li>
+<li><p><code>prediction_rule</code>: The prediction rule used.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function identifies marker columns as all columns not in the reserved set
 (<code>id</code>, <code>pheno</code>, <code>ecoff</code>, <code>R</code>, <code>I</code>, <code>NWT</code>, <code>mic</code>, <code>disk</code>). It then applies
-filtering in order: inclusion list <code>markers</code>, exclusion list <code>exclude_markers</code>,
-then <code>ppv_threshold</code> filtering.</p>
-<p>Genotypic prediction is generated per sample: if <code>prediction_rule = "any"</code>,
-then a sample is predicted positive (1) if any included marker equals 1.</p>
+filtering in order: inclusion list <code>markers</code>, exclusion list <code>exclude_markers</code>, <code>min_count</code>,
+<code>ppv_threshold</code> filtering, then <code>pval_threshold</code> filtering.</p>
+<p>Marker filtering is performed per outcome (R, NWT), since PPV-based and
+p-value-based filters are category/outcome-specific.</p>
 <p>Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
 F-measure) are calculated using pkg <code>yardstick</code>. AMR-specific error rates are
 computed internally:</p><ul><li><p><strong>VME</strong> (Very Major Error): FN / (TP + FN) = 1 - sensitivity. Proportion of
@@ -143,7 +169,7 @@ truly susceptible isolates incorrectly predicted resistant from genotype.</p></l
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>, <code><a href="solo_ppv_analysis.html">solo_ppv_analysis()</a></code>, <a href="https://yardstick.tidymodels.org/reference/yardstick-package.html" class="external-link">yardstick::yardstick</a></p></div>
+    <div class="dont-index"><p><code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>, <code><a href="solo_ppv_analysis.html">solo_ppv_analysis()</a></code>, <code><a href="amr_logistic.html">amr_logistic()</a></code>, <a href="https://yardstick.tidymodels.org/reference/yardstick-package.html" class="external-link">yardstick::yardstick</a></p></div>
     </div>
 
     <div class="section level2">
@@ -159,9 +185,12 @@ truly susceptible isolates incorrectly predicted resistant from genotype.</p></l
 <span class="r-in"><span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Basic concordance using all markers</span></span></span>
+<span class="r-in"><span><span class="co"># Basic concordance for both R and NWT</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">concordance</span><span class="op">(</span><span class="va">binary_matrix</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">result</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Single outcome</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">concordance</span><span class="op">(</span><span class="va">binary_matrix</span>, truth <span class="op">=</span> <span class="st">"R"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Exclude specific markers</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">concordance</span><span class="op">(</span><span class="va">binary_matrix</span>, exclude_markers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"qnrS1"</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -174,8 +203,19 @@ truly susceptible isolates incorrectly predicted resistant from genotype.</p></l
 <span class="r-in"><span>  solo_ppv_results <span class="op">=</span> <span class="va">solo_ppv</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Require at least 2 markers present for prediction</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">concordance</span><span class="op">(</span><span class="va">binary_matrix</span>, prediction_rule <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Use logistic regression model for prediction</span></span></span>
+<span class="r-in"><span><span class="va">logreg</span> <span class="op">&lt;-</span> <span class="fu"><a href="amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">binary_matrix</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">concordance</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">binary_matrix</span>,</span></span>
+<span class="r-in"><span>  prediction_rule <span class="op">=</span> <span class="st">"logistic"</span>,</span></span>
+<span class="r-in"><span>  logreg_results <span class="op">=</span> <span class="va">logreg</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Access components</span></span></span>
-<span class="r-in"><span><span class="va">result</span><span class="op">$</span><span class="va">conf_mat</span></span></span>
+<span class="r-in"><span><span class="va">result</span><span class="op">$</span><span class="va">conf_mat</span><span class="op">$</span><span class="va">R</span></span></span>
 <span class="r-in"><span><span class="va">result</span><span class="op">$</span><span class="va">metrics</span></span></span>
 <span class="r-in"><span><span class="va">result</span><span class="op">$</span><span class="va">markers_used</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>

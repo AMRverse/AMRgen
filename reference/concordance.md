@@ -11,6 +11,8 @@ classification metrics (via the `yardstick` pkg) and AMR-specific error
 rates (major error, ME and very major error, VME) per ISO 20776-2 (and
 see [FDA
 definitions](https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda).
+Supports evaluating both R and NWT outcomes in a single call, with
+flexible prediction rules and marker inclusion options.
 
 ## Usage
 
@@ -21,8 +23,11 @@ concordance(
   exclude_markers = NULL,
   ppv_threshold = NULL,
   solo_ppv_results = NULL,
-  truth = "R",
-  prediction_rule = "any"
+  truth = c("R", "NWT"),
+  prediction_rule = "any",
+  min_count = NULL,
+  logreg_results = NULL,
+  pval_threshold = NULL
 )
 ```
 
@@ -37,8 +42,8 @@ concordance(
 
 - markers:
 
-  A character vector of marker column names to include in a summary
-  binary outcome variable 'markers present'. Default `NULL` includes all
+  A character vector of marker column names to include in a new binary
+  outcome variable `genotypic_prediction`. Default `NULL` includes all
   marker columns.
 
 - exclude_markers:
@@ -59,45 +64,73 @@ concordance(
 
 - truth:
 
-  A character string specifying the phenotype column to use: `"R"` (R vs
-  S/I classifications, default) or `"NWT"` (nonwildtype vs wildtype).
+  A character vector specifying the phenotypic truth column(s) to
+  evaluate: `"R"` (resistant vs susceptible/intermediate), `"NWT"`
+  (non-wildtype vs wildtype), or `c("R", "NWT")` (default) to evaluate
+  both.
 
 - prediction_rule:
 
-  A character string specifying the rule for generating genotypic
-  predictions. Currently only `"any"` is supported: a sample is
-  predicted positive if any included marker is present (value of 1).
+  The rule for generating genotypic predictions: `"any"` (default)
+  predicts positive if any marker is present (after applying filters as
+  specified by `markers`, `exclude_markers`, `ppv_threshold`,
+  `pval_threshold`, `min_count`); `"all"` predicts positive only if all
+  markers are present (after applying filters as specified by `markers`,
+  `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`); a
+  positive integer predicts positive if at least that many markers are
+  present (after applying filters as specified by `markers`,
+  `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
+  `"logistic"` uses a logistic regression model from `logreg_results` to
+  predict outcomes for each sample.
+
+- min_count:
+
+  An integer or `NULL`. Exclude markers with total frequency (column sum
+  in binary_matrix) below this value. Default `NULL` (no filtering).
+
+- logreg_results:
+
+  Output of
+  [`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md).
+  Used for p-value filtering (when `pval_threshold` is set) and for
+  `prediction_rule = "logistic"`.
+
+- pval_threshold:
+
+  A numeric p-value threshold. Exclude markers with logistic regression
+  p-value \>= this value. Requires `logreg_results`.
 
 ## Value
 
 An S3 object of class `"amr_concordance"`, a list containing:
 
-- `conf_mat`: A yardstick confusion matrix object.
+- `conf_mat`: Named list of yardstick confusion matrix objects (e.g.
+  `list(R = <cm>, NWT = <cm>)`).
 
-- `metrics`: A tibble with columns `.metric`, `.estimator`, `.estimate`
-  containing sensitivity, specificity, ppv, npv, accuracy, kap, f_meas,
-  VME, and ME.
+- `metrics`: A tibble with columns `outcome`, `metric`, `estimate`.
 
-- `data`: The input binary matrix with an added `geno_prediction`
-  column.
+- `data`: The input binary matrix with added `R_pred` and/or `NWT_pred`
+  columns.
 
-- `markers_used`: Character vector of markers included in the
-  prediction.
+- `markers_used`: Named list of character vectors of markers used per
+  outcome.
 
-- `truth_col`: Which truth column was used (`"R"` or `"NWT"`).
+- `truth_col`: Character vector of truth columns evaluated.
 
-- `n`: Total number of samples with non-missing truth values.
+- `n`: Named integer vector of sample counts per outcome.
+
+- `prediction_rule`: The prediction rule used.
 
 ## Details
 
 The function identifies marker columns as all columns not in the
 reserved set (`id`, `pheno`, `ecoff`, `R`, `I`, `NWT`, `mic`, `disk`).
 It then applies filtering in order: inclusion list `markers`, exclusion
-list `exclude_markers`, then `ppv_threshold` filtering.
+list `exclude_markers`, `min_count`, `ppv_threshold` filtering, then
+`pval_threshold` filtering.
 
-Genotypic prediction is generated per sample: if
-`prediction_rule = "any"`, then a sample is predicted positive (1) if
-any included marker equals 1.
+Marker filtering is performed per outcome (R, NWT), since PPV-based and
+p-value-based filters are category/outcome-specific.
 
 Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
 F-measure) are calculated using pkg `yardstick`. AMR-specific error
@@ -115,6 +148,7 @@ rates are computed internally:
 
 [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md),
 [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md),
+[`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md),
 [yardstick::yardstick](https://yardstick.tidymodels.org/reference/yardstick-package.html)
 
 ## Examples
@@ -131,9 +165,12 @@ binary_matrix <- get_binary_matrix(
   sir_col = "pheno_clsi"
 )
 
-# Basic concordance using all markers
+# Basic concordance for both R and NWT
 result <- concordance(binary_matrix)
 result
+
+# Single outcome
+result <- concordance(binary_matrix, truth = "R")
 
 # Exclude specific markers
 result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
@@ -146,8 +183,19 @@ result <- concordance(
   solo_ppv_results = solo_ppv
 )
 
+# Require at least 2 markers present for prediction
+result <- concordance(binary_matrix, prediction_rule = 2)
+
+# Use logistic regression model for prediction
+logreg <- amr_logistic(binary_matrix = binary_matrix)
+result <- concordance(
+  binary_matrix,
+  prediction_rule = "logistic",
+  logreg_results = logreg
+)
+
 # Access components
-result$conf_mat
+result$conf_mat$R
 result$metrics
 result$markers_used
 } # }

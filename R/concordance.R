@@ -14,19 +14,26 @@
 #  the Free Software Foundation.                                        #
 # ===================================================================== #
 
-#' Calculate Genotype-Phenotype Concordance
+#' Calculate genotype-phenotype concordance from binary matrix
 #'
-#' Compares genotypic predictions (presence of resistance markers) to phenotypic
-#' truth (resistant vs susceptible) using a binary matrix from [get_binary_matrix()].
-#' Calculates standard classification metrics via yardstick and AMR-specific error
-#' rates (VME and ME) per ISO 20776-2. Supports evaluating both R and NWT outcomes
-#' in a single call, with flexible prediction rules and marker filtering options.
+#' Compares genotypes (presence of resistance markers) to observed phenotypes
+#' (resistant vs susceptible) using a binary matrix from [get_binary_matrix()].
+#' A genotypic prediction variable is defined on the basis of presence of
+#' genotype markers (either any marker in the input table, or those defined by
+#' an input inclusion list or exclusion list). This genotypic prediction is then
+#' compared to the observed phenotypes using standard classification metrics
+#' (via the `yardstick` pkg) and AMR-specific error rates (major error, ME
+#' and very major error, VME) per ISO 20776-2 (and see
+#' [FDA definitions](https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda).
+#' Supports evaluating both R and NWT outcomes
+#' in a single call, with flexible prediction rules and marker inclusion options.
 #'
 #' @param binary_matrix A data frame output by [get_binary_matrix()], containing
-#'   sample-level binary marker presence/absence alongside phenotype columns
-#'   (`R`, `NWT`).
-#' @param markers A character vector of marker column names to include in the
-#'   genotypic prediction. Default `NULL` includes all marker columns.
+#'   one row per sample, columns indicating binary phenotypes (`R`, `I`, `NWT`)
+#'   and binary marker presence/absence.
+#' @param markers A character vector of marker column names to include in a
+#'   new binary outcome variable `genotypic_prediction`.
+#'   Default `NULL` includes all marker columns.
 #' @param exclude_markers A character vector of marker column names to exclude
 #'   from the genotypic prediction. Applied after `markers` filtering.
 #' @param ppv_threshold A numeric PPV threshold (0-1). Markers with solo PPV
@@ -37,10 +44,10 @@
 #'   evaluate: `"R"` (resistant vs susceptible/intermediate), `"NWT"`
 #'   (non-wildtype vs wildtype), or `c("R", "NWT")` (default) to evaluate both.
 #' @param prediction_rule The rule for generating genotypic predictions:
-#'   `"any"` (default) predicts positive if any marker is present;
-#'   `"all"` predicts positive only if all markers are present;
-#'   a positive integer predicts positive if at least that many markers are present;
-#'   `"logistic"` uses a logistic regression model from `logreg_results` to predict.
+#'   `"any"` (default) predicts positive if any marker is present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
+#'   `"all"` predicts positive only if all markers are present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
+#'   a positive integer predicts positive if at least that many markers are present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
+#'   `"logistic"` uses a logistic regression model from `logreg_results` to predict outcomes for each sample.
 #' @param min_count An integer or `NULL`. Exclude markers with total frequency
 #'   (column sum in binary_matrix) below this value. Default `NULL` (no filtering).
 #' @param logreg_results Output of [amr_logistic()]. Used for p-value filtering
@@ -51,19 +58,19 @@
 #' @details
 #' The function identifies marker columns as all columns not in the reserved set
 #' (`id`, `pheno`, `ecoff`, `R`, `I`, `NWT`, `mic`, `disk`). It then applies
-#' filtering in order: custom `markers` list, `exclude_markers`, `min_count`,
+#' filtering in order: inclusion list `markers`, exclusion list `exclude_markers`, `min_count`,
 #' `ppv_threshold` filtering, then `pval_threshold` filtering.
 #'
-#' Marker filtering is performed per outcome, since PPV-based and p-value-based
-#' filters are category/outcome-specific.
+#' Marker filtering is performed per outcome (R, NWT), since PPV-based and 
+#' p-value-based filters are category/outcome-specific.
 #'
 #' Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
-#' F-measure) are calculated using yardstick. AMR-specific error rates are
+#' F-measure) are calculated using pkg `yardstick`. AMR-specific error rates are
 #' computed internally:
 #' - **VME** (Very Major Error): FN / (TP + FN) = 1 - sensitivity. Proportion of
-#'   truly resistant isolates missed by genotype.
+#'   truly resistant isolates not predicted as such from genotype.
 #' - **ME** (Major Error): FP / (TN + FP) = 1 - specificity. Proportion of
-#'   truly susceptible isolates incorrectly called resistant by genotype.
+#'   truly susceptible isolates incorrectly predicted resistant from genotype.
 #'
 #' @return An S3 object of class `"amr_concordance"`, a list containing:
 #' - `conf_mat`: Named list of yardstick confusion matrix objects (e.g.
@@ -79,7 +86,7 @@
 #' @importFrom stats predict
 #' @importFrom tibble tibble
 #' @importFrom yardstick conf_mat sens spec ppv npv accuracy kap f_meas
-#' @seealso [get_binary_matrix()], [solo_ppv_analysis()], [amr_logistic()]
+#' @seealso [get_binary_matrix()], [solo_ppv_analysis()], [amr_logistic()], [yardstick]
 #' @export
 #' @examples
 #' \dontrun{
@@ -361,6 +368,8 @@ concordance <- function(binary_matrix,
         rowSums(binary_matrix[, selected_markers, drop = FALSE], na.rm = TRUE) >= prediction_rule
       )
     }
+    out_data <- out_data %>% relocate(any_of(c("R", "NWT")), .after = 1)
+    out_data <- out_data %>% relocate(any_of(c("R_pred", "NWT_pred")), .after = 1)
   }
 
   if (length(conf_mat_list) == 0) {

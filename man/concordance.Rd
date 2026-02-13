@@ -2,7 +2,7 @@
 % Please edit documentation in R/concordance.R
 \name{concordance}
 \alias{concordance}
-\title{Calculate Genotype-Phenotype Concordance}
+\title{Calculate genotype-phenotype concordance from binary matrix}
 \usage{
 concordance(
   binary_matrix,
@@ -19,11 +19,12 @@ concordance(
 }
 \arguments{
 \item{binary_matrix}{A data frame output by \code{\link[=get_binary_matrix]{get_binary_matrix()}}, containing
-sample-level binary marker presence/absence alongside phenotype columns
-(\code{R}, \code{NWT}).}
+one row per sample, columns indicating binary phenotypes (\code{R}, \code{I}, \code{NWT})
+and binary marker presence/absence.}
 
-\item{markers}{A character vector of marker column names to include in the
-genotypic prediction. Default \code{NULL} includes all marker columns.}
+\item{markers}{A character vector of marker column names to include in a
+new binary outcome variable \code{genotypic_prediction}.
+Default \code{NULL} includes all marker columns.}
 
 \item{exclude_markers}{A character vector of marker column names to exclude
 from the genotypic prediction. Applied after \code{markers} filtering.}
@@ -39,10 +40,10 @@ evaluate: \code{"R"} (resistant vs susceptible/intermediate), \code{"NWT"}
 (non-wildtype vs wildtype), or \code{c("R", "NWT")} (default) to evaluate both.}
 
 \item{prediction_rule}{The rule for generating genotypic predictions:
-\code{"any"} (default) predicts positive if any marker is present;
-\code{"all"} predicts positive only if all markers are present;
-a positive integer predicts positive if at least that many markers are present;
-\code{"logistic"} uses a logistic regression model from \code{logreg_results} to predict.}
+\code{"any"} (default) predicts positive if any marker is present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
+\code{"all"} predicts positive only if all markers are present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
+a positive integer predicts positive if at least that many markers are present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
+\code{"logistic"} uses a logistic regression model from \code{logreg_results} to predict outcomes for each sample.}
 
 \item{min_count}{An integer or \code{NULL}. Exclude markers with total frequency
 (column sum in binary_matrix) below this value. Default \code{NULL} (no filtering).}
@@ -67,29 +68,35 @@ An S3 object of class \code{"amr_concordance"}, a list containing:
 }
 }
 \description{
-Compares genotypic predictions (presence of resistance markers) to phenotypic
-truth (resistant vs susceptible) using a binary matrix from \code{\link[=get_binary_matrix]{get_binary_matrix()}}.
-Calculates standard classification metrics via yardstick and AMR-specific error
-rates (VME and ME) per ISO 20776-2. Supports evaluating both R and NWT outcomes
-in a single call, with flexible prediction rules and marker filtering options.
+Compares genotypes (presence of resistance markers) to observed phenotypes
+(resistant vs susceptible) using a binary matrix from \code{\link[=get_binary_matrix]{get_binary_matrix()}}.
+A genotypic prediction variable is defined on the basis of presence of
+genotype markers (either any marker in the input table, or those defined by
+an input inclusion list or exclusion list). This genotypic prediction is then
+compared to the observed phenotypes using standard classification metrics
+(via the \code{yardstick} pkg) and AMR-specific error rates (major error, ME
+and very major error, VME) per ISO 20776-2 (and see
+\href{https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda}{FDA definitions}.
+Supports evaluating both R and NWT outcomes
+in a single call, with flexible prediction rules and marker inclusion options.
 }
 \details{
 The function identifies marker columns as all columns not in the reserved set
 (\code{id}, \code{pheno}, \code{ecoff}, \code{R}, \code{I}, \code{NWT}, \code{mic}, \code{disk}). It then applies
-filtering in order: custom \code{markers} list, \code{exclude_markers}, \code{min_count},
+filtering in order: inclusion list \code{markers}, exclusion list \code{exclude_markers}, \code{min_count},
 \code{ppv_threshold} filtering, then \code{pval_threshold} filtering.
 
-Marker filtering is performed per outcome, since PPV-based and p-value-based
-filters are category/outcome-specific.
+Marker filtering is performed per outcome (R, NWT), since PPV-based and
+p-value-based filters are category/outcome-specific.
 
 Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
-F-measure) are calculated using yardstick. AMR-specific error rates are
+F-measure) are calculated using pkg \code{yardstick}. AMR-specific error rates are
 computed internally:
 \itemize{
 \item \strong{VME} (Very Major Error): FN / (TP + FN) = 1 - sensitivity. Proportion of
-truly resistant isolates missed by genotype.
+truly resistant isolates not predicted as such from genotype.
 \item \strong{ME} (Major Error): FP / (TN + FP) = 1 - specificity. Proportion of
-truly susceptible isolates incorrectly called resistant by genotype.
+truly susceptible isolates incorrectly predicted resistant from genotype.
 }
 }
 \examples{
@@ -140,5 +147,5 @@ result$markers_used
 }
 }
 \seealso{
-\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, \code{\link[=amr_logistic]{amr_logistic()}}
+\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, \code{\link[=amr_logistic]{amr_logistic()}}, \link[yardstick:yardstick-package]{yardstick::yardstick}
 }

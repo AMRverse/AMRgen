@@ -98,6 +98,8 @@ reference:
       - logistf_details
       - getBreakpoints
       - checkBreakpoints
+      - concordance
+      - print.amr_concordance
 
   - title: "Visualisation & Reporting"
     desc: >

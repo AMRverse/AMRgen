@@ -2,7 +2,7 @@
 % Please edit documentation in R/concordance.R
 \name{concordance}
 \alias{concordance}
-\title{Calculate Genotype-Phenotype Concordance}
+\title{Calculate genotype-phenotype concordance from binary matrix}
 \usage{
 concordance(
   binary_matrix,
@@ -16,11 +16,12 @@ concordance(
 }
 \arguments{
 \item{binary_matrix}{A data frame output by \code{\link[=get_binary_matrix]{get_binary_matrix()}}, containing
-sample-level binary marker presence/absence alongside phenotype columns
-(\code{R}, \code{NWT}).}
+one row per sample, columns indicating binary phenotypes (\code{R}, \code{I}, \code{NWT})
+and binary marker presence/absence.}
 
-\item{markers}{A character vector of marker column names to include in the
-genotypic prediction. Default \code{NULL} includes all marker columns.}
+\item{markers}{A character vector of marker column names to include in a
+summary binary outcome variable 'markers present'.
+Default \code{NULL} includes all marker columns.}
 
 \item{exclude_markers}{A character vector of marker column names to exclude
 from the genotypic prediction. Applied after \code{markers} filtering.}
@@ -31,9 +32,9 @@ below this value are excluded. Requires \code{solo_ppv_results}.}
 \item{solo_ppv_results}{Output of \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, used for PPV-based
 marker filtering when \code{ppv_threshold} is set.}
 
-\item{truth}{A character string specifying the phenotypic truth column to use:
-\code{"R"} (resistant vs susceptible/intermediate, default) or \code{"NWT"}
-(non-wildtype vs wildtype).}
+\item{truth}{A character string specifying the phenotype column to use:
+\code{"R"} (R vs S/I classifications, default) or \code{"NWT"}
+(nonwildtype vs wildtype).}
 
 \item{prediction_rule}{A character string specifying the rule for generating
 genotypic predictions. Currently only \code{"any"} is supported: a sample is
@@ -53,28 +54,33 @@ and ME.
 }
 }
 \description{
-Compares genotypic predictions (presence of resistance markers) to phenotypic
-truth (resistant vs susceptible) using a binary matrix from \code{\link[=get_binary_matrix]{get_binary_matrix()}}.
-Calculates standard classification metrics via yardstick and AMR-specific error
-rates (VME and ME) per ISO 20776-2.
+Compares genotypes (presence of resistance markers) to observed phenotypes
+(resistant vs susceptible) using a binary matrix from \code{\link[=get_binary_matrix]{get_binary_matrix()}}.
+A genotypic prediction variable is defined on the basis of presence of
+genotype markers (either any marker in the input table, or those defined by
+an input inclusion list or exclusion list). This genotypic prediction is then
+compared to the observed phenotypes using standard classification metrics
+(via the \code{yardstick} pkg) and AMR-specific error rates (major error, ME
+and very major error, VME) per ISO 20776-2 (and see
+\href{https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda}{FDA definitions}.
 }
 \details{
 The function identifies marker columns as all columns not in the reserved set
 (\code{id}, \code{pheno}, \code{ecoff}, \code{R}, \code{I}, \code{NWT}, \code{mic}, \code{disk}). It then applies
-filtering in order: custom \code{markers} list, \code{exclude_markers}, then
-\code{ppv_threshold} filtering.
+filtering in order: inclusion list \code{markers}, exclusion list \code{exclude_markers},
+then \code{ppv_threshold} filtering.
 
 Genotypic prediction is generated per sample: if \code{prediction_rule = "any"},
-then a sample is predicted positive (1) if any selected marker equals 1.
+then a sample is predicted positive (1) if any included marker equals 1.
 
 Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
-F-measure) are calculated using yardstick. AMR-specific error rates are
+F-measure) are calculated using pkg \code{yardstick}. AMR-specific error rates are
 computed internally:
 \itemize{
 \item \strong{VME} (Very Major Error): FN / (TP + FN) = 1 - sensitivity. Proportion of
-truly resistant isolates missed by genotype.
+truly resistant isolates not predicted as such from genotype.
 \item \strong{ME} (Major Error): FP / (TN + FP) = 1 - specificity. Proportion of
-truly susceptible isolates incorrectly called resistant by genotype.
+truly susceptible isolates incorrectly predicted resistant from genotype.
 }
 }
 \examples{
@@ -111,5 +117,5 @@ result$markers_used
 }
 }
 \seealso{
-\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}
+\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, \link[yardstick:yardstick-package]{yardstick::yardstick}
 }

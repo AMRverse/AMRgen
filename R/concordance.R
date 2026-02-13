@@ -14,27 +14,33 @@
 #  the Free Software Foundation.                                        #
 # ===================================================================== #
 
-#' Calculate Genotype-Phenotype Concordance
+#' Calculate genotype-phenotype concordance from binary matrix
 #'
-#' Compares genotypic predictions (presence of resistance markers) to phenotypic
-#' truth (resistant vs susceptible) using a binary matrix from [get_binary_matrix()].
-#' Calculates standard classification metrics via yardstick and AMR-specific error
-#' rates (VME and ME) per ISO 20776-2.
+#' Compares genotypes (presence of resistance markers) to observed phenotypes
+#' (resistant vs susceptible) using a binary matrix from [get_binary_matrix()].
+#' A genotypic prediction variable is defined on the basis of presence of
+#' genotype markers (either any marker in the input table, or those defined by
+#' an input inclusion list or exclusion list). This genotypic prediction is then
+#' compared to the observed phenotypes using standard classification metrics
+#' (via the `yardstick` pkg) and AMR-specific error rates (major error, ME
+#' and very major error, VME) per ISO 20776-2 (and see
+#' [FDA definitions](https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda).
 #'
 #' @param binary_matrix A data frame output by [get_binary_matrix()], containing
-#'   sample-level binary marker presence/absence alongside phenotype columns
-#'   (`R`, `NWT`).
-#' @param markers A character vector of marker column names to include in the
-#'   genotypic prediction. Default `NULL` includes all marker columns.
+#'   one row per sample, columns indicating binary phenotypes (`R`, `I`, `NWT`)
+#'   and binary marker presence/absence.
+#' @param markers A character vector of marker column names to include in a
+#'   summary binary outcome variable 'markers present'.
+#'   Default `NULL` includes all marker columns.
 #' @param exclude_markers A character vector of marker column names to exclude
 #'   from the genotypic prediction. Applied after `markers` filtering.
 #' @param ppv_threshold A numeric PPV threshold (0-1). Markers with solo PPV
 #'   below this value are excluded. Requires `solo_ppv_results`.
 #' @param solo_ppv_results Output of [solo_ppv_analysis()], used for PPV-based
 #'   marker filtering when `ppv_threshold` is set.
-#' @param truth A character string specifying the phenotypic truth column to use:
-#'   `"R"` (resistant vs susceptible/intermediate, default) or `"NWT"`
-#'   (non-wildtype vs wildtype).
+#' @param truth A character string specifying the phenotype column to use:
+#'   `"R"` (R vs S/I classifications, default) or `"NWT"`
+#'   (nonwildtype vs wildtype).
 #' @param prediction_rule A character string specifying the rule for generating
 #'   genotypic predictions. Currently only `"any"` is supported: a sample is
 #'   predicted positive if any included marker is present (value of 1).
@@ -42,19 +48,19 @@
 #' @details
 #' The function identifies marker columns as all columns not in the reserved set
 #' (`id`, `pheno`, `ecoff`, `R`, `I`, `NWT`, `mic`, `disk`). It then applies
-#' filtering in order: custom `markers` list, `exclude_markers`, then
-#' `ppv_threshold` filtering.
+#' filtering in order: inclusion list `markers`, exclusion list `exclude_markers`,
+#' then `ppv_threshold` filtering.
 #'
 #' Genotypic prediction is generated per sample: if `prediction_rule = "any"`,
-#' then a sample is predicted positive (1) if any selected marker equals 1.
+#' then a sample is predicted positive (1) if any included marker equals 1.
 #'
 #' Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
-#' F-measure) are calculated using yardstick. AMR-specific error rates are
+#' F-measure) are calculated using pkg `yardstick`. AMR-specific error rates are
 #' computed internally:
 #' - **VME** (Very Major Error): FN / (TP + FN) = 1 - sensitivity. Proportion of
-#'   truly resistant isolates missed by genotype.
+#'   truly resistant isolates not predicted as such from genotype.
 #' - **ME** (Major Error): FP / (TN + FP) = 1 - specificity. Proportion of
-#'   truly susceptible isolates incorrectly called resistant by genotype.
+#'   truly susceptible isolates incorrectly predicted resistant from genotype.
 #'
 #' @return An S3 object of class `"amr_concordance"`, a list containing:
 #' - `conf_mat`: A yardstick confusion matrix object.
@@ -69,7 +75,7 @@
 #' @importFrom dplyr across any_of filter mutate select
 #' @importFrom tibble tibble
 #' @importFrom yardstick conf_mat sens spec ppv npv accuracy kap f_meas
-#' @seealso [get_binary_matrix()], [solo_ppv_analysis()]
+#' @seealso [get_binary_matrix()], [solo_ppv_analysis()], [yardstick]
 #' @export
 #' @examples
 #' \dontrun{
@@ -141,8 +147,10 @@ concordance <- function(binary_matrix,
   if (!is.null(markers)) {
     unknown <- setdiff(markers, all_markers)
     if (length(unknown) > 0) {
-      warning(paste("Markers not found in binary_matrix (ignored):",
-                    paste(unknown, collapse = ", ")))
+      warning(paste(
+        "Markers not found in binary_matrix (ignored):",
+        paste(unknown, collapse = ", ")
+      ))
     }
     selected_markers <- intersect(markers, all_markers)
   }
@@ -178,7 +186,8 @@ concordance <- function(binary_matrix,
     df <- df %>%
       mutate(
         geno_prediction = as.integer(rowSums(
-          across(all_of(selected_markers)), na.rm = TRUE
+          across(all_of(selected_markers)),
+          na.rm = TRUE
         ) > 0)
       )
   }
@@ -209,7 +218,7 @@ concordance <- function(binary_matrix,
   specificity <- ys_metrics$.estimate[ys_metrics$.metric == "spec"]
 
   vme <- 1 - sensitivity # FN / (TP + FN)
-  me <- 1 - specificity  # FP / (TN + FP)
+  me <- 1 - specificity # FP / (TN + FP)
 
   amr_metrics <- tibble(
     .metric = c("VME", "ME"),
@@ -227,9 +236,11 @@ concordance <- function(binary_matrix,
     out_data <- out_data %>%
       mutate(
         geno_prediction = as.integer(rowSums(
-          across(all_of(selected_markers)), na.rm = TRUE
+          across(all_of(selected_markers)),
+          na.rm = TRUE
         ) > 0)
-      )
+      ) %>%
+      relocate(geno_prediction, .after = 1)
   }
 
   result <- list(
@@ -254,8 +265,10 @@ concordance <- function(binary_matrix,
 #' @export
 print.amr_concordance <- function(x, ...) {
   cat("AMR Genotype-Phenotype Concordance\n")
-  cat(paste0("Truth: ", x$truth_col, " | Samples: ", x$n,
-             " | Markers: ", length(x$markers_used), "\n"))
+  cat(paste0(
+    "Truth: ", x$truth_col, " | Samples: ", x$n,
+    " | Markers: ", length(x$markers_used), "\n"
+  ))
   cat(paste0("Markers used: ", paste(x$markers_used, collapse = ", "), "\n\n"))
 
   cat("Confusion Matrix:\n")
@@ -266,7 +279,9 @@ print.amr_concordance <- function(x, ...) {
   m <- x$metrics
   fmt <- function(metric_name, digits = 4) {
     val <- m$.estimate[m$.metric == metric_name]
-    if (length(val) == 0) return(NA_character_)
+    if (length(val) == 0) {
+      return(NA_character_)
+    }
     format(round(val, digits), nsmall = digits)
   }
 

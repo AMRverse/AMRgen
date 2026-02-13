@@ -88,12 +88,10 @@ solo_ppv_analysis(
 - ecoff_col:
 
   A character string specifying the column name in `pheno_table` that
-  contains resistance interpretations (SIR) made against the ECOFF
-  rather than a clinical breakpoint. The values should be `"S"`, `"I"`,
-  `"R"` or otherwise interpretable by
-  [`AMR::as.sir()`](https://amr-for-r.org/reference/as.sir.html).
-  Default `ecoff`. Set to `NULL` if not available. Only used if
-  `binary_matrix` not provided.
+  contains the ECOFF interpretation of phenotype. The values should be
+  interpretable as `"WT"` (wildtype) and `"NWT"` (nonwildtype), or `"S"`
+  / `"I"` / `"R"`. Default `ecoff`. Set to `NULL` if not available. Only
+  used if `binary_matrix` not provided.
 
 - icat:
 

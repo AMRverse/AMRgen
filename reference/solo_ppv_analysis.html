@@ -91,7 +91,7 @@
 
 
 <dt id="arg-ecoff-col">ecoff_col<a class="anchor" aria-label="anchor" href="#arg-ecoff-col"></a></dt>
-<dd><p>A character string specifying the column name in <code>pheno_table</code> that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be <code>"S"</code>, <code>"I"</code>, <code>"R"</code> or otherwise interpretable by <code><a href="https://amr-for-r.org/reference/as.sir.html" class="external-link">AMR::as.sir()</a></code>. Default <code>ecoff</code>. Set to <code>NULL</code> if not available.  Only used if <code>binary_matrix</code> not provided.</p></dd>
+<dd><p>A character string specifying the column name in <code>pheno_table</code> that contains the ECOFF interpretation of phenotype. The values should be interpretable as <code>"WT"</code> (wildtype) and <code>"NWT"</code> (nonwildtype), or <code>"S"</code> / <code>"I"</code> / <code>"R"</code>. Default <code>ecoff</code>. Set to <code>NULL</code> if not available.  Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-icat">icat<a class="anchor" aria-label="anchor" href="#arg-icat"></a></dt>

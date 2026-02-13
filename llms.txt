@@ -320,6 +320,10 @@ logistic regression and Firth regression.
   : Get Clinical Breakpoints for an Antibiotic
 - [`checkBreakpoints()`](https://AMRverse.github.io/AMRgen/reference/checkBreakpoints.md)
   : Check and Retrieve Breakpoints for an Antibiotic
+- [`concordance()`](https://AMRverse.github.io/AMRgen/reference/concordance.md)
+  : Calculate genotype-phenotype concordance from binary matrix
+- [`print(`*`<amr_concordance>`*`)`](https://AMRverse.github.io/AMRgen/reference/print.amr_concordance.md)
+  : Print method for amr_concordance objects
 
 ## Visualisation & Reporting
 

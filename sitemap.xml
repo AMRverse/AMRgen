@@ -14,6 +14,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/combo_stats.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/compare_estimates.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/compare_geno_pheno_id.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/concordance.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/convert_aa_code.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/convert_mutation.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/download_ebi.html</loc></url>
@@ -55,6 +56,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_estimates.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_solo_logReg.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/ppv.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/print.amr_concordance.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/reexports.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.html</loc></url>
 </urlset>

@@ -69,8 +69,17 @@ ecoli_geno_raw
 #> #   `Accession of closest sequence` <chr>, `Name of closest sequence` <chr>, …
 
 # Load AMRFinderPlus output
-#    (replace 'ecoli_geno_raw' with the filepath for any AMRFinderPlus output)
-ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
+ecoli_geno <- import_amrfp(input_table = ecoli_geno_raw, # (replace 'ecoli_geno_raw' with the filepath for any AMRFinderPlus output)
+                           sample_col = "Name", 
+                           # you can optionally specify the below key column names if they differ in your dataframe to standard AMRFinderPlus outputs
+                           element_symbol_col = "Gene symbol", # or "Element symbol" 
+                           element_type_col = "Element type", # or "Type" 
+                           element_subtype_col = "Element subtype",
+                           method_col = "Method",
+                           node_col = "Hierarchy node",
+                           subclass_col = "Subclass",
+                           class_col = "Class"
+                           )
 
 # Check the format of the processed genotype table
 head(ecoli_geno)
@@ -93,13 +102,19 @@ head(ecoli_geno)
 ```
 
 The genotype table has one row for each genetic marker detected in an
-input genome, i.e. one per strain/marker combination.
+input genome, i.e. one per strain/marker combination. This means your
+output table may end up with more columns than your input table, as
+markers conferring resistance to multiple drug classes will be expanded
+into several rows.
 
 If your genotype data is not in AMRFinderPlus format, you can wrangle
-other input data files into the necessary format.
+other input data files into the necessary format. If only your column
+names differ to standard AMRFinderPlus inputs, you can specify these
+using `element_symbol_col`, `element_type_col`, `element_subtype_col`,
+`method_col`, `node_col`, `subclass_col` and `class_col`.
 
-The essential columns for a genotype table to work with `AMRgen`
-functions are:
+The essential columns for a genotype table to work with downstream
+`AMRgen` functions are:
 
 - `Name`: character string giving the sample name, used to link to
   sample names in the phenotype file (this column can have a different

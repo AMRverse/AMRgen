@@ -61,7 +61,7 @@
 #' filtering in order: inclusion list `markers`, exclusion list `exclude_markers`, `min_count`,
 #' `ppv_threshold` filtering, then `pval_threshold` filtering.
 #'
-#' Marker filtering is performed per outcome (R, NWT), since PPV-based and 
+#' Marker filtering is performed per outcome (R, NWT), since PPV-based and
 #' p-value-based filters are category/outcome-specific.
 #'
 #' Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
@@ -199,8 +199,10 @@ concordance <- function(binary_matrix,
   if (!is.null(markers)) {
     unknown <- setdiff(markers, all_markers)
     if (length(unknown) > 0) {
-      warning(paste("Markers not found in binary_matrix (ignored):",
-                    paste(unknown, collapse = ", ")))
+      warning(paste(
+        "Markers not found in binary_matrix (ignored):",
+        paste(unknown, collapse = ", ")
+      ))
     }
     shared_markers <- intersect(markers, all_markers)
   }
@@ -258,8 +260,10 @@ concordance <- function(binary_matrix,
     }
 
     if (length(selected_markers) == 0) {
-      warning(paste0("No markers remaining for outcome '", outcome,
-                     "' after filtering. Skipping."))
+      warning(paste0(
+        "No markers remaining for outcome '", outcome,
+        "' after filtering. Skipping."
+      ))
       next
     }
 
@@ -270,8 +274,10 @@ concordance <- function(binary_matrix,
       filter(!is.na(get(outcome)))
 
     if (nrow(df) == 0) {
-      warning(paste0("No samples with non-NA values in truth column '",
-                     outcome, "'. Skipping."))
+      warning(paste0(
+        "No samples with non-NA values in truth column '",
+        outcome, "'. Skipping."
+      ))
       next
     }
 
@@ -285,8 +291,10 @@ concordance <- function(binary_matrix,
       raw_model_key <- paste0("raw_model", outcome)
       raw_model <- logreg_results[[raw_model_key]]
       if (is.null(raw_model)) {
-        stop(paste0("No raw model found in logreg_results$", raw_model_key,
-                     ". Ensure amr_logistic() returned raw model objects."))
+        stop(paste0(
+          "No raw model found in logreg_results$", raw_model_key,
+          ". Ensure amr_logistic() returned raw model objects."
+        ))
       }
       probs <- predict(raw_model, newdata = df, type = "response")
       df[[pred_col]] <- as.integer(probs > 0.5)
@@ -332,7 +340,7 @@ concordance <- function(binary_matrix,
     specificity <- ys_metrics$.estimate[ys_metrics$.metric == "spec"]
 
     vme <- 1 - sensitivity # FN / (TP + FN)
-    me <- 1 - specificity  # FP / (TN + FP)
+    me <- 1 - specificity # FP / (TN + FP)
 
     amr_metrics <- tibble(
       .metric = c("VME", "ME"),
@@ -414,11 +422,15 @@ print.amr_concordance <- function(x, ...) {
 
   for (outcome in names(x$conf_mat)) {
     cat(paste0("\n--- Outcome: ", outcome, " ---\n"))
-    cat(paste0("Samples: ", x$n[outcome],
-               " | Markers: ", length(x$markers_used[[outcome]]), "\n"))
-    cat(paste0("Markers used: ",
-               paste(gsub("\\.\\.", ":", x$markers_used[[outcome]]), collapse = ", "),
-               "\n\n"))
+    cat(paste0(
+      "Samples: ", x$n[outcome],
+      " | Markers: ", length(x$markers_used[[outcome]]), "\n"
+    ))
+    cat(paste0(
+      "Markers used: ",
+      paste(gsub("\\.\\.", ":", x$markers_used[[outcome]]), collapse = ", "),
+      "\n\n"
+    ))
 
     cat("Confusion Matrix:\n")
     print(x$conf_mat[[outcome]])
@@ -428,7 +440,9 @@ print.amr_concordance <- function(x, ...) {
     m <- x$metrics[x$metrics$outcome == outcome, ]
     fmt <- function(metric_name, digits = 4) {
       val <- m$estimate[m$metric == metric_name]
-      if (length(val) == 0) return(NA_character_)
+      if (length(val) == 0) {
+        return(NA_character_)
+      }
       format(round(val, digits), nsmall = digits)
     }
 

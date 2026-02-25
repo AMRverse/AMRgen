@@ -275,10 +275,10 @@ binary_matrix <- get_binary_matrix(
 )
 
 # Run ppv analysis using this binary_matrix
-ppv(binary_matrix)
+ppv <- ppv(binary_matrix)
 
 # Alternatively, generate binary matrix and run ppv() in one step
-ppv(
+ppv <- ppv(
   geno_table = ecoli_geno,
   pheno_table = ecoli_ast,
   antibiotic = "Ciprofloxacin",

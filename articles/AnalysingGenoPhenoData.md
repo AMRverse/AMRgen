@@ -146,44 +146,45 @@ e.g. `tibble(Name=missing_samples) %>% bind_rows(genotype_table)`.
 ### 2. Phenotype table
 
 The
-[`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
-function imports AST data from NCBI format files.
+[`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
+function imports AST data from NCBI or other standard formats
 
 ``` r
 # Example E. coli AST data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
-# You can make your own from different file formats, and interpret against breakpoints, using:
-#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
-#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
-
 ecoli_ast
-#> # A tibble: 4,170 × 10
-#>    id           drug_agent     mic  disk pheno_clsi ecoff guideline method
-#>    <chr>        <ab>         <mic> <dsk> <sir>      <sir> <chr>     <chr> 
-#>  1 SAMN36015110 CIP        <128.00    NA   R          R   CLSI      NA    
-#>  2 SAMN11638310 CIP         256.00    NA   R          R   CLSI      NA    
-#>  3 SAMN05729964 CIP          64.00    NA   R          R   CLSI      Etest 
-#>  4 SAMN10620111 CIP         >=4.00    NA   R          R   CLSI      NA    
-#>  5 SAMN10620168 CIP         >=4.00    NA   R          R   CLSI      NA    
-#>  6 SAMN10620104 CIP         <=0.25    NA   S          R   CLSI      NA    
-#>  7 SAMN10620102 CIP         >=4.00    NA   R          R   CLSI      NA    
-#>  8 SAMN10620129 CIP         >=4.00    NA   R          R   CLSI      NA    
-#>  9 SAMN10620121 CIP         >=4.00    NA   R          R   CLSI      NA    
-#> 10 SAMN10620086 CIP         >=4.00    NA   R          R   CLSI      NA    
-#> # ℹ 4,160 more rows
+#> # A tibble: 4,168 × 11
+#>    id         drug_agent    mic  disk pheno_clsi ecoff guideline method platform
+#>    <chr>      <ab>        <mic> <dsk> <sir>      <sir> <chr>     <chr>  <chr>   
+#>  1 SAMN11638… CIP        256.00    NA   R         NWT  CLSI      broth… NA      
+#>  2 SAMN05729… CIP         64.00    NA   R         NWT  CLSI      Etest  Etest   
+#>  3 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#>  4 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#>  5 SAMN10620… CIP        <=0.25    NA   S          NI  CLSI      broth… NA      
+#>  6 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#>  7 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#>  8 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#>  9 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#> 10 SAMN04122… CIP          1.00    NA   R         NWT  CLSI      broth… Vitek   
+#> # ℹ 4,158 more rows
 #> # ℹ 2 more variables: pheno_provided <sir>, spp_pheno <mo>
 
 head(ecoli_ast)
-#> # A tibble: 6 × 10
-#>   id           drug_agent     mic  disk pheno_clsi ecoff guideline method
-#>   <chr>        <ab>         <mic> <dsk> <sir>      <sir> <chr>     <chr> 
-#> 1 SAMN36015110 CIP        <128.00    NA   R          R   CLSI      NA    
-#> 2 SAMN11638310 CIP         256.00    NA   R          R   CLSI      NA    
-#> 3 SAMN05729964 CIP          64.00    NA   R          R   CLSI      Etest 
-#> 4 SAMN10620111 CIP         >=4.00    NA   R          R   CLSI      NA    
-#> 5 SAMN10620168 CIP         >=4.00    NA   R          R   CLSI      NA    
-#> 6 SAMN10620104 CIP         <=0.25    NA   S          R   CLSI      NA    
+#> # A tibble: 6 × 11
+#>   id          drug_agent    mic  disk pheno_clsi ecoff guideline method platform
+#>   <chr>       <ab>        <mic> <dsk> <sir>      <sir> <chr>     <chr>  <chr>   
+#> 1 SAMN116383… CIP        256.00    NA   R         NWT  CLSI      broth… NA      
+#> 2 SAMN057299… CIP         64.00    NA   R         NWT  CLSI      Etest  Etest   
+#> 3 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#> 4 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#> 5 SAMN106201… CIP        <=0.25    NA   S          NI  CLSI      broth… NA      
+#> 6 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
 #> # ℹ 2 more variables: pheno_provided <sir>, spp_pheno <mo>
+
+
+# You can make your own from different file formats, and interpret against breakpoints, using:
+#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
+#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
 ```
 
 Data can be imported from various standard formats using the
@@ -402,7 +403,7 @@ ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
 comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
 #> Joining with `by = join_by(value)`
 comparison
-#> # A tibble: 34 × 3
+#> # A tibble: 32 × 3
 #>    value    user eucast
 #>  * <fct>   <int>  <int>
 #>  1 0.002       0     14
@@ -415,7 +416,7 @@ comparison
 #>  8 <=0.06     11      0
 #>  9 0.06        5    356
 #> 10 0.12       34      0
-#> # ℹ 24 more rows
+#> # ℹ 22 more rows
 #> Use ggplot2::autoplot() on this output to visualise.
 ggplot2::autoplot(comparison)
 ```
@@ -457,12 +458,12 @@ head(cip_bin)
 #> # A tibble: 6 × 50
 #>   id     pheno ecoff     mic     R   NWT gyrA_S83L gyrA_D87Y gyrA_D87N parC_S80I
 #>   <chr>  <sir> <sir>   <mic> <dbl> <dbl>     <dbl>     <dbl>     <dbl>     <dbl>
-#> 1 SAMN0…   S     S   <=0.015     0     0         0         0         0         0
-#> 2 SAMN0…   S     S   <=0.015     0     0         0         0         0         0
-#> 3 SAMN0…   S     S   <=0.015     0     0         0         0         0         0
-#> 4 SAMN0…   S     R     0.250     0     1         1         0         0         0
-#> 5 SAMN0…   S     R     0.120     0     1         0         1         0         0
-#> 6 SAMN0…   S     S   <=0.015     0     0         0         0         0         0
+#> 1 SAMN0…   S     WT  <=0.015     0     0         0         0         0         0
+#> 2 SAMN0…   S     WT  <=0.015     0     0         0         0         0         0
+#> 3 SAMN0…   S     WT  <=0.015     0     0         0         0         0         0
+#> 4 SAMN0…   S    NWT    0.250     0     1         1         0         0         0
+#> 5 SAMN0…   S    NWT    0.120     0     1         0         1         0         0
+#> 6 SAMN0…   S     WT  <=0.015     0     0         0         0         0         0
 #> # ℹ 40 more variables: parE_S458A <dbl>, parC_S80R <dbl>, parE_L416F <dbl>,
 #> #   qnrB6 <dbl>, gyrA_D87G <dbl>, parC_S57T <dbl>, parC_E84A <dbl>,
 #> #   soxS_A12S <dbl>, qnrB2 <dbl>, qnrS2 <dbl>, parC_E84K <dbl>,
@@ -609,60 +610,60 @@ summary(modelR)
 #> Model fitted by Penalized ML
 #> Coefficients:
 #>                        coef  se(coef) lower 0.95 upper 0.95       Chisq
-#> (Intercept)      -5.3126336 0.2631271 -5.8283532 -4.7969141         Inf
-#> gyrA_S83L         5.0964769 0.3396242  4.4308257  5.7621280         Inf
-#> gyrA_D87Y         0.6106668 1.9594688 -3.2298214  4.4511550  0.09712520
-#> gyrA_D87N         1.0360455 1.2910108 -1.4942892  3.5663801  0.64401779
-#> parC_S80I         3.5373730 1.2607416  1.0663649  6.0083812  7.87244336
-#> parE_S458A       -0.6704877 1.4211494 -3.4558894  2.1149139  0.22258823
-#> parC_S80R         0.9483222 0.9365007 -0.8871855  2.7838299  1.02540544
-#> parE_L416F        1.0898410 1.4770169 -1.8050589  3.9847409  0.54444672
-#> parC_S57T         1.4138484 1.4556144 -1.4391034  4.2668003  0.94343723
-#> soxS_A12S         1.5835771 1.4858311 -1.3285984  4.4957527  1.13589853
-#> parC_A56T         2.6649799 1.5169240 -0.3081365  5.6380963  3.08645711
-#> qnrB19            5.2724510 0.4539251  4.3827740  6.1621279         Inf
-#> `aac(6')-Ib-cr5`  4.2781111 1.3428296  1.6462134  6.9100089 10.14991218
-#> parC_E84V        -0.5431447 1.7851855 -4.0420441  2.9557547  0.09256874
-#> parE_I529L        2.0650647 0.4422569  1.1982571  2.9318724 21.80309146
-#> parE_S458T       -2.7638947 1.9476308 -6.5811808  1.0533915  2.01386205
-#> parE_E460D       -1.5247536 1.8858945 -5.2210388  2.1715317  0.65367903
-#> parC_E84G         1.2138825 1.5879100 -1.8983640  4.3261290  0.58438832
-#> qnrS1             5.5078662 0.4382199  4.6489710  6.3667613         Inf
-#> marR_S3N          3.1497735 0.5128996  2.1445088  4.1550382 37.71325169
-#> parE_I355T        1.9452320 0.8701522  0.2397651  3.6506990  4.99749513
-#> soxR_G121D       -2.5711031 1.6085609 -5.7238245  0.5816183  2.55484162
-#> qnrB4             6.9220299 1.5713224  3.8422946 10.0017653 19.40601369
-#> parE_D475E       -0.7090156 1.4119171 -3.4763223  2.0582910  0.25216990
+#> (Intercept)      -5.3175097 0.2633180 -5.8336034 -4.8014159         Inf
+#> gyrA_S83L         5.1068379 0.3391112  4.4421922  5.7714836         Inf
+#> gyrA_D87Y         0.6085750 1.9592283 -3.2314420  4.4485920  0.09648461
+#> gyrA_D87N         1.0349517 1.2899342 -1.4932729  3.5631763  0.64373192
+#> parC_S80I         3.5331411 1.2607159  1.0621833  6.0040989  7.85393846
+#> parE_S458A       -0.6705019 1.4210624 -3.4557329  2.1147292  0.22262490
+#> parC_S80R         0.9079621 0.9428897 -0.9400679  2.7559920  0.92728574
+#> parE_L416F        1.0858606 1.4754461 -1.8059607  3.9776818  0.54162839
+#> parC_S57T         1.4187529 1.4556325 -1.4342344  4.2717401  0.94997028
+#> soxS_A12S         1.5838463 1.4862202 -1.3290918  4.4967844  1.13568986
+#> parC_A56T         2.6703270 1.5168050 -0.3025562  5.6432103  3.09934110
+#> qnrB19            5.2773513 0.4540398  4.3874495  6.1672530         Inf
+#> `aac(6')-Ib-cr5`  4.2828221 1.3434569  1.6496951  6.9159492 10.16278221
+#> parC_E84V        -0.6804449 1.7890326 -4.1868843  2.8259946  0.14466032
+#> parE_I529L        2.2022178 0.4576747  1.3051918  3.0992437 23.15297055
+#> parE_S458T       -2.7640228 1.9475381 -6.5811274  1.0530817  2.01424047
+#> parE_E460D       -1.5249129 1.8857582 -5.2209311  2.1711053  0.65391016
+#> parC_E84G         1.2081572 1.5876105 -1.9035023  4.3198167  0.57910718
+#> qnrS1             5.5126904 0.4383455  4.6535490  6.3718319         Inf
+#> marR_S3N          3.1530001 0.5135941  2.1463742  4.1596261 37.68841990
+#> parE_I355T        1.9462857 0.8716735  0.2378370  3.6547344  4.98546287
+#> soxR_G121D       -2.5712233 1.6085720 -5.7239664  0.5815198  2.55504535
+#> qnrB4             6.9269063 1.5713547  3.8471075 10.0067050 19.43256528
+#> parE_D475E       -0.7063419 1.4133734 -3.4765029  2.0638192  0.24975608
 #>                             p method
 #> (Intercept)      0.000000e+00      1
 #> gyrA_S83L        0.000000e+00      1
-#> gyrA_D87Y        7.553072e-01      1
-#> gyrA_D87N        4.222596e-01      1
-#> parC_S80I        5.019379e-03      1
-#> parE_S458A       6.370749e-01      1
-#> parC_S80R        3.112402e-01      1
-#> parE_L416F       4.605957e-01      1
-#> parC_S57T        3.313954e-01      1
-#> soxS_A12S        2.865207e-01      1
-#> parC_A56T        7.894653e-02      1
+#> gyrA_D87Y        7.560897e-01      1
+#> gyrA_D87N        4.223626e-01      1
+#> parC_S80I        5.071012e-03      1
+#> parE_S458A       6.370471e-01      1
+#> parC_S80R        3.355692e-01      1
+#> parE_L416F       4.617586e-01      1
+#> parC_S57T        3.297269e-01      1
+#> soxS_A12S        2.865649e-01      1
+#> parC_A56T        7.832399e-02      1
 #> qnrB19           0.000000e+00      1
-#> `aac(6')-Ib-cr5` 1.443081e-03      1
-#> parC_E84V        7.609366e-01      1
-#> parE_I529L       3.021130e-06      1
-#> parE_S458T       1.558681e-01      1
-#> parE_E460D       4.188004e-01      1
-#> parC_E84G        4.445974e-01      1
+#> `aac(6')-Ib-cr5` 1.433042e-03      1
+#> parC_E84V        7.036913e-01      1
+#> parE_I529L       1.496119e-06      1
+#> parE_S458T       1.558292e-01      1
+#> parE_E460D       4.187182e-01      1
+#> parC_E84G        4.466625e-01      1
 #> qnrS1            0.000000e+00      1
-#> marR_S3N         8.194598e-10      1
-#> parE_I355T       2.538403e-02      1
-#> soxR_G121D       1.099568e-01      1
-#> qnrB4            1.056738e-05      1
-#> parE_D475E       6.155513e-01      1
+#> marR_S3N         8.299580e-10      1
+#> parE_I355T       2.556115e-02      1
+#> soxR_G121D       1.099427e-01      1
+#> qnrB4            1.042148e-05      1
+#> parE_D475E       6.172469e-01      1
 #> 
 #> Method: 1-Wald, 2-Profile penalized log-likelihood, 3-None
 #> 
-#> Likelihood ratio test=3335.169 on 23 df, p=0, n=3630
-#> Wald test = 515.415 on 23 df, p = 0
+#> Likelihood ratio test=3338.78 on 23 df, p=0, n=3629
+#> Wald test = 514.8685 on 23 df, p = 0
 
 # Extract model summary details using `logistf_details()`
 modelR_summary <- logistf_details(modelR)
@@ -671,15 +672,15 @@ modelR_summary
 #> # A tibble: 24 × 5
 #>    marker         est ci.lower ci.upper    pval
 #>  * <chr>        <dbl>    <dbl>    <dbl>   <dbl>
-#>  1 (Intercept) -5.31    -5.83     -4.80 0      
-#>  2 gyrA_S83L    5.10     4.43      5.76 0      
-#>  3 gyrA_D87Y    0.611   -3.23      4.45 0.755  
-#>  4 gyrA_D87N    1.04    -1.49      3.57 0.422  
-#>  5 parC_S80I    3.54     1.07      6.01 0.00502
-#>  6 parE_S458A  -0.670   -3.46      2.11 0.637  
-#>  7 parC_S80R    0.948   -0.887     2.78 0.311  
-#>  8 parE_L416F   1.09    -1.81      3.98 0.461  
-#>  9 parC_S57T    1.41    -1.44      4.27 0.331  
+#>  1 (Intercept) -5.32    -5.83     -4.80 0      
+#>  2 gyrA_S83L    5.11     4.44      5.77 0      
+#>  3 gyrA_D87Y    0.609   -3.23      4.45 0.756  
+#>  4 gyrA_D87N    1.03    -1.49      3.56 0.422  
+#>  5 parC_S80I    3.53     1.06      6.00 0.00507
+#>  6 parE_S458A  -0.671   -3.46      2.11 0.637  
+#>  7 parC_S80R    0.908   -0.940     2.76 0.336  
+#>  8 parE_L416F   1.09    -1.81      3.98 0.462  
+#>  9 parC_S57T    1.42    -1.43      4.27 0.330  
 #> 10 soxS_A12S    1.58    -1.33      4.50 0.287  
 #> # ℹ 14 more rows
 #> Use ggplot2::autoplot() on this output to visualise
@@ -703,13 +704,13 @@ models <- amr_logistic(
 #> Generating geno-pheno binary matrix
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff 
 #> ...Fitting logistic regression model to R using logistf
-#>    Filtered data contains 3630 samples (793 => 1, 2837 => 0) and 19 variables.
+#>    Filtered data contains 3629 samples (793 => 1, 2836 => 0) and 19 variables.
 #> Warning in logistf::logistf(R ~ ., data = to_fit, pl = FALSE): logistf.fit:
 #> Maximum number of iterations for full model exceeded. Try to increase the
 #> number of iterations or alter step size by passing 'logistf.control(maxit=...,
 #> maxstep=...)' to parameter control
 #> ...Fitting logistic regression model to NWT using logistf
-#>    Filtered data contains 3630 samples (929 => 1, 2701 => 0) and 19 variables.
+#>    Filtered data contains 3576 samples (875 => 1, 2701 => 0) and 19 variables.
 #> Warning in logistf::logistf(NWT ~ ., data = to_fit, pl = FALSE): logistf.fit:
 #> Maximum number of iterations for full model exceeded. Try to increase the
 #> number of iterations or alter step size by passing 'logistf.control(maxit=...,
@@ -726,52 +727,52 @@ models$modelR
 #> # A tibble: 20 × 5
 #>    marker            est ci.lower ci.upper          pval
 #>    <chr>           <dbl>    <dbl>    <dbl>         <dbl>
-#>  1 (Intercept)    -5.18    -5.66     -4.70 0            
-#>  2 gyrA:Ser83Leu   4.98     4.33      5.62 0            
-#>  3 gyrA:Asp87Tyr   0.917   -2.94      4.78 0.642        
-#>  4 gyrA:Asp87Asn   1.19    -1.38      3.77 0.363        
-#>  5 parC:Ser80Ile   3.65     1.13      6.17 0.00457      
-#>  6 parE:Ser458Ala -1.03    -3.86      1.79 0.472        
-#>  7 parC:Ser80Arg   0.940   -0.896     2.78 0.316        
-#>  8 parE:Leu416Phe  1.08    -1.85      4.01 0.471        
-#>  9 parC:Ser57Thr   1.28    -1.57      4.13 0.377        
+#>  1 (Intercept)    -5.19    -5.67     -4.70 0            
+#>  2 gyrA:Ser83Leu   4.99     4.34      5.63 0            
+#>  3 gyrA:Asp87Tyr   0.912   -2.95      4.77 0.643        
+#>  4 gyrA:Asp87Asn   1.19    -1.38      3.77 0.364        
+#>  5 parC:Ser80Ile   3.65     1.12      6.17 0.00462      
+#>  6 parE:Ser458Ala -1.03    -3.85      1.79 0.473        
+#>  7 parC:Ser80Arg   0.900   -0.949     2.75 0.340        
+#>  8 parE:Leu416Phe  1.07    -1.85      4.00 0.473        
+#>  9 parC:Ser57Thr   1.29    -1.56      4.13 0.376        
 #> 10 soxS:Ala12Ser   1.62    -1.31      4.56 0.279        
-#> 11 parC:Ala56Thr   2.54    -0.420     5.50 0.0926       
-#> 12 qnrB19          5.13     4.26      6.01 0            
-#> 13 aac(6')-Ib-cr5  4.22     1.61      6.83 0.00151      
-#> 14 parC:Glu84Val  -0.733   -4.49      3.02 0.702        
-#> 15 parE:Ile529Leu  2.04     1.19      2.90 0.00000311   
-#> 16 parC:Glu84Gly   1.22    -1.92      4.35 0.448        
+#> 11 parC:Ala56Thr   2.55    -0.415     5.51 0.0919       
+#> 12 qnrB19          5.14     4.27      6.01 0            
+#> 13 aac(6')-Ib-cr5  4.23     1.62      6.84 0.00150      
+#> 14 parC:Glu84Val  -0.866   -4.63      2.90 0.652        
+#> 15 parE:Ile529Leu  2.18     1.29      3.07 0.00000151   
+#> 16 parC:Glu84Gly   1.21    -1.93      4.35 0.450        
 #> 17 qnrS1           5.38     4.54      6.22 0            
-#> 18 marR:Ser3Asn    3.04     2.06      4.02 0.00000000125
-#> 19 parE:Ile355Thr  1.86     0.190     3.53 0.0290       
-#> 20 parE:Asp475Glu -0.761   -3.48      1.96 0.583
+#> 18 marR:Ser3Asn    3.04     2.06      4.02 0.00000000128
+#> 19 parE:Ile355Thr  1.86     0.188     3.53 0.0292       
+#> 20 parE:Asp475Glu -0.759   -3.48      1.96 0.585
 #> Use ggplot2::autoplot() on this output to visualise
 
 models$modelNWT
 #> # A tibble: 20 × 5
-#>    marker            est ci.lower ci.upper     pval
-#>    <chr>           <dbl>    <dbl>    <dbl>    <dbl>
-#>  1 (Intercept)    -3.71    -3.97    -3.46  0       
-#>  2 gyrA:Ser83Leu   9.52     6.22    12.8   1.57e- 8
-#>  3 gyrA:Asp87Tyr   5.51     2.81     8.21  6.29e- 5
-#>  4 gyrA:Asp87Asn   5.14     2.08     8.21  1.00e- 3
-#>  5 parC:Ser80Ile  -2.52    -6.06     1.02  1.63e- 1
-#>  6 parE:Ser458Ala -3.85    -7.90     0.202 6.26e- 2
-#>  7 parC:Ser80Arg  -3.78    -7.89     0.337 7.20e- 2
-#>  8 parE:Leu416Phe -4.63    -8.40    -0.858 1.61e- 2
-#>  9 parC:Ser57Thr   0.959   -0.709    2.63  2.60e- 1
-#> 10 soxS:Ala12Ser   3.71     1.44     5.98  1.38e- 3
-#> 11 parC:Ala56Thr   1.13    -1.78     4.03  4.48e- 1
-#> 12 qnrB19          6.59     4.92     8.25  8.22e-15
-#> 13 aac(6')-Ib-cr5  5.75     2.31     9.19  1.06e- 3
-#> 14 parC:Glu84Val  -4.83    -9.41    -0.251 3.87e- 2
-#> 15 parE:Ile529Leu  2.35     1.16     3.54  1.07e- 4
-#> 16 parC:Glu84Gly  -4.54    -8.41    -0.681 2.11e- 2
-#> 17 qnrS1           6.73     5.07     8.39  1.78e-15
-#> 18 marR:Ser3Asn    2.91     2.22     3.59  1.11e-16
-#> 19 parE:Ile355Thr -0.882   -3.65     1.89  5.32e- 1
-#> 20 parE:Asp475Glu -0.263   -1.64     1.12  7.08e- 1
+#>    marker             est ci.lower ci.upper     pval
+#>    <chr>            <dbl>    <dbl>    <dbl>    <dbl>
+#>  1 (Intercept)    -4.46     -4.82   -4.10   0       
+#>  2 gyrA:Ser83Leu  10.5       7.16   13.9    7.30e-10
+#>  3 gyrA:Asp87Tyr   6.28      3.52    9.03   8.08e- 6
+#>  4 gyrA:Asp87Asn   5.57      2.65    8.49   1.87e- 4
+#>  5 parC:Ser80Ile  -2.90     -6.37    0.564  1.01e- 1
+#>  6 parE:Ser458Ala -4.14     -8.18   -0.0956 4.48e- 2
+#>  7 parC:Ser80Arg  -3.53     -7.57    0.509  8.67e- 2
+#>  8 parE:Leu416Phe -4.92     -8.72   -1.12   1.11e- 2
+#>  9 parC:Ser57Thr   0.552    -2.31    3.41   7.06e- 1
+#> 10 soxS:Ala12Ser   4.46      2.17    6.75   1.36e- 4
+#> 11 parC:Ala56Thr   1.88     -1.02    4.79   2.04e- 1
+#> 12 qnrB19          7.33      5.65    9.01   0       
+#> 13 aac(6')-Ib-cr5  5.34      0.957   9.73   1.70e- 2
+#> 14 parC:Glu84Val  -2.94     -7.96    2.08   2.51e- 1
+#> 15 parE:Ile529Leu  0.170    -2.89    3.23   9.13e- 1
+#> 16 parC:Glu84Gly  -4.94     -8.79   -1.09   1.19e- 2
+#> 17 qnrS1           7.40      5.72    9.08   0       
+#> 18 marR:Ser3Asn    2.90      1.98    3.81   4.78e-10
+#> 19 parE:Ile355Thr  0.193    -2.86    3.25   9.02e- 1
+#> 20 parE:Asp475Glu  0.0389   -1.69    1.77   9.65e- 1
 #> Use ggplot2::autoplot() on this output to visualise
 
 # Note the matrix output is the same as cip_bin, but without the MIC data as this is not required
@@ -830,6 +831,10 @@ soloPPV_cipro <- solo_ppv_analysis(
 )
 #> Generating geno-pheno binary matrix
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff
+#> Warning: Removed 1 row containing missing values or values outside the scale range
+#> (`geom_segment()`).
+#> Warning: Removed 1 row containing missing values or values outside the scale range
+#> (`geom_point()`).
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/solo_ppv_analysis-1.png)
@@ -858,33 +863,33 @@ soloPPV_cipro$solo_binary
 #> # A tibble: 306 × 9
 #>    id           pheno ecoff   mic  disk     R   NWT marker    value
 #>    <chr>        <sir> <sir> <mic> <dsk> <dbl> <dbl> <chr>     <dbl>
-#>  1 SAMN03177618   S     R    0.25    NA     0     1 gyrA_S83L     1
-#>  2 SAMN03177619   S     R    0.12    NA     0     1 gyrA_D87Y     1
-#>  3 SAMN03177623   S     R    0.25    NA     0     1 gyrA_S83L     1
-#>  4 SAMN03177631   S     R    0.25    NA     0     1 gyrA_S83L     1
-#>  5 SAMN03177635   S     R    0.25    NA     0     1 gyrA_S83L     1
-#>  6 SAMN03177637   S     R    0.25    NA     0     1 gyrA_S83L     1
-#>  7 SAMN03177638   S     R    0.25    NA     0     1 qnrB6         1
-#>  8 SAMN03177639   S     R    0.12    NA     0     1 gyrA_S83L     1
-#>  9 SAMN03177643   S     R    0.25    NA     0     1 gyrA_S83L     1
-#> 10 SAMN03177646   S     R    0.25    NA     0     1 gyrA_S83L     1
+#>  1 SAMN03177618   S    NWT   0.25    NA     0     1 gyrA_S83L     1
+#>  2 SAMN03177619   S    NWT   0.12    NA     0     1 gyrA_D87Y     1
+#>  3 SAMN03177623   S    NWT   0.25    NA     0     1 gyrA_S83L     1
+#>  4 SAMN03177631   S    NWT   0.25    NA     0     1 gyrA_S83L     1
+#>  5 SAMN03177635   S    NWT   0.25    NA     0     1 gyrA_S83L     1
+#>  6 SAMN03177637   S    NWT   0.25    NA     0     1 gyrA_S83L     1
+#>  7 SAMN03177638   S    NWT   0.25    NA     0     1 qnrB6         1
+#>  8 SAMN03177639   S    NWT   0.12    NA     0     1 gyrA_S83L     1
+#>  9 SAMN03177643   S    NWT   0.25    NA     0     1 gyrA_S83L     1
+#> 10 SAMN03177646   S    NWT   0.25    NA     0     1 gyrA_S83L     1
 #> # ℹ 296 more rows
 
 soloPPV_cipro$amr_binary
-#> # A tibble: 3,630 × 51
+#> # A tibble: 3,629 × 51
 #>    id        pheno ecoff     mic  disk     R   NWT gyrA_S83L gyrA_D87Y gyrA_D87N
 #>    <chr>     <sir> <sir>   <mic> <dsk> <dbl> <dbl>     <dbl>     <dbl>     <dbl>
-#>  1 SAMN0317…   S     S   <=0.015    NA     0     0         0         0         0
-#>  2 SAMN0317…   S     S   <=0.015    NA     0     0         0         0         0
-#>  3 SAMN0317…   S     S   <=0.015    NA     0     0         0         0         0
-#>  4 SAMN0317…   S     R     0.250    NA     0     1         1         0         0
-#>  5 SAMN0317…   S     R     0.120    NA     0     1         0         1         0
-#>  6 SAMN0317…   S     S   <=0.015    NA     0     0         0         0         0
-#>  7 SAMN0317…   S     S   <=0.015    NA     0     0         0         0         0
-#>  8 SAMN0317…   R     R    >4.000    NA     1     1         1         0         1
-#>  9 SAMN0317…   S     R     0.250    NA     0     1         1         0         0
-#> 10 SAMN0317…   R     R    >4.000    NA     1     1         1         0         1
-#> # ℹ 3,620 more rows
+#>  1 SAMN0317…   S     WT  <=0.015    NA     0     0         0         0         0
+#>  2 SAMN0317…   S     WT  <=0.015    NA     0     0         0         0         0
+#>  3 SAMN0317…   S     WT  <=0.015    NA     0     0         0         0         0
+#>  4 SAMN0317…   S    NWT    0.250    NA     0     1         1         0         0
+#>  5 SAMN0317…   S    NWT    0.120    NA     0     1         0         1         0
+#>  6 SAMN0317…   S     WT  <=0.015    NA     0     0         0         0         0
+#>  7 SAMN0317…   S     WT  <=0.015    NA     0     0         0         0         0
+#>  8 SAMN0317…   R    NWT   >4.000    NA     1     1         1         0         1
+#>  9 SAMN0317…   S    NWT    0.250    NA     0     1         1         0         0
+#> 10 SAMN0317…   R    NWT   >4.000    NA     1     1         1         0         1
+#> # ℹ 3,619 more rows
 #> # ℹ 41 more variables: parC_S80I <dbl>, parE_S458A <dbl>, parC_S80R <dbl>,
 #> #   parE_L416F <dbl>, qnrB6 <dbl>, gyrA_D87G <dbl>, parC_S57T <dbl>,
 #> #   parC_E84A <dbl>, soxS_A12S <dbl>, qnrB2 <dbl>, qnrS2 <dbl>,

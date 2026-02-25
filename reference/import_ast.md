@@ -164,16 +164,16 @@ ecoli_ast_raw
 #> # A tibble: 10 × 21
 #>    `#BioSample` `Organism group`    `Scientific name` `Isolation type` Location 
 #>    <chr>        <chr>               <chr>             <chr>            <chr>    
-#>  1 SAMN36015110 E.coli and Shigella Escherichia coli  clinical         India: A…
-#>  2 SAMN11638310 E.coli and Shigella Escherichia coli  clinical         India    
-#>  3 SAMN05729964 E.coli and Shigella Escherichia coli  clinical         Brazil: …
-#>  4 SAMN10620111 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
-#>  5 SAMN10620168 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
-#>  6 SAMN10620104 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
-#>  7 SAMN10620102 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
-#>  8 SAMN10620129 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
-#>  9 SAMN10620121 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
-#> 10 SAMN10620086 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
+#>  1 SAMN11638310 E.coli and Shigella Escherichia coli  clinical         India    
+#>  2 SAMN05729964 E.coli and Shigella Escherichia coli  clinical         Brazil: …
+#>  3 SAMN10620111 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
+#>  4 SAMN10620168 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
+#>  5 SAMN10620104 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
+#>  6 SAMN10620102 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
+#>  7 SAMN10620129 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
+#>  8 SAMN10620121 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
+#>  9 SAMN10620086 E.coli and Shigella Escherichia coli  clinical         USA: Roc…
+#> 10 SAMN04122821 E.coli and Shigella Escherichia coli  clinical         USA:Bost…
 #> # ℹ 16 more variables: `Isolation source` <chr>, Isolate <chr>,
 #> #   Antibiotic <chr>, `Resistance phenotype` <chr>, `Measurement sign` <chr>,
 #> #   `MIC (mg/L)` <dbl>, `Disk diffusion (mm)` <lgl>,
@@ -189,14 +189,14 @@ pheno <- import_ast(ecoli_ast_raw, format = "ncbi")
 #> Warning: Expected column 'BioProject' not found in input
 head(pheno)
 #> # A tibble: 6 × 29
-#>   id           drug_agent     mic  disk guideline method platform pheno_provided
-#>   <chr>        <ab>         <mic> <dsk> <chr>     <chr>  <chr>    <sir>         
-#> 1 SAMN36015110 CIP        <128.00    NA CLSI      broth… NA         R           
-#> 2 SAMN11638310 CIP         256.00    NA CLSI      broth… NA         R           
-#> 3 SAMN05729964 CIP          64.00    NA CLSI      Etest  Etest      R           
-#> 4 SAMN10620111 CIP         >=4.00    NA CLSI      broth… NA         R           
-#> 5 SAMN10620168 CIP         >=4.00    NA CLSI      broth… NA         R           
-#> 6 SAMN10620104 CIP         <=0.25    NA CLSI      broth… NA         S           
+#>   id           drug_agent    mic  disk guideline method  platform pheno_provided
+#>   <chr>        <ab>        <mic> <dsk> <chr>     <chr>   <chr>    <sir>         
+#> 1 SAMN11638310 CIP        256.00    NA CLSI      broth … NA         R           
+#> 2 SAMN05729964 CIP         64.00    NA CLSI      Etest   Etest      R           
+#> 3 SAMN10620111 CIP        >=4.00    NA CLSI      broth … NA         R           
+#> 4 SAMN10620168 CIP        >=4.00    NA CLSI      broth … NA         R           
+#> 5 SAMN10620104 CIP        <=0.25    NA CLSI      broth … NA         S           
+#> 6 SAMN10620102 CIP        >=4.00    NA CLSI      broth … NA         R           
 #> # ℹ 21 more variables: spp_pheno <mo>, `Organism group` <chr>,
 #> #   `Scientific name` <chr>, `Isolation type` <chr>, Location <chr>,
 #> #   `Isolation source` <chr>, Isolate <chr>, Antibiotic <chr>,
@@ -212,14 +212,14 @@ pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, int
 #> Warning: Expected column 'BioProject' not found in input
 head(pheno)
 #> # A tibble: 6 × 33
-#>   id       drug_agent     mic  disk pheno_eucast ecoff guideline method platform
-#>   <chr>    <ab>         <mic> <dsk> <sir>        <sir> <chr>     <chr>  <chr>   
-#> 1 SAMN360… CIP        <128.00    NA   NI           NI  CLSI      broth… NA      
-#> 2 SAMN116… CIP         256.00    NA   R           NWT  CLSI      broth… NA      
-#> 3 SAMN057… CIP          64.00    NA   R           NWT  CLSI      Etest  Etest   
-#> 4 SAMN106… CIP         >=4.00    NA   R           NWT  CLSI      broth… NA      
-#> 5 SAMN106… CIP         >=4.00    NA   R           NWT  CLSI      broth… NA      
-#> 6 SAMN106… CIP         <=0.25    NA   S            NI  CLSI      broth… NA      
+#>   id        drug_agent    mic  disk pheno_eucast ecoff guideline method platform
+#>   <chr>     <ab>        <mic> <dsk> <sir>        <sir> <chr>     <chr>  <chr>   
+#> 1 SAMN1163… CIP        256.00    NA   R           NWT  CLSI      broth… NA      
+#> 2 SAMN0572… CIP         64.00    NA   R           NWT  CLSI      Etest  Etest   
+#> 3 SAMN1062… CIP        >=4.00    NA   R           NWT  CLSI      broth… NA      
+#> 4 SAMN1062… CIP        >=4.00    NA   R           NWT  CLSI      broth… NA      
+#> 5 SAMN1062… CIP        <=0.25    NA   S            NI  CLSI      broth… NA      
+#> 6 SAMN1062… CIP        >=4.00    NA   R           NWT  CLSI      broth… NA      
 #> # ℹ 24 more variables: pheno_provided <sir>, spp_pheno <mo>,
 #> #   `Organism group` <chr>, `Scientific name` <chr>, `Isolation type` <chr>,
 #> #   Location <chr>, `Isolation source` <chr>, Isolate <chr>, Antibiotic <chr>,

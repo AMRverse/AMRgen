@@ -185,36 +185,3 @@ resistance and non-wild-type interpretations. The function also
 generates plots to aid in interpretation.
 
 ## Examples
-
-``` r
-if (FALSE) { # \dontrun{
-geno_table <- import_amrfp(ecoli_geno_raw, "Name")
-head(ecoli_ast)
-
-# Generate binary matrix
-binary_matrix <- get_binary_matrix(
-  geno_table = geno_table,
-  pheno_table = ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
-  sir_col = "pheno_clsi",
-  keep_assay_values = TRUE,
-  keep_assay_values_from = "mic"
-)
-
-# Run solo PPV analysis plot analysis using this binary_matrix
-solo_ppv_analysis(binary_matrix = binary_matrix)
-
-# Alternatively, generate binary matrix and solo PPV analysis in one step
-# (note `antibiotic` and `drug_class` list are optional here, and only used
-# for titling the plot)
-soloPPV_cipro <- solo_ppv_analysis(
-  binary_matrix = binary_matrix,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones")
-)
-
-soloPPV_cipro$solo_stats
-soloPPV_cipro$combined_plot
-} # }
-```

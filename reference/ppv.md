@@ -190,7 +190,9 @@ ppv(
 - plot_assay:
 
   Logical indicating whether to plot the distribution of MIC/disk assay
-  values, for each marker combination (default `FALSE`).
+  values, for each marker combination (default `FALSE`). Note you must
+  also indicate which assay column to plot (`"mic"` or `"disk"`) via
+  `assay`.
 
 - assay:
 

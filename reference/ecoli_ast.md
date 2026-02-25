@@ -10,7 +10,7 @@ ecoli_ast
 
 ## Format
 
-### `ecoli_ast` A data frame with 4170 rows and 10 columns representing reinterpreted data from the NCBI AST browser.
+### `ecoli_ast` A data frame with 4168 rows and 11 columns representing reinterpreted data from the NCBI AST browser.
 
 Columns include:
 
@@ -34,8 +34,7 @@ Columns include:
 - `guideline`: Interpretation guidelines used to interpret `ecoff` and
   `pheno` columns.
 
-- `method`: Test method, one of: "Etest', "Microscan', "Phoenix',
-  "Phoenix NMIC-203 card', "Sensititer', "Sensititre', "Vitek'.
+- `method`: Test method, one of: "Etest', "broth dilution'.
 
 - `pheno_provided`: ??
 

@@ -19,6 +19,7 @@ solo_ppv_analysis(
   ecoff_col = "ecoff",
   icat = FALSE,
   marker_col = "marker",
+  reverse_order = FALSE,
   binary_matrix = NULL,
   min = 1,
   axis_label_size = 9,
@@ -103,6 +104,12 @@ solo_ppv_analysis(
   A character string specifying the column name in `geno_table`
   containing the marker identifiers. Default `"marker"`. Only used if
   `binary_matrix` not provided.
+
+- reverse_order:
+
+  A logical indicating whether to reverse the order of rows in the plot,
+  so that markers are ordered from lowest R PPV to highest (default
+  `FALSE`, i.e. markers are ordered from highest to lowest PPV).
 
 - binary_matrix:
 
@@ -189,7 +196,7 @@ generates plots to aid in interpretation.
 ``` r
 if (FALSE) { # \dontrun{
 geno_table <- import_amrfp(ecoli_geno_raw, "Name")
-head(ecoli_ast)
+head(geno_table)
 
 # Generate binary matrix
 binary_matrix <- get_binary_matrix(

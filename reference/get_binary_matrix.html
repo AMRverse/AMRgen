@@ -95,7 +95,7 @@
 
 
 <dt id="arg-sir-col">sir_col<a class="anchor" aria-label="anchor" href="#arg-sir-col"></a></dt>
-<dd><p>A character string specifying the column name in <code>pheno_table</code> that contains the resistance interpretation (SIR) data. The values should be interpretable as <code>"R"</code>, <code>"I"</code>, <code>"S"</code>. Default <code>"pheno_clsi</code>.</p></dd>
+<dd><p>A character string specifying the column name in <code>pheno_table</code> that contains the resistance interpretation (SIR) data. The values should be <code>"S"</code>, <code>"I"</code>, <code>"R"</code> or otherwise interpretable by <code><a href="https://amr-for-r.org/reference/as.sir.html" class="external-link">AMR::as.sir()</a></code>. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-ecoff-col">ecoff_col<a class="anchor" aria-label="anchor" href="#arg-ecoff-col"></a></dt>

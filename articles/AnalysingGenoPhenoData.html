@@ -825,18 +825,18 @@ marker</p></li>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">solo_stats</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 40 × 8</span></span></span>
-<span><span class="co">#&gt;    marker         category     x     n   ppv     se ci.lower ci.upper</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> aac(6')-Ib-cr5 R            0     1 0     0       0          0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA_D87N      R            0     1 0     0       0          0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_D87Y      R            0     3 0     0       0          0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA_S83A      R            0     3 0     0       0          0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> gyrA_S83L      R           27    62 0.435 0.063<span style="text-decoration: underline;">0</span>  0.312      0.559</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> marR_S3N       R            4    38 0.105 0.049<span style="text-decoration: underline;">8</span>  0.007<span style="text-decoration: underline;">69</span>    0.203</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parC_A56T      R            0     6 0     0       0          0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parC_S57T      R            0    23 0     0       0          0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parE_D475E     R            0    61 0     0       0          0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> parE_I355T     R            0    24 0     0       0          0    </span></span>
+<span><span class="co">#&gt;    marker         category     x     n   ppv    se ci.lower ci.upper</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> aac(6')-Ib-cr5 R            0     1     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA_D87N      R            0     1     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_D87Y      R            0     3     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> gyrA_S83A      R            0     3     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> parC_A56T      R            0     6     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> parC_S57T      R            0    23     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> parE_D475E     R            0    61     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> parE_I355T     R            0    24     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parE_I529L     R            0    16     0     0        0        0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> qnrA1          R            0     2     0     0        0        0</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30 more rows</span></span></span>
 <span></span>
 <span><span class="co"># Interim matrices with data used to compute stats and plots</span></span>
@@ -914,7 +914,7 @@ combination</p></li>
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>
 <span><span class="va">cipro_mic_upset</span><span class="op">$</span><span class="va">summary</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 103 × 19</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 103 × 21</span></span></span>
 <span><span class="co">#&gt;    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> <span style="color: #949494;">""</span>                            0  <span style="text-decoration: underline;">2</span>590 0_0_0_0_0_0_0…    10 0.003<span style="text-decoration: underline;">86</span>    0.001<span style="text-decoration: underline;">47</span></span></span>
@@ -928,11 +928,11 @@ combination</p></li>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> <span style="color: #949494;">"</span>marR_S3N<span style="color: #949494;">"</span>                    1    38 0_0_0_0_0_0_0…     4 0.105      0.007<span style="text-decoration: underline;">69</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> <span style="color: #949494;">"</span>marR_S3N, parE_D…            2     4 0_0_0_0_0_0_0…     0 0          0      </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 93 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more variables: R.ci_upper &lt;dbl&gt;, NWT.n &lt;dbl&gt;, NWT.ppv &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   NWT.ci_lower &lt;dbl&gt;, NWT.ci_upper &lt;dbl&gt;, median_excludeRangeValues &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   q25_excludeRangeValues &lt;dbl&gt;, q75_excludeRangeValues &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   n_excludeRangeValues &lt;int&gt;, median_ignoreRanges &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   q25_ignoreRanges &lt;dbl&gt;, q75_ignoreRanges &lt;dbl&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: R.ci_upper &lt;dbl&gt;, R.denom &lt;int&gt;, NWT.n &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   NWT.ppv &lt;dbl&gt;, NWT.ci_lower &lt;dbl&gt;, NWT.ci_upper &lt;dbl&gt;, NWT.denom &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   median_excludeRangeValues &lt;dbl&gt;, q25_excludeRangeValues &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   q75_excludeRangeValues &lt;dbl&gt;, n_excludeRangeValues &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   median_ignoreRanges &lt;dbl&gt;, q25_ignoreRanges &lt;dbl&gt;, q75_ignoreRanges &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -844,18 +844,18 @@ soloPPV_cipro <- solo_ppv_analysis(
 # Output table
 soloPPV_cipro$solo_stats
 #> # A tibble: 40 × 8
-#>    marker         category     x     n   ppv     se ci.lower ci.upper
-#>    <chr>          <chr>    <dbl> <int> <dbl>  <dbl>    <dbl>    <dbl>
-#>  1 aac(6')-Ib-cr5 R            0     1 0     0       0          0    
-#>  2 gyrA_D87N      R            0     1 0     0       0          0    
-#>  3 gyrA_D87Y      R            0     3 0     0       0          0    
-#>  4 gyrA_S83A      R            0     3 0     0       0          0    
-#>  5 gyrA_S83L      R           27    62 0.435 0.0630  0.312      0.559
-#>  6 marR_S3N       R            4    38 0.105 0.0498  0.00769    0.203
-#>  7 parC_A56T      R            0     6 0     0       0          0    
-#>  8 parC_S57T      R            0    23 0     0       0          0    
-#>  9 parE_D475E     R            0    61 0     0       0          0    
-#> 10 parE_I355T     R            0    24 0     0       0          0    
+#>    marker         category     x     n   ppv    se ci.lower ci.upper
+#>    <chr>          <chr>    <dbl> <int> <dbl> <dbl>    <dbl>    <dbl>
+#>  1 aac(6')-Ib-cr5 R            0     1     0     0        0        0
+#>  2 gyrA_D87N      R            0     1     0     0        0        0
+#>  3 gyrA_D87Y      R            0     3     0     0        0        0
+#>  4 gyrA_S83A      R            0     3     0     0        0        0
+#>  5 parC_A56T      R            0     6     0     0        0        0
+#>  6 parC_S57T      R            0    23     0     0        0        0
+#>  7 parE_D475E     R            0    61     0     0        0        0
+#>  8 parE_I355T     R            0    24     0     0        0        0
+#>  9 parE_I529L     R            0    16     0     0        0        0
+#> 10 qnrA1          R            0     2     0     0        0        0
 #> # ℹ 30 more rows
 
 # Interim matrices with data used to compute stats and plots
@@ -941,7 +941,7 @@ cipro_mic_upset <- amr_upset(
 
 # Output table
 cipro_mic_upset$summary
-#> # A tibble: 103 × 19
+#> # A tibble: 103 × 21
 #>    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower
 #>    <chr>                     <dbl> <int> <fct>          <dbl>   <dbl>      <dbl>
 #>  1 ""                            0  2590 0_0_0_0_0_0_0…    10 0.00386    0.00147
@@ -955,9 +955,9 @@ cipro_mic_upset$summary
 #>  9 "marR_S3N"                    1    38 0_0_0_0_0_0_0…     4 0.105      0.00769
 #> 10 "marR_S3N, parE_D…            2     4 0_0_0_0_0_0_0…     0 0          0      
 #> # ℹ 93 more rows
-#> # ℹ 12 more variables: R.ci_upper <dbl>, NWT.n <dbl>, NWT.ppv <dbl>,
-#> #   NWT.ci_lower <dbl>, NWT.ci_upper <dbl>, median_excludeRangeValues <dbl>,
-#> #   q25_excludeRangeValues <dbl>, q75_excludeRangeValues <dbl>,
-#> #   n_excludeRangeValues <int>, median_ignoreRanges <dbl>,
-#> #   q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
+#> # ℹ 14 more variables: R.ci_upper <dbl>, R.denom <int>, NWT.n <dbl>,
+#> #   NWT.ppv <dbl>, NWT.ci_lower <dbl>, NWT.ci_upper <dbl>, NWT.denom <int>,
+#> #   median_excludeRangeValues <dbl>, q25_excludeRangeValues <dbl>,
+#> #   q75_excludeRangeValues <dbl>, n_excludeRangeValues <int>,
+#> #   median_ignoreRanges <dbl>, q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
 ```

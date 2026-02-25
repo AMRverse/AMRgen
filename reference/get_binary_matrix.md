@@ -108,7 +108,11 @@ get_binary_matrix(
 
   A character string specifying the column name in `pheno_table` that
   contains the resistance interpretation (SIR) data. The values should
-  be interpretable as `"R"`, `"I"`, `"S"`. Default `"pheno_clsi`.
+  be `"S"`, `"I"`, `"R"` or otherwise interpretable by
+  [`AMR::as.sir()`](https://amr-for-r.org/reference/as.sir.html). If not
+  provided, the first column prefixed with "phenotype\*" will be used if
+  present, otherwise an error is thrown. Only used if `binary_matrix`
+  not provided.
 
 - ecoff_col:
 

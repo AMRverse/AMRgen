@@ -1,0 +1,162 @@
+---
+title: "Download NCBI and EBI Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Download NCBI and EBI Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 10,
+  out.width = "100%"
+)
+```
+
+# Introduction
+This vignette demonstrates how to download antibiotic susceptibility testing (AST) data from NCBI and EBI, and to re-interpret it using different clinical breakpoints. 
+
+Start by loading the `AMRgen` package:
+
+```{r setup}
+library(AMRgen)
+library(dplyr)
+```
+
+## 1. Download data from NCBI
+The `download_ncbi_ast()` function lets you download NCBI data, and allowing you to narrow your search by species or drug, and re-interpret phenotypes using specified breakpoints.
+
+``` {r download_ncbi_data}
+# Download Staphylococcus aureus AST data in Sensititre format, filtering for ampicillin, and re-interpreting with EUCAST breakpoints
+staph_ast_ncbi <- download_ncbi_ast(species = "Staphylococcus aureus", 
+                                    antibiotic = c("amikacin", "DOX"), # antibiotics can be listed in short or long form
+                                    reformat = TRUE, 
+                                    interpret_eucast = TRUE) # reformat must be true to use interpret_* argument
+
+# check how many samples retreived 
+nrow(staph_ast_ncbi)
+
+# check the output
+head(staph_ast_ncbi)
+
+# This is the same as downloading the data then re-interpreting it separately:
+staph_ast_ncbi_raw <- download_ncbi_ast(species = "Staphylococcus aureus", 
+                                    antibiotic = c("amikacin", "DOX"),
+                                    reformat = FALSE, 
+                                    interpret_eucast = FALSE)
+head(staph_ast_ncbi_raw)
+# Then reformat and re-interpret using EUCAST and CLSI breakpoints, and ECOFFs using the import_ncbi_biosample() function
+staph_ast_ncbi <- import_ncbi_biosample(input = staph_ast_ncbi_raw,
+                                        interpret_clsi = TRUE, 
+                                        interpret_eucast = TRUE,
+                                        interpret_ecoff = TRUE)
+head(staph_ast_ncbi)
+# Note that when there is a mix of MIC and disk data, a separate _disc and _mic interpretation column, as well as an overall column is produced for each interpretation.
+
+```
+This produces a long format data frame, with one row per drug-bug combination. This is compatible with downstream functions in the AMRgen package.
+
+Consider altering the `max_records`, `batch_size`  or `sleep_time` options if you want to download a lot of data run into NCBI server issues. 
+
+
+``` {r assay_by_var}
+# Visualise the dowloaded phenotype data to check the distribution of the AST data 
+
+# Select one antibiotic at a time
+# Specify species and guideline, to annotate with EUCAST breakpoints
+staph_mic_plot <- assay_by_var(pheno_table = staph_ast_ncbi, 
+                               antibiotic = c("DOX"), 
+                               measure = "mic", 
+                               colour_by = "pheno_eucast",
+                               species = "Staphylococcus aureus",
+                               guideline = "EUCAST 2024"
+                               )
+
+staph_mic_plot
+
+
+```
+For more guidance on how to visulaise phenotypic data and combine it with genotypic data, have a look at the other `AMRgen` [vignettes](https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
+
+
+## 2. Download data from EBI
+The `download_ebi` function lets you retrieve phenotypic or genotypic data (with the `data =` option), as well as searching at a genus or species level, and at a drug or drug class level. You can still reformat and re-interpret the retrieved results with the guideline of your choosing.
+
+``` {r download_ebi}
+# Download EBI phenotypic data from the Dec 2025 release for al Staphylococcus using the same example drugs. Reformat and re-interpret using eucast guidelines.
+staph_ast_ebi <- download_ebi(genus = "Staphylococcus",
+                              antibiotic =  c("amikacin", "DOX"), 
+                              release = "2025-12", # specify the version to download
+                              reformat = TRUE,
+                              interpret_eucast = TRUE,
+                              interpret_clsi =  TRUE,
+                              interpret_ecoff = TRUE) # chose which guideline to use for re-interpretation. reformat has to be TRUE for reinterpreation
+
+# check output
+nrow(staph_ast_ebi)
+length(unique(staph_ast_ebi$id))
+head(staph_ast_ebi)
+
+
+# Download genotypic data for markers assigned to NCBI class 'TRIMETHOPRIM'
+staph_geno_ebi <- download_ebi(data = "genotype",
+                             genus = "Staphylococcus",
+                             geno_subclass = c("BETA-LACTAM", "TETRACYCLINE"),
+                             release = "2025-12"
+                             )
+
+nrow(staph_geno_ebi)
+length(unique(staph_geno_ebi$BioSample_ID))
+head(staph_geno_ebi)
+
+```
+The downloaded genotype and phenotype data can then be combined using the `get_binary_matrix` function.
+```{r get_binary_matrix}
+# first filter both EBI pheno and geno dataframes for Staph aureus only
+# filter pheno data
+staph_ast_ebi_filtered <- staph_ast_ebi |> 
+  filter(organism == "Staphylococcus aureus")
+
+# filter geno data
+staph_geno_ebi_filtered <- staph_geno_ebi |>
+  filter(species == "Staphylococcus aureus")
+
+#check column names of geno table
+colnames(staph_geno_ebi_filtered)
+
+# get geno data into correct format for downstream AMRgen functions
+staph_geno_ebi_clean <- import_amrfp(input_table = staph_geno_ebi_filtered,
+                                     sample_col = "BioSample_ID",
+                                     element_symbol_col = "gene_symbol", # or "Element symbol"
+                                     element_type_col = "element_type", # or "Type"
+                                     element_subtype_col = "element_subtype",
+                                     subclass_col = "subclass",
+                                     class_col = "class"
+                                     )
+# rename the sequence 'id' column to avoid errors
+staph_geno_ebi_clean <- staph_geno_ebi_clean |>
+  rename(sequence_id = id)
+
+# check standardised geno table
+colnames(staph_geno_ebi_clean)
+head(staph_geno_ebi_clean)
+
+# Make binary geno-pheno matrix for tetracyclines
+tet_bin <- get_binary_matrix(
+  staph_geno_ebi_clean,
+  staph_ast_ebi_filtered,
+  antibiotic = "DOX",
+  drug_class_list = "Tetracyclines",
+  sir_col = "pheno_eucast",
+  keep_assay_values = TRUE,
+  keep_assay_values_from = "mic"
+)
+
+nrow(tet_bin)
+head(tet_bin)
+
+```
+This produces a binary matrix with 1 row per BioSample that had both phenotype and genotype data downloaded fom EBI, and columns for phenotype, and for each genomic marker associated with resistance to your specified drug class. For more examples on how to do join geno-pheno analyses and visualisations, so the other AMRgen [Vignettes](https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).

@@ -77,18 +77,19 @@ The essential columns for a genotype table to work with downstream `AMRgen` func
 NOTE: You should consider whether you have genomes with no AMR markers detected by genotyping, and how to make sure these are include in your analyses. E.g. AMRFinderPlus will output one row per genome/marker combination, but if you have a genome with no markers detected, there will be no row at all for that genome in the concatenated output file. If your species has core genes included in AMRFinderPlus this probably won't be a problem as you would expect some calls for every genome (e.g. AMRFinderPlus will report blaSHV, oqxA, oqxB, fosA in all Klebsiella pneumoniae genomes, so all input genomes will appear in the concatenated output file). An easy solution is to run a check to make sure that all genome names in your input dataset are represented in the genotype table, and if any are missing add empty rows for these using e.g. `tibble(Name=missing_samples) %>% bind_rows(genotype_table)`.
 
 ## 2. Phenotype table
-The `import_ncbi_ast()` function imports AST data from NCBI format files.
+The `import_ast()` function imports AST data from NCBI or other standard formats
 
 ``` {r import_ncbi_ast}
 # Example E. coli AST data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
-# You can make your own from different file formats, and interpret against breakpoints, using:
-#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
-#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
-
 ecoli_ast
 
 head(ecoli_ast)
+
+
+# You can make your own from different file formats, and interpret against breakpoints, using:
+#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
+#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
 ```
 
 Data can be imported from various standard formats using the `import_ast` function, and re-interpreted using latest breakpoints and/or ECOFF. Use `?import_ast` to see the available formats and other options.

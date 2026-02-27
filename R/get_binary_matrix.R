@@ -23,7 +23,7 @@
 #' @param drug_class_list A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list.
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers.
-#' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be interpretable as `"R"`, `"I"`, `"S"`. Default `"pheno_clsi`.
+#' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
 #' @param ecoff_col A character string specifying the column name in `pheno_table` that contains the ECOFF interpretation of phenotype. The values should be interpretable as `"WT"` (wildtype) and `"NWT"` (nonwildtype), or `"S"` / `"I"` / `"R"`. Default `"ecoff`.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Defaults to `"marker"`.
 #' @param keep_SIR A logical indicating whether to retain the full S/I/R phenotype column in the output. Defaults to `TRUE`.
@@ -69,6 +69,24 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
                               geno_sample_col = NULL, pheno_sample_col = NULL,
                               sir_col = "pheno_clsi", ecoff_col = "ecoff", marker_col = "marker",
                               most_resistant = TRUE) {
+  
+  # check there is a SIR column specified
+  if (is.null(sir_col)) {
+    # make a sensible guess
+    sir_col <- pheno_table %>%
+      select(starts_with("pheno")) %>%
+      colnames() %>%
+      first()
+    if (!is.na(sir_col)) {
+      cat(paste("WARNING: `sir_col` not provided, using first column with prefix 'pheno':", sir_col, "\n"))
+    } else {
+      stop("`sir_col` not provided. Please specify a column with S/I/R phenotype values.")
+    }
+  }
+  if (!(sir_col %in% colnames(pheno_table))) {
+    stop(paste0("Column: '", sir_col, "' not found in input phenotype data. Please specify a valid column with S/I/R values."))
+  }
+  
   # check we have a drug_agent column with class ab
   if (!("drug_agent" %in% colnames(pheno_table))) {
     stop(paste("input", deparse(substitute(pheno_table)), "must have a column labelled `drug_agent`"))

@@ -27,6 +27,7 @@
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
 #' @param ecoff_col A character string specifying the column name in `pheno_table` that contains the ECOFF interpretation of phenotype. The values should be interpretable as `"WT"` (wildtype) and `"NWT"` (nonwildtype), or `"S"` / `"I"` / `"R"`. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Default `"marker"`. Only used if `binary_matrix` not provided.
+#' @param reverse_order A logical indicating whether to reverse the order of rows in the plot, so that markers are ordered from lowest R PPV to highest (default `FALSE`, i.e. markers are ordered from highest to lowest PPV).
 #' @param icat A logical indicating whether to calculate PPV for `"I"` (if such a category exists in the phenotype column) (default `FALSE`).
 #' @param min Minimum number of genomes with the solo marker, to include the marker in the plot (default `1`).
 #' @param pd A `ggplot2::position_dodge()` object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default `position_dodge(width = 0.8)`.
@@ -52,7 +53,7 @@
 #' @examples
 #' \dontrun{
 #' geno_table <- import_amrfp(ecoli_geno_raw, "Name")
-#' head(ecoli_ast)
+#' head(geno_table)
 #'
 #' # Generate binary matrix
 #' binary_matrix <- get_binary_matrix(
@@ -66,16 +67,9 @@
 #' )
 #'
 #' # Run solo PPV analysis plot analysis using this binary_matrix
-#' solo_ppv_analysis(binary_matrix = binary_matrix)
-#'
-#' # Alternatively, generate binary matrix and solo PPV analysis in one step
-#' # (note `antibiotic` and `drug_class` list are optional here, and only used
+#' # (note antibiotic and drug_class list are optional here, and only used
 #' # for titling the plot)
-#' soloPPV_cipro <- solo_ppv_analysis(
-#'   binary_matrix = binary_matrix,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones")
-#' )
+#' soloPPV_cipro <- solo_ppv_analysis(binary_matrix = binary_matrix)
 #'
 #' soloPPV_cipro$solo_stats
 #' soloPPV_cipro$combined_plot
@@ -84,7 +78,7 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
                               antibiotic = NULL, drug_class_list = NULL,
                               geno_sample_col = NULL, pheno_sample_col = NULL,
                               sir_col = NULL, ecoff_col = "ecoff", icat = FALSE,
-                              marker_col = "marker",
+                              marker_col = "marker", reverse_order = FALSE,
                               binary_matrix = NULL,
                               min = 1,
                               axis_label_size = 9,
@@ -194,6 +188,9 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
       ci.upper = double(), category = character()
     )
   }
+  
+  solo_stats_R <- solo_stats_R %>% arrange(p)
+  if (reverse_order) {solo_stats_R <- solo_stats_R %>% arrange(desc(p))}
 
   if (icat & sum(!is.na(solo_binary$pheno)) > 0) {
     if ("I" %in% excludeRanges & "mic" %in% colnames(solo_binary)) {
@@ -249,6 +246,8 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
     bind_rows(solo_stats_NWT) %>%
     relocate(category, .before = x) %>%
     rename(ppv = p)
+  
+  
 
   # plots
 

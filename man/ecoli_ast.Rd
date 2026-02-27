@@ -5,7 +5,7 @@
 \alias{ecoli_ast}
 \title{E. coli NCBI AST Example Data, Re-interpreted with AMR Package}
 \format{
-\subsection{\code{ecoli_ast} A data frame with 4170 rows and 10 columns representing reinterpreted data from the NCBI AST browser.}{
+\subsection{\code{ecoli_ast} A data frame with 4168 rows and 11 columns representing reinterpreted data from the NCBI AST browser.}{
 
 Columns include:
 \itemize{
@@ -16,7 +16,7 @@ Columns include:
 \item \code{pheno_clsi}: S/I/R classification according to CLSI, interpreted using \code{as.sir}.
 \item \code{ecoff}: WT/NWT classification, interpreted using \code{as.sir}.
 \item \code{guideline}: Interpretation guidelines used to interpret \code{ecoff} and \code{pheno} columns.
-\item \code{method}: Test method, one of: "Etest', "Microscan', "Phoenix', "Phoenix NMIC-203 card', "Sensititer', "Sensititre', "Vitek'.
+\item \code{method}: Test method, one of: "Etest', "broth dilution'.
 \item \code{pheno_provided}: ??
 \item \code{spp_pheno}: Species identifier, interpreted from \verb{Scientific name} using \code{as.mo}, used to interpret \code{ecoff} and \code{pheno} columns.
 }

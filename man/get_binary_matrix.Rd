@@ -39,7 +39,7 @@ get_binary_matrix(
 
 \item{pheno_sample_col}{A character string (optional) specifying the column name in \code{pheno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers.}
 
-\item{sir_col}{A character string specifying the column name in \code{pheno_table} that contains the resistance interpretation (SIR) data. The values should be interpretable as \code{"R"}, \code{"I"}, \code{"S"}. Default \verb{"pheno_clsi}.}
+\item{sir_col}{A character string specifying the column name in \code{pheno_table} that contains the resistance interpretation (SIR) data. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if \code{binary_matrix} not provided.}
 
 \item{ecoff_col}{A character string specifying the column name in \code{pheno_table} that contains the ECOFF interpretation of phenotype. The values should be interpretable as \code{"WT"} (wildtype) and \code{"NWT"} (nonwildtype), or \code{"S"} / \code{"I"} / \code{"R"}. Default \verb{"ecoff}.}
 

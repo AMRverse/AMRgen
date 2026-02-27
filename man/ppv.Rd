@@ -81,7 +81,7 @@ ppv(
 
 \item{plot_ppv}{Logical indicating whether to plot the estimates for positive predictive value, for each marker combination (default \code{TRUE}).}
 
-\item{plot_assay}{Logical indicating whether to plot the distribution of MIC/disk assay values, for each marker combination (default \code{FALSE}).}
+\item{plot_assay}{Logical indicating whether to plot the distribution of MIC/disk assay values, for each marker combination (default \code{FALSE}). Note you must also indicate which assay column to plot (\code{"mic"} or \code{"disk"}) via \code{assay}.}
 
 \item{assay}{A character string indicating whether to plot MIC or disk diffusion data. Must be one of:
 \itemize{
@@ -133,10 +133,10 @@ binary_matrix <- get_binary_matrix(
 )
 
 # Run ppv analysis using this binary_matrix
-ppv(binary_matrix)
+ppv <- ppv(binary_matrix)
 
 # Alternatively, generate binary matrix and run ppv() in one step
-ppv(
+ppv <- ppv(
   geno_table = ecoli_geno,
   pheno_table = ecoli_ast,
   antibiotic = "Ciprofloxacin",

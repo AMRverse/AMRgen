@@ -106,6 +106,6 @@ binary_matrix <- get_binary_matrix(
   keep_assay_values_from = "mic"
 )
 
-combo_stats(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
+combo_matrix <- combo_stats(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
 }
 }

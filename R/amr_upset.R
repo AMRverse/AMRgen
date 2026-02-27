@@ -77,7 +77,7 @@
 #'   keep_assay_values_from = "mic"
 #' )
 #'
-#' combo_stats(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
+#' combo_matrix <- combo_stats(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
 #' }
 combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
                         assay = "mic",
@@ -256,10 +256,11 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   if ("NWT" %in% colnames(binary_matrix_wide)) {
     summary <- binary_matrix_wide %>%
       group_by(combination_id) %>%
-      summarise(NWT.n = sum(NWT, na.rm = TRUE)) %>%
+      summarise(NWT.n = sum(NWT, na.rm = TRUE), 
+                NWT.denom = sum(!is.na(NWT))) %>%
       right_join(summary, by = "combination_id") %>%
-      mutate(NWT.ppv = NWT.n / n, .after = NWT.n) %>%
-      mutate(NWT.se = sqrt(NWT.ppv * (1 - NWT.ppv) / n)) %>%
+      mutate(NWT.ppv = NWT.n / NWT.denom, .after = NWT.n) %>%
+      mutate(NWT.se = sqrt(NWT.ppv * (1 - NWT.ppv) / NWT.denom)) %>%
       mutate(NWT.ci_upper = pmin(1, NWT.ppv + 1.96 * NWT.se), .after = NWT.ppv) %>%
       mutate(NWT.ci_lower = pmax(0, NWT.ppv - 1.96 * NWT.se), .after = NWT.ppv) %>%
       select(-NWT.se)
@@ -267,10 +268,11 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   if ("I" %in% colnames(binary_matrix_wide)) {
     summary <- binary_matrix_wide %>%
       group_by(combination_id) %>%
-      summarise(I.n = sum(I, na.rm = TRUE)) %>%
+      summarise(I.n = sum(I, na.rm = TRUE),
+                I.denom = sum(!is.na(I))) %>%
       right_join(summary, by = "combination_id") %>%
-      mutate(I.ppv = I.n / n, .after = I.n) %>%
-      mutate(I.se = sqrt(I.ppv * (1 - I.ppv) / n)) %>%
+      mutate(I.ppv = I.n / I.denom, .after = I.n) %>%
+      mutate(I.se = sqrt(I.ppv * (1 - I.ppv) / I.denom)) %>%
       mutate(I.ci_upper = pmin(1, I.ppv + 1.96 * I.se), .after = I.ppv) %>%
       mutate(I.ci_lower = pmax(0, I.ppv - 1.96 * I.se), .after = I.ppv) %>%
       select(-I.se)
@@ -278,10 +280,11 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   if ("R" %in% colnames(binary_matrix_wide)) {
     summary <- binary_matrix_wide %>%
       group_by(combination_id) %>%
-      summarise(R.n = sum(R, na.rm = TRUE)) %>%
+      summarise(R.n = sum(R, na.rm = TRUE),
+                R.denom = sum(!is.na(R))) %>%
       right_join(summary, by = "combination_id") %>%
-      mutate(R.ppv = R.n / n, .after = R.n) %>%
-      mutate(R.se = sqrt(R.ppv * (1 - R.ppv) / n)) %>%
+      mutate(R.ppv = R.n / R.denom, .after = R.n) %>%
+      mutate(R.se = sqrt(R.ppv * (1 - R.ppv) / R.denom)) %>%
       mutate(R.ci_upper = pmin(1, R.ppv + 1.96 * R.se), .after = R.ppv) %>%
       mutate(R.ci_lower = pmax(0, R.ppv - 1.96 * R.se), .after = R.ppv) %>%
       select(-R.se)
@@ -554,10 +557,10 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' )
 #'
 #' # Run upset plot analysis using this binary_matrix
-#' amr_upset(binary_matrix, assay = "mic")
+#' cip_mic_upset <- amr_upset(binary_matrix, assay = "mic")
 #'
 #' # Alternatively, generate binary matrix and run ppv() in one step
-#' amr_upset(
+#' cip_mic_upset <- amr_upset(
 #'   assay = "mic",
 #'   geno_table = ecoli_geno,
 #'   pheno_table = ecoli_ast,
@@ -684,7 +687,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' @param plot_category Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the `pheno` column in the input file). Default is `TRUE`.
 #' @param print_category_counts Logical indicating whether, if `plot_category=TRUE`, to print the number of strains in each resistance category for each marker combination in the plot. Default is `FALSE`.
 #' @param plot_ppv Logical indicating whether to plot the estimates for positive predictive value, for each marker combination (default `TRUE`).
-#' @param plot_assay Logical indicating whether to plot the distribution of MIC/disk assay values, for each marker combination (default `FALSE`).
+#' @param plot_assay Logical indicating whether to plot the distribution of MIC/disk assay values, for each marker combination (default `FALSE`). Note you must also indicate which assay column to plot (`"mic"` or `"disk"`) via `assay`.
 #' @param assay A character string indicating whether to plot MIC or disk diffusion data. Must be one of:
 #' - `NULL`: (default) if no assay data is to be plotted
 #' - `"mic"`: plot MIC data stored in column `mic`
@@ -723,10 +726,10 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' )
 #'
 #' # Run ppv analysis using this binary_matrix
-#' ppv(binary_matrix)
+#' ppv <- ppv(binary_matrix)
 #'
 #' # Alternatively, generate binary matrix and run ppv() in one step
-#' ppv(
+#' ppv <- ppv(
 #'   geno_table = ecoli_geno,
 #'   pheno_table = ecoli_ast,
 #'   antibiotic = "Ciprofloxacin",
@@ -852,9 +855,21 @@ ppv <- function(binary_matrix = NULL,
     }
   }
 
-  row_counts <- combo_data$summary %>%
+  # add counts for each row to the right hand side
+  
+  if ("R.denom" %in% colnames(combo_data$summary) & "NWT.denom" %in% colnames(combo_data$summary)) {
+    row_counts <- combo_data$summary %>%
+      mutate(count_label = paste0("(n=", R.denom, ", ", NWT.denom, ")"))
+  } else if ("R.denom" %in% colnames(combo_data$summary)) {
+    row_counts <- combo_data$summary %>%
+      mutate(count_label = paste0("(n=", R.denom, ")"))
+  } else if ("NWT.denom" %in% colnames(combo_data$summary)) {
+    row_counts <- combo_data$summary %>%
+      mutate(count_label = paste0("(n=", NWT.denom, ")"))
+  } 
+      
+  row_counts <- row_counts %>%
     filter(n >= min_set_size) %>%
-    mutate(count_label = paste0("(n=", n, ")")) %>%
     ggplot(aes(y = combination_id, x = 1, label = count_label)) +
     geom_text(hjust = 0, size = 3) +
     scale_x_continuous(limits = c(1, 1.5), expand = c(0, 0)) +

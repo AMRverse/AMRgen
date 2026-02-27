@@ -15,6 +15,7 @@ solo_ppv_analysis(
   ecoff_col = "ecoff",
   icat = FALSE,
   marker_col = "marker",
+  reverse_order = FALSE,
   binary_matrix = NULL,
   min = 1,
   axis_label_size = 9,
@@ -44,6 +45,8 @@ solo_ppv_analysis(
 \item{icat}{A logical indicating whether to calculate PPV for \code{"I"} (if such a category exists in the phenotype column) (default \code{FALSE}).}
 
 \item{marker_col}{A character string specifying the column name in \code{geno_table} containing the marker identifiers. Default \code{"marker"}. Only used if \code{binary_matrix} not provided.}
+
+\item{reverse_order}{A logical indicating whether to reverse the order of rows in the plot, so that markers are ordered from lowest R PPV to highest (default \code{FALSE}, i.e. markers are ordered from highest to lowest PPV).}
 
 \item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{antibiotic}, \code{drug_class_list} and optionally \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
 
@@ -79,7 +82,7 @@ The function analyzes the predictive power of individual AMR markers when they a
 \examples{
 \dontrun{
 geno_table <- import_amrfp(ecoli_geno_raw, "Name")
-head(ecoli_ast)
+head(geno_table)
 
 # Generate binary matrix
 binary_matrix <- get_binary_matrix(
@@ -93,16 +96,9 @@ binary_matrix <- get_binary_matrix(
 )
 
 # Run solo PPV analysis plot analysis using this binary_matrix
-solo_ppv_analysis(binary_matrix = binary_matrix)
-
-# Alternatively, generate binary matrix and solo PPV analysis in one step
-# (note `antibiotic` and `drug_class` list are optional here, and only used
+# (note antibiotic and drug_class list are optional here, and only used
 # for titling the plot)
-soloPPV_cipro <- solo_ppv_analysis(
-  binary_matrix = binary_matrix,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones")
-)
+soloPPV_cipro <- solo_ppv_analysis(binary_matrix = binary_matrix)
 
 soloPPV_cipro$solo_stats
 soloPPV_cipro$combined_plot

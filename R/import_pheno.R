@@ -870,7 +870,6 @@ import_ebi_ast_ftp <- function(input,
 }
 
 
-
 #' Import and process antimicrobial phenotype data retrieved from NCBI BioSamples
 #'
 #' This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function `download_ncbi_ast()`.

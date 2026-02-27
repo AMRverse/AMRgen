@@ -200,7 +200,7 @@ download_ebi <- function(data = "phenotype",
     }
   }
 
-  if (remove_dup) {
+  if (remove_dup & data == "genotype") {
     cat("...Checking for duplicate rows ")
     before <- nrow(ebi_dat)
     ebi_dat <- ebi_dat %>%

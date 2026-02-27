@@ -24,7 +24,7 @@
 #' compared to the observed phenotypes using standard classification metrics
 #' (via the `yardstick` pkg) and AMR-specific error rates (major error, ME
 #' and very major error, VME) per ISO 20776-2 (and see
-#' [FDA definitions](https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda).
+#' [FDA definitions](https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda)).
 #' Supports evaluating both R and NWT outcomes
 #' in a single call, with flexible prediction rules and marker inclusion options.
 #'

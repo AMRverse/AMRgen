@@ -188,9 +188,11 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
       ci.upper = double(), category = character()
     )
   }
-  
+
   solo_stats_R <- solo_stats_R %>% arrange(p)
-  if (reverse_order) {solo_stats_R <- solo_stats_R %>% arrange(desc(p))}
+  if (reverse_order) {
+    solo_stats_R <- solo_stats_R %>% arrange(desc(p))
+  }
 
   if (icat & sum(!is.na(solo_binary$pheno)) > 0) {
     if ("I" %in% excludeRanges & "mic" %in% colnames(solo_binary)) {
@@ -246,8 +248,7 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
     bind_rows(solo_stats_NWT) %>%
     relocate(category, .before = x) %>%
     rename(ppv = p)
-  
-  
+
 
   # plots
 

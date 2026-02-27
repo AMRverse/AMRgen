@@ -217,7 +217,10 @@ utils::globalVariables(c(
   "NWT_pred",
   "outcome",
   "metric",
-  "estimate"
+  "estimate",
+  "I.denom",
+  "NWT.denom",
+  "R.denom"
 ))
 
 

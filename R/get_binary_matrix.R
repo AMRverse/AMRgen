@@ -69,7 +69,6 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
                               geno_sample_col = NULL, pheno_sample_col = NULL,
                               sir_col = "pheno_clsi", ecoff_col = "ecoff", marker_col = "marker",
                               most_resistant = TRUE) {
-  
   # check there is a SIR column specified
   if (is.null(sir_col)) {
     # make a sensible guess
@@ -86,7 +85,7 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
   if (!(sir_col %in% colnames(pheno_table))) {
     stop(paste0("Column: '", sir_col, "' not found in input phenotype data. Please specify a valid column with S/I/R values."))
   }
-  
+
   # check we have a drug_agent column with class ab
   if (!("drug_agent" %in% colnames(pheno_table))) {
     stop(paste("input", deparse(substitute(pheno_table)), "must have a column labelled `drug_agent`"))

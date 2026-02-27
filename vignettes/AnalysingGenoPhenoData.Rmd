@@ -155,7 +155,7 @@ When aggregating AST data from different methods and sources, it is a good idea 
 # specify facet_var="method" to generate facet plots by assay method
 mic_by_platform <- assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
 
-mic_by_platform$plot
+mic_by_platform
 ```
 
 ## 4. Download reference assay distributions and compare to your data
@@ -256,7 +256,7 @@ The `amr_logistic()` function uses the `get_binary_matrix` function to generate 
 
 Note that the 'NWT' variable in the latter model can be taken either from a precomputed ECOFF-based call of WT=wildtype/NWT=nonwildtype (encoded in the input column `ecoff_col`), or computed from the S/I/R phenotype as NWT=R/I and WT=S.
 
-The `amr_logistic()` function can fit the model using either the standard logistic regression approach implemented in the `glm()` function, or Firth's bias-reduced penalized-likelihood logistic regression implemented in the `logistf` package. The default is to use Firth's regression, as standard logistic regression can fail if there are too observations in some subgroups, which happens quite often with this kind of data. To use `glm()` instead, set `glm=TRUE`.
+The `amr_logistic()` function can fit the model using either the standard logistic regression approach implemented in the `glm()` function, or Firth's bias-reduced penalized-likelihood logistic regression implemented in the `logistf` package. The default is to use Firth's regression, as standard logistic regression can fail if there are too few observations in some subgroups, which happens quite often with this kind of data. To use `glm()` instead, set `glm=TRUE`.
 
 The function also filters out markers with too few observations in the combined genotype/phenotype dataset. The default minimum is 10 but this can be changed using the `maf` parameter (maf stands for 'minor allele frequency'). If you are having trouble fitting models, it may be because too many markers and combinations have very few observations, and you might try increasing the `maf` value to ensure that rare markers are excluded prior to model fitting.
 
@@ -303,16 +303,15 @@ models$modelR
 
 models$modelNWT
 
-# Note the matrix output is the same as cip_bin, but without the MIC data as this is not required
-#    for logistic regression.
-models$bin_mat
+# Note the matrix output is the same as cip_bin.
+models$binary_matrix
 ```
 
 ## 7. Assess solo positive predictive value of genetic markers
 
 The strongest evidence of the effect of an individual genetic marker on a drug phenotype is its positive predictive value (PPV) for resistance amongst strains that carry this marker 'solo' with no other markers known to be associated with resistance to the drug class. This is referred to as 'solo PPV'. 
 
-The function `solo_ppv_analysis()` takes as input our genotype and phenotype tables, and calculates solo PPV for resistance to a specific drug (included in our phenotype table) formarkers associated with the specified drug class (included in our genotype table). It uses the `get_binary_matrix()` function to first calculate the binary matrix, then filters out all samples that have more than one marker.
+The function `solo_ppv_analysis()` takes as input our genotype and phenotype tables, and calculates solo PPV for resistance to a specific drug (included in our phenotype table) for markers associated with the specified drug class (included in our genotype table). It uses the `get_binary_matrix()` function to first calculate the binary matrix, then filters out all samples that have more than one marker.
 
 It then calculates for each remaining marker, amongst the genomes in which that marker is found solo, the number of genomes, the number and proportion that are R or NWT, and the 95% confidence intervals for these proportions. The values are returned as a table, and also plotted so we can easily visualise the distribution of S/I/R calls and the solo PPV for R and NWT, for each solo marker.
 

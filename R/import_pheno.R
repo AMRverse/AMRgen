@@ -1410,14 +1410,18 @@ import_microscan_ast <- function(input,
 
 #' Import and process antimicrobial phenotype data exported from Sensititre instruments
 #'
-#' This function imports antimicrobial susceptibility testing (AST) data from Sensititre instrument output files (UTF-16LE encoded,
-#' tab-separated, no header row) and converts it to the standardised long-format used by AMRgen.
+#' This function imports antimicrobial susceptibility testing (AST) data from Sensititre instrument output files
+#' (tab- or comma-separated, optionally UTF-16LE encoded, no header row) and converts it to the standardised
+#' long-format used by AMRgen.
 #'
-#' @param input Path to a Sensititre output text file
+#' @param input Path to a Sensititre output text file (tab- or comma-separated)
 #' @param source Optional source value to record for all data points
 #' @param species Optional species override for phenotype interpretation
 #' @param ab Optional antibiotic override for phenotype interpretation
 #' @param instrument_guideline Optional guideline used by the instrument for SIR interpretation
+#' @param id_col Integer. Column index (1-based) of the sample identifier. Default is 7, which corresponds
+#'   to the sample accession column in standard Sensititre exports. Adjust if your file uses a different
+#'   column for the sample ID (e.g. set to 2 for the plate/batch identifier column).
 #' @param interpret_eucast Interpret against EUCAST breakpoints
 #' @param interpret_clsi Interpret against CLSI breakpoints
 #' @param interpret_ecoff Interpret against ECOFF values
@@ -1430,29 +1434,35 @@ import_sensititre_ast <- function(input,
                                   species = NULL,
                                   ab = NULL,
                                   instrument_guideline = NULL,
+                                  id_col = 7,
                                   interpret_eucast = FALSE,
                                   interpret_clsi = FALSE,
                                   interpret_ecoff = FALSE) {
-  # Sensititre files are UTF-16LE encoded, tab-separated, with no header row
+  # Sensititre files may be UTF-16LE encoded; tab- or comma-separated; no header row
   # Cannot use process_input() - needs custom reading
   if (!is.character(input) || !file.exists(input)) {
     stop("import_sensititre_ast requires a file path as input")
   }
 
-  # Read as UTF-16LE via file connection, fall back to UTF-8
-  raw_lines <- tryCatch(
-    {
-      con <- file(input, encoding = "UTF-16LE")
-      lines <- readLines(con, warn = FALSE)
-      close(con)
-      lines
-    },
-    error = function(e) {
-      readLines(input, warn = FALSE)
-    }
-  )
+  # Detect encoding from BOM: UTF-16LE files start with 0xFF 0xFE
+  bom <- readBin(input, "raw", n = 2)
+  is_utf16le <- length(bom) >= 2 && bom[1] == as.raw(0xFF) && bom[2] == as.raw(0xFE)
 
-  # Remove BOM character and empty lines
+  raw_lines <- if (is_utf16le) {
+    tryCatch(
+      {
+        con <- file(input, encoding = "UTF-16LE")
+        lines <- readLines(con, warn = FALSE)
+        close(con)
+        lines
+      },
+      error = function(e) readLines(input, warn = FALSE)
+    )
+  } else {
+    readLines(input, warn = FALSE)
+  }
+
+  # Remove BOM character (if still present) and empty lines
   raw_lines <- sub("^\ufeff", "", raw_lines)
   raw_lines <- raw_lines[nchar(trimws(raw_lines)) > 0]
 
@@ -1460,26 +1470,36 @@ import_sensititre_ast <- function(input,
     stop("No data found in Sensititre file")
   }
 
+  # Auto-detect separator: count tabs vs commas in the first data line
+  first_line <- raw_lines[1]
+  n_tabs   <- nchar(first_line) - nchar(gsub("\t", "", first_line, fixed = TRUE))
+  n_commas <- nchar(first_line) - nchar(gsub(",",  "", first_line, fixed = TRUE))
+  sep <- if (n_tabs >= n_commas) "\t" else ","
+
   cat(paste0("Reading ", length(raw_lines), " rows from Sensititre file\n"))
 
-  # Parse each line as tab-separated fields, extract drug triplets
+  # Parse each line, extract drug triplets
   all_rows <- list()
   for (row_idx in seq_along(raw_lines)) {
-    fields <- strsplit(raw_lines[row_idx], "\t")[[1]]
+    fields <- strsplit(raw_lines[row_idx], sep, fixed = TRUE)[[1]]
+    # Strip surrounding double-quotes from all fields
+    fields <- gsub('^"|"$', "", fields)
 
-    # Find the timestamp field (YYYY-MM-DD HH:MM:SS) to locate where metadata ends
-    ts_idx <- which(grepl("\\d{4}-\\d{2}-\\d{2}", fields))[1]
+    # Find the full datetime field (YYYY-MM-DD HH:MM:SS) to locate where metadata ends.
+    # Using the full datetime pattern avoids matching bare date fields (e.g. collection date)
+    # that appear earlier in the row.
+    ts_idx <- which(grepl("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", fields))[1]
     if (is.na(ts_idx)) {
       cat(paste0("Warning: No timestamp found in row ", row_idx, ", skipping\n"))
       next
     }
 
     # Extract metadata
-    sample_id <- trimws(fields[2])
-    panel_code <- if (length(fields) >= 8) trimws(fields[8]) else NA_character_
+    sample_id     <- if (length(fields) >= id_col) trimws(fields[id_col]) else NA_character_
+    panel_code    <- if (length(fields) >= 8)  trimws(fields[8])  else NA_character_
     organism_code <- if (length(fields) >= 10) trimws(fields[10]) else NA_character_
-    specimen <- if (length(fields) >= 11) trimws(fields[11]) else NA_character_
-    timestamp <- trimws(fields[ts_idx])
+    specimen      <- if (length(fields) >= 12) trimws(fields[12]) else NA_character_
+    timestamp     <- trimws(fields[ts_idx])
 
     # Parse drug data starting after the timestamp
     # Fields are in triplets (drug_name, mic_value, interpretation) but

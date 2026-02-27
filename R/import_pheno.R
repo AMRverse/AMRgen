@@ -1439,7 +1439,7 @@ import_sensititre_ast <- function(input,
   if (!is.character(input) || !file.exists(input)) {
     stop("import_sensititre_ast requires a file path as input")
   }
-
+  
   # Read as UTF-16LE via file connection, fall back to UTF-8
   raw_lines <- tryCatch(
     {
@@ -1452,36 +1452,36 @@ import_sensititre_ast <- function(input,
       readLines(input, warn = FALSE)
     }
   )
-
+  
   # Remove BOM character and empty lines
   raw_lines <- sub("^\ufeff", "", raw_lines)
   raw_lines <- raw_lines[nchar(trimws(raw_lines)) > 0]
-
+  
   if (length(raw_lines) == 0) {
     stop("No data found in Sensititre file")
   }
-
+  
   cat(paste0("Reading ", length(raw_lines), " rows from Sensititre file\n"))
-
+  
   # Parse each line as tab-separated fields, extract drug triplets
   all_rows <- list()
   for (row_idx in seq_along(raw_lines)) {
     fields <- strsplit(raw_lines[row_idx], "\t")[[1]]
-
+    
     # Find the timestamp field (YYYY-MM-DD HH:MM:SS) to locate where metadata ends
     ts_idx <- which(grepl("\\d{4}-\\d{2}-\\d{2}", fields))[1]
     if (is.na(ts_idx)) {
       cat(paste0("Warning: No timestamp found in row ", row_idx, ", skipping\n"))
       next
     }
-
+    
     # Extract metadata
     sample_id <- trimws(fields[2])
     panel_code <- if (length(fields) >= 8) trimws(fields[8]) else NA_character_
     organism_code <- if (length(fields) >= 10) trimws(fields[10]) else NA_character_
     specimen <- if (length(fields) >= 11) trimws(fields[11]) else NA_character_
     timestamp <- trimws(fields[ts_idx])
-
+    
     # Parse drug data starting after the timestamp
     # Fields are in triplets (drug_name, mic_value, interpretation) but
     # empty positions may have irregular numbers of blank fields.
@@ -1490,7 +1490,7 @@ import_sensititre_ast <- function(input,
     drug_start <- ts_idx + 1
     if (drug_start > length(fields)) next
     remaining <- fields[drug_start:length(fields)]
-
+    
     i <- 1
     while (i <= length(remaining) - 2) {
       field_val <- trimws(remaining[i])
@@ -1504,7 +1504,7 @@ import_sensititre_ast <- function(input,
         drug_abbrev <- field_val
         mic_raw <- trimws(remaining[i + 1])
         interp_raw <- trimws(remaining[i + 2])
-
+        
         all_rows[[length(all_rows) + 1]] <- data.frame(
           id = sample_id,
           panel = panel_code,
@@ -1522,14 +1522,14 @@ import_sensititre_ast <- function(input,
       }
     }
   }
-
+  
   if (length(all_rows) == 0) {
     stop("No drug data found in Sensititre file")
   }
-
-
+  
+  
   ast_long <- dplyr::bind_rows(all_rows) %>% as_tibble()
-
+  
   # Clean MIC values: remove leading/trailing spaces, normalise signs
   ast_long <- ast_long %>%
     mutate(mic_raw = trimws(mic_raw)) %>%
@@ -1543,7 +1543,7 @@ import_sensititre_ast <- function(input,
     # Remove bare "=" prefix (just means exact value)
     mutate(mic = gsub("^=", "", mic)) %>%
     mutate(mic = as.mic(mic))
-
+  
   # Map interpretation codes to S/I/R
   ast_long <- ast_long %>%
     mutate(pheno_provided = case_when(
@@ -1555,41 +1555,41 @@ import_sensititre_ast <- function(input,
       TRUE ~ NA_character_
     )) %>%
     mutate(pheno_provided = as.sir(pheno_provided))
-
+  
   # Parse drug_agent from abbreviation
   ast_long <- ast_long %>%
     mutate(drug_agent = as.ab(drug_name_raw))
-
+  
   # Add standard columns
   ast_long <- ast_long %>%
     mutate(method = "broth dilution") %>%
     mutate(platform = "Sensititre") %>%
     mutate(disk = as.disk(NA))
-
+  
   # Add guideline if specified
   if (!is.null(instrument_guideline)) {
     ast_long <- ast_long %>% mutate(guideline = instrument_guideline)
   }
-
+  
   # Add source only if specified
   if (!is.null(source)) {
     ast_long <- ast_long %>% mutate(source = source)
   }
-
+  
   # Parse organism if present
   if ("organism_code" %in% colnames(ast_long)) {
     ast_long <- ast_long %>%
       mutate(spp_pheno = as.mo(organism_code))
   }
-
+  
   # Interpret phenotypes
   ast_long <- interpret_ast(ast_long,
-    interpret_ecoff = interpret_ecoff,
-    interpret_eucast = interpret_eucast,
-    interpret_clsi = interpret_clsi,
-    species = species, ab = ab
+                            interpret_ecoff = interpret_ecoff,
+                            interpret_eucast = interpret_eucast,
+                            interpret_clsi = interpret_clsi,
+                            species = species, ab = ab
   )
-
+  
   # Reorder columns
   ast_long <- ast_long %>%
     relocate(any_of(c(
@@ -1598,7 +1598,7 @@ import_sensititre_ast <- function(input,
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno"
     )))
-
+  
   return(ast_long)
 }
 

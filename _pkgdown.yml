@@ -48,7 +48,7 @@ navbar:
       href: "reference/index.html"
     - text: "Vignettes"
       icon: "fa-book"
-      href: "articles/AnalysingGenoPhenoData.html"
+      href: "articles"
   right:
     - text: "Source Code"
       icon: "fab fa-github"
@@ -58,6 +58,7 @@ articles:
   - title: "Vignettes"
     contents:
       - AnalysingGenoPhenoData
+      - DownloadNCBIdata
 
 # Reference section grouping
 reference:

@@ -67,17 +67,17 @@ staph_ast_ncbi2 <- import_ncbi_biosample(
   interpret_eucast = TRUE,
   interpret_ecoff = TRUE
 )
+
 head(staph_ast_ncbi2)
+
 # Note that when there is a mix of MIC and disk data, a separate _disk and _mic interpretation column, as well as an overall phenotype column, is produced for each interpretation.
 ```
 This produces a long format data frame, with one row per sample and drug combination. This is compatible with downstream functions in the AMRgen package.
 
 Consider altering the `max_records`, `batch_size`  or `sleep_time` options if you want to download a lot of data or run into NCBI server issues. 
 
-
+### Visualise the downloaded phenotype data to check the distribution of the AST data
 ``` {r assay_by_var_staph_doxy}
-# Visualise the downloaded phenotype data to check the distribution of the AST data
-
 # Select one antibiotic at a time
 # Specify species and guideline, to annotate with EUCAST breakpoints
 
@@ -128,7 +128,9 @@ staph_ast_ebi <- download_ebi(
 ``` {r download_ebi_ast_dummy}
 # check output
 nrow(staph_ast_ebi)
+
 length(unique(staph_ast_ebi$id))
+
 head(staph_ast_ebi)
 ```
 
@@ -143,9 +145,13 @@ staph_geno_ebi <- download_ebi(
 
 ``` {r download_ebi_geno_dummy}
 nrow(staph_geno_ebi)
+
 length(unique(staph_geno_ebi$BioSample_ID))
+
 head(staph_geno_ebi)
 ```
+
+### Compare downloaded phenotypes and genotypes
 The downloaded phenotype and genotype data for a specified antibiotic can then be extracted and combined using the `get_binary_matrix` function.
 ```{r get_binary_matrix}
 # first filter both EBI pheno and geno dataframes for Staph aureus only
@@ -169,10 +175,15 @@ tet_bin <- get_binary_matrix(
 )
 
 nrow(tet_bin)
-head(tet_bin)
 
+head(tet_bin)
+```
+
+``` {r ppv, fig.height=8}
 # plot positive predictive value for each marker/combination
-ppv(tet_bin)
+tet_ppv <- ppv(tet_bin)
+
+tet_ppv$plot
 ```
 This produces a binary matrix with 1 row per BioSample, for all BioSamples that had both phenotype data for doxycycline in `staph_ast_ebi_filtered` AND any genotype data (associated with any marker, not just Tetracyclines) in `staph_geno_ebi_filtered`. This ensures that we include samples for which genotyping was performed but returned no hits associated with Tetracyclines, not just those samples that had tetracycline associated markers detected (note that such samples would be missing if we had only downloaded genotype data associated with Tetracyclines).
 

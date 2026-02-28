@@ -5,7 +5,7 @@
 \alias{ecoli_ast}
 \title{E. coli NCBI AST Example Data, Re-interpreted with AMR Package}
 \format{
-\subsection{\code{ecoli_ast} A data frame with 4168 rows and 11 columns representing reinterpreted data from the NCBI AST browser.}{
+A data frame with 4168 rows and 11 columns representing data from the NCBI AST browser, formatted and re-interpreted using \link{import_ast}.
 
 Columns include:
 \itemize{
@@ -19,7 +19,6 @@ Columns include:
 \item \code{method}: Test method, one of: "Etest', "broth dilution'.
 \item \code{pheno_provided}: ??
 \item \code{spp_pheno}: Species identifier, interpreted from \verb{Scientific name} using \code{as.mo}, used to interpret \code{ecoff} and \code{pheno} columns.
-}
 }
 }
 \source{

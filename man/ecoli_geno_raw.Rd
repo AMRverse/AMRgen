@@ -5,7 +5,9 @@
 \alias{ecoli_geno_raw}
 \title{E. coli Genotype Example Data}
 \format{
-\subsection{\code{ecoli_geno_raw} A data frame with 45228 rows and 28 columns representing genotyping results from AMRFinderPlus.}{
+A data frame with 45228 rows and
+28 columns representing genotyping results
+from AMRFinderPlus.
 
 Columns include:
 \itemize{
@@ -15,7 +17,6 @@ Columns include:
 \item \code{Class}, \code{Subclass}: Drug class(es) associated with the marker (from NCBI RefGene).
 \item \verb{\% Coverage of reference sequence}, \verb{\% Identity to reference sequence}, \verb{Accession of closest sequence}: Sequence match information.
 \item ...: Additional metadata columns from the AMRFinderPlus output.
-}
 }
 }
 \source{

@@ -5,7 +5,7 @@
 \alias{staph_ast_ncbi}
 \title{S. aureus Example of Imported NCBI Phenotype Data}
 \format{
-\subsection{\code{staph_ast_ncbi} A data frame with 143 rows and 19 columns representing phenotyping results from NCBI, imported into AMRgen format using \link{import_ast}.}{
+\code{staph_ast_ncbi} A data frame with 143 rows and 19 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline downloaded from NCBI using \link{download_ncbi_ast}, imported into AMRgen format using \link{import_ast}.
 
 Columns include:
 \itemize{
@@ -13,9 +13,8 @@ Columns include:
 \item \code{drug_agent}: Antibiotic identifier, as class 'ab'.
 \item \code{mic}: MIC data, as class 'mic'.
 \item \code{disk}: Disk diffusion zone diameter data, as class 'disk'.
-\item \code{pheno_provided}, \code{pheno_eucast}: S/I/R phenotypes as downloaded from NCBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints using \link[AMR:as.ab]{AMR::as.ab}.
+\item \code{pheno_provided}, \code{pheno_eucast}: S/I/R phenotypes as downloaded from NCBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.
 \item ...: Additional data columns from NCBI.
-}
 }
 }
 \source{

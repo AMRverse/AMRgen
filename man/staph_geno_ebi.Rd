@@ -5,7 +5,7 @@
 \alias{staph_geno_ebi}
 \title{S. aureus Example of Imported EBI Genotype Data}
 \format{
-\subsection{\code{staph_geno_ebi} A data frame with 198344 rows and 34 columns representing genotyping results from EBI, imported into AMRgen format using \link{import_amrfp}.}{
+\code{staph_geno_ebi} A data frame with 198344 rows and 34 columns representing all Staphylococcus genotyping results downloaded from EBI using \link{download_ebi}, and imported into AMRgen format using \link{import_amrfp}.
 
 Columns include:
 \itemize{
@@ -15,7 +15,6 @@ Columns include:
 \item \code{mutation}: mutation within gene, parsed into HGVS nomenclature format from \code{amr_element_symbol} field in the downloaded file.
 \item \code{marker.label}: label for genotype marker, combining \code{gene} and \code{mutation} information (deletion variants represented as \code{"gene:-"}).
 \item ...: Additional data columns from EBI.
-}
 }
 }
 \source{

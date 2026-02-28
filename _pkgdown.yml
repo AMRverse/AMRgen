@@ -116,6 +116,8 @@ reference:
       - ecoli_ast
       - ecoli_ast_raw
       - ecoli_geno_raw
+      - ecoli_cip_vs_ref
+      - ecoli_cip_mic_data
       - staph_ast_ncbi
       - staph_ast_ncbi_raw
       - staph_ast_ebi

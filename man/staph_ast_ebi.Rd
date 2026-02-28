@@ -5,7 +5,7 @@
 \alias{staph_ast_ebi}
 \title{S. aureus Example of Imported EBI Phenotype Data}
 \format{
-\subsection{\code{staph_ast_ebi} A data frame with 218 rows and 46 columns representing phenotyping results from EBI, imported into AMRgen format using \link{import_ast}.}{
+\code{staph_ast_ebi} A data frame with 218 rows and 46 columns representing all Staphylococcus phenotyping results for amikacin and doxycycline downloaded from EBI using \link{download_ebi}, and imported into AMRgen format using \link{import_ast}.
 
 Columns include:
 \itemize{
@@ -13,9 +13,8 @@ Columns include:
 \item \code{drug_agent}: Antibiotic identifier, as class 'ab'.
 \item \code{mic}: MIC data, as class 'mic'.
 \item \code{disk}: Disk diffusion zone diameter data, as class 'disk'.
-\item \code{pheno_provided}, \code{pheno_eucast}, \code{pheno_clsi}, \code{ecoff}: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints using \link[AMR:as.ab]{AMR::as.ab}.
+\item \code{pheno_provided}, \code{pheno_eucast}, \code{pheno_clsi}, \code{ecoff}: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.
 \item ...: Additional data columns from EBI.
-}
 }
 }
 \source{

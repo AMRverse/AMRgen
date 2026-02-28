@@ -17,7 +17,8 @@
 #' E. coli NCBI AST Example Data
 #'
 #' A subset of E. coli phenotype data from the NCBI AST browser.
-#' @format ## `ecoli_ast_raw` A data frame with `r NROW(ecoli_ast_raw)` rows and `r NCOL(ecoli_ast_raw)` columns representing unprocessed data from the NCBI AST browser.
+#' @format A data frame with 10 rows and 21 columns representing unprocessed data from the NCBI AST browser.
+#'
 #' Columns include:
 #' - `#BioSample`: Sample identifier.
 #' - `Scientific name`: Species identifier.
@@ -35,7 +36,8 @@
 #' E. coli NCBI AST Example Data, Re-interpreted with AMR Package
 #'
 #' A subset of E. coli phenotype data from the NCBI AST browser.
-#' @format ## `ecoli_ast` A data frame with `r NROW(ecoli_ast)` rows and `r NCOL(ecoli_ast)` columns representing reinterpreted data from the NCBI AST browser.
+#' @format A data frame with 4168 rows and 11 columns representing data from the NCBI AST browser, formatted and re-interpreted using [import_ast].
+#'
 #' Columns include:
 #' - `id`: Sample identifier, imported from the `#BioSample` column in the raw input.
 #' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
@@ -54,7 +56,10 @@
 #' E. coli Genotype Example Data
 #'
 #' Genotypes called using AMRFinderPlus (v3.12.8, DB 2024-01-31.1), sourced from the AllTheBacteria project.
-#' @format ## `ecoli_geno_raw` A data frame with `r NROW(ecoli_geno_raw)` rows and `r NCOL(ecoli_geno_raw)` columns representing genotyping results from AMRFinderPlus.
+#' @format A data frame with 45228 rows and
+#' 28 columns representing genotyping results
+#' from AMRFinderPlus.
+#'
 #' Columns include:
 #' - `Name`: Sample identifier.
 #' - `Gene symbol`: Gene symbol in NCBI RefGene.
@@ -66,16 +71,49 @@
 "ecoli_geno_raw"
 
 
+#' E. coli Ciprofloxacin MIC Distribution Example Data
+#'
+#' Ciprofloxacin MIC distributions for E. coli, calculated from public data
+#' and compared with the EUCAST reference distribution.
+#'
+#' @format An object of class `compare_eucast` with 32 rows and
+#' 3 columns. It provides MIC distributions
+#' from EUCAST and public AST data extracted from [ecoli_ast]
+#' in the form of counts per value.
+#'
+#' Columns include:
+#' - `value`: MIC value.
+#' - `user`: Count of samples with this MIC value, from the example data [ecoli_ast].
+#' - `eucast`: Count of samples with this MIC value, downloaded from EUCAST (Feb 2026).
+#' @source <https://mic.eucast.org/>
+"ecoli_cip_vs_ref"
+
+
+#' EUCAST Reference distribution for Ciprofloxacin in E. coli
+#'
+#' Data frame containing EUCAST reference distribution for ciprofloxacin in E. coli, downloaded using [get_eucast_mic_distribution].
+#'
+#' @format A data frame with 19 rows and 2 columns. It provides MIC distributions
+#' from EUCAST in the form of counts per value.
+#'
+#' Columns include:
+#' - `mic`: MIC value.
+#' - `count`: Count of samples with this MIC value, downloaded from EUCAST (Feb 2026).
+#' @source <https://mic.eucast.org/>
+"ecoli_cip_mic_data"
+
+
 #' S. aureus Example of Imported NCBI Phenotype Data
 #'
 #' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function and imported to AMRgen phenotype table format.
-#' @format ## `staph_ast_ncbi` A data frame with `r NROW(staph_ast_ncbi)` rows and `r NCOL(staph_ast_ncbi)` columns representing phenotyping results from NCBI, imported into AMRgen format using [import_ast].
+#' @format `staph_ast_ncbi` A data frame with 143 rows and 19 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline downloaded from NCBI using [download_ncbi_ast], imported into AMRgen format using [import_ast].
+#'
 #' Columns include:
 #' - `id`: Sample identifier.
 #' - `drug_agent`: Antibiotic identifier, as class 'ab'.
 #' - `mic`: MIC data, as class 'mic'.
 #' - `disk`: Disk diffusion zone diameter data, as class 'disk'.
-#' - `pheno_provided`, `pheno_eucast`: S/I/R phenotypes as downloaded from NCBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints using [AMR::as.ab].
+#' - `pheno_provided`, `pheno_eucast`: S/I/R phenotypes as downloaded from NCBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.
 #' - ...: Additional data columns from NCBI.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
 "staph_ast_ncbi"
@@ -84,7 +122,8 @@
 #' S. aureus Example of Raw Downloaded NCBI Phenotype Data
 #'
 #' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function without reformating.
-#' @format ## `staph_ast_ncbi_raw` A data frame with `r NROW(staph_ast_ncbi_raw)` rows and `r NCOL(staph_ast_ncbi_raw)` columns representing phenotyping results from NCBI.
+#' @format `staph_ast_ncbi_raw` A data frame with 143 rows and 13 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
+#'
 #' Columns include:
 #' - `id`: Sample identifier.
 #' - `Antibiotic`: Antibiotic name.
@@ -97,13 +136,14 @@
 #' S. aureus Example of Imported EBI Phenotype Data
 #'
 #' Phenotypes sourced from EBI AMR Portal using the [download_ebi] function and imported to AMRgen phenotype table format.
-#' @format ## `staph_ast_ebi` A data frame with `r NROW(staph_ast_ebi)` rows and `r NCOL(staph_ast_ebi)` columns representing phenotyping results from EBI, imported into AMRgen format using [import_ast].
+#' @format `staph_ast_ebi` A data frame with 218 rows and 46 columns representing all Staphylococcus phenotyping results for amikacin and doxycycline downloaded from EBI using [download_ebi], and imported into AMRgen format using [import_ast].
+#'
 #' Columns include:
 #' - `id`: Sample identifier.
 #' - `drug_agent`: Antibiotic identifier, as class 'ab'.
 #' - `mic`: MIC data, as class 'mic'.
 #' - `disk`: Disk diffusion zone diameter data, as class 'disk'.
-#' - `pheno_provided`, `pheno_eucast`, `pheno_clsi`, `ecoff`: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints using [AMR::as.ab].
+#' - `pheno_provided`, `pheno_eucast`, `pheno_clsi`, `ecoff`: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.
 #' - ...: Additional data columns from EBI.
 #' @source <https://www.ebi.ac.uk/amr>
 "staph_ast_ebi"
@@ -112,7 +152,8 @@
 #' S. aureus Example of Imported EBI Genotype Data
 #'
 #' Phenotypes sourced from EBI AMR Portal using the [download_ebi] function and imported to AMRgen phenotype table format.
-#' @format ## `staph_geno_ebi` A data frame with `r NROW(staph_geno_ebi)` rows and `r NCOL(staph_geno_ebi)` columns representing genotyping results from EBI, imported into AMRgen format using [import_amrfp].
+#' @format `staph_geno_ebi` A data frame with 198344 rows and 34 columns representing all Staphylococcus genotyping results downloaded from EBI using [download_ebi], and imported into AMRgen format using [import_amrfp].
+#'
 #' Columns include:
 #' - `id`: Sample identifier.
 #' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.

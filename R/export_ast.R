@@ -62,7 +62,11 @@
 #' export_ncbi_biosample(ecoli_ast, "Ec_NCBI.tsv")
 #'
 #' # Download data from EBI, then write it out to file in NCBI format
-#' ebi_kleb_quasipneumoniae <- download_ebi(species = "Klebsiella quasipneumoniae", reformat = T)
+#' ebi_kq <- download_ebi(
+#'   data = "phenotype",
+#'   species = "Klebsiella quasipneumoniae",
+#'   reformat = T
+#' )
 #' export_ncbi_biosample(ebi_kq, "Kq_NCBI.tsv")
 #' }
 export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
@@ -232,6 +236,14 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
 #' @importFrom dplyr if_else case_when
 #' @importFrom stringr str_match
 #' @export
+#' @examples
+#' \dontrun{
+#' # Return formatted data frame without writing a file
+#' ebi_df <- export_ebi_antibiogram(ecoli_ast)
+#'
+#' # Write out the ecoli_ast data to file in EBI format
+#' export_ebi_antibiogram(ecoli_ast, "Ec_EBI.tsv")
+#' }
 export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
                                    pheno_col = "pheno_provided",
                                    sep = "\t") {
@@ -394,6 +406,22 @@ export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
 #'   written.
 #'
 #' @export
+#' @examples
+#' \dontrun{
+#' # Return NCBI formatted data frame without writing a file
+#' ncbi_df <- export_ast(ecoli_ast)
+#'
+#' # Write out the ecoli_ast data to file in EBI format
+#' export_ast(ecoli_ast, "Ec_EBI.tsv", format = "ebi")
+#'
+#' # Download data from EBI, then write it out to file in NCBI format
+#' ebi_kq <- download_ebi(
+#'   data = "phenotype",
+#'   species = "Klebsiella quasipneumoniae",
+#'   reformat = T
+#' )
+#' export_ast(ebi_kq, "Kq_NCBI.tsv", format = "ncbi")
+#' }
 export_ast <- function(data, file = NULL, format = "ncbi", overwrite = FALSE,
                        pheno_col = "pheno_provided", ...) {
   format <- tolower(format)

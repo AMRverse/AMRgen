@@ -115,6 +115,10 @@ reference:
       - ecoli_ast
       - ecoli_ast_raw
       - ecoli_geno_raw
+      - staph_ast_ncbi
+      - staph_ast_ncbi_raw
+      - staph_ast_ebi
+      - staph_geno_ebi
 
 
 # Footer configuration

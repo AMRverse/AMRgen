@@ -320,9 +320,10 @@ Sensititer) in the platform
 mic_by_platform <- assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 
-mic_by_platform$plot
-#> NULL
+mic_by_platform
 ```
+
+![](AnalysingGenoPhenoData_files/figure-html/plot_mic_breakpoints_method-1.png)
 
 ### 4. Download reference assay distributions and compare to your data
 
@@ -557,9 +558,9 @@ approach implemented in the [`glm()`](https://rdrr.io/r/stats/glm.html)
 function, or Firth’s bias-reduced penalized-likelihood logistic
 regression implemented in the `logistf` package. The default is to use
 Firth’s regression, as standard logistic regression can fail if there
-are too observations in some subgroups, which happens quite often with
-this kind of data. To use [`glm()`](https://rdrr.io/r/stats/glm.html)
-instead, set `glm=TRUE`.
+are too few observations in some subgroups, which happens quite often
+with this kind of data. To use
+[`glm()`](https://rdrr.io/r/stats/glm.html) instead, set `glm=TRUE`.
 
 The function also filters out markers with too few observations in the
 combined genotype/phenotype dataset. The default minimum is 10 but this
@@ -775,10 +776,28 @@ models$modelNWT
 #> 20 parE:Asp475Glu  0.0389   -1.69    1.77   9.65e- 1
 #> Use ggplot2::autoplot() on this output to visualise
 
-# Note the matrix output is the same as cip_bin, but without the MIC data as this is not required
-#    for logistic regression.
-models$bin_mat
-#> NULL
+# Note the matrix output is the same as cip_bin.
+models$binary_matrix
+#> # A tibble: 3,629 × 51
+#>    id        pheno ecoff     mic  disk     R   NWT gyrA..Ser83Leu gyrA..Asp87Tyr
+#>    <chr>     <sir> <sir>   <mic> <dsk> <dbl> <dbl>          <dbl>          <dbl>
+#>  1 SAMN0317…   S     WT  <=0.015    NA     0     0              0              0
+#>  2 SAMN0317…   S     WT  <=0.015    NA     0     0              0              0
+#>  3 SAMN0317…   S     WT  <=0.015    NA     0     0              0              0
+#>  4 SAMN0317…   S    NWT    0.250    NA     0     1              1              0
+#>  5 SAMN0317…   S    NWT    0.120    NA     0     1              0              1
+#>  6 SAMN0317…   S     WT  <=0.015    NA     0     0              0              0
+#>  7 SAMN0317…   S     WT  <=0.015    NA     0     0              0              0
+#>  8 SAMN0317…   R    NWT   >4.000    NA     1     1              1              0
+#>  9 SAMN0317…   S    NWT    0.250    NA     0     1              1              0
+#> 10 SAMN0317…   R    NWT   >4.000    NA     1     1              1              0
+#> # ℹ 3,619 more rows
+#> # ℹ 42 more variables: gyrA..Asp87Asn <dbl>, parC..Ser80Ile <dbl>,
+#> #   parE..Ser458Ala <dbl>, parC..Ser80Arg <dbl>, parE..Leu416Phe <dbl>,
+#> #   qnrB6 <dbl>, gyrA..Asp87Gly <dbl>, parC..Ser57Thr <dbl>,
+#> #   parC..Glu84Ala <dbl>, soxS..Ala12Ser <dbl>, qnrB2 <dbl>, qnrS2 <dbl>,
+#> #   parC..Glu84Lys <dbl>, parC..Ala56Thr <dbl>, qnrB19 <dbl>,
+#> #   `aac(6')-Ib-cr5` <dbl>, parC..Glu84Val <dbl>, parE..Ile529Leu <dbl>, …
 ```
 
 ### 7. Assess solo positive predictive value of genetic markers
@@ -793,7 +812,7 @@ The function
 [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md)
 takes as input our genotype and phenotype tables, and calculates solo
 PPV for resistance to a specific drug (included in our phenotype table)
-formarkers associated with the specified drug class (included in our
+for markers associated with the specified drug class (included in our
 genotype table). It uses the
 [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
 function to first calculate the binary matrix, then filters out all

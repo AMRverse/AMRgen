@@ -349,6 +349,14 @@ Example datasets for demonstration and reproducible analysis.
   : E. coli NCBI AST Example Data
 - [`ecoli_geno_raw`](https://AMRverse.github.io/AMRgen/reference/ecoli_geno_raw.md)
   : E. coli Genotype Example Data
+- [`staph_ast_ncbi`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi.md)
+  : S. aureus Example of Imported NCBI Phenotype Data
+- [`staph_ast_ncbi_raw`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_raw.md)
+  : S. aureus Example of Raw Downloaded NCBI Phenotype Data
+- [`staph_ast_ebi`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ebi.md)
+  : S. aureus Example of Imported EBI Phenotype Data
+- [`staph_geno_ebi`](https://AMRverse.github.io/AMRgen/reference/staph_geno_ebi.md)
+  : S. aureus Example of Imported EBI Genotype Data
 
 # Articles
 
@@ -356,3 +364,5 @@ Example datasets for demonstration and reproducible analysis.
 
 - [Analysing Geno-Pheno
   Data](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.md):
+- [Download NCBI and EBI
+  Data](https://AMRverse.github.io/AMRgen/articles/DownloadNCBIdata.md):

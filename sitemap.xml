@@ -2,6 +2,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/404.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/LICENSE-text.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/articles/DownloadNCBIdata.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/articles/index.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/authors.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/index.html</loc></url>
@@ -59,5 +60,9 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/print.amr_concordance.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/reexports.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/staph_ast_ebi.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_raw.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/staph_geno_ebi.html</loc></url>
 </urlset>
 

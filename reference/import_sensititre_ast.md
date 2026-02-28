@@ -1,9 +1,9 @@
 # Import and process antimicrobial phenotype data exported from Sensititre instruments
 
 This function imports antimicrobial susceptibility testing (AST) data
-from Sensititre instrument output files (UTF-16LE encoded,
-tab-separated, no header row) and converts it to the standardised
-long-format used by AMRgen.
+from Sensititre instrument output files (tab- or comma-separated,
+optionally UTF-16LE encoded, no header row) and converts it to the
+standardised long-format used by AMRgen.
 
 ## Usage
 
@@ -14,6 +14,7 @@ import_sensititre_ast(
   species = NULL,
   ab = NULL,
   instrument_guideline = NULL,
+  id_col = 7,
   interpret_eucast = FALSE,
   interpret_clsi = FALSE,
   interpret_ecoff = FALSE
@@ -24,7 +25,7 @@ import_sensititre_ast(
 
 - input:
 
-  Path to a Sensititre output text file
+  Path to a Sensititre output text file (tab- or comma-separated)
 
 - source:
 
@@ -41,6 +42,13 @@ import_sensititre_ast(
 - instrument_guideline:
 
   Optional guideline used by the instrument for SIR interpretation
+
+- id_col:
+
+  Integer. Column index (1-based) of the sample identifier. Default is
+  7, which corresponds to the sample accession column in standard
+  Sensititre exports. Adjust if your file uses a different column for
+  the sample ID (e.g. set to 2 for the plate/batch identifier column).
 
 - interpret_eucast:
 

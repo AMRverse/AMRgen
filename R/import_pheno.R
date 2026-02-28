@@ -1472,8 +1472,8 @@ import_sensititre_ast <- function(input,
 
   # Auto-detect separator: count tabs vs commas in the first data line
   first_line <- raw_lines[1]
-  n_tabs   <- nchar(first_line) - nchar(gsub("\t", "", first_line, fixed = TRUE))
-  n_commas <- nchar(first_line) - nchar(gsub(",",  "", first_line, fixed = TRUE))
+  n_tabs <- nchar(first_line) - nchar(gsub("\t", "", first_line, fixed = TRUE))
+  n_commas <- nchar(first_line) - nchar(gsub(",", "", first_line, fixed = TRUE))
   sep <- if (n_tabs >= n_commas) "\t" else ","
 
   cat(paste0("Reading ", length(raw_lines), " rows from Sensititre file\n"))
@@ -1495,11 +1495,11 @@ import_sensititre_ast <- function(input,
     }
 
     # Extract metadata
-    sample_id     <- if (length(fields) >= id_col) trimws(fields[id_col]) else NA_character_
-    panel_code    <- if (length(fields) >= 8)  trimws(fields[8])  else NA_character_
+    sample_id <- if (length(fields) >= id_col) trimws(fields[id_col]) else NA_character_
+    panel_code <- if (length(fields) >= 8) trimws(fields[8]) else NA_character_
     organism_code <- if (length(fields) >= 10) trimws(fields[10]) else NA_character_
-    specimen      <- if (length(fields) >= 12) trimws(fields[12]) else NA_character_
-    timestamp     <- trimws(fields[ts_idx])
+    specimen <- if (length(fields) >= 12) trimws(fields[12]) else NA_character_
+    timestamp <- trimws(fields[ts_idx])
 
     # Parse drug data starting after the timestamp
     # Fields are in triplets (drug_name, mic_value, interpretation) but

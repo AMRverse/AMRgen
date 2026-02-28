@@ -157,9 +157,9 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
   method_raw <- if ("method" %in% colnames(data)) as.character(data$method) else rep(NA_character_, nrow(data))
   ncbi_method <- dplyr::case_when(
     method_raw %in% c("MIC", "broth dilution") ~ "MIC",
-    method_raw == "disk diffusion"              ~ "disk diffusion",
-    method_raw == "agar dilution"               ~ "agar dilution",
-    TRUE                                        ~ "missing"
+    method_raw == "disk diffusion" ~ "disk diffusion",
+    method_raw == "agar dilution" ~ "agar dilution",
+    TRUE ~ "missing"
   )
 
   # --- assemble output ---
@@ -342,11 +342,11 @@ export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
   # Permitted: "E-test", "agar dilution", "broth dilution", "disk diffusion"
   method_raw_ebi <- if ("method" %in% colnames(data)) as.character(data$method) else rep(NA_character_, nrow(data))
   ebi_method <- dplyr::case_when(
-    method_raw_ebi %in% c("MIC", "broth dilution")       ~ "broth dilution",
-    method_raw_ebi == "disk diffusion"                    ~ "disk diffusion",
-    method_raw_ebi == "agar dilution"                     ~ "agar dilution",
-    tolower(method_raw_ebi) %in% c("etest", "e-test")    ~ "E-test",
-    TRUE                                                  ~ NA_character_
+    method_raw_ebi %in% c("MIC", "broth dilution") ~ "broth dilution",
+    method_raw_ebi == "disk diffusion" ~ "disk diffusion",
+    method_raw_ebi == "agar dilution" ~ "agar dilution",
+    tolower(method_raw_ebi) %in% c("etest", "e-test") ~ "E-test",
+    TRUE ~ NA_character_
   )
 
   # --- assemble output ---

@@ -64,3 +64,61 @@
 #' - ...: Additional metadata columns from the AMRFinderPlus output.
 #' @source <https://github.com/ncbi/amr/wiki/Interpreting-results>
 "ecoli_geno_raw"
+
+
+#' S. aureus Example of Imported NCBI Phenotype Data
+#'
+#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function and imported to AMRgen phenotype table format.
+#' @format ## `staph_ast_ncbi` A data frame with `r NROW(staph_ast_ncbi)` rows and `r NCOL(staph_ast_ncbi)` columns representing phenotyping results from NCBI, imported into AMRgen format using [import_ast].
+#' Columns include:
+#' - `id`: Sample identifier.
+#' - `drug_agent`: Antibiotic identifier, as class 'ab'.
+#' - `mic`: MIC data, as class 'mic'.
+#' - `disk`: Disk diffusion zone diameter data, as class 'disk'.
+#' - `pheno_provided`, `pheno_eucast`: S/I/R phenotypes as downloaded from NCBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints using [AMR::as.ab].
+#' - ...: Additional data columns from NCBI.
+#' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
+"staph_ast_ncbi"
+
+
+#' S. aureus Example of Raw Downloaded NCBI Phenotype Data
+#'
+#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function without reformating.
+#' @format ## `staph_ast_ncbi_raw` A data frame with `r NROW(staph_ast_ncbi_raw)` rows and `r NCOL(staph_ast_ncbi_raw)` columns representing phenotyping results from NCBI.
+#' Columns include:
+#' - `id`: Sample identifier.
+#' - `Antibiotic`: Antibiotic name.
+#' - `Resistance phenotype`: S/I/R phenotypes as downloaded from NCBI.
+#' - ...: Additional data columns from NCBI.
+#' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
+"staph_ast_ncbi_raw"
+
+
+#' S. aureus Example of Imported EBI Phenotype Data
+#'
+#' Phenotypes sourced from EBI AMR Portal using the [download_ebi] function and imported to AMRgen phenotype table format.
+#' @format ## `staph_ast_ebi` A data frame with `r NROW(staph_ast_ebi)` rows and `r NCOL(staph_ast_ebi)` columns representing phenotyping results from EBI, imported into AMRgen format using [import_ast].
+#' Columns include:
+#' - `id`: Sample identifier.
+#' - `drug_agent`: Antibiotic identifier, as class 'ab'.
+#' - `mic`: MIC data, as class 'mic'.
+#' - `disk`: Disk diffusion zone diameter data, as class 'disk'.
+#' - `pheno_provided`, `pheno_eucast`, `pheno_clsi`, `ecoff`: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints using [AMR::as.ab].
+#' - ...: Additional data columns from EBI.
+#' @source <https://www.ebi.ac.uk/amr>
+"staph_ast_ebi"
+
+
+#' S. aureus Example of Imported EBI Genotype Data
+#'
+#' Phenotypes sourced from EBI AMR Portal using the [download_ebi] function and imported to AMRgen phenotype table format.
+#' @format ## `staph_geno_ebi` A data frame with `r NROW(staph_geno_ebi)` rows and `r NCOL(staph_geno_ebi)` columns representing genotyping results from EBI, imported into AMRgen format using [import_amrfp].
+#' Columns include:
+#' - `id`: Sample identifier.
+#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
+#' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
+#' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
+#' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
+#' - ...: Additional data columns from EBI.
+#' @source <https://www.ebi.ac.uk/amr>
+"staph_geno_ebi"

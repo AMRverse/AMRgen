@@ -113,6 +113,7 @@ staph_ast_ncbi2 <- import_ncbi_biosample(
 #> Caused by warning:
 #> ! Some MICs were converted to the nearest higher log2 level, following the
 #> CLSI interpretation guideline.
+
 head(staph_ast_ncbi2)
 #> # A tibble: 6 × 25
 #>   id         drug_agent   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff
@@ -129,6 +130,7 @@ head(staph_ast_ncbi2)
 #> #   Vendor <chr>, `Laboratory typing method version or reagent` <chr>,
 #> #   pheno_eucast_mic <sir>, pheno_eucast_disk <sir>, pheno_clsi_mic <sir>,
 #> #   pheno_clsi_disk <sir>, ecoff_mic <sir>, ecoff_disk <sir>
+
 # Note that when there is a mix of MIC and disk data, a separate _disk and _mic interpretation column, as well as an overall phenotype column, is produced for each interpretation.
 ```
 
@@ -140,9 +142,9 @@ Consider altering the `max_records`, `batch_size` or `sleep_time`
 options if you want to download a lot of data or run into NCBI server
 issues.
 
-``` r
-# Visualise the downloaded phenotype data to check the distribution of the AST data
+#### Visualise the downloaded phenotype data to check the distribution of the AST data
 
+``` r
 # Select one antibiotic at a time
 # Specify species and guideline, to annotate with EUCAST breakpoints
 
@@ -209,8 +211,10 @@ staph_ast_ebi <- download_ebi(
 # check output
 nrow(staph_ast_ebi)
 #> [1] 218
+
 length(unique(staph_ast_ebi$id))
 #> [1] 190
+
 head(staph_ast_ebi)
 #> # A tibble: 6 × 46
 #>   id         drug_agent   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff
@@ -242,8 +246,10 @@ staph_geno_ebi <- download_ebi(
 ``` r
 nrow(staph_geno_ebi)
 #> [1] 198344
+
 length(unique(staph_geno_ebi$BioSample_ID))
 #> [1] 7548
+
 head(staph_geno_ebi)
 #> # A tibble: 6 × 34
 #>   BioSample_ID gene    mutation node   marker marker.label drug_agent drug_class
@@ -262,6 +268,8 @@ head(staph_geno_ebi)
 #> #   antibiotic_name <chr>, antibiotic_ontology <chr>,
 #> #   antibiotic_ontology_link <chr>, evidence_accession <chr>, …
 ```
+
+#### Compare downloaded phenotypes and genotypes
 
 The downloaded phenotype and genotype data for a specified antibiotic
 can then be extracted and combined using the `get_binary_matrix`
@@ -292,6 +300,7 @@ tet_bin <- get_binary_matrix(
 
 nrow(tet_bin)
 #> [1] 116
+
 head(tet_bin)
 #> # A tibble: 6 × 11
 #>   id    pheno ecoff   mic     R   NWT  mepA `tet(38)` `tet(K)` `tet(M)` `tet(L)`
@@ -302,56 +311,30 @@ head(tet_bin)
 #> 4 SAMN…   S     NI    <=1     0    NA     1         1        1        0        0
 #> 5 SAMN…   R    NWT      8     1     1     1         1        0        1        0
 #> 6 SAMN…   S     NI    <=1     0    NA     1         1        0        0        0
+```
 
+``` r
 # plot positive predictive value for each marker/combination
-ppv(tet_bin)
+tet_ppv <- ppv(tet_bin)
 #>  Removing 69 rows with no phenotype call
 ```
 
-![](DownloadNCBIdata_files/figure-html/get_binary_matrix-1.png)
+![](DownloadNCBIdata_files/figure-html/ppv-1.png)
 
-    #> $plot
+``` r
 
-![](DownloadNCBIdata_files/figure-html/get_binary_matrix-2.png)
+tet_ppv$plot
+```
 
-    #> 
-    #> $binary_matrix
-    #> # A tibble: 116 × 11
-    #>    id           pheno ecoff   mic     R   NWT  mepA `tet(38)` `tet(K)` `tet(M)`
-    #>    <chr>        <sir> <sir> <mic> <dbl> <dbl> <dbl>     <dbl>    <dbl>    <dbl>
-    #>  1 SAMN04901605   S     NI    <=1     0    NA     1         1        0        0
-    #>  2 SAMN04901606   S     NI    <=1     0    NA     1         1        0        0
-    #>  3 SAMN04901607   S     NI    <=1     0    NA     1         1        0        0
-    #>  4 SAMN04901608   S     NI    <=1     0    NA     1         1        1        0
-    #>  5 SAMN04901609   R    NWT      8     1     1     1         1        0        1
-    #>  6 SAMN04901610   S     NI    <=1     0    NA     1         1        0        0
-    #>  7 SAMN04901611   R    NWT      4     1     1     1         1        0        1
-    #>  8 SAMN04901612   S     NI    <=1     0    NA     1         1        0        0
-    #>  9 SAMN04901613   S     NI    <=1     0    NA     1         1        0        0
-    #> 10 SAMN04901614   S     NI    <=1     0    NA     1         1        1        0
-    #> # ℹ 106 more rows
-    #> # ℹ 1 more variable: `tet(L)` <dbl>
-    #> 
-    #> $summary
-    #> # A tibble: 4 × 14
-    #>   marker_list          marker_count     n combination_id   R.n  R.ppv R.ci_lower
-    #>   <chr>                       <dbl> <int> <fct>          <dbl>  <dbl>      <dbl>
-    #> 1 mepA, tet(38)                   2    37 1_1_0_0_0          1 0.0270          0
-    #> 2 mepA, tet(38), tet(…            3     6 1_1_0_1_0          6 1               1
-    #> 3 mepA, tet(38), tet(…            4     1 1_1_0_1_1          1 1               1
-    #> 4 mepA, tet(38), tet(…            3     3 1_1_1_0_0          1 0.333           0
-    #> # ℹ 7 more variables: R.ci_upper <dbl>, R.denom <int>, NWT.n <dbl>,
-    #> #   NWT.ppv <dbl>, NWT.ci_lower <dbl>, NWT.ci_upper <dbl>, NWT.denom <int>
-
-This produces a binary matrix with 1 row per BioSample, for all
-BioSamples that had both phenotype data for doxycycline in
-`staph_ast_ebi_filtered` AND any genotype data (associated with any
-marker, not just Tetracyclines) in `staph_geno_ebi_filtered`. This
-ensures that we include samples for which genotyping was performed but
-returned no hits associated with Tetracyclines, not just those samples
-that had tetracycline associated markers detected (note that such
-samples would be missing if we had only downloaded genotype data
-associated with Tetracyclines).
+![](DownloadNCBIdata_files/figure-html/ppv-2.png) This produces a binary
+matrix with 1 row per BioSample, for all BioSamples that had both
+phenotype data for doxycycline in `staph_ast_ebi_filtered` AND any
+genotype data (associated with any marker, not just Tetracyclines) in
+`staph_geno_ebi_filtered`. This ensures that we include samples for
+which genotyping was performed but returned no hits associated with
+Tetracyclines, not just those samples that had tetracycline associated
+markers detected (note that such samples would be missing if we had only
+downloaded genotype data associated with Tetracyclines).
 
 Columns indicate the input phenotype columns for doxycycline (renamed to
 standard fields `pheno`, `ecoff`, `mic`), and binary indicators

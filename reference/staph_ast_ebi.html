@@ -42,20 +42,14 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-
-<div class="section">
-<h3 id="staph-ast-ebi-a-data-frame-with-rows-and-columns-representing-phenotyping-results-from-ebi-imported-into-amrgen-format-using-import-ast-"><code>staph_ast_ebi</code> A data frame with 218 rows and 46 columns representing phenotyping results from EBI, imported into AMRgen format using <a href="import_ast.html">import_ast</a>.<a class="anchor" aria-label="anchor" href="#staph-ast-ebi-a-data-frame-with-rows-and-columns-representing-phenotyping-results-from-ebi-imported-into-amrgen-format-using-import-ast-"></a></h3>
-
-
+    <p><code>staph_ast_ebi</code> A data frame with 218 rows and 46 columns representing all Staphylococcus phenotyping results for amikacin and doxycycline downloaded from EBI using <a href="download_ebi.html">download_ebi</a>, and imported into AMRgen format using <a href="import_ast.html">import_ast</a>.</p>
 <p>Columns include:</p><ul><li><p><code>id</code>: Sample identifier.</p></li>
 <li><p><code>drug_agent</code>: Antibiotic identifier, as class 'ab'.</p></li>
 <li><p><code>mic</code>: MIC data, as class 'mic'.</p></li>
 <li><p><code>disk</code>: Disk diffusion zone diameter data, as class 'disk'.</p></li>
-<li><p><code>pheno_provided</code>, <code>pheno_eucast</code>, <code>pheno_clsi</code>, <code>ecoff</code>: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints using <a href="https://amr-for-r.org/reference/as.ab.html" class="external-link">AMR::as.ab</a>.</p></li>
+<li><p><code>pheno_provided</code>, <code>pheno_eucast</code>, <code>pheno_clsi</code>, <code>ecoff</code>: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.</p></li>
 <li><p>...: Additional data columns from EBI.</p></li>
 </ul></div>
-
-    </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
     <p><a href="https://www.ebi.ac.uk/amr" class="external-link">https://www.ebi.ac.uk/amr</a></p>

@@ -12,7 +12,12 @@ staph_ast_ncbi
 
 ## Format
 
-### `staph_ast_ncbi` A data frame with 143 rows and 19 columns representing phenotyping results from NCBI, imported into AMRgen format using [import_ast](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
+`staph_ast_ncbi` A data frame with 143 rows and 19 columns representing
+all Staphylococcus aureus phenotyping results for amikacin and
+doxycycline downloaded from NCBI using
+[download_ncbi_ast](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md),
+imported into AMRgen format using
+[import_ast](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
 
 Columns include:
 
@@ -26,8 +31,7 @@ Columns include:
 
 - `pheno_provided`, `pheno_eucast`: S/I/R phenotypes as downloaded from
   NCBI, and as re-interpreted from mic/disk measures against EUCAST 2024
-  breakpoints using
-  [AMR::as.ab](https://amr-for-r.org/reference/as.ab.html).
+  breakpoints.
 
 - ...: Additional data columns from NCBI.
 

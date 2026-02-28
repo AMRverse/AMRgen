@@ -10,7 +10,8 @@ ecoli_ast_raw
 
 ## Format
 
-### `ecoli_ast_raw` A data frame with 10 rows and 21 columns representing unprocessed data from the NCBI AST browser.
+A data frame with 10 rows and 21 columns representing unprocessed data
+from the NCBI AST browser.
 
 Columns include:
 

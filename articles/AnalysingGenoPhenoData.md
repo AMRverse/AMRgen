@@ -336,74 +336,50 @@ or with your data overlaid.
 
 ``` r
 # get MIC distribution for ciprofloxacin, for all organisms
-get_eucast_mic_distribution("cipro")
-#> # A tibble: 2,033 × 4
-#>    microorganism              microorganism_code   mic count
-#>    <chr>                      <mo>               <mic> <int>
-#>  1 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.002     0
-#>  2 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.004     0
-#>  3 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.008     0
-#>  4 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.016     0
-#>  5 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.030     0
-#>  6 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.060     0
-#>  7 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.125     0
-#>  8 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.250     1
-#>  9 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.500     0
-#> 10 Achromobacter xylosoxidans B_ACHRMB_XYLS      1.000     6
-#> # ℹ 2,023 more rows
+cip_mic_data <- get_eucast_mic_distribution("cipro")
 
 # specify microorganism to only get results for that pathogen
 ecoli_cip_mic_data <- get_eucast_mic_distribution("cipro", "E. coli")
 
 # get disk diffusion data instead
 ecoli_cip_disk_data <- get_eucast_disk_distribution("cipro", "E. coli")
-
-# plot the MIC data
-mics <- rep(ecoli_cip_mic_data$mic, ecoli_cip_mic_data$count)
-ggplot2::autoplot(
-  mics,
-  ab = "cipro",
-  mo = "E. coli",
-  title = "E. coli cipro reference distribution"
-)
 ```
 
-![](AnalysingGenoPhenoData_files/figure-html/get_eucast_distribution-1.png)
-
 ``` r
-# Compare reference distribution to random test data
-my_mic_values <- AMR::random_mic(500)
-comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "E. coli")
-#> Joining with `by = join_by(value)`
-comparison
-#> # A tibble: 25 × 3
-#>    value     user eucast
-#>  * <fct>    <int>  <int>
-#>  1 <=0.0005    47      0
-#>  2 0.001       29      0
-#>  3 0.002       44     14
-#>  4 0.004       33    189
-#>  5 0.008       28   3952
-#>  6 0.016       34   7238
-#>  7 0.03         0   1355
-#>  8 0.032       24      0
-#>  9 0.06         0    356
-#> 10 0.064       32      0
-#> # ℹ 15 more rows
-#> Use ggplot2::autoplot() on this output to visualise.
-ggplot2::autoplot(comparison)
+# Ciprofloxacin MIC reference distribution for E. coli
+ecoli_cip_mic_data
+#> # A tibble: 19 × 2
+#>        mic count
+#>      <mic> <int>
+#>  1   0.002    14
+#>  2   0.004   189
+#>  3   0.008  3952
+#>  4   0.016  7238
+#>  5   0.030  1355
+#>  6   0.060   356
+#>  7   0.125   401
+#>  8   0.250   521
+#>  9   0.500   171
+#> 10   1.000    94
+#> 11   2.000    47
+#> 12   4.000   119
+#> 13   8.000   246
+#> 14  16.000   229
+#> 15  32.000   564
+#> 16  64.000   166
+#> 17 128.000    85
+#> 18 256.000    59
+#> 19 512.000     7
 ```
 
-![](AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-1.png)
-
 ``` r
-
-
 # Compare reference distribution to example E. coli data
 ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
-comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
-#> Joining with `by = join_by(value)`
-comparison
+ecoli_cip_vs_ref <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
+```
+
+``` r
+ecoli_cip_vs_ref
 #> # A tibble: 32 × 3
 #>    value    user eucast
 #>  * <fct>   <int>  <int>
@@ -419,10 +395,10 @@ comparison
 #> 10 0.12       34      0
 #> # ℹ 22 more rows
 #> Use ggplot2::autoplot() on this output to visualise.
-ggplot2::autoplot(comparison)
+ggplot2::autoplot(ecoli_cip_vs_ref)
 ```
 
-![](AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast-2.png)
+![](AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast_dummy-1.png)
 
 ### 5. Combine genotype and phenotype data for a given drug
 

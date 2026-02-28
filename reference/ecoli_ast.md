@@ -10,7 +10,9 @@ ecoli_ast
 
 ## Format
 
-### `ecoli_ast` A data frame with 4168 rows and 11 columns representing reinterpreted data from the NCBI AST browser.
+A data frame with 4168 rows and 11 columns representing data from the
+NCBI AST browser, formatted and re-interpreted using
+[import_ast](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
 
 Columns include:
 

@@ -11,7 +11,8 @@ ecoli_geno_raw
 
 ## Format
 
-### `ecoli_geno_raw` A data frame with 45228 rows and 28 columns representing genotyping results from AMRFinderPlus.
+A data frame with 45228 rows and 28 columns representing genotyping
+results from AMRFinderPlus.
 
 Columns include:
 

@@ -42,11 +42,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-
-<div class="section">
-<h3 id="staph-geno-ebi-a-data-frame-with-rows-and-columns-representing-genotyping-results-from-ebi-imported-into-amrgen-format-using-import-amrfp-"><code>staph_geno_ebi</code> A data frame with 198344 rows and 34 columns representing genotyping results from EBI, imported into AMRgen format using <a href="import_amrfp.html">import_amrfp</a>.<a class="anchor" aria-label="anchor" href="#staph-geno-ebi-a-data-frame-with-rows-and-columns-representing-genotyping-results-from-ebi-imported-into-amrgen-format-using-import-amrfp-"></a></h3>
-
-
+    <p><code>staph_geno_ebi</code> A data frame with 198344 rows and 34 columns representing all Staphylococcus genotyping results downloaded from EBI using <a href="download_ebi.html">download_ebi</a>, and imported into AMRgen format using <a href="import_amrfp.html">import_amrfp</a>.</p>
 <p>Columns include:</p><ul><li><p><code>id</code>: Sample identifier.</p></li>
 <li><p><code>drug_agent</code>, <code>drug_class</code>: Antibiotic agent and class, determined by parsing AMRfinderplus <code>subclass</code> field in the downloaded file.</p></li>
 <li><p><code>gene</code>, <code>node</code>, <code>marker</code>: gene symbol, parsed from <code>amr_element_symbol</code> field in the downloaded file.</p></li>
@@ -54,8 +50,6 @@
 <li><p><code>marker.label</code>: label for genotype marker, combining <code>gene</code> and <code>mutation</code> information (deletion variants represented as <code>"gene:-"</code>).</p></li>
 <li><p>...: Additional data columns from EBI.</p></li>
 </ul></div>
-
-    </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
     <p><a href="https://www.ebi.ac.uk/amr" class="external-link">https://www.ebi.ac.uk/amr</a></p>

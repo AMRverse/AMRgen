@@ -12,7 +12,9 @@ staph_ast_ncbi_raw
 
 ## Format
 
-### `staph_ast_ncbi_raw` A data frame with 143 rows and 13 columns representing phenotyping results from NCBI.
+`staph_ast_ncbi_raw` A data frame with 143 rows and 13 columns
+representing all Staphylococcus aureus phenotyping results for amikacin
+and doxycycline.
 
 Columns include:
 

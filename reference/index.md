@@ -142,6 +142,10 @@ Example datasets for demonstration and reproducible analysis.
   : E. coli NCBI AST Example Data
 - [`ecoli_geno_raw`](https://AMRverse.github.io/AMRgen/reference/ecoli_geno_raw.md)
   : E. coli Genotype Example Data
+- [`ecoli_cip_vs_ref`](https://AMRverse.github.io/AMRgen/reference/ecoli_cip_vs_ref.md)
+  : E. coli Ciprofloxacin MIC Distribution Example Data
+- [`ecoli_cip_mic_data`](https://AMRverse.github.io/AMRgen/reference/ecoli_cip_mic_data.md)
+  : EUCAST Reference distribution for Ciprofloxacin in E. coli
 - [`staph_ast_ncbi`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi.md)
   : S. aureus Example of Imported NCBI Phenotype Data
 - [`staph_ast_ncbi_raw`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_raw.md)

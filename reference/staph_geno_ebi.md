@@ -12,7 +12,12 @@ staph_geno_ebi
 
 ## Format
 
-### `staph_geno_ebi` A data frame with 198344 rows and 34 columns representing genotyping results from EBI, imported into AMRgen format using [import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
+`staph_geno_ebi` A data frame with 198344 rows and 34 columns
+representing all Staphylococcus genotyping results downloaded from EBI
+using
+[download_ebi](https://AMRverse.github.io/AMRgen/reference/download_ebi.md),
+and imported into AMRgen format using
+[import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
 
 Columns include:
 

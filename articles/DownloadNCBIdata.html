@@ -161,6 +161,7 @@ CLSI.</p>
 <span><span class="co">#&gt; Caused by warning:</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Some MICs were converted to the nearest higher log2 level, following the</span></span>
 <span><span class="co">#&gt; CLSI interpretation guideline.</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_ast_ncbi2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 25</span></span></span>
 <span><span class="co">#&gt;   id         drug_agent   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff</span></span>
@@ -177,6 +178,7 @@ CLSI.</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Vendor &lt;chr&gt;, `Laboratory typing method version or reagent` &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   pheno_eucast_mic &lt;sir&gt;, pheno_eucast_disk &lt;sir&gt;, pheno_clsi_mic &lt;sir&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   pheno_clsi_disk &lt;sir&gt;, ecoff_mic &lt;sir&gt;, ecoff_disk &lt;sir&gt;</span></span></span>
+<span></span>
 <span><span class="co"># Note that when there is a mix of MIC and disk data, a separate _disk and _mic interpretation column, as well as an overall phenotype column, is produced for each interpretation.</span></span></code></pre></div>
 <p>This produces a long format data frame, with one row per sample and
 drug combination. This is compatible with downstream functions in the
@@ -184,10 +186,12 @@ AMRgen package.</p>
 <p>Consider altering the <code>max_records</code>,
 <code>batch_size</code> or <code>sleep_time</code> options if you want
 to download a lot of data or run into NCBI server issues.</p>
+<div class="section level4">
+<h4 id="visualise-the-downloaded-phenotype-data-to-check-the-distribution-of-the-ast-data">Visualise the downloaded phenotype data to check the distribution of
+the AST data<a class="anchor" aria-label="anchor" href="#visualise-the-downloaded-phenotype-data-to-check-the-distribution-of-the-ast-data"></a>
+</h4>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Visualise the downloaded phenotype data to check the distribution of the AST data</span></span>
-<span></span>
-<span><span class="co"># Select one antibiotic at a time</span></span>
+<code class="sourceCode R"><span><span class="co"># Select one antibiotic at a time</span></span>
 <span><span class="co"># Specify species and guideline, to annotate with EUCAST breakpoints</span></span>
 <span></span>
 <span><span class="co"># Doxycycline</span></span>
@@ -220,6 +224,7 @@ to download a lot of data or run into NCBI server issues.</p>
 For more guidance on how to visulaise phenotypic data and combine it
 with genotypic data, have a look at the other <code>AMRgen</code> <a href="https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html" class="external-link">vignettes</a>.</p>
 </div>
+</div>
 <div class="section level3">
 <h3 id="download-data-from-ebi">2. Download data from EBI<a class="anchor" aria-label="anchor" href="#download-data-from-ebi"></a>
 </h3>
@@ -245,8 +250,10 @@ standards of your choosing.</p>
 <code class="sourceCode R"><span><span class="co"># check output</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">staph_ast_ebi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 218</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">staph_ast_ebi</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 190</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_ast_ebi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 46</span></span></span>
 <span><span class="co">#&gt;   id         drug_agent   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff</span></span>
@@ -274,8 +281,10 @@ standards of your choosing.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">staph_geno_ebi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 198344</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">staph_geno_ebi</span><span class="op">$</span><span class="va">BioSample_ID</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7548</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_geno_ebi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 34</span></span></span>
 <span><span class="co">#&gt;   BioSample_ID gene    mutation node   marker marker.label drug_agent drug_class</span></span>
@@ -293,6 +302,9 @@ standards of your choosing.</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   element_subtype &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, split_subclass &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   antibiotic_name &lt;chr&gt;, antibiotic_ontology &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   antibiotic_ontology_link &lt;chr&gt;, evidence_accession &lt;chr&gt;, …</span></span></span></code></pre></div>
+<div class="section level4">
+<h4 id="compare-downloaded-phenotypes-and-genotypes">Compare downloaded phenotypes and genotypes<a class="anchor" aria-label="anchor" href="#compare-downloaded-phenotypes-and-genotypes"></a>
+</h4>
 <p>The downloaded phenotype and genotype data for a specified antibiotic
 can then be extracted and combined using the
 <code>get_binary_matrix</code> function.</p>
@@ -321,6 +333,7 @@ can then be extracted and combined using the
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tet_bin</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 116</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tet_bin</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 11</span></span></span>
 <span><span class="co">#&gt;   id    pheno ecoff   mic     R   NWT  mepA `tet(38)` `tet(K)` `tet(M)` `tet(L)`</span></span>
@@ -330,43 +343,17 @@ can then be extracted and combined using the
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0        0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        1        0        0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN… <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #BBBBBB; background-color: #FF5F5F;"> NWT </span>     8     1     1     1         1        0        1        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0        0</span></span>
-<span></span>
-<span><span class="co"># plot positive predictive value for each marker/combination</span></span>
-<span><span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">tet_bin</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN… <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0        0</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># plot positive predictive value for each marker/combination</span></span>
+<span><span class="va">tet_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">tet_bin</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Removing 69 rows with no phenotype call</span></span></code></pre></div>
-<p><img src="DownloadNCBIdata_files/figure-html/get_binary_matrix-1.png" class="r-plt" alt="" width="100%"></p>
-<pre><code><span><span class="co">#&gt; $plot</span></span></code></pre>
-<p><img src="DownloadNCBIdata_files/figure-html/get_binary_matrix-2.png" class="r-plt" alt="" width="100%"></p>
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $binary_matrix</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 116 × 11</span></span></span>
-<span><span class="co">#&gt;    id           pheno ecoff   mic     R   NWT  mepA `tet(38)` `tet(K)` `tet(M)`</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN04901605 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN04901606 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN04901607 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN04901608 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        1        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN04901609 <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #BBBBBB; background-color: #FF5F5F;"> NWT </span>     8     1     1     1         1        0        1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN04901610 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN04901611 <span style="color: #080808; background-color: #FF5F5F;">  R  </span> <span style="color: #BBBBBB; background-color: #FF5F5F;"> NWT </span>     4     1     1     1         1        0        1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN04901612 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN04901613 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        0        0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN04901614 <span style="color: #080808; background-color: #5FD7AF;">  S  </span> <span style="color: #BBBBBB; background-color: #444444;">  NI </span>   <span style="color: #555555;">&lt;=</span>1     0    <span style="color: #BB0000;">NA</span>     1         1        1        0</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 106 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: `tet(L)` &lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $summary</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 14</span></span></span>
-<span><span class="co">#&gt;   marker_list          marker_count     n combination_id   R.n  R.ppv R.ci_lower</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> mepA, tet(38)                   2    37 1_1_0_0_0          1 0.027<span style="text-decoration: underline;">0</span>          0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> mepA, tet(38), tet(…            3     6 1_1_0_1_0          6 1               1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> mepA, tet(38), tet(…            4     1 1_1_0_1_1          1 1               1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> mepA, tet(38), tet(…            3     3 1_1_1_0_0          1 0.333           0</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: R.ci_upper &lt;dbl&gt;, R.denom &lt;int&gt;, NWT.n &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   NWT.ppv &lt;dbl&gt;, NWT.ci_lower &lt;dbl&gt;, NWT.ci_upper &lt;dbl&gt;, NWT.denom &lt;int&gt;</span></span></span></code></pre>
-<p>This produces a binary matrix with 1 row per BioSample, for all
+<p><img src="DownloadNCBIdata_files/figure-html/ppv-1.png" class="r-plt" alt="" width="100%"></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">tet_ppv</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<p><img src="DownloadNCBIdata_files/figure-html/ppv-2.png" class="r-plt" alt="" width="100%">
+This produces a binary matrix with 1 row per BioSample, for all
 BioSamples that had both phenotype data for doxycycline in
 <code>staph_ast_ebi_filtered</code> AND any genotype data (associated
 with any marker, not just Tetracyclines) in
@@ -385,6 +372,7 @@ genotype marker associated with tetracyclines (in this case
 <code>tet(M)</code>,<code>tet(L)</code>).</p>
 <p>For more examples on how to do join geno-pheno analyses and
 visualisations, so the other AMRgen <a href="https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html" class="external-link">Vignettes</a>.</p>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

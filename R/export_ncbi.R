@@ -152,6 +152,16 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
     )
   }
 
+  # --- map method to NCBI-permitted values ---
+  # Permitted: "MIC", "agar dilution", "disk diffusion", "missing"
+  method_raw <- if ("method" %in% colnames(data)) as.character(data$method) else rep(NA_character_, nrow(data))
+  ncbi_method <- dplyr::case_when(
+    method_raw %in% c("MIC", "broth dilution") ~ "MIC",
+    method_raw == "disk diffusion" ~ "disk diffusion",
+    method_raw == "agar dilution" ~ "agar dilution",
+    TRUE ~ "missing"
+  )
+
   # --- assemble output ---
   out <- data.frame(
     sample_name = data$id,
@@ -160,11 +170,7 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
     measurement_sign = m_sign,
     measurement = m_value,
     measurement_units = m_units,
-    laboratory_typing_method = if ("method" %in% colnames(data)) {
-      dplyr::if_else(is.na(data$method), "missing", as.character(data$method))
-    } else {
-      "missing"
-    },
+    laboratory_typing_method = ncbi_method,
     testing_standard = if ("guideline" %in% colnames(data)) {
       as.character(data$guideline)
     } else {
@@ -332,6 +338,17 @@ export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
     )
   }
 
+  # --- map method to EBI-permitted values ---
+  # Permitted: "E-test", "agar dilution", "broth dilution", "disk diffusion"
+  method_raw_ebi <- if ("method" %in% colnames(data)) as.character(data$method) else rep(NA_character_, nrow(data))
+  ebi_method <- dplyr::case_when(
+    method_raw_ebi %in% c("MIC", "broth dilution") ~ "broth dilution",
+    method_raw_ebi == "disk diffusion" ~ "disk diffusion",
+    method_raw_ebi == "agar dilution" ~ "agar dilution",
+    tolower(method_raw_ebi) %in% c("etest", "e-test") ~ "E-test",
+    TRUE ~ NA_character_
+  )
+
   # --- assemble output ---
   out <- data.frame(
     biosample_id = data$id,
@@ -343,11 +360,7 @@ export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
       NA_character_
     },
     breakpoint_version = NA_character_,
-    laboratory_typing_method = if ("method" %in% colnames(data)) {
-      as.character(data$method)
-    } else {
-      NA_character_
-    },
+    laboratory_typing_method = ebi_method,
     measurement = m_value,
     measurement_units = m_units,
     measurement_sign = m_sign,

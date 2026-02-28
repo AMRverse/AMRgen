@@ -213,7 +213,8 @@ import_amrfp <- function(input_table,
 #' ebi_geno <- import_amrfp_ebi_ftp(ebi_geno_raw)
 #' }
 import_amrfp_ebi_ftp <- function(input_table) {
-  input_table <- process_input(input_table)
+  input_table <- process_input(input_table) %>%
+    rename(id2 = id) # to avoid clash when creating id from BioSample_ID via import_amrfp
 
   input_table <- import_amrfp(input_table,
     sample_col = "BioSample_ID",

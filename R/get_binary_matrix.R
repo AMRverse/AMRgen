@@ -146,7 +146,6 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
   }
 
   # get interpreted phenotype as binary (based on colname provided by 'sir_col')
-  # to do: check we have interpretation data for this pheno, and optionally interpret from mic/disk
   pheno_binary <- pheno_matched %>%
     select(id, any_of(c(sir_col, ecoff_col))) %>%
     mutate(R = case_when(

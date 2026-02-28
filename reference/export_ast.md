@@ -9,7 +9,7 @@ EBI Antibiogram formats.
 ``` r
 export_ast(
   data,
-  file,
+  file = NULL,
   format = "ncbi",
   overwrite = FALSE,
   pheno_col = "pheno_provided",
@@ -31,7 +31,8 @@ export_ast(
 
 - file:
 
-  File path for the output file.
+  File path for the output file. If `NULL` (default), no file is written
+  and the formatted data frame is returned visibly.
 
 - format:
 
@@ -52,4 +53,26 @@ export_ast(
 
 ## Value
 
-The formatted data frame is returned invisibly.
+When `file` is provided, the formatted data frame is returned invisibly
+and a file is written. When `file = NULL`, the formatted data frame is
+returned visibly and no file is written.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Return NCBI formatted data frame without writing a file
+ncbi_df <- export_ast(ecoli_ast)
+
+# Write out the ecoli_ast data to file in EBI format
+export_ast(ecoli_ast, "Ec_EBI.tsv", format = "ebi")
+
+# Download data from EBI, then write it out to file in NCBI format
+ebi_kq <- download_ebi(
+  data = "phenotype",
+  species = "Klebsiella quasipneumoniae",
+  reformat = T
+)
+export_ast(ebi_kq, "Kq_NCBI.tsv", format = "ncbi")
+} # }
+```

@@ -9,7 +9,7 @@ submission file.
 ``` r
 export_ncbi_biosample(
   data,
-  file,
+  file = NULL,
   overwrite = FALSE,
   pheno_col = "pheno_provided"
 )
@@ -29,7 +29,9 @@ export_ncbi_biosample(
 
 - file:
 
-  File path for the output file (must end in `.txt` or `.tsv`).
+  File path for the output file (must end in `.txt` or `.tsv`). If
+  `NULL` (default), no file is written and the formatted data frame is
+  returned visibly.
 
 - overwrite:
 
@@ -42,8 +44,9 @@ export_ncbi_biosample(
 
 ## Value
 
-The formatted data frame is returned invisibly. A tab-delimited UTF-8
-text file is written to `file`.
+When `file` is provided, the formatted data frame is returned invisibly
+and a tab-delimited UTF-8 file is written to `file`. When `file = NULL`,
+the formatted data frame is returned visibly and no file is written.
 
 ## Details
 
@@ -61,11 +64,18 @@ replaced by `"-"` (NCBI convention, e.g.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Return formatted data frame without writing a file
+ncbi_df <- export_ncbi_biosample(ecoli_ast)
+
 # Write out the ecoli_ast data to file in NCBI format
 export_ncbi_biosample(ecoli_ast, "Ec_NCBI.tsv")
 
 # Download data from EBI, then write it out to file in NCBI format
-ebi_kleb_quasipneumoniae <- download_ebi(species = "Klebsiella quasipneumoniae", reformat = T)
+ebi_kq <- download_ebi(
+  data = "phenotype",
+  species = "Klebsiella quasipneumoniae",
+  reformat = T
+)
 export_ncbi_biosample(ebi_kq, "Kq_NCBI.tsv")
 } # }
 ```

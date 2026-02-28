@@ -31,7 +31,7 @@ EBI COMPARE-AMR)."><meta property="og:image" content="https://AMRverse.github.io
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Export EBI Antibiogram</h1>
-      <small class="dont-index">Source: <a href="https://github.com/AMRverse/AMRgen/blob/main/R/export_ncbi.R" class="external-link"><code>R/export_ncbi.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/AMRverse/AMRgen/blob/main/R/export_pheno.R" class="external-link"><code>R/export_pheno.R</code></a></small>
       <div class="d-none name"><code>export_ebi_antibiogram.Rd</code></div>
     </div>
 
@@ -45,7 +45,7 @@ submission file (see
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">export_ebi_antibiogram</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
-<span>  <span class="va">file</span>,</span>
+<span>  file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  pheno_col <span class="op">=</span> <span class="st">"pheno_provided"</span>,</span>
 <span>  sep <span class="op">=</span> <span class="st">"\t"</span></span>
@@ -65,7 +65,8 @@ one phenotype column (see <code>pheno_col</code>). Optional columns: <code>mic</
 
 
 <dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
-<dd><p>File path for the output file.</p></dd>
+<dd><p>File path for the output file. If <code>NULL</code> (default), no
+file is written and the formatted data frame is returned visibly.</p></dd>
 
 
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
@@ -84,8 +85,10 @@ SIR interpretations (class <code>sir</code>). Default <code>"pheno_provided"</co
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The formatted data frame is returned invisibly. A file is
-written to <code>file</code>.</p>
+    <p>When <code>file</code> is provided, the formatted data frame is
+returned invisibly and a file is written to <code>file</code>. When
+<code>file = NULL</code>, the formatted data frame is returned visibly and
+no file is written.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -96,6 +99,17 @@ combination agents (EBI convention, e.g.
 <code><a href="https://amr-for-r.org/reference/mo_property.html" class="external-link">AMR::mo_name()</a></code>.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Return formatted data frame without writing a file</span></span></span>
+<span class="r-in"><span><span class="va">ebi_df</span> <span class="op">&lt;-</span> <span class="fu">export_ebi_antibiogram</span><span class="op">(</span><span class="va">ecoli_ast</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Write out the ecoli_ast data to file in EBI format</span></span></span>
+<span class="r-in"><span><span class="fu">export_ebi_antibiogram</span><span class="op">(</span><span class="va">ecoli_ast</span>, <span class="st">"Ec_EBI.tsv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

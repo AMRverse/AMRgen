@@ -256,8 +256,10 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   if ("NWT" %in% colnames(binary_matrix_wide)) {
     summary <- binary_matrix_wide %>%
       group_by(combination_id) %>%
-      summarise(NWT.n = sum(NWT, na.rm = TRUE), 
-                NWT.denom = sum(!is.na(NWT))) %>%
+      summarise(
+        NWT.n = sum(NWT, na.rm = TRUE),
+        NWT.denom = sum(!is.na(NWT))
+      ) %>%
       right_join(summary, by = "combination_id") %>%
       mutate(NWT.ppv = NWT.n / NWT.denom, .after = NWT.n) %>%
       mutate(NWT.se = sqrt(NWT.ppv * (1 - NWT.ppv) / NWT.denom)) %>%
@@ -268,8 +270,10 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   if ("I" %in% colnames(binary_matrix_wide)) {
     summary <- binary_matrix_wide %>%
       group_by(combination_id) %>%
-      summarise(I.n = sum(I, na.rm = TRUE),
-                I.denom = sum(!is.na(I))) %>%
+      summarise(
+        I.n = sum(I, na.rm = TRUE),
+        I.denom = sum(!is.na(I))
+      ) %>%
       right_join(summary, by = "combination_id") %>%
       mutate(I.ppv = I.n / I.denom, .after = I.n) %>%
       mutate(I.se = sqrt(I.ppv * (1 - I.ppv) / I.denom)) %>%
@@ -280,8 +284,10 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   if ("R" %in% colnames(binary_matrix_wide)) {
     summary <- binary_matrix_wide %>%
       group_by(combination_id) %>%
-      summarise(R.n = sum(R, na.rm = TRUE),
-                R.denom = sum(!is.na(R))) %>%
+      summarise(
+        R.n = sum(R, na.rm = TRUE),
+        R.denom = sum(!is.na(R))
+      ) %>%
       right_join(summary, by = "combination_id") %>%
       mutate(R.ppv = R.n / R.denom, .after = R.n) %>%
       mutate(R.se = sqrt(R.ppv * (1 - R.ppv) / R.denom)) %>%
@@ -856,7 +862,7 @@ ppv <- function(binary_matrix = NULL,
   }
 
   # add counts for each row to the right hand side
-  
+
   if ("R.denom" %in% colnames(combo_data$summary) & "NWT.denom" %in% colnames(combo_data$summary)) {
     row_counts <- combo_data$summary %>%
       mutate(count_label = paste0("(n=", R.denom, ", ", NWT.denom, ")"))
@@ -866,8 +872,8 @@ ppv <- function(binary_matrix = NULL,
   } else if ("NWT.denom" %in% colnames(combo_data$summary)) {
     row_counts <- combo_data$summary %>%
       mutate(count_label = paste0("(n=", NWT.denom, ")"))
-  } 
-      
+  }
+
   row_counts <- row_counts %>%
     filter(n >= min_set_size) %>%
     ggplot(aes(y = combination_id, x = 1, label = count_label)) +

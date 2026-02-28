@@ -10,13 +10,14 @@ import_sensititre_ast(
   species = NULL,
   ab = NULL,
   instrument_guideline = NULL,
+  id_col = 7,
   interpret_eucast = FALSE,
   interpret_clsi = FALSE,
   interpret_ecoff = FALSE
 )
 }
 \arguments{
-\item{input}{Path to a Sensititre output text file}
+\item{input}{Path to a Sensititre output text file (tab- or comma-separated)}
 
 \item{source}{Optional source value to record for all data points}
 
@@ -25,6 +26,10 @@ import_sensititre_ast(
 \item{ab}{Optional antibiotic override for phenotype interpretation}
 
 \item{instrument_guideline}{Optional guideline used by the instrument for SIR interpretation}
+
+\item{id_col}{Integer. Column index (1-based) of the sample identifier. Default is 7, which corresponds
+to the sample accession column in standard Sensititre exports. Adjust if your file uses a different
+column for the sample ID (e.g. set to 2 for the plate/batch identifier column).}
 
 \item{interpret_eucast}{Interpret against EUCAST breakpoints}
 
@@ -36,6 +41,7 @@ import_sensititre_ast(
 Standardised AST data frame
 }
 \description{
-This function imports antimicrobial susceptibility testing (AST) data from Sensititre instrument output files (UTF-16LE encoded,
-tab-separated, no header row) and converts it to the standardised long-format used by AMRgen.
+This function imports antimicrobial susceptibility testing (AST) data from Sensititre instrument output files
+(tab- or comma-separated, optionally UTF-16LE encoded, no header row) and converts it to the standardised
+long-format used by AMRgen.
 }

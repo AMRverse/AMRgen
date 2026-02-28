@@ -25,7 +25,9 @@
 #'   Expected columns: `id`, `drug_agent`, and at least one phenotype
 #'   column (see `pheno_col`). Optional columns: `mic`, `disk`,
 #'   `method`, `guideline`, `platform`.
-#' @param file File path for the output file (must end in `.txt` or `.tsv`).
+#' @param file File path for the output file (must end in `.txt` or
+#'   `.tsv`). If `NULL` (default), no file is written and the
+#'   formatted data frame is returned visibly.
 #' @param overwrite Logical; overwrite an existing file? Default `FALSE`.
 #' @param pheno_col Character string naming the column that contains
 #'   SIR interpretations (class `sir`). Default `"pheno_provided"`.
@@ -42,8 +44,10 @@
 #' separators replaced by `"-"` (NCBI convention, e.g.
 #' `"amoxicillin-clavulanic acid"`).
 #'
-#' @return The formatted data frame is returned invisibly. A
-#'   tab-delimited UTF-8 text file is written to `file`.
+#' @return When `file` is provided, the formatted data frame is
+#'   returned invisibly and a tab-delimited UTF-8 file is written to
+#'   `file`. When `file = NULL`, the formatted data frame is returned
+#'   visibly and no file is written.
 #'
 #' @importFrom AMR ab_name
 #' @importFrom dplyr mutate if_else case_when select any_of
@@ -51,21 +55,30 @@
 #' @export
 #' @examples
 #' \dontrun{
+#' # Return formatted data frame without writing a file
+#' ncbi_df <- export_ncbi_biosample(ecoli_ast)
+#'
 #' # Write out the ecoli_ast data to file in NCBI format
 #' export_ncbi_biosample(ecoli_ast, "Ec_NCBI.tsv")
 #'
 #' # Download data from EBI, then write it out to file in NCBI format
-#' ebi_kleb_quasipneumoniae <- download_ebi(species = "Klebsiella quasipneumoniae", reformat = T)
+#' ebi_kq <- download_ebi(
+#'   data = "phenotype",
+#'   species = "Klebsiella quasipneumoniae",
+#'   reformat = T
+#' )
 #' export_ncbi_biosample(ebi_kq, "Kq_NCBI.tsv")
 #' }
-export_ncbi_biosample <- function(data, file, overwrite = FALSE,
+export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
                                   pheno_col = "pheno_provided") {
   # --- input validation ---
-  if (file.exists(file) && !overwrite) {
-    stop("The file '", file, "' already exists and `overwrite` is set to `FALSE`.")
-  }
-  if (!grepl("[.](txt|tsv)$", file, ignore.case = TRUE)) {
-    stop("`file` must have the file extension '.txt' or '.tsv'.")
+  if (!is.null(file)) {
+    if (file.exists(file) && !overwrite) {
+      stop("The file '", file, "' already exists and `overwrite` is set to `FALSE`.")
+    }
+    if (!grepl("[.](txt|tsv)$", file, ignore.case = TRUE)) {
+      stop("`file` must have the file extension '.txt' or '.tsv'.")
+    }
   }
 
   required <- c("id", "drug_agent", pheno_col)
@@ -139,6 +152,16 @@ export_ncbi_biosample <- function(data, file, overwrite = FALSE,
     )
   }
 
+  # --- map method to NCBI-permitted values ---
+  # Permitted: "MIC", "agar dilution", "disk diffusion", "missing"
+  method_raw <- if ("method" %in% colnames(data)) as.character(data$method) else rep(NA_character_, nrow(data))
+  ncbi_method <- dplyr::case_when(
+    method_raw %in% c("MIC", "broth dilution") ~ "MIC",
+    method_raw == "disk diffusion" ~ "disk diffusion",
+    method_raw == "agar dilution" ~ "agar dilution",
+    TRUE ~ "missing"
+  )
+
   # --- assemble output ---
   out <- data.frame(
     sample_name = data$id,
@@ -147,11 +170,7 @@ export_ncbi_biosample <- function(data, file, overwrite = FALSE,
     measurement_sign = m_sign,
     measurement = m_value,
     measurement_units = m_units,
-    laboratory_typing_method = if ("method" %in% colnames(data)) {
-      dplyr::if_else(is.na(data$method), "missing", as.character(data$method))
-    } else {
-      "missing"
-    },
+    laboratory_typing_method = ncbi_method,
     testing_standard = if ("guideline" %in% colnames(data)) {
       as.character(data$guideline)
     } else {
@@ -168,19 +187,22 @@ export_ncbi_biosample <- function(data, file, overwrite = FALSE,
   )
 
   # --- write ---
-  utils::write.table(
-    x = out,
-    file = file,
-    append = FALSE,
-    quote = TRUE,
-    sep = "\t",
-    na = "",
-    row.names = FALSE,
-    col.names = TRUE,
-    fileEncoding = "UTF-8"
-  )
+  if (!is.null(file)) {
+    utils::write.table(
+      x = out,
+      file = file,
+      append = FALSE,
+      quote = TRUE,
+      sep = "\t",
+      na = "",
+      row.names = FALSE,
+      col.names = TRUE,
+      fileEncoding = "UTF-8"
+    )
+    return(invisible(out))
+  }
 
-  invisible(out)
+  out
 }
 
 
@@ -195,7 +217,8 @@ export_ncbi_biosample <- function(data, file, overwrite = FALSE,
 #'   Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least
 #'   one phenotype column (see `pheno_col`). Optional columns: `mic`,
 #'   `disk`, `method`, `guideline`, `platform`.
-#' @param file File path for the output file.
+#' @param file File path for the output file. If `NULL` (default), no
+#'   file is written and the formatted data frame is returned visibly.
 #' @param overwrite Logical; overwrite an existing file? Default `FALSE`.
 #' @param pheno_col Character string naming the column that contains
 #'   SIR interpretations (class `sir`). Default `"pheno_provided"`.
@@ -210,18 +233,28 @@ export_ncbi_biosample <- function(data, file, overwrite = FALSE,
 #' Species names are derived from the `spp_pheno` column via
 #' [AMR::mo_name()].
 #'
-#' @return The formatted data frame is returned invisibly. A file is
-#'   written to `file`.
+#' @return When `file` is provided, the formatted data frame is
+#'   returned invisibly and a file is written to `file`. When
+#'   `file = NULL`, the formatted data frame is returned visibly and
+#'   no file is written.
 #'
 #' @importFrom AMR ab_name mo_name
 #' @importFrom dplyr if_else case_when
 #' @importFrom stringr str_match
 #' @export
-export_ebi_antibiogram <- function(data, file, overwrite = FALSE,
+#' @examples
+#' \dontrun{
+#' # Return formatted data frame without writing a file
+#' ebi_df <- export_ebi_antibiogram(ecoli_ast)
+#'
+#' # Write out the ecoli_ast data to file in EBI format
+#' export_ebi_antibiogram(ecoli_ast, "Ec_EBI.tsv")
+#' }
+export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
                                    pheno_col = "pheno_provided",
                                    sep = "\t") {
   # --- input validation ---
-  if (file.exists(file) && !overwrite) {
+  if (!is.null(file) && file.exists(file) && !overwrite) {
     stop("The file '", file, "' already exists and `overwrite` is set to `FALSE`.")
   }
 
@@ -305,6 +338,17 @@ export_ebi_antibiogram <- function(data, file, overwrite = FALSE,
     )
   }
 
+  # --- map method to EBI-permitted values ---
+  # Permitted: "E-test", "agar dilution", "broth dilution", "disk diffusion"
+  method_raw_ebi <- if ("method" %in% colnames(data)) as.character(data$method) else rep(NA_character_, nrow(data))
+  ebi_method <- dplyr::case_when(
+    method_raw_ebi %in% c("MIC", "broth dilution") ~ "broth dilution",
+    method_raw_ebi == "disk diffusion" ~ "disk diffusion",
+    method_raw_ebi == "agar dilution" ~ "agar dilution",
+    tolower(method_raw_ebi) %in% c("etest", "e-test") ~ "E-test",
+    TRUE ~ NA_character_
+  )
+
   # --- assemble output ---
   out <- data.frame(
     biosample_id = data$id,
@@ -316,11 +360,7 @@ export_ebi_antibiogram <- function(data, file, overwrite = FALSE,
       NA_character_
     },
     breakpoint_version = NA_character_,
-    laboratory_typing_method = if ("method" %in% colnames(data)) {
-      as.character(data$method)
-    } else {
-      NA_character_
-    },
+    laboratory_typing_method = ebi_method,
     measurement = m_value,
     measurement_units = m_units,
     measurement_sign = m_sign,
@@ -334,19 +374,22 @@ export_ebi_antibiogram <- function(data, file, overwrite = FALSE,
   )
 
   # --- write ---
-  utils::write.table(
-    x = out,
-    file = file,
-    append = FALSE,
-    quote = TRUE,
-    sep = sep,
-    na = "",
-    row.names = FALSE,
-    col.names = TRUE,
-    fileEncoding = "UTF-8"
-  )
+  if (!is.null(file)) {
+    utils::write.table(
+      x = out,
+      file = file,
+      append = FALSE,
+      quote = TRUE,
+      sep = sep,
+      na = "",
+      row.names = FALSE,
+      col.names = TRUE,
+      fileEncoding = "UTF-8"
+    )
+    return(invisible(out))
+  }
 
-  invisible(out)
+  out
 }
 
 
@@ -361,7 +404,8 @@ export_ebi_antibiogram <- function(data, file, overwrite = FALSE,
 #'   Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least
 #'   one phenotype column (see `pheno_col`). Optional columns: `mic`,
 #'   `disk`, `method`, `guideline`, `platform`.
-#' @param file File path for the output file.
+#' @param file File path for the output file. If `NULL` (default), no
+#'   file is written and the formatted data frame is returned visibly.
 #' @param format Target format: `"ncbi"` (default) or `"ebi"`.
 #' @param overwrite Logical; overwrite an existing file? Default `FALSE`.
 #' @param pheno_col Character string naming the column that contains
@@ -369,10 +413,29 @@ export_ebi_antibiogram <- function(data, file, overwrite = FALSE,
 #' @param ... Additional arguments passed to the format-specific
 #'   export function.
 #'
-#' @return The formatted data frame is returned invisibly.
+#' @return When `file` is provided, the formatted data frame is
+#'   returned invisibly and a file is written. When `file = NULL`,
+#'   the formatted data frame is returned visibly and no file is
+#'   written.
 #'
 #' @export
-export_ast <- function(data, file, format = "ncbi", overwrite = FALSE,
+#' @examples
+#' \dontrun{
+#' # Return NCBI formatted data frame without writing a file
+#' ncbi_df <- export_ast(ecoli_ast)
+#'
+#' # Write out the ecoli_ast data to file in EBI format
+#' export_ast(ecoli_ast, "Ec_EBI.tsv", format = "ebi")
+#'
+#' # Download data from EBI, then write it out to file in NCBI format
+#' ebi_kq <- download_ebi(
+#'   data = "phenotype",
+#'   species = "Klebsiella quasipneumoniae",
+#'   reformat = T
+#' )
+#' export_ast(ebi_kq, "Kq_NCBI.tsv", format = "ncbi")
+#' }
+export_ast <- function(data, file = NULL, format = "ncbi", overwrite = FALSE,
                        pheno_col = "pheno_provided", ...) {
   format <- tolower(format)
   switch(format,

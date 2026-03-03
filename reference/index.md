@@ -68,6 +68,12 @@ from public repositories or internal formats.
 - [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
   : Import and process antimicrobial phenotype data from a generic
   format
+- [`query_ncbi_bq_ast()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.md)
+  : Query antimicrobial phenotype (AST) data from NCBI Pathogen
+  Detection BigQuery
+- [`query_ncbi_bq_geno()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.md)
+  : Query antimicrobial genotype (MicroBIGG-E) data from NCBI Pathogen
+  Detection BigQuery
 
 ## Resistance Interpretation
 
@@ -149,7 +155,14 @@ Example datasets for demonstration and reproducible analysis.
 - [`staph_ast_ncbi`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi.md)
   : S. aureus Example of Imported NCBI Phenotype Data
 - [`staph_ast_ncbi_raw`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_raw.md)
-  : S. aureus Example of Raw Downloaded NCBI Phenotype Data
+  : S. aureus Example of Raw Phenotype Data Downloaded from NCBI
+  BioSamples via Entrez API
+- [`staph_ast_ncbi_cloud_raw`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_cloud_raw.md)
+  : S. aureus Example of Raw Phenotype Data Downloaded from NCBI via
+  Google Cloud BigQuery
+- [`staph_geno_ncbi_cloud_raw`](https://AMRverse.github.io/AMRgen/reference/staph_geno_ncbi_cloud_raw.md)
+  : S. aureus Example of Raw Genotype Data Downloaded from NCBI via
+  Google Cloud BigQuery
 - [`staph_ast_ebi`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ebi.md)
   : S. aureus Example of Imported EBI Phenotype Data
 - [`staph_geno_ebi`](https://AMRverse.github.io/AMRgen/reference/staph_geno_ebi.md)

@@ -21,18 +21,28 @@ library(dplyr)
 #>     intersect, setdiff, setequal, union
 ```
 
-### 1. Download data from NCBI
+### Option 1: Download data from NCBI
+
+#### Option 1a: Download AST data from NCBI via rentrez
 
 The
 [`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md)
-function lets you download antibiogram data from NCBI. You must specify
-a species, and can optionally limit the download to one or more specific
-drugs. The function can also re-format the data into an AMRgen phenotype
-table, and re-interpret phenotypes against clinical breakpoints from
-EUCAST or CLSI.
+function lets you download antibiogram data from NCBI via their ‘EUtils’
+API using the rentrez R pacakge. You must specify a species, and can
+optionally limit the download to one or more specific drugs. The
+function can also re-format the data into an AMRgen phenotype table, and
+re-interpret phenotypes against clinical breakpoints from EUCAST or
+CLSI.
+
+This function is quite slow, especially for organisms with many
+BioSamples to search through, but it is free and requires no
+authentication to use. Alternatively, you may prefer to try the BigQuery
+functions below (Option 1b), which provide more efficient and complete
+access to NCBI data but require authentication via a Google Cloud
+account.
 
 ``` r
-# Download Staphylococcus aureus AST data from NCBI, filtering for ampicillin, and re-interpreting with EUCAST breakpoints
+# Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline, and re-interpret with EUCAST breakpoints
 staph_ast_ncbi <- download_ncbi_ast(
   species = "Staphylococcus aureus",
   antibiotic = c("amikacin", "DOX"), # antibiotics can be listed in short or long form
@@ -142,6 +152,116 @@ Consider altering the `max_records`, `batch_size` or `sleep_time`
 options if you want to download a lot of data or run into NCBI server
 issues.
 
+#### Option 1b: Download AST and genotype data from NCBI via bigrquery
+
+NCBI data can be accessed via Google Cloud BigQuery. This requires a
+Google Cloud account. For more information about using BigQuery to
+explore NCBI data see
+<https://www.ncbi.nlm.nih.gov/sra/docs/sra-bigquery/>
+
+The
+[`query_ncbi_bq_ast()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.md)
+function lets you download antibiogram data from NCBI via Google Cloud
+BigQuery using the bigrquery R pacakge. You must specify a species, and
+can optionally limit the download to one or more specific drugs. The
+function can also re-format the data into an AMRgen phenotype table, and
+re-interpret phenotypes against clinical breakpoints from EUCAST or
+CLSI.
+
+This function is computationally very efficient but requires
+authentication via a [Google Cloud
+account](https://docs.cloud.google.com/docs/get-started) and may require
+payment (free trial accounts can be set up, but require credit card
+authorization).
+
+``` r
+# Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline
+# NOTE: you may need to add 'PROJECT_ID="xxx"' to the command if you have not set up application default credentials
+staph_ast_ncbi_cloud_raw <- query_ncbi_bq_ast(
+  taxgroup = "Staphylococcus aureus",
+  antibiotic = c("amikacin", "DOX")
+)
+```
+
+``` r
+# Import and reinterpret using CLSI breakpoints
+staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi = TRUE)
+#> Warning: There was 1 warning in `mutate()`.
+#> ℹ In argument: `pheno_provided = as.sir(`Resistance phenotype`)`.
+#> Caused by warning:
+#> ! in `as.sir()`: 8 results in column 'pheno_provided' truncated (6%) that
+#> were invalid antimicrobial interpretations: "intermediate"
+```
+
+The
+[`query_ncbi_bq_geno()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.md)
+function lets you download AMRfinderplus genotype data, for BioSamples
+that have matching AST data, from NCBI via Google Cloud BigQuery using
+the bigrquery R pacakge. You must specify a species, and can optionally
+limit the download to one or more specific drug classes (see [NCBI AMR
+Class-Subclass
+Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid
+terms). The function can also re-format the data into an AMRgen genotype
+table.
+
+Note that BioSamples with no AST data in NCBI will not be included in
+the download.
+
+NCBI genotype results are not updated with each new release of
+AMRfinderplus, so older genomes will have genotype results obtained with
+older versions of AMRfinderplus, and newer genomes will have genotype
+results obtained with more recent versions.
+
+``` r
+# Download Staphylococcus aureus genotype data from NCBI, filtering for variants associated with class 'AMINOGLYCOSIDES' or 'TETRACYCLINES'
+# NOTE: you may need to add 'PROJECT_ID="xxx"' to the command if you have not set up application default credentials
+staph_geno_ncbi_cloud_raw <- query_ncbi_bq_geno(
+  taxgroup = "Staphylococcus aureus",
+  geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE")
+) %>% filter(biosample_acc %in% staph_ast_ncbi_cloud_raw$BioSample)
+```
+
+``` r
+staph_geno_ncbi_cloud_raw
+#> # A tibble: 119 × 9
+#>    biosample_acc `Gene symbol`   Class Subclass `Element type` `Element subtype`
+#>    <chr>         <chr>           <chr> <chr>    <chr>          <chr>            
+#>  1 SAMN07291566  mepA            TETR… TIGECYC… AMR            AMR              
+#>  2 SAMN04901618  ant(9)-Ia       AMIN… SPECTIN… AMR            AMR              
+#>  3 SAMN04901605  mepA            TETR… TIGECYC… AMR            AMR              
+#>  4 SAMN04901606  mepA            TETR… TIGECYC… AMR            AMR              
+#>  5 SAMN07291567  aac(6')-Ie/aph… AMIN… AMIKACI… AMR            AMR              
+#>  6 SAMN07291564  mepA            TETR… TIGECYC… AMR            AMR              
+#>  7 SAMN04901609  tet(M)          TETR… TETRACY… AMR            AMR              
+#>  8 SAMN07291562  mepA            TETR… TIGECYC… AMR            AMR              
+#>  9 SAMN04901615  mepA            TETR… TIGECYC… AMR            AMR              
+#> 10 SAMN30333622  ant(9)-Ia       AMIN… SPECTIN… AMR            AMR              
+#> # ℹ 109 more rows
+#> # ℹ 3 more variables: Method <chr>, Hierarchy_node <chr>, scientific_name <chr>
+
+# Import and parse results into AMRgen genotype table
+staph_geno_ncbi_cloud <- import_amrfp(staph_geno_ncbi_cloud_raw, sample_col = "biosample_acc")
+
+staph_geno_ncbi_cloud
+#> # A tibble: 148 × 17
+#>    biosample_acc gene   mutation node  marker marker.label drug_agent drug_class
+#>    <chr>         <chr>  <chr>    <chr> <chr>  <chr>        <ab>       <chr>     
+#>  1 SAMN07291566  mepA   NA       mepA  mepA   mepA         TGC        Tetracycl…
+#>  2 SAMN04901618  ant(9… NA       ant(… ant(9… ant(9)-Ia    SPT        Other ant…
+#>  3 SAMN04901605  mepA   NA       mepA  mepA   mepA         TGC        Tetracycl…
+#>  4 SAMN04901606  mepA   NA       mepA  mepA   mepA         TGC        Tetracycl…
+#>  5 SAMN07291567  aac(6… NA       aac(… aac(6… aac(6')-Ie/… AMK        Aminoglyc…
+#>  6 SAMN07291567  aac(6… NA       aac(… aac(6… aac(6')-Ie/… GEN        Aminoglyc…
+#>  7 SAMN07291567  aac(6… NA       aac(… aac(6… aac(6')-Ie/… KAN        Aminoglyc…
+#>  8 SAMN07291567  aac(6… NA       aac(… aac(6… aac(6')-Ie/… TOB        Aminoglyc…
+#>  9 SAMN07291564  mepA   NA       mepA  mepA   mepA         TGC        Tetracycl…
+#> 10 SAMN04901609  tet(M) NA       tet(… tet(M) tet(M)       NA         Tetracycl…
+#> # ℹ 138 more rows
+#> # ℹ 9 more variables: `Gene symbol` <chr>, Class <chr>, Subclass <chr>,
+#> #   `Element type` <chr>, `Element subtype` <chr>, Method <chr>,
+#> #   Hierarchy_node <chr>, scientific_name <chr>, `variation type` <chr>
+```
+
 #### Visualise the downloaded phenotype data to check the distribution of the AST data
 
 ``` r
@@ -184,16 +304,22 @@ more guidance on how to visulaise phenotypic data and combine it with
 genotypic data, have a look at the other `AMRgen`
 [vignettes](https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
 
-### 2. Download data from EBI
+### Option 2: Download data from EBI
 
 The `download_ebi` function lets you retrieve phenotype or genotype data
-(by setting `data ="genotype'`). You can optionally filter the
+(by setting `data ="genotype'`) from the [EBI AMR
+Portal](https://www.ebi.ac.uk/amr). Genotypes are called using
+AMRfinderplus but processed by EBI. You can optionally filter the
 downloaded file to a specified genus or species, and a specific
 antibiotic (for phenotype data) or NCBI class/subclass (for genotype
 data; check the [NCBI AMR Class-Subclass
 Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid
 terms). The function can also reformat and re-interpret the retrieved
 results with the breakpoint standards of your choosing.
+
+Note that while NCBI and EBI AST databases have a lot of overlapping
+content, they are not identical and each includes biosamples that the
+other does not.
 
 ``` r
 # Download EBI phenotype data for all Staphylococcus, using the same example drugs as above. Reformat and re-interpret using EUCAST breakpoints
@@ -234,32 +360,41 @@ head(staph_ast_ebi)
 #> #   Updated_phenotype_CLSI <chr>, Updated_phenotype_EUCAST <chr>, …
 ```
 
+Genotype data can be retrieved from EBI using the same function.
+Currently, not all samples in the EBI AMR portal have both AST and
+genotype data.
+
+Note the input assemblies used to call genotypes, and the version of
+AMRfinderplus, in the EBI portal can be different from what’s available
+for download from NCBI using the above functions.
+
 ``` r
-# Download all available genotype data for Staphylococcus, and re-format the data into an AMRgen genotype table. Note that not all samples with phenotype data have genotype data.
+# Download genotype data for Staphylococcus, filter to markers associated with aminoglycosides or tetracyclines, and re-format the data into an AMRgen genotype table. Note that not all samples with phenotype data have genotype data.
 staph_geno_ebi <- download_ebi(
   data = "genotype",
   genus = "Staphylococcus",
+  geno_class = c("AMINOGLYCOSIDE","TETRACYCLINE"),
   reformat = T
 )
 ```
 
 ``` r
 nrow(staph_geno_ebi)
-#> [1] 198344
+#> [1] 45945
 
 length(unique(staph_geno_ebi$BioSample_ID))
-#> [1] 7548
+#> [1] 7547
 
 head(staph_geno_ebi)
 #> # A tibble: 6 × 34
 #>   BioSample_ID gene    mutation node   marker marker.label drug_agent drug_class
 #>   <chr>        <chr>   <chr>    <chr>  <chr>  <chr>        <ab>       <chr>     
 #> 1 SAMEA5330271 tet(38) -        tet(3… tet(3… tet(38)      NA         Tetracycl…
-#> 2 SAMEA5330271 dfrG    -        dfrG   dfrG   dfrG         NA         Trimethop…
-#> 3 SAMEA5330271 blaI    -        blaI   blaI   blaI         NA         Beta-lact…
-#> 4 SAMEA5330271 blaR1   -        blaR1  blaR1  blaR1        NA         Beta-lact…
-#> 5 SAMEA5330271 blaZ    -        blaZ   blaZ   blaZ         NA         Beta-lact…
-#> 6 SAMEA5330271 tet(K)  -        tet(K) tet(K) tet(K)       NA         Tetracycl…
+#> 2 SAMEA5330271 tet(K)  -        tet(K) tet(K) tet(K)       NA         Tetracycl…
+#> 3 SAMEA5330271 mepA    -        mepA   mepA   mepA         TGC        Tetracycl…
+#> 4 SAMEA5330297 tet(38) -        tet(3… tet(3… tet(38)      NA         Tetracycl…
+#> 5 SAMEA5330297 mepA    -        mepA   mepA   mepA         TGC        Tetracycl…
+#> 6 SAMEA5330308 tet(K)  -        tet(K) tet(K) tet(K)       NA         Tetracycl…
 #> # ℹ 26 more variables: assembly_ID <chr>, genus <chr>, species <chr>,
 #> #   organism <chr>, isolate <chr>, taxon_id <int>, region <chr>,
 #> #   region_start <int>, region_end <int>, strand <chr>, `_bin` <int>,

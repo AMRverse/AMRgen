@@ -96,47 +96,16 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_eucast_mic_distribution</span><span class="op">(</span><span class="st">"cipro"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 133 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    microorganism                   microorganism_code   mic count</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;mo&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.002     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.004     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.008     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.016     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.03<span style="color: #555555;">0</span>     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.06<span style="color: #555555;">0</span>     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.125     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.25<span style="color: #555555;">0</span>    28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       0.5<span style="color: #555555;">00</span>    27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Actinobacillus pleuropneumoniae <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP       1<span style="color: #555555;">.000</span>     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 123 more rows</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="fu">get_eucast_mic_distribution</span><span class="op">(</span><span class="st">"cipro"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># not returning as frequency table</span></span></span>
 <span class="r-in"><span><span class="fu">get_eucast_mic_distribution</span><span class="op">(</span><span class="st">"cipro"</span>, as_freq_table <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 25</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   microorganism microorganism_code `0.002` `0.004` `0.008` `0.016` `0.03` `0.06`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;mo&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Actinobacill… <span style="color: #949494;">B_</span>ACTNB<span style="color: #949494;">_</span>PLRP             0       0       0       0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Mannheimia h… <span style="color: #949494;">B_</span>MNNHM<span style="color: #949494;">_</span>HMLY             0       0       0       0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Pasteurella … <span style="color: #949494;">B_</span>PSTRL<span style="color: #949494;">_</span>MLTC             0       0       0       0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Staphylococc… <span style="color: #949494;">B_</span>STPHY<span style="color: #949494;">_</span>AURS             0       0       0       0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Staphylococc… <span style="color: #949494;">B_</span>STPHY<span style="color: #949494;">_</span>PSDN             0       0       0       0      1     16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Streptococcu… <span style="color: #949494;">B_</span>STRPT<span style="color: #949494;">_</span>EQUI<span style="color: #949494;">_</span>EQUI        0       0       0       0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> Streptococcu… <span style="color: #949494;">B_</span>STRPT<span style="color: #949494;">_</span>EQUI<span style="color: #949494;">_</span>ZPDM        0       0       0       0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 17 more variables: `0.125` &lt;int&gt;, `0.25` &lt;int&gt;, `0.5` &lt;int&gt;, `1` &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   `2` &lt;int&gt;, `4` &lt;int&gt;, `8` &lt;int&gt;, `16` &lt;int&gt;, `32` &lt;int&gt;, `64` &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   `128` &lt;int&gt;, `256` &lt;int&gt;, `512` &lt;int&gt;, distributions &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   observations &lt;int&gt;, ecoff &lt;chr&gt;, confidence_interval &lt;chr&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># specify microorganism to only get results for that pathogen</span></span></span>
 <span class="r-in"><span><span class="fu">get_eucast_mic_distribution</span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"K. pneumoniae"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 0 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 variables: mic &lt;mic&gt;, count &lt;int&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">get_eucast_disk_distribution</span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"K. pneumoniae"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 0 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 variables: disk_diffusion &lt;dsk&gt;, count &lt;int&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plotting ----------------------------------------------------------------</span></span></span>
@@ -144,45 +113,15 @@
 <span class="r-in"><span><span class="va">mic_data</span> <span class="op">&lt;-</span> <span class="fu">get_eucast_mic_distribution</span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"K. pneumoniae"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">mic_data</span><span class="op">$</span><span class="va">mic</span>, <span class="va">mic_data</span><span class="op">$</span><span class="va">count</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">mics</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"K. pneumoniae"</span>, title <span class="op">=</span> <span class="st">"Look at my MICs!"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to min; returning Inf</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to max; returning -Inf</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in as.mic():</span> argument <span style="background-color: #444444;">`x`</span> must not be NULL</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Comparing With User Values ----------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">my_mic_values</span> <span class="op">&lt;-</span> <span class="fu">AMR</span><span class="fu">::</span><span class="fu"><a href="https://amr-for-r.org/reference/random.html" class="external-link">random_mic</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu">compare_mic_with_eucast</span><span class="op">(</span><span class="va">my_mic_values</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"K. pneumoniae"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(value)`</span>
 <span class="r-in"><span><span class="va">comparison</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 20 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    value   user eucast</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 0.0005    52      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 0.001     40      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 0.002     49      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 0.004     29      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 0.008     41      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 0.016     25      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 0.032     37      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 0.064     28      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 0.125     27      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 0.25      27      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> 0.5       27      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> 1         16      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> 2         24      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> 4         20      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> 8         18      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> 16        11      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> 32        12      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> 64         7      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">19</span> 128        5      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">20</span> &gt;=256      5      0</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Use ggplot2::autoplot() on this output to visualise.</span>
 <span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 20 rows containing missing values or values outside the scale range</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_col()`).</span>
-<span class="r-plt img"><img src="get_eucast_amr_distribution-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -60,11 +60,15 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_solo_logReg.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/ppv.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/print.amr_concordance.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/reexports.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/staph_ast_ebi.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_cloud_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/staph_geno_ebi.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/staph_geno_ncbi_cloud_raw.html</loc></url>
 </urlset>
 

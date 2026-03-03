@@ -1868,15 +1868,15 @@ import_whonet_ast <- function(input,
 #' @examples
 #' \dontrun{
 #' # German XLS export (auto-detected)
-#' pheno <- import_phoenix_ast("Phoenix-Antibiogramm-Daten.xls")
+#' pheno <- import_phoenix_ast("phoenix_export.xls")
 #'
 #' # CLSI per-isolate report (auto-detected), providing species and guideline
-#' pheno <- import_phoenix_ast("TF-BDP_CLSI2018.txt",
+#' pheno <- import_phoenix_ast("phoenix_clsi_report.txt",
 #'   species = "Escherichia coli", instrument_guideline = "CLSI 2018"
 #' )
 #'
 #' # Wide format (auto-detected), specifying sample ID column
-#' pheno <- import_phoenix_ast("AST_MIC_Mills.xlsx",
+#' pheno <- import_phoenix_ast("phoenix_wide.xlsx",
 #'   sample_col = "Sample", species = "Escherichia coli",
 #'   interpret_eucast = TRUE
 #' )
@@ -2062,7 +2062,7 @@ import_phoenix_ast <- function(input,
   # ---------------------------------------------------------------
   # FORMAT: wide
   #   One row per isolate with alternating "[Drug] call" / "[Drug] MIC"
-  #   column pairs (e.g. Mills et al. 2022 supplementary data).
+  #   column pairs (one row per isolate).
   #   Embedded whitespace in column names (tabs, etc.) is stripped.
   # ---------------------------------------------------------------
   else if (format == "wide") {

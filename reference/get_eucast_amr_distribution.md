@@ -111,82 +111,46 @@ For the current list, run
 
 ``` r
 get_eucast_mic_distribution("cipro")
-#> # A tibble: 2,033 × 4
-#>    microorganism              microorganism_code   mic count
-#>    <chr>                      <mo>               <mic> <int>
-#>  1 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.002     0
-#>  2 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.004     0
-#>  3 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.008     0
-#>  4 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.016     0
-#>  5 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.030     0
-#>  6 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.060     0
-#>  7 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.125     0
-#>  8 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.250     1
-#>  9 Achromobacter xylosoxidans B_ACHRMB_XYLS      0.500     0
-#> 10 Achromobacter xylosoxidans B_ACHRMB_XYLS      1.000     6
-#> # ℹ 2,023 more rows
+#> # A tibble: 133 × 4
+#>    microorganism                   microorganism_code   mic count
+#>    <chr>                           <mo>               <mic> <int>
+#>  1 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.002     0
+#>  2 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.004     0
+#>  3 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.008     0
+#>  4 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.016     0
+#>  5 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.030     0
+#>  6 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.060     0
+#>  7 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.125     0
+#>  8 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.250    28
+#>  9 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       0.500    27
+#> 10 Actinobacillus pleuropneumoniae B_ACTNB_PLRP       1.000     1
+#> # ℹ 123 more rows
 
 # not returning as frequency table
 get_eucast_mic_distribution("cipro", as_freq_table = FALSE)
-#> # A tibble: 107 × 25
-#>    microorganism       microorganism_code `0.002` `0.004` `0.008` `0.016` `0.03`
-#>    <chr>               <mo>                 <dbl>   <dbl>   <dbl>   <dbl>  <dbl>
-#>  1 Achromobacter xylo… B_ACHRMB_XYLS            0       0       0       0      0
-#>  2 Acinetobacter baum… B_ACNTB_BMNN             0       0       2       5     16
-#>  3 Acinetobacter pitt… B_ACNTB_PITT             0       0       0       0      0
-#>  4 Actinomyces israel… B_AMYCS_ISRL             0       0       0       0      0
-#>  5 Aerococcus sanguin… B_AERCC_SNGN             0       0       0       0      0
-#>  6 Aerococcus urinae   B_AERCC_URIN             0       0       0       0      0
-#>  7 Alcaligenes faecal… B_ALCLG_FCLS             0       0       0       0      0
-#>  8 Bacillus anthracis  B_BCLLS_ANTH             0       0       0       0      2
-#>  9 Bacillus cereus     B_BCLLS_CERS             0       0       0       0      0
-#> 10 Brucella melitensis B_BRCLL_MLTN             0       0       0       1      0
-#> # ℹ 97 more rows
-#> # ℹ 18 more variables: `0.06` <dbl>, `0.125` <dbl>, `0.25` <dbl>, `0.5` <dbl>,
-#> #   `1` <int>, `2` <int>, `4` <int>, `8` <int>, `16` <int>, `32` <int>,
-#> #   `64` <int>, `128` <int>, `256` <int>, `512` <int>, distributions <chr>,
-#> #   observations <chr>, ecoff <chr>, confidence_interval <chr>
+#> # A tibble: 7 × 25
+#>   microorganism microorganism_code `0.002` `0.004` `0.008` `0.016` `0.03` `0.06`
+#>   <chr>         <mo>                 <int>   <int>   <int>   <int>  <int>  <int>
+#> 1 Actinobacill… B_ACTNB_PLRP             0       0       0       0      0      0
+#> 2 Mannheimia h… B_MNNHM_HMLY             0       0       0       0      0      0
+#> 3 Pasteurella … B_PSTRL_MLTC             0       0       0       0      0      0
+#> 4 Staphylococc… B_STPHY_AURS             0       0       0       0      0      0
+#> 5 Staphylococc… B_STPHY_PSDN             0       0       0       0      1     16
+#> 6 Streptococcu… B_STRPT_EQUI_EQUI        0       0       0       0      0      0
+#> 7 Streptococcu… B_STRPT_EQUI_ZPDM        0       0       0       0      0      0
+#> # ℹ 17 more variables: `0.125` <int>, `0.25` <int>, `0.5` <int>, `1` <int>,
+#> #   `2` <int>, `4` <int>, `8` <int>, `16` <int>, `32` <int>, `64` <int>,
+#> #   `128` <int>, `256` <int>, `512` <int>, distributions <int>,
+#> #   observations <int>, ecoff <chr>, confidence_interval <chr>
 
 # specify microorganism to only get results for that pathogen
 get_eucast_mic_distribution("cipro", "K. pneumoniae")
-#> # A tibble: 19 × 2
-#>        mic count
-#>      <mic> <int>
-#>  1   0.002     0
-#>  2   0.004     4
-#>  3   0.008   116
-#>  4   0.016   545
-#>  5   0.030  1456
-#>  6   0.060   692
-#>  7   0.125   196
-#>  8   0.250   189
-#>  9   0.500   119
-#> 10   1.000    88
-#> 11   2.000    36
-#> 12   4.000    43
-#> 13   8.000    26
-#> 14  16.000    36
-#> 15  32.000   105
-#> 16  64.000    53
-#> 17 128.000    31
-#> 18 256.000    28
-#> 19 512.000    15
+#> # A tibble: 0 × 2
+#> # ℹ 2 variables: mic <mic>, count <int>
 
 get_eucast_disk_distribution("cipro", "K. pneumoniae")
-#> # A tibble: 45 × 2
-#>    disk_diffusion count
-#>             <dsk> <int>
-#>  1              6   362
-#>  2              7     6
-#>  3              8     8
-#>  4              9     8
-#>  5             10    20
-#>  6             11    15
-#>  7             12     5
-#>  8             13     8
-#>  9             14    20
-#> 10             15    37
-#> # ℹ 35 more rows
+#> # A tibble: 0 × 2
+#> # ℹ 2 variables: disk_diffusion <dsk>, count <int>
 
 
 # Plotting ----------------------------------------------------------------
@@ -194,7 +158,9 @@ get_eucast_disk_distribution("cipro", "K. pneumoniae")
 mic_data <- get_eucast_mic_distribution("cipro", "K. pneumoniae")
 mics <- rep(mic_data$mic, mic_data$count)
 ggplot2::autoplot(mics, ab = "cipro", mo = "K. pneumoniae", title = "Look at my MICs!")
-
+#> Warning: no non-missing arguments to min; returning Inf
+#> Warning: no non-missing arguments to max; returning -Inf
+#> Error in as.mic(): argument `x` must not be NULL
 
 
 # Comparing With User Values ----------------------------------------------
@@ -203,20 +169,31 @@ my_mic_values <- AMR::random_mic(500)
 comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "K. pneumoniae")
 #> Joining with `by = join_by(value)`
 comparison
-#> # A tibble: 24 × 3
+#> # A tibble: 20 × 3
 #>    value   user eucast
 #>  * <fct>  <int>  <int>
 #>  1 0.0005    52      0
 #>  2 0.001     40      0
 #>  3 0.002     49      0
-#>  4 0.004     29      4
-#>  5 0.008     41    116
-#>  6 0.016     25    545
-#>  7 0.03       0   1456
-#>  8 0.032     37      0
-#>  9 0.06       0    692
-#> 10 0.064     28      0
-#> # ℹ 14 more rows
+#>  4 0.004     29      0
+#>  5 0.008     41      0
+#>  6 0.016     25      0
+#>  7 0.032     37      0
+#>  8 0.064     28      0
+#>  9 0.125     27      0
+#> 10 0.25      27      0
+#> 11 0.5       27      0
+#> 12 1         16      0
+#> 13 2         24      0
+#> 14 4         20      0
+#> 15 8         18      0
+#> 16 16        11      0
+#> 17 32        12      0
+#> 18 64         7      0
+#> 19 128        5      0
+#> 20 >=256      5      0
 #> Use ggplot2::autoplot() on this output to visualise.
 ggplot2::autoplot(comparison)
+#> Warning: Removed 20 rows containing missing values or values outside the scale range
+#> (`geom_col()`).
 ```

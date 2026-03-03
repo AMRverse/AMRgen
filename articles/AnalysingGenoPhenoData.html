@@ -396,6 +396,7 @@ their own or with your data overlaid.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare reference distribution to example E. coli data</span></span>
 <span><span class="va">ecoli_cip</span> <span class="op">&lt;-</span> <span class="va">ecoli_ast</span><span class="op">$</span><span class="va">mic</span><span class="op">[</span><span class="va">ecoli_ast</span><span class="op">$</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CIP"</span><span class="op">]</span></span>
+<span></span>
 <span><span class="va">ecoli_cip_vs_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ecoli_cip</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ecoli_cip_vs_ref</span></span>
@@ -414,6 +415,7 @@ their own or with your data overlaid.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 0.12       34      0</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 22 more rows</span></span></span>
 <span><span class="co">#&gt; Use ggplot2::autoplot() on this output to visualise.</span></span>
+<span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">ecoli_cip_vs_ref</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast_dummy-1.png" class="r-plt" alt="" width="100%"></p>
 </div>

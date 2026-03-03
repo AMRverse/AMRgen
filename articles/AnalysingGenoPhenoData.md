@@ -375,6 +375,7 @@ ecoli_cip_mic_data
 ``` r
 # Compare reference distribution to example E. coli data
 ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
+
 ecoli_cip_vs_ref <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
 ```
 
@@ -395,6 +396,7 @@ ecoli_cip_vs_ref
 #> 10 0.12       34      0
 #> # ℹ 22 more rows
 #> Use ggplot2::autoplot() on this output to visualise.
+
 ggplot2::autoplot(ecoli_cip_vs_ref)
 ```
 

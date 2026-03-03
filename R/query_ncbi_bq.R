@@ -179,6 +179,7 @@ query_ncbi_bq_geno <- function(taxgroup,
     SELECT
       mb.biosample_acc,
       element_symbol,
+      class,
       subclass,
       type,
       subtype,
@@ -219,6 +220,7 @@ query_ncbi_bq_geno <- function(taxgroup,
       "Method" = amr_method,
       "Hierarchy_node" = hierarchy_node,
       "Element subtype" = subtype,
+      "Class" = class,
       "Subclass" = subclass
     )
 
@@ -237,11 +239,14 @@ get_bq_project_id <- function(project_id = NULL) {
   }
 
   # 3. Fallback: Ask gcloud directly
-  tryCatch({
-    system("gcloud config get-value project", intern = TRUE)
-  }, error = function(e) {
-    stop("GCP Project ID must be provided via `project_id` argument or `GOOGLE_CLOUD_PROJECT` environment variable. \nSee https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects", call. = FALSE)
-  })
+  tryCatch(
+    {
+      system("gcloud config get-value project", intern = TRUE)
+    },
+    error = function(e) {
+      stop("GCP Project ID must be provided via `project_id` argument or `GOOGLE_CLOUD_PROJECT` environment variable. \nSee https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects", call. = FALSE)
+    }
+  )
 
   stop("GCP Project ID must be provided via `project_id` argument or `GOOGLE_CLOUD_PROJECT` environment variable. \nSee https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects", call. = FALSE)
 }
@@ -261,4 +266,3 @@ bq_query_with_auth_check <- function(project_id, query, params) {
     }
   )
 }
-

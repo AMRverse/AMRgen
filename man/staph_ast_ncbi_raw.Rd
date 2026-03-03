@@ -3,7 +3,7 @@
 \docType{data}
 \name{staph_ast_ncbi_raw}
 \alias{staph_ast_ncbi_raw}
-\title{S. aureus Example of Raw Downloaded NCBI Phenotype Data}
+\title{S. aureus Example of Raw Phenotype Data Downloaded from NCBI BioSamples via Entrez API}
 \format{
 \code{staph_ast_ncbi_raw} A data frame with 143 rows and 13 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
 

@@ -14,7 +14,6 @@ staph_ast_ncbi <- download_ncbi_ast(
   reformat = TRUE,
   interpret_eucast = TRUE
 ) # reformat must be true to use interpret_* argument
-
 usethis::use_data(staph_ast_ncbi, internal = FALSE, overwrite = TRUE)
 
 staph_ast_ncbi_raw <- download_ncbi_ast(
@@ -23,8 +22,23 @@ staph_ast_ncbi_raw <- download_ncbi_ast(
   reformat = FALSE,
   interpret_eucast = FALSE
 )
-
 usethis::use_data(staph_ast_ncbi_raw, internal = FALSE, overwrite = TRUE)
+
+
+# downloading via google bigquery - note you may need to add project_id to run
+staph_ast_ncbi_cloud_raw <- query_ncbi_bq_ast(
+  taxgroup = "Staphylococcus aureus",
+  antibiotic = c("amikacin", "DOX")
+)
+usethis::use_data(staph_ast_ncbi_cloud_raw, internal = FALSE, overwrite = TRUE)
+
+staph_geno_ncbi_cloud_raw <- query_ncbi_bq_geno(
+  taxgroup = "Staphylococcus aureus",
+  geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE")
+)
+# file is too big including all samples that have ANY AST data in NCBI, narrow down to those with 
+staph_geno_ncbi_cloud_raw <- staph_geno_ncbi_cloud_raw %>% filter(biosample_acc %in% staph_ast_ncbi_cloud_raw$BioSample)
+usethis::use_data(staph_geno_ncbi_cloud_raw, internal = FALSE, overwrite = TRUE)
 
 
 staph_ast_ebi <- download_ebi(
@@ -35,13 +49,12 @@ staph_ast_ebi <- download_ebi(
   interpret_clsi = TRUE,
   interpret_ecoff = TRUE
 ) # chose which guideline to use for re-interpretation. reformat must be TRUE for re-interpretation
-
 usethis::use_data(staph_ast_ebi, internal = FALSE, overwrite = TRUE)
 
 staph_geno_ebi <- download_ebi(
   data = "genotype",
   genus = "Staphylococcus",
+  geno_class = c("AMINOGLYCOSIDE","TETRACYCLINE"),
   reformat = T
 )
-
 usethis::use_data(staph_geno_ebi, internal = FALSE, overwrite = TRUE)

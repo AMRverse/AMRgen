@@ -220,7 +220,17 @@ utils::globalVariables(c(
   "estimate",
   "I.denom",
   "NWT.denom",
-  "R.denom"
+  "R.denom",
+  "amr_method",
+  "bioproject_acc",
+  "biosample_acc",
+  "disk_diffusion",
+  "element_symbol",
+  "hierarchy_node",
+  "phenotype",
+  "reagent",
+  "scientific_name",
+  "standard"
 ))
 
 

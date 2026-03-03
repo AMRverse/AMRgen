@@ -119,7 +119,7 @@
 "staph_ast_ncbi"
 
 
-#' S. aureus Example of Raw Downloaded NCBI Phenotype Data
+#' S. aureus Example of Raw Phenotype Data Downloaded from NCBI BioSamples via Entrez API
 #'
 #' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function without reformating.
 #' @format `staph_ast_ncbi_raw` A data frame with 143 rows and 13 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
@@ -131,6 +131,33 @@
 #' - ...: Additional data columns from NCBI.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
 "staph_ast_ncbi_raw"
+
+
+#' S. aureus Example of Raw Phenotype Data Downloaded from NCBI via Google Cloud BigQuery
+#'
+#' Phenotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformating.
+#' @format `staph_ast_ncbi_cloud_raw` A data frame with 142 rows and 11 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
+#'
+#' Columns include:
+#' - `BioSample`: Sample identifier.
+#' - `Antibiotic`: Antibiotic name.
+#' - `Resistance phenotype`: S/I/R phenotypes as downloaded from NCBI.
+#' - ...: Additional data columns from NCBI.
+#' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
+"staph_ast_ncbi_cloud_raw"
+
+
+#' S. aureus Example of Raw Genotype Data Downloaded from NCBI via Google Cloud BigQuery
+#'
+#' AMRfinderplus genotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformating.
+#' @format `staph_geno_ncbi_cloud_raw` A data frame with 4064 rows and 9 columns representing all Staphylococcus aureus genotyping results for markers associated with class aminoglycoside or tetracycline.
+#'
+#' Columns include:
+#' - `biosample_acc`: Sample identifier.
+#' - `scientific_name`: Organism name.
+#' - `Gene symbol`, `Class`, `Subclass`, `Element type`, `Element subtype`, `Method`, `Hierarchy_node`: Key results fields from AMRfinderplus.
+#' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/>
+"staph_geno_ncbi_cloud_raw"
 
 
 #' S. aureus Example of Imported EBI Phenotype Data

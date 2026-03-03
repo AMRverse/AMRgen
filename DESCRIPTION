@@ -39,6 +39,7 @@ Imports:
     XML,
     yardstick (>= 1.2.0)
 Suggests:
+    bigrquery,
     devtools,
     knitr,
     rmarkdown,

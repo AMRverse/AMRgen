@@ -1814,329 +1814,280 @@ import_whonet_ast <- function(input,
 #' Import and process antimicrobial phenotype data exported from BD Phoenix instruments
 #'
 #' This function imports antimicrobial susceptibility testing (AST) data from BD Phoenix instrument
-#' export files and converts them to the standardised long-format used by AMRgen. Three Phoenix
-#' export formats are supported and auto-detected:
+#' export files and converts them to the standardised long-format used by AMRgen.
 #'
-#' \describe{
-#'   \item{\code{"long_german"}}{XLS export (no header row, 7 fixed columns). Columns: sample ID,
-#'     organism, antibiotic name (German), MIC (German decimal locale with comma), instrument SIR,
-#'     expertized/reported SIR, testing date (DD.MM.YYYY). \code{X} in SIR columns (no breakpoint
-#'     defined) is treated as \code{NA}. Triggered automatically for \code{.xls} files.}
-#'   \item{\code{"long_clsi"}}{Per-isolate CLSI report (TXT/TSV with named column headers). Columns:
-#'     \code{Antimicrobial}, \code{MIC or Concentration}, \code{Interp}, \code{Expert (SIR)},
-#'     \code{Final (SIR)}, \code{Rule Number}, \code{Drug Test (Group)}. The \code{Resistance Markers}
-#'     and \code{Expert Triggered Rules} sections at the end of the file are automatically discarded.
-#'     Since no sample ID is present in this format, one is derived from the filename or may be
-#'     supplied via \code{sample_col}. Triggered automatically for \code{.txt}/\code{.tsv} files
-#'     containing an \code{Antimicrobial} header.}
-#'   \item{\code{"wide"}}{Wide-format XLSX (one row per isolate, alternating \code{[Drug] call} /
-#'     \code{[Drug] MIC} column pairs). Unicode \code{<=} signs (\code{≤}) are normalised.
-#'     Embedded whitespace in column names (e.g. a tab in \code{"Trimethoprim-sulfamethoxazole\\tcall"})
-#'     is stripped. Triggered automatically for \code{.xlsx} files whose column names contain
-#'     \code{"call"}.}
-#' }
+#' Phoenix instruments can export data in different file formats. This function handles both
+#' named-header exports (e.g. tab-delimited CLSI reports with columns such as
+#' \code{"Antimicrobial"}, \code{"MIC or Concentration"}, \code{"Final (SIR)"}) and
+#' positional/headerless exports (XLS files with no column headers). Column detection is
+#' automatic based on common Phoenix header name patterns, but any column can be overridden
+#' by supplying its name or 1-based index via \code{drug_col}, \code{mic_col}, \code{sir_col},
+#' \code{sample_col}, and \code{species_col}.
+#'
+#' For headerless files (detected when no standard column names are recognised), the function
+#' assumes the standard Phoenix positional layout: column 1 = sample ID, column 2 = species,
+#' column 3 = drug, column 4 = MIC, column 5 = instrument interpretation, column 6 =
+#' expert/final interpretation. Drug names are standardised using [AMR::as.ab()], which handles
+#' abbreviated, full, and language-specific names (e.g. \code{"Fosfomycin mit G6P"}). Species
+#' names are standardised using [AMR::as.mo()].
+#'
+#' For tab-delimited files, trailing non-data sections commonly appended by Phoenix (e.g.
+#' \code{"Resistance Markers"}, \code{"Expert Triggered Rules"}) are automatically discarded.
 #'
 #' @param input Path to a Phoenix export file (XLS, XLSX, TXT, or TSV), or a data frame.
-#' @param sample_col For \code{"wide"} format: column name to use as the sample identifier
-#'   (default: first column). For \code{"long_clsi"} format: a fixed string to use as the sample
-#'   identifier for all rows in the file (default: filename without extension).
-#' @param source Optional source value to record for all data points
-#' @param species Optional species override for phenotype interpretation. Required for
-#'   \code{"long_clsi"} and \code{"wide"} formats, which have no organism column.
-#' @param ab Optional antibiotic override for phenotype interpretation
-#' @param use_expertized For \code{"long_german"}: use expertized SIR (col 6, TRUE) vs instrument
-#'   SIR (col 5, FALSE). For \code{"long_clsi"}: use \code{Final (SIR)} (TRUE) vs \code{Interp}
-#'   (FALSE). For \code{"wide"}: always uses the \code{[Drug] call} column (this parameter has no
-#'   effect). Default: TRUE.
-#' @param instrument_guideline Optional guideline string recorded in the output \code{guideline}
-#'   column (e.g. \code{"CLSI 2018"}, \code{"EUCAST 2024"}). Useful for \code{"long_clsi"} and
-#'   \code{"wide"} formats which do not encode the guideline in the file.
-#' @param format One of \code{"auto"} (default), \code{"long_german"}, \code{"long_clsi"}, or
-#'   \code{"wide"}. See Details.
-#' @param interpret_eucast Interpret MIC values against EUCAST human breakpoints (default FALSE)
-#' @param interpret_clsi Interpret MIC values against CLSI human breakpoints (default FALSE)
-#' @param interpret_ecoff Interpret MIC values against ECOFF values (default FALSE)
-#' @param include_dates Include date columns in output where available (default TRUE).
-#'   For \code{"long_german"}: parses \code{testing_date} from DD.MM.YYYY.
+#' @param sample_col Name or 1-based column index of the sample ID column. If \code{NULL}
+#'   (default), auto-detected from common names (\code{"Sample"}, \code{"ID"}, \code{"Isolate"}).
+#'   For single-isolate files with no sample column, the filename is used as the sample ID.
+#' @param drug_col Name or 1-based column index of the drug/antimicrobial column. If \code{NULL}
+#'   (default), auto-detected from names such as \code{"Antimicrobial"}, \code{"Drug"}, etc.
+#' @param mic_col Name or 1-based column index of the MIC column. If \code{NULL} (default),
+#'   auto-detected from names such as \code{"MIC"}, \code{"MIC or Concentration"}, etc.
+#' @param sir_col Name or 1-based column index of the S/I/R interpretation column. If \code{NULL}
+#'   (default), auto-detected based on \code{use_expertized}: prefers \code{"Final (SIR)"},
+#'   \code{"Expert (SIR)"} when \code{TRUE}; prefers \code{"Interp"} when \code{FALSE}.
+#' @param species_col Name or 1-based column index of the species/organism column. If \code{NULL}
+#'   (default), auto-detected from names such as \code{"Organism"}, \code{"Species"}, etc.
+#'   Ignored if \code{species} is supplied.
+#' @param species Optional fixed species string applied to all rows (parsed via [AMR::as.mo()]).
+#'   Overrides \code{species_col}. Required for files without an organism column.
+#' @param ab Optional antibiotic filter/override passed to [interpret_ast()].
+#' @param use_expertized If \code{TRUE} (default), prefer the expert/final interpretation column
+#'   over raw instrument interpretation when both are present and \code{sir_col} is not specified.
+#' @param source Optional source label recorded in the \code{source} output column.
+#' @param instrument_guideline Optional guideline string recorded in the \code{guideline} column
+#'   (e.g. \code{"CLSI 2018"}, \code{"EUCAST 2024"}).
+#' @param interpret_eucast Interpret MIC values against EUCAST human breakpoints (default \code{FALSE}).
+#' @param interpret_clsi Interpret MIC values against CLSI human breakpoints (default \code{FALSE}).
+#' @param interpret_ecoff Interpret MIC values against ECOFF values (default \code{FALSE}).
 #' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
-#' @importFrom dplyr any_of case_when coalesce mutate relocate rename select
-#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr any_of filter if_else mutate relocate
 #' @importFrom readr read_tsv
-#' @importFrom rlang sym
 #' @return Standardised long-format AST data frame
 #' @export
 #' @examples
 #' \dontrun{
-#' # German XLS export (auto-detected)
-#' pheno <- import_phoenix_ast("phoenix_export.xls")
-#'
-#' # CLSI per-isolate report (auto-detected), providing species and guideline
+#' # Named-header export (e.g. CLSI report, auto-detected)
 #' pheno <- import_phoenix_ast("phoenix_clsi_report.txt",
 #'   species = "Escherichia coli", instrument_guideline = "CLSI 2018"
 #' )
 #'
-#' # Wide format (auto-detected), specifying sample ID column
-#' pheno <- import_phoenix_ast("phoenix_wide.xlsx",
-#'   sample_col = "Sample", species = "Escherichia coli",
-#'   interpret_eucast = TRUE
+#' # Positional/headerless XLS export (auto-detected)
+#' pheno <- import_phoenix_ast("phoenix_export.xls")
+#'
+#' # Override column detection when names differ from defaults
+#' pheno <- import_phoenix_ast("phoenix_export.xlsx",
+#'   drug_col = "Antibiotic", mic_col = "Result",
+#'   sir_col = "SIR_final", sample_col = "IsolateID",
+#'   species_col = "Organism"
 #' )
 #' }
 
 import_phoenix_ast <- function(input,
                                sample_col = NULL,
-                               source = NULL,
+                               drug_col = NULL,
+                               mic_col = NULL,
+                               sir_col = NULL,
+                               species_col = NULL,
                                species = NULL,
                                ab = NULL,
                                use_expertized = TRUE,
+                               source = NULL,
                                instrument_guideline = NULL,
-                               format = "auto",
                                interpret_eucast = FALSE,
                                interpret_clsi = FALSE,
-                               interpret_ecoff = FALSE,
-                               include_dates = TRUE) {
+                               interpret_ecoff = FALSE) {
 
   is_file <- is.character(input) && file.exists(input)
   ext <- if (is_file) tolower(tools::file_ext(input)) else NULL
 
-  # ---------------------------------------------------------------
-  # Auto-detect format from file extension and content
-  # ---------------------------------------------------------------
-  if (format == "auto") {
-    if (is.data.frame(input)) {
-      # Data frame: check for "call" columns (wide) vs 7-column no-header (long_german)
-      format <- if (any(grepl("\\bcall$", colnames(input), ignore.case = TRUE))) "wide" else "long_german"
-    } else if (ext == "xls") {
-      format <- "long_german"
-    } else if (ext == "xlsx") {
-      # Peek at first row: "call" columns → wide, otherwise long_german (no header)
-      peek <- readxl::read_excel(input, col_names = TRUE, .name_repair = "minimal", n_max = 0)
-      format <- if (any(grepl("\\bcall\\b", colnames(peek), ignore.case = TRUE))) "wide" else "long_german"
-    } else {
-      # txt/tsv: check whether "Antimicrobial" appears near the top
-      top_lines <- readLines(input, n = 5, warn = FALSE)
-      format <- if (any(grepl("Antimicrobial", top_lines, fixed = TRUE))) "long_clsi" else "long_german"
+  # -------------------------------------------------------------------
+  # Helper: resolve a column reference (name or 1-based index)
+  # -------------------------------------------------------------------
+  .resolve_col <- function(col_ref, df) {
+    if (is.null(col_ref)) return(NULL)
+    if (is.numeric(col_ref)) {
+      if (col_ref < 1 || col_ref > ncol(df))
+        stop(paste("Column index", col_ref, "is out of range (", ncol(df), "columns)."))
+      return(colnames(df)[col_ref])
     }
-    cat(paste0("Detected Phoenix format: ", format, "\n"))
+    if (!col_ref %in% colnames(df))
+      stop(paste0("Column '", col_ref, "' not found.\nAvailable columns: ",
+                  paste(colnames(df), collapse = ", ")))
+    col_ref
   }
 
-  # ---------------------------------------------------------------
-  # Helper: normalise MIC strings across all formats
-  #   - Unicode ≤ → <=
-  #   - German decimal comma → period
-  #   - Strip combination denominator: ">32/2" → ">32", "≤1/19" → "<=1"
+  # -------------------------------------------------------------------
+  # Helper: auto-detect a column by regex patterns (case-insensitive)
+  # -------------------------------------------------------------------
+  .find_col <- function(df, patterns) {
+    cols_lower <- tolower(colnames(df))
+    for (p in patterns) {
+      idx <- grep(p, cols_lower)[1]
+      if (!is.na(idx)) return(colnames(df)[idx])
+    }
+    NULL
+  }
+
+  # -------------------------------------------------------------------
+  # Helper: normalise MIC strings
+  #   - Unicode ≤  → <=
+  #   - Comma decimal separator → period (safety for locale variants)
+  #   - Strip combination denominators: ">32/2" → ">32"
   #   - Empty / dash → NA
-  # ---------------------------------------------------------------
+  # -------------------------------------------------------------------
   .clean_mic <- function(x) {
-    x <- as.character(x)
-    x <- trimws(x)
+    x <- trimws(as.character(x))
     x[x == "" | x == "-"] <- NA_character_
-    x <- gsub("\u2264", "<=", x)         # ≤ → <=
-    x <- gsub(",", ".", x)               # German decimal comma
-    x <- gsub("/[0-9.,\u2264<=]+$", "", x)  # strip combination denominator
+    x <- gsub("\u2264", "<=", x)
+    x <- gsub(",", ".", x)
+    x <- gsub("/[0-9.,\u2264<=]+$", "", x)
     x
   }
 
-  # ---------------------------------------------------------------
-  # FORMAT: long_german
-  #   XLS export — no header, 7 fixed columns, German locale
-  # ---------------------------------------------------------------
-  if (format == "long_german") {
-    if (is_file && ext %in% c("xls", "xlsx")) {
-      ast <- readxl::read_excel(input, col_names = FALSE, .name_repair = "minimal")
-    } else if (is.data.frame(input)) {
-      ast <- input
-    } else {
-      ast <- process_input(input)
-    }
+  # -------------------------------------------------------------------
+  # 1. Read raw data
+  # -------------------------------------------------------------------
+  if (is_file && ext %in% c("xls", "xlsx")) {
+    # Peek at column names to determine whether the file has a header row
+    peek <- tryCatch(
+      readxl::read_excel(input, col_names = TRUE, .name_repair = "minimal", n_max = 0),
+      error = function(e) NULL
+    )
+    known_pats <- c("antimicrobial", "antibiotic", "drug", "^mic$",
+                    "interp", "interpretation", "^sample$", "organism", "species")
+    has_header <- !is.null(peek) &&
+      any(sapply(known_pats, function(p) any(grepl(p, tolower(colnames(peek))))))
 
-    if (ncol(ast) < 6) stop(paste("Phoenix long_german format expects >= 6 columns, found:", ncol(ast)))
-    col_map <- c("id", "spp_raw", "ab_raw", "mic_raw", "sir_instrument", "sir_expertized", "testing_date")
-    colnames(ast)[seq_len(min(ncol(ast), length(col_map)))] <- col_map[seq_len(min(ncol(ast), length(col_map)))]
+    ast <- readxl::read_excel(input, col_names = has_header, .name_repair = "minimal")
+    if (!has_header) colnames(ast) <- paste0("V", seq_len(ncol(ast)))
 
-    ast <- ast %>% mutate(id = as.character(id))
-
-    # Clean German antibiotic names:
-    #   "(f)"/"(u)" = site-specific markers | " mit G6P" = fosfomycin additive
-    #   "-Syn" = synergy screen | "Hohe X Konzentration" = high-concentration screen
-    ast <- ast %>%
-      mutate(ab_raw = as.character(ab_raw),
-             ab_clean = ab_raw,
-             ab_clean = gsub("\\s*\\([a-zA-Z]\\)$", "", ab_clean),
-             ab_clean = gsub("\\s+mit\\s+G6P$", "", ab_clean, ignore.case = TRUE),
-             ab_clean = gsub("-Syn$", "", ab_clean),
-             ab_clean = gsub("^Hohe\\s+|\\s+Konzentration$", "", ab_clean),
-             ab_clean = trimws(ab_clean))
-
-    ast <- ast %>%
-      mutate(mic_raw = .clean_mic(mic_raw),
-             mic = as.mic(mic_raw))
-
-    # "X" = no breakpoint defined → NA; use expertized (col 6) or instrument (col 5)
-    sir_src <- if (use_expertized && "sir_expertized" %in% colnames(ast)) "sir_expertized" else "sir_instrument"
-    ast <- ast %>%
-      mutate(pheno_provided = if_else(
-        !is.na(!!sym(sir_src)) & !!sym(sir_src) %in% c("S", "I", "R"),
-        !!sym(sir_src), NA_character_
-      )) %>%
-      mutate(pheno_provided = as.sir(pheno_provided))
-
-    ast <- ast %>%
-      mutate(spp_pheno = as.mo(spp_raw),
-             drug_agent = as.ab(ab_clean))
-
-    if ("testing_date" %in% colnames(ast) && include_dates) {
-      ast <- ast %>% mutate(testing_date = as.Date(as.character(testing_date), format = "%d.%m.%Y"))
-    } else if (!include_dates && "testing_date" %in% colnames(ast)) {
-      ast <- ast %>% dplyr::select(-testing_date)
-    }
-  }
-
-  # ---------------------------------------------------------------
-  # FORMAT: long_clsi
-  #   Per-isolate CLSI report (TXT/TSV). Named headers. Trailing
-  #   "Resistance Markers" and "Expert Triggered Rules" sections
-  #   are stripped. No isolate ID column — derived from filename.
-  # ---------------------------------------------------------------
-  else if (format == "long_clsi") {
-    if (!is_file) stop("long_clsi format requires a file path as input.")
-
+  } else if (is_file && ext %in% c("txt", "tsv")) {
     lines <- readLines(input, warn = FALSE)
-
-    # Find the header row (first field = "Antimicrobial")
-    header_idx <- which(startsWith(lines, "Antimicrobial"))[1]
-    if (is.na(header_idx)) stop("Could not find 'Antimicrobial' header row in Phoenix CLSI file.")
-
-    # Find end of AST data: first line after header that is all-whitespace,
-    # or starts a trailing section (Resistance Markers / Expert Triggered Rules)
-    stop_pattern <- "^\\s*$|^Resistance Markers|^Expert Triggered Rules"
-    stop_candidates <- which(grepl(stop_pattern, lines) & seq_along(lines) > header_idx)
-    data_end_idx <- if (length(stop_candidates) > 0) min(stop_candidates) - 1 else length(lines)
-
+    # Locate the header row (first line starting with a recognised field name)
+    header_idx <- which(grepl("^(Antimicrobial|Drug|Sample|Antibiotic)",
+                               lines, ignore.case = TRUE))[1]
+    if (is.na(header_idx)) header_idx <- 1
+    # Strip trailing non-data sections appended by Phoenix
+    stop_pat <- "^\\s*$|^Resistance Markers|^Expert Triggered Rules|^Interpretation Criteria"
+    stop_cands <- which(grepl(stop_pat, lines) & seq_along(lines) > header_idx)
+    data_end <- if (length(stop_cands) > 0) min(stop_cands) - 1 else length(lines)
     ast <- readr::read_tsv(
-      I(paste(lines[header_idx:data_end_idx], collapse = "\n")),
+      I(paste(lines[header_idx:data_end], collapse = "\n")),
       show_col_types = FALSE, name_repair = "minimal"
+    ) %>% dplyr::filter(!is.na(.[[1]]) & trimws(.[[1]]) != "")
+
+  } else if (is.data.frame(input)) {
+    ast <- input
+  } else {
+    ast <- process_input(input)
+  }
+
+  # -------------------------------------------------------------------
+  # 2. Resolve column names
+  # -------------------------------------------------------------------
+
+  # Apply any user-supplied overrides first
+  r_sample  <- .resolve_col(sample_col,  ast)
+  r_drug    <- .resolve_col(drug_col,    ast)
+  r_mic     <- .resolve_col(mic_col,     ast)
+  r_sir     <- .resolve_col(sir_col,     ast)
+  r_species <- .resolve_col(species_col, ast)
+
+  # Auto-detect columns not yet resolved
+  if (is.null(r_drug))
+    r_drug <- .find_col(ast, c("antimicrobial", "antibiotic", "^drug$", "^agent$", "^ab$"))
+  if (is.null(r_mic))
+    r_mic  <- .find_col(ast, c("^mic$", "mic or concentration", "concentration"))
+  if (is.null(r_sir)) {
+    if (use_expertized) {
+      r_sir <- .find_col(ast, c("final.*sir", "expert.*sir", "^expertized$"))
+      if (is.null(r_sir))
+        r_sir <- .find_col(ast, c("^interp$", "^interpretation$", "^sir$"))
+    } else {
+      r_sir <- .find_col(ast, c("^interp$", "^interpretation$"))
+      if (is.null(r_sir))
+        r_sir <- .find_col(ast, c("final.*sir", "expert.*sir", "^sir$"))
+    }
+  }
+  if (is.null(r_sample))
+    r_sample <- .find_col(ast, c("^sample$", "^id$", "^isolate$", "sample_id", "patient_id"))
+  if (is.null(r_species) && is.null(species))
+    r_species <- .find_col(ast, c("^organism$", "^species$", "^spp$", "^pathogen$"))
+
+  # Positional fallback for headerless files (columns named V1, V2, ...)
+  if (is.null(r_drug) && all(grepl("^V\\d+$", colnames(ast)))) {
+    if (ncol(ast) >= 4) {
+      message(
+        "No standard column headers detected.\n",
+        "Using Phoenix positional defaults: col 1 = sample, col 2 = species, ",
+        "col 3 = drug, col 4 = MIC, col 5 = instrument SIR, col 6 = expert SIR.\n",
+        "Supply 'drug_col', 'mic_col', 'sir_col' etc. to override."
+      )
+      if (is.null(r_sample))  r_sample  <- colnames(ast)[1]
+      if (is.null(r_species)) r_species <- if (ncol(ast) >= 2) colnames(ast)[2] else NULL
+      r_drug <- colnames(ast)[3]
+      r_mic  <- colnames(ast)[4]
+      r_sir  <- if (use_expertized && ncol(ast) >= 6) colnames(ast)[6] else colnames(ast)[5]
+    }
+  }
+
+  # Validate that all required columns were resolved
+  if (is.null(r_drug))
+    stop("Could not auto-detect the drug/antimicrobial column.\n",
+         "Available columns: ", paste(colnames(ast), collapse = ", "),
+         "\nUse 'drug_col' to specify.")
+  if (is.null(r_mic))
+    stop("Could not auto-detect the MIC column.\n",
+         "Available columns: ", paste(colnames(ast), collapse = ", "),
+         "\nUse 'mic_col' to specify.")
+  if (is.null(r_sir))
+    stop("Could not auto-detect the S/I/R interpretation column.\n",
+         "Available columns: ", paste(colnames(ast), collapse = ", "),
+         "\nUse 'sir_col' to specify.")
+
+  # Handle missing sample column
+  if (is.null(r_sample)) {
+    if (is_file) {
+      derived_id <- gsub("\\.[^.]*$", "", basename(input))
+      message("No sample ID column found — using filename '", derived_id,
+              "' as sample ID. Use 'sample_col' to specify the sample ID column.")
+      ast[["__id__"]] <- derived_id
+      r_sample <- "__id__"
+    } else {
+      message("No sample ID column found. Use 'sample_col' to specify.")
+    }
+  }
+
+  if (is.null(r_species) && is.null(species))
+    message("No species column found and 'species' not supplied.\n",
+            "Breakpoint interpretation will not be possible without organism information.\n",
+            "Use 'species_col' or 'species' to provide organism information.")
+
+  # -------------------------------------------------------------------
+  # 3. Map to standardised columns and apply AMR package classes
+  # -------------------------------------------------------------------
+
+  # "X" = no breakpoint defined in Phoenix → NA
+  sir_vals <- as.character(ast[[r_sir]])
+  sir_vals[sir_vals %in% c("X", "x", "-") | is.na(sir_vals)] <- NA_character_
+
+  ast <- ast %>%
+    mutate(
+      id             = if (!is.null(r_sample)) as.character(.data[[r_sample]]) else NA_character_,
+      drug_agent     = as.ab(.data[[r_drug]]),
+      mic            = as.mic(.clean_mic(as.character(.data[[r_mic]]))),
+      pheno_provided = as.sir(sir_vals)
     )
 
-    # Remove rows where Antimicrobial is NA or empty (stray blank lines)
-    ast <- ast %>% dplyr::filter(!is.na(Antimicrobial) & trimws(Antimicrobial) != "")
-
-    # Rename columns to internal names
-    col_renames <- c(
-      ab_raw        = "Antimicrobial",
-      mic_raw       = "MIC or Concentration",
-      sir_instrument = "Interp",
-      sir_expert    = "Expert (SIR)",
-      sir_final     = "Final (SIR)"
-    )
-    for (new_nm in names(col_renames)) {
-      old_nm <- col_renames[new_nm]
-      if (old_nm %in% colnames(ast)) colnames(ast)[colnames(ast) == old_nm] <- new_nm
-    }
-
-    # Sample ID: use sample_col string if supplied, otherwise derive from filename
-    isolate_id <- if (!is.null(sample_col)) sample_col else gsub("\\.[^.]*$", "", basename(input))
-    ast <- ast %>% mutate(id = isolate_id)
-
-    ast <- ast %>%
-      mutate(mic_raw = .clean_mic(mic_raw),
-             mic = as.mic(mic_raw))
-
-    # Final (SIR) is the authoritative call (instrument + expert rules applied)
-    sir_src <- if (use_expertized && "sir_final" %in% colnames(ast)) "sir_final" else "sir_instrument"
-    ast <- ast %>%
-      mutate(pheno_provided = if_else(
-        !is.na(!!sym(sir_src)) & !!sym(sir_src) %in% c("S", "I", "R"),
-        !!sym(sir_src), NA_character_
-      )) %>%
-      mutate(pheno_provided = as.sir(pheno_provided))
-
-    ast <- ast %>% mutate(drug_agent = as.ab(ab_raw))
-
-    if (!is.null(species)) {
-      ast <- ast %>% mutate(spp_pheno = as.mo(species))
-    } else {
-      cat("Warning: No organism column in long_clsi format. Provide 'species' parameter for breakpoint interpretation.\n")
-    }
+  if (!is.null(species)) {
+    ast <- ast %>% mutate(spp_pheno = as.mo(species))
+  } else if (!is.null(r_species)) {
+    ast <- ast %>% mutate(spp_pheno = as.mo(.data[[r_species]]))
   }
 
-  # ---------------------------------------------------------------
-  # FORMAT: wide
-  #   One row per isolate with alternating "[Drug] call" / "[Drug] MIC"
-  #   column pairs (one row per isolate).
-  #   Embedded whitespace in column names (tabs, etc.) is stripped.
-  # ---------------------------------------------------------------
-  else if (format == "wide") {
-    if (is_file && ext %in% c("xls", "xlsx")) {
-      ast <- readxl::read_excel(input, col_names = TRUE, .name_repair = "minimal")
-    } else if (is.data.frame(input)) {
-      ast <- input
-    } else {
-      ast <- process_input(input)
-    }
-
-    # Strip embedded whitespace (tabs, newlines) from column names
-    colnames(ast) <- trimws(gsub("[\t\n\r]+", " ", colnames(ast)))
-    colnames(ast) <- gsub("\\s{2,}", " ", colnames(ast))
-
-    # Determine sample ID column
-    if (!is.null(sample_col) && sample_col %in% colnames(ast)) {
-      ast <- ast %>% rename(id = !!sym(sample_col))
-    } else {
-      colnames(ast)[1] <- "id"
-      cat("Using first column as sample ID. Use 'sample_col' to specify a different column.\n")
-    }
-    ast <- ast %>% mutate(id = as.character(id))
-
-    # Identify call/MIC column pairs
-    all_cols <- colnames(ast)
-    call_cols <- all_cols[grepl("\\bcall$", all_cols, ignore.case = TRUE)]
-    mic_cols  <- all_cols[grepl("\\bMIC$",  all_cols, ignore.case = TRUE)]
-
-    if (length(call_cols) == 0) stop("No '[Drug] call' columns found in wide Phoenix format.")
-
-    # Pivot call and MIC columns separately, then join on id + drug name
-    ast_call <- ast %>%
-      dplyr::select(id, any_of(call_cols)) %>%
-      tidyr::pivot_longer(cols = any_of(call_cols), names_to = "ab_raw", values_to = "sir_raw") %>%
-      mutate(ab_raw = trimws(gsub("(?i)\\bcall$", "", ab_raw)))
-
-    ast_mic <- ast %>%
-      dplyr::select(id, any_of(mic_cols)) %>%
-      tidyr::pivot_longer(cols = any_of(mic_cols), names_to = "ab_raw", values_to = "mic_raw") %>%
-      mutate(ab_raw = trimws(gsub("(?i)\\bMIC$", "", ab_raw)))
-
-    ast <- dplyr::left_join(ast_call, ast_mic, by = c("id", "ab_raw"))
-
-    ast <- ast %>%
-      mutate(mic_raw = .clean_mic(mic_raw),
-             mic = as.mic(mic_raw))
-
-    ast <- ast %>%
-      mutate(pheno_provided = if_else(
-        !is.na(sir_raw) & sir_raw %in% c("S", "I", "R"),
-        sir_raw, NA_character_
-      )) %>%
-      mutate(pheno_provided = as.sir(pheno_provided))
-
-    ast <- ast %>% mutate(drug_agent = as.ab(ab_raw))
-
-    if (!is.null(species)) {
-      ast <- ast %>% mutate(spp_pheno = as.mo(species))
-    } else {
-      cat("Warning: No organism column in wide format. Provide 'species' parameter for breakpoint interpretation.\n")
-    }
-  }
-
-  else {
-    stop(paste0(
-      "Unknown Phoenix format: '", format, "'. ",
-      "Use 'auto', 'long_german', 'long_clsi', or 'wide'."
-    ))
-  }
-
-  # ---------------------------------------------------------------
-  # Common processing for all formats
-  # ---------------------------------------------------------------
+  # -------------------------------------------------------------------
+  # 4. Common processing
+  # -------------------------------------------------------------------
   ast <- ast %>%
     mutate(platform = "Phoenix",
            method   = "broth dilution",
@@ -2152,13 +2103,10 @@ import_phoenix_ast <- function(input,
     species = species, ab = ab
   )
 
-  ast <- ast %>%
-    relocate(any_of(c(
-      "id", "drug_agent", "mic", "disk",
-      "pheno_eucast", "pheno_clsi", "ecoff",
-      "guideline", "method", "platform", "source",
-      "pheno_provided", "spp_pheno"
-    )))
-
-  return(ast)
+  ast %>% relocate(any_of(c(
+    "id", "drug_agent", "mic", "disk",
+    "pheno_eucast", "pheno_clsi", "ecoff",
+    "guideline", "method", "platform", "source",
+    "pheno_provided", "spp_pheno"
+  )))
 }

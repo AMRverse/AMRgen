@@ -114,11 +114,11 @@ download_ebi <- function(data = "phenotype",
                          interpret_clsi = FALSE,
                          interpret_ecoff = FALSE) {
   # EBI source url
-  ebi_url <- "ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/"
+  ebi_url <- "https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/"
 
   filename <- paste0(data, ".parquet")
 
-  cat(paste("Downloading", data, "data from EBI AMR portal (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/)\n"))
+  cat(paste("Downloading", data, "data from EBI AMR portal (https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/)\n"))
 
   if (!is.null(release)) {
     user_release <- release
@@ -127,14 +127,24 @@ download_ebi <- function(data = "phenotype",
     # get list of releases
     folders <- str_split(RCurl::getURL(ebi_url, dirlistonly = TRUE), "\n")[[1]]
     # get latest
-    user_release <- folders[!folders %in% c("releases.yml", "")] %>% max()
+    release_list_url <- paste0(ebi_url, "releases.yml")
+    lines <- RCurl::getURL(release_list_url) %>% readr::read_lines()
+    user_release <- sub("latest: ", "", lines[1])
     cat(paste("...Requesting data from latest release", user_release, "\n"))
   }
 
-  ebi_dat <- RCurl::getBinaryURL(print(gsub("ftp\\:", "https\\:", paste0(ebi_url, user_release, "/", paste0(data, ".parquet")))))
-
-  cat(paste("...Reading parquet file\n"))
-  ebi_dat <- arrow::read_parquet(ebi_dat)
+  ebi_dat <- tryCatch(
+    withCallingHandlers(
+      arrow::read_parquet(
+        print(paste0(ebi_url, user_release, "/", paste0(data, ".parquet")))
+      ),
+      warning = function(w) invokeRestart("muffleWarning")
+    ),
+    error = function(e) {
+      cat(paste0("Could not find release ", user_release, ", defaulting to last known release 2025-12\n"))
+      arrow::read_parquet(print(paste0(ebi_url, "2025-12", "/", paste0(data, ".parquet"))))
+    }
+  )
 
   # filter by genus or species as required
   if (!is.null(genus)) {

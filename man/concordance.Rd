@@ -9,7 +9,7 @@ concordance(
   markers = NULL,
   exclude_markers = NULL,
   ppv_threshold = NULL,
-  solo_ppv_results = NULL,
+  ppv_results = NULL,
   truth = c("R", "NWT"),
   prediction_rule = "any",
   min_count = NULL,
@@ -29,11 +29,15 @@ Default \code{NULL} includes all marker columns.}
 \item{exclude_markers}{A character vector of marker column names to exclude
 from the genotypic prediction. Applied after \code{markers} filtering.}
 
-\item{ppv_threshold}{A numeric PPV threshold (0-1). Markers with solo PPV
-below this value are excluded. Requires \code{solo_ppv_results}.}
+\item{ppv_threshold}{A numeric PPV threshold (0-1). Markers with solo PPV below
+this value are excluded. Requires \code{ppv_results}.}
 
-\item{solo_ppv_results}{Output of \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, used for PPV-based
-marker filtering when \code{ppv_threshold} is set.}
+\item{ppv_results}{Output of \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}} \strong{or} \code{\link[=ppv]{ppv()}},
+used for solo PPV-based marker filtering when \code{ppv_threshold} is set.
+When the output of \code{\link[=ppv]{ppv()}} is supplied, single-marker entries
+(\code{marker_count == 1}) in the \code{summary} table are used to obtain per-marker
+PPVs, making the behaviour equivalent to supplying \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}
+output directly.}
 
 \item{truth}{A character vector specifying the phenotypic truth column(s) to
 evaluate: \code{"R"} (resistant vs susceptible/intermediate), \code{"NWT"}
@@ -121,12 +125,20 @@ result <- concordance(binary_matrix, truth = "R")
 # Exclude specific markers
 result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
 
-# Filter markers by solo PPV threshold
+# Filter markers by solo PPV threshold, using solo_ppv_analysis() output
 solo_ppv <- solo_ppv_analysis(binary_matrix = binary_matrix)
 result <- concordance(
   binary_matrix,
   ppv_threshold = 0.5,
-  solo_ppv_results = solo_ppv
+  ppv_results = solo_ppv
+)
+
+# Filter markers by solo PPV threshold, using ppv() output
+ppv_res <- ppv(binary_matrix = binary_matrix)
+result <- concordance(
+  binary_matrix,
+  ppv_threshold = 0.5,
+  ppv_results = ppv_res
 )
 
 # Require at least 2 markers present for prediction

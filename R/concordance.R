@@ -36,10 +36,10 @@
 #'   Default `NULL` includes all marker columns.
 #' @param exclude_markers A character vector of marker column names to exclude
 #'   from the genotypic prediction. Applied after `markers` filtering.
-#' @param ppv_threshold A numeric PPV threshold (0-1). Markers with PPV below
-#'   this value are excluded. Requires `solo_ppv_results`.
-#' @param solo_ppv_results Output of [solo_ppv_analysis()] **or** [ppv()],
-#'   used for PPV-based marker filtering when `ppv_threshold` is set.
+#' @param ppv_threshold A numeric PPV threshold (0-1). Markers with solo PPV below
+#'   this value are excluded. Requires `ppv_results`.
+#' @param ppv_results Output of [solo_ppv_analysis()] **or** [ppv()],
+#'   used for solo PPV-based marker filtering when `ppv_threshold` is set.
 #'   When the output of [ppv()] is supplied, single-marker entries
 #'   (`marker_count == 1`) in the `summary` table are used to obtain per-marker
 #'   PPVs, making the behaviour equivalent to supplying [solo_ppv_analysis()]
@@ -114,20 +114,20 @@
 #' # Exclude specific markers
 #' result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
 #'
-#' # Filter markers by solo PPV threshold (using solo_ppv_analysis output)
+#' # Filter markers by solo PPV threshold, using solo_ppv_analysis() output
 #' solo_ppv <- solo_ppv_analysis(binary_matrix = binary_matrix)
 #' result <- concordance(
 #'   binary_matrix,
 #'   ppv_threshold = 0.5,
-#'   solo_ppv_results = solo_ppv
+#'   ppv_results = solo_ppv
 #' )
 #'
-#' # Filter markers by PPV threshold (using ppv() output — single-marker rows used)
-#' ppv_res <- ppv(binary_matrix = binary_matrix, ...)
+#' # Filter markers by solo PPV threshold, using ppv() output
+#' ppv_res <- ppv(binary_matrix = binary_matrix)
 #' result <- concordance(
 #'   binary_matrix,
 #'   ppv_threshold = 0.5,
-#'   solo_ppv_results = ppv_res
+#'   ppv_results = ppv_res
 #' )
 #'
 #' # Require at least 2 markers present for prediction
@@ -150,7 +150,7 @@ concordance <- function(binary_matrix,
                         markers = NULL,
                         exclude_markers = NULL,
                         ppv_threshold = NULL,
-                        solo_ppv_results = NULL,
+                        ppv_results = NULL,
                         truth = c("R", "NWT"),
                         prediction_rule = "any",
                         min_count = NULL,
@@ -184,9 +184,11 @@ concordance <- function(binary_matrix,
     stop("`logreg_results` must be provided when prediction_rule = \"logistic\".")
   }
 
-  if (!is.null(ppv_threshold) && is.null(solo_ppv_results)) {
-    stop("`solo_ppv_results` must be provided when `ppv_threshold` is set. ",
-         "Pass the output of either `solo_ppv_analysis()` or `ppv()`.")
+  if (!is.null(ppv_threshold) && is.null(ppv_results)) {
+    stop(
+      "`ppv_results` must be provided when `ppv_threshold` is set. ",
+      "Pass the output of either `solo_ppv_analysis()` or `ppv()`."
+    )
   }
 
   if (!is.null(pval_threshold) && is.null(logreg_results)) {
@@ -250,24 +252,28 @@ concordance <- function(binary_matrix,
     # Accepts output from either solo_ppv_analysis() [$solo_stats] or ppv() [$summary].
     if (!is.null(ppv_threshold)) {
       ppv_category <- outcome
-      if (!is.null(solo_ppv_results$solo_stats)) {
+      if (!is.null(ppv_results$solo_stats)) {
         # solo_ppv_analysis() output: long table with marker / category / ppv columns
-        passing_markers <- solo_ppv_results$solo_stats %>%
+        passing_markers <- ppv_results$solo_stats %>%
           filter(category == ppv_category, ppv >= ppv_threshold) %>%
           pull(marker)
-      } else if (!is.null(solo_ppv_results$summary)) {
+      } else if (!is.null(ppv_results$summary)) {
         # ppv() output: wide combo_stats table; use single-marker rows (marker_count == 1)
         ppv_col <- paste0(ppv_category, ".ppv")
-        if (!(ppv_col %in% colnames(solo_ppv_results$summary))) {
-          stop(paste0("Column '", ppv_col, "' not found in ppv() summary. ",
-                      "Ensure the binary_matrix contains a '", ppv_category, "' column."))
+        if (!(ppv_col %in% colnames(ppv_results$summary))) {
+          stop(paste0(
+            "Column '", ppv_col, "' not found in ppv() summary. ",
+            "Ensure the binary_matrix contains a '", ppv_category, "' column."
+          ))
         }
-        passing_markers <- solo_ppv_results$summary %>%
-          filter(marker_count == 1, !is.na(.data[[ppv_col]]),
-                 .data[[ppv_col]] >= ppv_threshold) %>%
+        passing_markers <- ppv_results$summary %>%
+          filter(
+            marker_count == 1, !is.na(.data[[ppv_col]]),
+            .data[[ppv_col]] >= ppv_threshold
+          ) %>%
           dplyr::pull(marker_list)
       } else {
-        stop("`solo_ppv_results` must be the output of `solo_ppv_analysis()` or `ppv()`.")
+        stop("`ppv_results` must be the output of `solo_ppv_analysis()` or `ppv()`.")
       }
       # normalize : to .. for matching binary_matrix column names
       passing_markers_norm <- gsub(":", "..", passing_markers)

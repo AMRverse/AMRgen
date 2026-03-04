@@ -230,7 +230,8 @@ utils::globalVariables(c(
   "phenotype",
   "reagent",
   "scientific_name",
-  "standard"
+  "standard",
+  ".data"
 ))
 
 

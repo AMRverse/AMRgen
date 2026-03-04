@@ -52,6 +52,7 @@
 #' @importFrom AMR ab_name
 #' @importFrom dplyr mutate if_else case_when select any_of
 #' @importFrom stringr str_match
+#' @importFrom readr write_tsv
 #' @export
 #' @examples
 #' \dontrun{
@@ -188,16 +189,14 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
 
   # --- write ---
   if (!is.null(file)) {
-    utils::write.table(
+    write_tsv(
       x = out,
       file = file,
       append = FALSE,
-      quote = TRUE,
-      sep = "\t",
       na = "",
-      row.names = FALSE,
-      col.names = TRUE,
-      fileEncoding = "UTF-8"
+      col_names = TRUE,
+      quote = "all",
+      eol = "\n"
     )
     return(invisible(out))
   }
@@ -241,6 +240,7 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
 #' @importFrom AMR ab_name mo_name
 #' @importFrom dplyr if_else case_when
 #' @importFrom stringr str_match
+#' @importFrom readr write_tsv
 #' @export
 #' @examples
 #' \dontrun{
@@ -375,16 +375,14 @@ export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
 
   # --- write ---
   if (!is.null(file)) {
-    utils::write.table(
+    write_tsv(
       x = out,
       file = file,
       append = FALSE,
-      quote = TRUE,
-      sep = sep,
       na = "",
-      row.names = FALSE,
-      col.names = TRUE,
-      fileEncoding = "UTF-8"
+      col_names = TRUE,
+      quote = "all",
+      eol = "\n"
     )
     return(invisible(out))
   }

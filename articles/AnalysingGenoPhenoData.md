@@ -476,6 +476,8 @@ distribution coloured by presence of a particular genetic marker
 
 ``` r
 assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", antibiotic = "Ciprofloxacin")
+#> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
+#> Ensure your input table is already filtered to the antibiotic.
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-1.png)
@@ -489,6 +491,8 @@ gyrA_mut <- cip_bin %>%
 
 # plot the MIC distribution, coloured by count of gyrA mutations
 mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin")
+#> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
+#> Ensure your input table is already filtered to the antibiotic.
 
 mic_by_gyrA_count
 ```
@@ -504,6 +508,8 @@ marker_count <- cip_bin %>%
 
 # plot the MIC distribution, coloured by count of associated genetic markers
 mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1))
+#> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
+#> Ensure your input table is already filtered to the antibiotic.
 
 mic_by_marker_count
 ```

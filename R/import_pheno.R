@@ -1771,6 +1771,22 @@ import_whonet_ast <- function(input,
     )) %>%
     mutate(pheno_provided = as.sir(pheno_provided))
 
+  # Extract numeric measurements from sir_value where applicable.
+  # WHONET column values may contain MIC strings (e.g. "<=0.5", ">32") for
+  # broth-dilution/Etest columns, or zone sizes (e.g. "24") for disk columns;
+  # as.mic() / as.disk() silently return NA for non-parseable values (e.g. "S").
+  ast_long <- ast_long %>%
+    mutate(
+      mic = as.mic(case_when(
+        method %in% c("broth dilution", "Etest") ~ sir_value,
+        TRUE ~ NA_character_
+      )),
+      disk = as.disk(case_when(
+        method == "disk diffusion" ~ sir_value,
+        TRUE ~ NA_character_
+      ))
+    )
+
   # Parse organism
   if ("Organism" %in% colnames(ast_long)) {
     ast_long <- ast_long %>% mutate(spp_pheno = as.mo(Organism))
@@ -1801,7 +1817,7 @@ import_whonet_ast <- function(input,
   # Reorder columns
   ast_long <- ast_long %>%
     relocate(any_of(c(
-      "id", "drug_agent",
+      "id", "drug_agent", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",
       "guideline", "method", "platform", "disk_potency", "source",
       "pheno_provided", "spp_pheno"

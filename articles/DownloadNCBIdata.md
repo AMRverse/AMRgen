@@ -373,7 +373,7 @@ for download from NCBI using the above functions.
 staph_geno_ebi <- download_ebi(
   data = "genotype",
   genus = "Staphylococcus",
-  geno_class = c("AMINOGLYCOSIDE","TETRACYCLINE"),
+  geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE"),
   reformat = T
 )
 ```

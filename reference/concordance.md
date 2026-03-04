@@ -22,7 +22,7 @@ concordance(
   markers = NULL,
   exclude_markers = NULL,
   ppv_threshold = NULL,
-  solo_ppv_results = NULL,
+  ppv_results = NULL,
   truth = c("R", "NWT"),
   prediction_rule = "any",
   min_count = NULL,
@@ -54,13 +54,21 @@ concordance(
 - ppv_threshold:
 
   A numeric PPV threshold (0-1). Markers with solo PPV below this value
-  are excluded. Requires `solo_ppv_results`.
+  are excluded. Requires `ppv_results`.
 
-- solo_ppv_results:
+- ppv_results:
 
   Output of
-  [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md),
-  used for PPV-based marker filtering when `ppv_threshold` is set.
+  [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md)
+  **or** [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md),
+  used for solo PPV-based marker filtering when `ppv_threshold` is set.
+  When the output of
+  [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md) is
+  supplied, single-marker entries (`marker_count == 1`) in the `summary`
+  table are used to obtain per-marker PPVs, making the behaviour
+  equivalent to supplying
+  [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md)
+  output directly.
 
 - truth:
 
@@ -175,12 +183,20 @@ result <- concordance(binary_matrix, truth = "R")
 # Exclude specific markers
 result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
 
-# Filter markers by solo PPV threshold
+# Filter markers by solo PPV threshold, using solo_ppv_analysis() output
 solo_ppv <- solo_ppv_analysis(binary_matrix = binary_matrix)
 result <- concordance(
   binary_matrix,
   ppv_threshold = 0.5,
-  solo_ppv_results = solo_ppv
+  ppv_results = solo_ppv
+)
+
+# Filter markers by solo PPV threshold, using ppv() output
+ppv_res <- ppv(binary_matrix = binary_matrix)
+result <- concordance(
+  binary_matrix,
+  ppv_threshold = 0.5,
+  ppv_results = ppv_res
 )
 
 # Require at least 2 markers present for prediction

@@ -1715,8 +1715,8 @@ import_whonet_ast <- function(input,
   # Standard codes (guideline-based):
   #   - Guideline: N = CLSI/NCCLS, E = EUCAST, D = DIN
   #   - Method: D = Disk diffusion, M = MIC, E = Etest
-  #   - Potency: disk strength in µg (for disk diffusion only)
-  #   e.g., ND10 = CLSI disk 10µg, EM = EUCAST MIC, EE = EUCAST Etest
+  #   - Potency: disk strength in ug (for disk diffusion only)
+  #   e.g., ND10 = CLSI disk 10ug, EM = EUCAST MIC, EE = EUCAST Etest
   #
   # Platform codes (instrument-specific):
   #   - Platform: V = Vitek, P = Phoenix, M = Microscan, S = Sensititre, K = Trek
@@ -1946,10 +1946,10 @@ import_phoenix_ast <- function(input,
 
   # -------------------------------------------------------------------
   # Helper: normalise MIC strings
-  #   - Unicode ≤  → <=
-  #   - Comma decimal separator → period (safety for locale variants)
-  #   - Strip combination denominators: ">32/2" → ">32"
-  #   - Empty / dash → NA
+  #   - Unicode <= sign (\u2264) -> <=
+  #   - Comma decimal separator -> period (safety for locale variants)
+  #   - Strip combination denominators: ">32/2" -> ">32"
+  #   - Empty / dash -> NA
   # -------------------------------------------------------------------
   .clean_mic <- function(x) {
     x <- trimws(as.character(x))
@@ -2065,7 +2065,7 @@ import_phoenix_ast <- function(input,
   if (is.null(r_sample)) {
     if (is_file) {
       derived_id <- gsub("\\.[^.]*$", "", basename(input))
-      message("No sample ID column found — using filename '", derived_id,
+      message("No sample ID column found -- using filename '", derived_id,
               "' as sample ID. Use 'sample_col' to specify the sample ID column.")
       ast[["__id__"]] <- derived_id
       r_sample <- "__id__"
@@ -2083,7 +2083,7 @@ import_phoenix_ast <- function(input,
   # 3. Map to standardised columns and apply AMR package classes
   # -------------------------------------------------------------------
 
-  # "X" = no breakpoint defined in Phoenix → NA
+  # "X" = no breakpoint defined in Phoenix -> NA
   sir_vals <- as.character(ast[[r_sir]])
   sir_vals[sir_vals %in% c("X", "x", "-") | is.na(sir_vals)] <- NA_character_
 

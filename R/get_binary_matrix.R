@@ -175,7 +175,7 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
           TRUE ~ NA
         ))
     } else {
-      cat(" Defining NWT in binary matrix as I/R vs 0, as no ECOFF column defined\n")
+      cat(" Defining NWT in binary matrix as I/R vs S, as no ECOFF column defined\n")
     }
   }
 

@@ -36,7 +36,7 @@ staph_geno_ncbi_cloud_raw <- query_ncbi_bq_geno(
   taxgroup = "Staphylococcus aureus",
   geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE")
 )
-# file is too big including all samples that have ANY AST data in NCBI, narrow down to those with 
+# file is too big including all samples that have ANY AST data in NCBI, narrow down to those with
 staph_geno_ncbi_cloud_raw <- staph_geno_ncbi_cloud_raw %>% filter(biosample_acc %in% staph_ast_ncbi_cloud_raw$BioSample)
 usethis::use_data(staph_geno_ncbi_cloud_raw, internal = FALSE, overwrite = TRUE)
 
@@ -54,7 +54,7 @@ usethis::use_data(staph_ast_ebi, internal = FALSE, overwrite = TRUE)
 staph_geno_ebi <- download_ebi(
   data = "genotype",
   genus = "Staphylococcus",
-  geno_class = c("AMINOGLYCOSIDE","TETRACYCLINE"),
+  geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE"),
   reformat = T
 )
 usethis::use_data(staph_geno_ebi, internal = FALSE, overwrite = TRUE)

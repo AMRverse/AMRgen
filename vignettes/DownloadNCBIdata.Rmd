@@ -195,7 +195,7 @@ Note the input assemblies used to call genotypes, and the version of AMRfinderpl
 staph_geno_ebi <- download_ebi(
   data = "genotype",
   genus = "Staphylococcus",
-  geno_class = c("AMINOGLYCOSIDE","TETRACYCLINE"),
+  geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE"),
   reformat = T
 )
 ```

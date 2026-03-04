@@ -89,7 +89,8 @@ amr_logistic <- function(geno_table, pheno_table,
     if (sum(!is.na(binary_matrix$R)) > 0) {
       to_fit <- binary_matrix %>%
         select(-any_of(c("id", "pheno", "ecoff", "mic", "disk", "NWT"))) %>%
-        select(R, where(~ sum(., na.rm = TRUE) >= maf))
+        select(R, where(~ sum(., na.rm = TRUE) >= maf)) %>%
+        filter(!is.na(R))
       summarise_model_input(to_fit)
       raw_modelR <- glm(R ~ ., data = to_fit, family = stats::binomial(link = "logit"))
       modelR <- glm_details(raw_modelR) %>%
@@ -100,7 +101,8 @@ amr_logistic <- function(geno_table, pheno_table,
     if (sum(!is.na(binary_matrix$NWT)) > 0) {
       to_fit <- binary_matrix %>%
         select(-any_of(c("id", "pheno", "ecoff", "mic", "disk", "R"))) %>%
-        select(NWT, where(~ sum(., na.rm = TRUE) >= maf))
+        select(NWT, where(~ sum(., na.rm = TRUE) >= maf)) %>%
+        filter(!is.na(NWT))
       summarise_model_input(to_fit)
       raw_modelNWT <- glm(NWT ~ ., data = to_fit, family = stats::binomial(link = "logit"))
       modelNWT <- glm_details(raw_modelNWT) %>%
@@ -113,7 +115,8 @@ amr_logistic <- function(geno_table, pheno_table,
       to_fit <- binary_matrix %>%
         filter(!is.na(R)) %>%
         select(-any_of(c("id", "pheno", "ecoff", "mic", "disk", "NWT"))) %>%
-        select(R, where(~ sum(., na.rm = TRUE) >= maf))
+        select(R, where(~ sum(., na.rm = TRUE) >= maf)) %>%
+        filter(!is.na(R))
       summarise_model_input(to_fit)
       raw_modelR <- logistf::logistf(R ~ ., data = to_fit, pl = FALSE)
       modelR <- logistf_details(raw_modelR) %>%
@@ -125,7 +128,8 @@ amr_logistic <- function(geno_table, pheno_table,
       to_fit <- binary_matrix %>%
         filter(!is.na(NWT)) %>%
         select(-any_of(c("id", "pheno", "ecoff", "mic", "disk", "R"))) %>%
-        select(NWT, where(~ sum(., na.rm = TRUE) >= maf))
+        select(NWT, where(~ sum(., na.rm = TRUE) >= maf)) %>%
+        filter(!is.na(NWT))
       summarise_model_input(to_fit)
       raw_modelNWT <- logistf::logistf(NWT ~ ., data = to_fit, pl = FALSE)
       modelNWT <- logistf_details(raw_modelNWT) %>%
@@ -183,8 +187,8 @@ summarise_model_input <- function(dat) {
     "   Filtered data contains ",
     nrow(dat),
     " samples (",
-    sum(dat[, 1] == 1), " => 1, ",
-    sum(dat[, 1] == 0), " => 0) and ",
+    sum(dat[, 1] == 1, na.rm=T), " => 1, ",
+    sum(dat[, 1] == 0, na.rm=T), " => 0) and ",
     ncol(dat) - 1, " variables.\n"
   ))
 }

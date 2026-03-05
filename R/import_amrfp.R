@@ -183,7 +183,7 @@ import_amrfp <- function(input_table,
   in_table_ab <- in_table_ab %>% 
     mutate(drug_agent = case_when(is.na(drug_class) ~ as.ab(Subclass), 
   TRUE ~ NA)) %>%
-    mutate(drug_class = case_when(is.na(drug_class) ~ ab_group(Subclass), TRUE ~ drug_class)) %>%
+    mutate(drug_class = case_when(is.na(drug_class) ~ AMR::ab_group(Subclass), TRUE ~ drug_class)) %>%
     dplyr::relocate(any_of(c(sample_col, "gene", "mutation", "node", "marker", "marker.label", "drug_agent", "drug_class")), .before = dplyr::everything())
     
 

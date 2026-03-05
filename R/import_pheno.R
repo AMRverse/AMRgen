@@ -1485,10 +1485,13 @@ import_sensititre_ast <- function(input,
     # Strip surrounding double-quotes from all fields
     fields <- gsub('^"|"$', "", fields)
 
-    # Find the full datetime field (YYYY-MM-DD HH:MM:SS) to locate where metadata ends.
-    # Using the full datetime pattern avoids matching bare date fields (e.g. collection date)
-    # that appear earlier in the row.
-    ts_idx <- which(grepl("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", fields))[1]
+    # Find the datetime field to locate where metadata ends.
+    # Supports both ISO format (YYYY-MM-DD HH:MM:SS) and European/US format
+    # (DD/MM/YYYY HH:MM or MM/DD/YYYY HH:MM) as produced by some Sensititre exports.
+    ts_idx <- which(grepl(
+      "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}|\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}",
+      fields
+    ))[1]
     if (is.na(ts_idx)) {
       cat(paste0("Warning: No timestamp found in row ", row_idx, ", skipping\n"))
       next
@@ -1561,6 +1564,8 @@ import_sensititre_ast <- function(input,
     )) %>%
     # Remove bare "=" prefix (just means exact value)
     mutate(mic = gsub("^=", "", mic)) %>%
+    # Convert European decimal comma to period (e.g. "<=0,06" -> "<=0.06")
+    mutate(mic = gsub(",", ".", mic, fixed = TRUE)) %>%
     mutate(mic = as.mic(mic))
 
   # Map interpretation codes to S/I/R
@@ -1568,9 +1573,11 @@ import_sensititre_ast <- function(input,
     mutate(pheno_provided = case_when(
       interp_raw == "SUSC" ~ "S",
       interp_raw == "RESIST" ~ "R",
+      interp_raw == "INTER" ~ "I", # Intermediate
       interp_raw == "SUSIE" ~ "I", # EUCAST "susceptible, increased exposure"
       interp_raw == "SC" ~ "I", # SDD (susceptible dose-dependent)
-      interp_raw %in% c("NOINTP", "NOIMAT") ~ NA_character_,
+      interp_raw %in% c("NOINTP", "NOIMAT") ~ NA_character_, # no interpretive criteria
+      interp_raw == "INEV" ~ NA_character_, # inherent/intrinsic result, no breakpoint applicable
       TRUE ~ NA_character_
     )) %>%
     mutate(pheno_provided = as.sir(pheno_provided))

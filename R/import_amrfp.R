@@ -19,7 +19,7 @@
 #' This function imports and processes AMRFinderPlus results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised antibiotic names and drug classes. The function also converts gene symbols to a harmonised format and ensures compatibility with the AMR package.
 #' @param input_table A character string specifying a dataframe or path to the AMRFinderPlus results table (TSV format).
 #' @param sample_col A character string specifying the column that identifies samples in the dataset (default `Name`).
-#' @param amrfp_drugs A tibble containing a reference table mapping AMRFinderPlus subclasses (`AFP_Subclass`) to standardised drug agents (`drug_agent`) and drug classes (`drug_class`). Defaults to `amrfp_drugs_table`, which is provided internally.
+#' @param amrfp_drugs A tibble containing a reference table mapping AMRFinderPlus subclasses (`AMRFP_Subclass`) to standardised drug classes (`drug_class`). Defaults to `amrfp_drugs_table`, which is provided internally.
 #' @param element_symbol_col Optional character string specifying the column containing gene or element symbols if non-standard column names are used.
 #' @param element_type_col Optional character string specifying the column indicating element type (e.g. AMR).
 #' @param element_subtype_col Character string specifying the column used to detect mutation subtypes.
@@ -41,7 +41,7 @@
 #' - Filters the data to only include AMR elements.
 #' - Converts gene symbols to a harmonised format.
 #' - Splits multiple subclass annotations into separate rows.
-#' - Maps AMRFinderPlus subclasses to standardised drug agent and drug class names using `amrfp_drugs`.
+#' - Maps AMRFinderPlus subclasses to standardised drug class names using `amrfp_drugs`.
 #' - Converts drug agent names to the `"ab"` class from the AMR package.
 #' This processing ensures compatibility with downstream AMR analysis workflows.
 #' @export

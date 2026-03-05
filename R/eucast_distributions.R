@@ -22,7 +22,9 @@
 #' @importFrom rvest html_attrs html_children html_element html_text2 read_html
 #' @export
 #' @examples
+#' \dontrun{
 #' eucast_supported_ab_distributions()
+#' }
 eucast_supported_ab_distributions <- function(...) {
   if (is.null(AMRgen_env$eucast_ab_select_list)) {
     if (interactive()) message("Retrieving list of antimicrobials from ", font_url("https://mic.eucast.org", "mic.eucast.org"), "...", appendLF = FALSE)

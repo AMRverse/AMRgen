@@ -36,7 +36,7 @@ import_amrfp(
 
 \item{class_col}{Character string specifying the AMRFinderPlus class column.}
 
-\item{amrfp_drugs}{A tibble containing a reference table mapping AMRFinderPlus subclasses (\code{AFP_Subclass}) to standardised drug agents (\code{drug_agent}) and drug classes (\code{drug_class}). Defaults to \code{amrfp_drugs_table}, which is provided internally.}
+\item{amrfp_drugs}{A tibble containing a reference table mapping AMRFinderPlus subclasses (\code{AMRFP_Subclass}) to standardised drug classes (\code{drug_class}). Defaults to \code{amrfp_drugs_table}, which is provided internally.}
 }
 \value{
 A tibble containing the processed AMR elements, with harmonised gene names, mapped drug agents, and drug classes. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables.
@@ -51,7 +51,7 @@ The function performs the following steps:
 \item Filters the data to only include AMR elements.
 \item Converts gene symbols to a harmonised format.
 \item Splits multiple subclass annotations into separate rows.
-\item Maps AMRFinderPlus subclasses to standardised drug agent and drug class names using \code{amrfp_drugs}.
+\item Maps AMRFinderPlus subclasses to standardised drug class names using \code{amrfp_drugs}.
 \item Converts drug agent names to the \code{"ab"} class from the AMR package.
 This processing ensures compatibility with downstream AMR analysis workflows.
 }
@@ -59,7 +59,6 @@ This processing ensures compatibility with downstream AMR analysis workflows.
 \examples{
 \dontrun{
 # small example E. coli AMRFinderPlus data
-data(ecoli_geno_raw)
 ecoli_geno_raw
 
 # import first few rows of this data frame and parse it as AMRfp data

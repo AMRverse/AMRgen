@@ -124,6 +124,8 @@ reference:
       - staph_geno_ncbi_cloud_raw
       - staph_ast_ebi
       - staph_geno_ebi
+      - pheno_eco_2075
+      - geno_eco_2075
 
 
 # Footer configuration

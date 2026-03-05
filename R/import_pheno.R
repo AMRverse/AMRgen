@@ -676,7 +676,7 @@ format_ast <- function(input,
         ast <- ast %>% mutate(spp_pheno = !!sym(species_col)) # we need a column named spp_pheno for interpretation
       }
     } else {
-      cat(paste("Could not find species_col", species_col, "in input table"))
+      cat(paste("Could not find species_col", species_col, "in input table\n"))
     }
   }
 
@@ -694,7 +694,7 @@ format_ast <- function(input,
         cat(paste("Renaming column", ab_col, "to standard name 'drug_agent'\n"))
       }
     } else {
-      cat(paste("Could not find ab_col", ab_col, "in input table"))
+      cat(paste("Could not find ab_col", ab_col, "in input table\n"))
     }
   }
 
@@ -707,7 +707,7 @@ format_ast <- function(input,
         cat(paste("Renaming column", mic_col, "to standard name 'mic'\n"))
       }
     } else {
-      cat(paste("Could not find mic_col", mic_col, "in input table"))
+      cat(paste("Could not find mic_col", mic_col, "in input table\n"))
     }
   }
 
@@ -720,7 +720,7 @@ format_ast <- function(input,
         cat(paste("Renaming column", disk_col, "to standard name 'disk'\n"))
       }
     } else {
-      cat(paste("Could not find disk_col", disk_col, "in input table"))
+      cat(paste("Could not find disk_col", disk_col, "in input table\n"))
     }
   }
 
@@ -730,7 +730,7 @@ format_ast <- function(input,
         ast <- ast %>% mutate(!!sym(pheno_cols) := as.sir(!!sym(pheno_cols)))
         cat(paste("Parsing column", pheno_cols, "as class 'sir'\n"))
       } else {
-        cat(paste("Could not find pheno_cols", pheno_cols, "in input table"))
+        cat(paste("Could not find pheno_cols", pheno_cols, "in input table\n"))
       }
     } else {
       for (pheno_col in pheno_cols) {
@@ -739,7 +739,7 @@ format_ast <- function(input,
             ast <- ast %>% mutate(!!sym(pheno_col) := as.sir(!!sym(pheno_col)))
             cat(paste("Parsing column", pheno_col, "as class 'sir'\n"))
           } else {
-            cat(paste("Could not find pheno_col", pheno_col, "in input table"))
+            cat(paste("Could not find pheno_col", pheno_col, "in input table\n"))
           }
         }
       }
@@ -753,7 +753,7 @@ format_ast <- function(input,
         cat(paste("Renaming column", method_col, "to standard name 'method'\n"))
       }
     } else {
-      cat(paste("Could not find method_col", method_col, "in input table"))
+      cat(paste("Could not find method_col", method_col, "in input table\n"))
     }
   }
 
@@ -764,7 +764,7 @@ format_ast <- function(input,
         cat(paste("Renaming column", platform_col, "to standard name 'platform'\n"))
       }
     } else {
-      cat(paste("Could not find platform_col", platform_col, "in input table"))
+      cat(paste("Could not find platform_col", platform_col, "in input table\n"))
     }
   }
 
@@ -775,7 +775,7 @@ format_ast <- function(input,
         cat(paste("Renaming column", guideline_col, "to standard name 'guideline'\n"))
       }
     } else {
-      cat(paste("Could not find guideline_col", guideline_col, "in input table"))
+      cat(paste("Could not find guideline_col", guideline_col, "in input table\n"))
     }
   }
 
@@ -786,7 +786,7 @@ format_ast <- function(input,
         cat(paste("Renaming column", source_col, "to standard name 'source'\n"))
       }
     } else {
-      cat(paste("Could not find source_col", source_col, "in input table"))
+      cat(paste("Could not find source_col", source_col, "in input table\n"))
     }
   }
 

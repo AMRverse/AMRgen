@@ -125,6 +125,8 @@ reference:
       - staph_ast_ebi
       - staph_geno_ebi
       - amrfp_drugs_table
+      - pheno_eco_2075
+      - geno_eco_2075
 
 
 # Footer configuration

@@ -173,12 +173,26 @@ import_amrfp <- function(input_table,
 
   # make two new columns - drug_class and drug_agent, where we control the vocab for the AMRFinderPlus Subclass column
   # into something that is comparable with the drugs in the AMR package
-  in_table_ab <- in_table_label %>%
-    left_join(amrfp_drugs[, c("AFP_Subclass", "drug_agent", "drug_class")], by = setNames("AFP_Subclass", subclass_col)) %>%
+
+  # first, I think we want to identify any subclasses that we _know_ 
+  # aren't in the AMR package, using the internal data
+  in_table_ab <- in_table_label %>% left_join(amrfp_drugs, by= setNames("AMRFP_Subclass", subclass_col))
+  
+  # then for the the columns which are NA, we want to use the Subclass col
+  # and convert to ab using AMR pkg
+  in_table_ab <- in_table_ab %>% 
+    mutate(drug_agent = case_when(is.na(drug_class) ~ as.ab(Subclass), 
+  TRUE ~ NA)) %>%
+    mutate(drug_class = case_when(is.na(drug_class) ~ ab_group(Subclass), TRUE ~ drug_class)) %>%
     dplyr::relocate(any_of(c(sample_col, "gene", "mutation", "node", "marker", "marker.label", "drug_agent", "drug_class")), .before = dplyr::everything())
+    
+
+  #in_table_ab <- in_table_label %>%
+  #  left_join(amrfp_drugs[, c("AFP_Subclass", "drug_agent", "drug_class")], by = setNames("AFP_Subclass", subclass_col)) %>%
+  #  dplyr::relocate(any_of(c(sample_col, "gene", "mutation", "node", "marker", "marker.label", "drug_agent", "drug_class")), .before = dplyr::everything())
 
   # convert drug_agent into the "ab" class (will leave NAs as is)
-  in_table_ab <- in_table_ab %>% mutate(drug_agent = as.ab(drug_agent))
+  #in_table_ab <- in_table_ab %>% mutate(drug_agent = as.ab(drug_agent))
 
   return(in_table_ab)
 }

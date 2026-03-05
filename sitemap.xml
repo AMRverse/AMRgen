@@ -9,6 +9,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/AMRgen-package.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/amr_logistic.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/amr_upset.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/amrfp_drugs_table.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/as.gene.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/assay_by_var.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/checkBreakpoints.html</loc></url>
@@ -30,6 +31,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/export_ebi_antibiogram.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/export_ncbi_biosample.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/format_ast.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/geno_eco_2075.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/getBreakpoints.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/get_combo_matrix.html</loc></url>
@@ -55,6 +57,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/interpret_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/logistf_details.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/merge_logreg_soloppv.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/pheno_eco_2075.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_combined_stats.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_estimates.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_solo_logReg.html</loc></url>

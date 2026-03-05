@@ -167,3 +167,9 @@ Example datasets for demonstration and reproducible analysis.
   : S. aureus Example of Imported EBI Phenotype Data
 - [`staph_geno_ebi`](https://AMRverse.github.io/AMRgen/reference/staph_geno_ebi.md)
   : S. aureus Example of Imported EBI Genotype Data
+- [`amrfp_drugs_table`](https://AMRverse.github.io/AMRgen/reference/amrfp_drugs_table.md)
+  : NCBI Subclass mapping to drug class
+- [`pheno_eco_2075`](https://AMRverse.github.io/AMRgen/reference/pheno_eco_2075.md)
+  : E. coli AST data from Mills et al 2022
+- [`geno_eco_2075`](https://AMRverse.github.io/AMRgen/reference/geno_eco_2075.md)
+  : E. coli genotype data from Mills et al 2022

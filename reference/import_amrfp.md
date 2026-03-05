@@ -69,9 +69,8 @@ import_amrfp(
 - amrfp_drugs:
 
   A tibble containing a reference table mapping AMRFinderPlus subclasses
-  (`AFP_Subclass`) to standardised drug agents (`drug_agent`) and drug
-  classes (`drug_class`). Defaults to `amrfp_drugs_table`, which is
-  provided internally.
+  (`AMRFP_Subclass`) to standardised drug classes (`drug_class`).
+  Defaults to `amrfp_drugs_table`, which is provided internally.
 
 ## Value
 
@@ -92,8 +91,8 @@ The function performs the following steps:
 
 - Splits multiple subclass annotations into separate rows.
 
-- Maps AMRFinderPlus subclasses to standardised drug agent and drug
-  class names using `amrfp_drugs`.
+- Maps AMRFinderPlus subclasses to standardised drug class names using
+  `amrfp_drugs`.
 
 - Converts drug agent names to the `"ab"` class from the AMR package.
   This processing ensures compatibility with downstream AMR analysis
@@ -104,7 +103,6 @@ The function performs the following steps:
 ``` r
 if (FALSE) { # \dontrun{
 # small example E. coli AMRFinderPlus data
-data(ecoli_geno_raw)
 ecoli_geno_raw
 
 # import first few rows of this data frame and parse it as AMRfp data

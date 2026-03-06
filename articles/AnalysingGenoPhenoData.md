@@ -701,6 +701,7 @@ models <- amr_logistic(
 #> number of iterations or alter step size by passing 'logistf.control(maxit=...,
 #> maxstep=...)' to parameter control
 #> Generating plots
+#> Plotting 2 models
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/amr_logistic-1.png)

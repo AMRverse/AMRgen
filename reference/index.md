@@ -178,3 +178,15 @@ Example datasets for demonstration and reproducible analysis.
   : E. coli AST data from Mills et al 2022
 - [`geno_eco_2075`](https://AMRverse.github.io/AMRgen/reference/geno_eco_2075.md)
   : E. coli genotype data from Mills et al 2022
+- [`eurogasp_geno_raw`](https://AMRverse.github.io/AMRgen/reference/eurogasp_geno_raw.md)
+  : N. gonorrhoeae Euro-GASP Genotype Data Use Case 1
+- [`ngono_cro_geno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_cro_geno_raw.md)
+  : N. gonorrhoeae PBP2 Mutations Genotype Data Use Case 2
+- [`ngono_tet_geno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_tet_geno_raw.md)
+  : N. gonorrhoeae Tetracycline Resistance Genotype Data Use Case 3
+- [`ngono_cro_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_cro_pheno_raw.md)
+  : N. gonorrhoeae PBP2 Mutations Phenotype Data Use Case 2
+- [`eurogasp_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/eurogasp_pheno_raw.md)
+  : N. gonorrhoeae Euro-GASP Phenotype Data Use Case 1
+- [`ngono_tet_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_tet_pheno_raw.md)
+  : N. gonorrhoeae Tetracycline Resistance Phenotype Data Use Case 3

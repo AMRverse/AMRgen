@@ -3,6 +3,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/LICENSE-text.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/articles/DownloadGenoPhenoData.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/articles/NeisseriaGonoExamples.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/articles/index.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/authors.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/index.html</loc></url>
@@ -27,6 +28,8 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/ecoli_cip_vs_ref.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/ecoli_geno_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/eucast_supported_ab_distributions.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/eurogasp_geno_raw.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/eurogasp_pheno_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/export_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/export_ebi_antibiogram.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/export_ncbi_biosample.html</loc></url>
@@ -58,6 +61,10 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/interpret_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/logistf_details.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/merge_logreg_soloppv.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/ngono_cro_geno_raw.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/ngono_cro_pheno_raw.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/ngono_tet_geno_raw.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/ngono_tet_pheno_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/pheno_eco_2075.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_combined_stats.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/plot_estimates.html</loc></url>

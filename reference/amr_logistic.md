@@ -181,6 +181,7 @@ result <- amr_logistic(
 #>    Filtered data contains 3576 samples (875 => 1, 2701 => 0) and 19 variables.
 #> Warning: logistf.fit: Maximum number of iterations for full model exceeded. Try to increase the number of iterations or alter step size by passing 'logistf.control(maxit=..., maxstep=...)' to parameter control
 #> Generating plots
+#> Plotting 2 models
 
 # To access the plot:
 print(result$plot)

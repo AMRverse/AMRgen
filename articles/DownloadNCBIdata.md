@@ -156,8 +156,8 @@ issues.
 
 NCBI data can be accessed via Google Cloud BigQuery. This requires a
 Google Cloud account. For more information about using BigQuery to
-explore NCBI data see
-<https://www.ncbi.nlm.nih.gov/sra/docs/sra-bigquery/>
+explore NCBI Pathogen Detection data see
+<https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/>.
 
 The
 [`query_ncbi_bq_ast()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.md)
@@ -168,11 +168,21 @@ function can also re-format the data into an AMRgen phenotype table, and
 re-interpret phenotypes against clinical breakpoints from EUCAST or
 CLSI.
 
-This function is computationally very efficient but requires
-authentication via a [Google Cloud
+This function is fast but requires authentication via a [Google Cloud
 account](https://docs.cloud.google.com/docs/get-started) and may require
-payment (free trial accounts can be set up, but require credit card
-authorization).
+payment. Free trial accounts can be set up, but require credit card
+authorizatio. Google currently provides enough free tier usage for \>150
+different queries for genotype data per month. To use this you will also
+need to install the `bigrquery` package and authorize it to use your
+Google cloud account.
+
+``` r
+install.packages('bigrquery')
+library(bigrquery)
+bigrquery::bq_auth()
+```
+
+##### To download AST data
 
 ``` r
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline
@@ -193,6 +203,8 @@ staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi
 #> were invalid antimicrobial interpretations: "intermediate"
 ```
 
+##### To download genotype data
+
 The
 [`query_ncbi_bq_geno()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.md)
 function lets you download AMRfinderplus genotype data, for BioSamples
@@ -204,11 +216,11 @@ Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid
 terms). The function can also re-format the data into an AMRgen genotype
 table.
 
-Note that BioSamples with no AST data in NCBI will not be included in
-the download.
+Note that to save memory and disk space BioSamples with no AST data in
+NCBI will not be included in the download.
 
-NCBI genotype results are not updated with each new release of
-AMRfinderplus, so older genomes will have genotype results obtained with
+Not all NCBI genotype results are updated with each new release of
+AMRfinderplus, so older genomes may have genotype results obtained with
 older versions of AMRfinderplus, and newer genomes will have genotype
 results obtained with more recent versions.
 

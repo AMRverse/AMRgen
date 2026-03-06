@@ -81,12 +81,19 @@ This produces a long format data frame, with one row per sample and drug combina
 Consider altering the `max_records`, `batch_size`  or `sleep_time` options if you want to download a lot of data or run into NCBI server issues. 
 
 ### Option 1b: Download AST and genotype data from NCBI via bigrquery
-NCBI data can be accessed via Google Cloud BigQuery. This requires a Google Cloud account. For more information about using BigQuery to explore NCBI data see [https://www.ncbi.nlm.nih.gov/sra/docs/sra-bigquery/](https://www.ncbi.nlm.nih.gov/sra/docs/sra-bigquery/)
+NCBI data can be accessed via Google Cloud BigQuery. This requires a Google Cloud account. For more information about using BigQuery to explore NCBI Pathogen Detection data see [https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/](https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/). 
 
 The `query_ncbi_bq_ast()` function lets you download antibiogram data from NCBI via Google Cloud BigQuery using the bigrquery R pacakge. You must specify a species, and can optionally limit the download to one or more specific drugs. The function can also re-format the data into an AMRgen phenotype table, and re-interpret phenotypes against clinical breakpoints from EUCAST or CLSI. 
 
-This function is computationally very efficient but requires authentication via a [Google Cloud account](https://docs.cloud.google.com/docs/get-started) and may require payment (free trial accounts can be set up, but require credit card authorization).
+This function is fast but requires authentication via a [Google Cloud account](https://docs.cloud.google.com/docs/get-started) and may require payment. Free trial accounts can be set up, but require credit card authorizatio. Google currently provides enough free tier usage for >150 different queries for genotype data per month. To use this you will also need to install the `bigrquery` package and authorize it to use your Google cloud account.
 
+```{r install_bigrquery, eval=F}
+install.packages('bigrquery')
+library(bigrquery)
+bigrquery::bq_auth()
+```
+
+#### To download AST data
 ``` {r download_ncbi_ast_bigquery, eval=F}
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline
 # NOTE: you may need to add 'PROJECT_ID="xxx"' to the command if you have not set up application default credentials
@@ -101,11 +108,12 @@ staph_ast_ncbi_cloud_raw <- query_ncbi_bq_ast(
 staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi = TRUE)
 ```
 
+#### To download genotype data
 The `query_ncbi_bq_geno()` function lets you download AMRfinderplus genotype data, for BioSamples that have matching AST data, from NCBI via Google Cloud BigQuery using the bigrquery R pacakge. You must specify a species, and can optionally limit the download to one or more specific drug classes (see [NCBI AMR Class-Subclass Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid terms). The function can also re-format the data into an AMRgen genotype table. 
 
-Note that BioSamples with no AST data in NCBI will not be included in the download.
+Note that to save memory and disk space BioSamples with no AST data in NCBI will not be included in the download.
 
-NCBI genotype results are not updated with each new release of AMRfinderplus, so older genomes will have genotype results obtained with older versions of AMRfinderplus, and newer genomes will have genotype results obtained with more recent versions.
+Not all NCBI genotype results are updated with each new release of AMRfinderplus, so older genomes may have genotype results obtained with older versions of AMRfinderplus, and newer genomes will have genotype results obtained with more recent versions.
 
 ``` {r download_ncbi_geno_bigquery, eval=F}
 # Download Staphylococcus aureus genotype data from NCBI, filtering for variants associated with class 'AMINOGLYCOSIDES' or 'TETRACYCLINES'

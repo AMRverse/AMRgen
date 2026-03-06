@@ -31,6 +31,7 @@ Imports:
     purrr,
     RCurl,
     readr (>= 2.1.0),
+    readxl (>= 1.4.0),
     rentrez,
     rlang (>= 1.0.0),
     rvest (>= 1.0.0),

@@ -182,7 +182,7 @@ import_amrfp <- function(input_table,
   
   # then for the columns which are NA, we want to use the Subclass col and convert to ab using AMR pkg
   in_table_ab <- in_table_ab %>% 
-    mutate(subclass_to_parse = if_else(!is.na(drug_class_internal), NA, Subclass)) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
+    mutate(subclass_to_parse = if_else(!is.na(drug_class_internal), NA, !!sym(subclass_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
     mutate(drug_agent = AMR::as.ab(subclass_to_parse)) %>%
     mutate(drug_class_from_agent = AMR::ab_group(subclass_to_parse)) %>% 
     mutate(drug_class = coalesce(drug_class_internal, drug_class_from_agent)) %>% 

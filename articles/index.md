@@ -5,4 +5,4 @@
 - [Analysing Geno-Pheno
   Data](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.md):
 - [Download NCBI and EBI
-  Data](https://AMRverse.github.io/AMRgen/articles/DownloadNCBIdata.md):
+  Data](https://AMRverse.github.io/AMRgen/articles/DownloadGenoPhenoData.md):

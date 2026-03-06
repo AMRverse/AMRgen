@@ -103,6 +103,7 @@ The function performs the following steps:
 ``` r
 if (FALSE) { # \dontrun{
 # small example E. coli AMRFinderPlus data
+data(ecoli_geno_raw)
 ecoli_geno_raw
 
 # import first few rows of this data frame and parse it as AMRfp data

@@ -171,10 +171,10 @@ CLSI.
 This function is fast but requires authentication via a [Google Cloud
 account](https://docs.cloud.google.com/docs/get-started) and may require
 payment. Free trial accounts can be set up, but require credit card
-authorizatio. Google currently provides enough free tier usage for \>150
-different queries for genotype data per month. To use this you will also
-need to install the `bigrquery` package and authorize it to use your
-Google cloud account.
+authorization. Google currently provides enough free tier usage for
+\>150 different queries for genotype data per month. To use this you
+will also need to install the `bigrquery` package and authorize it to
+use your Google cloud account.
 
 ``` r
 install.packages('bigrquery')
@@ -295,7 +295,7 @@ staph_dox_mic_plot <- assay_by_var(
 staph_dox_mic_plot
 ```
 
-![](DownloadNCBIdata_files/figure-html/assay_by_var_staph_doxy-1.png)
+![](DownloadGenoPhenoData_files/figure-html/assay_by_var_staph_doxy-1.png)
 
 ``` r
 # Amikacin
@@ -312,9 +312,9 @@ staph_ami_mic_plot <- assay_by_var(
 staph_ami_mic_plot
 ```
 
-![](DownloadNCBIdata_files/figure-html/assay_by_var_staph_ami-1.png) For
-more guidance on how to visulaise phenotypic data and combine it with
-genotypic data, have a look at the other `AMRgen`
+![](DownloadGenoPhenoData_files/figure-html/assay_by_var_staph_ami-1.png)
+For more guidance on how to visulaise phenotypic data and combine it
+with genotypic data, have a look at the other `AMRgen`
 [vignettes](https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
 
 ### Option 2: Download data from EBI
@@ -467,15 +467,15 @@ tet_ppv <- ppv(tet_bin)
 #>  Removing 69 rows with no phenotype call
 ```
 
-![](DownloadNCBIdata_files/figure-html/ppv-1.png)
+![](DownloadGenoPhenoData_files/figure-html/ppv-1.png)
 
 ``` r
 
 tet_ppv$plot
 ```
 
-![](DownloadNCBIdata_files/figure-html/ppv-2.png) This produces a binary
-matrix with 1 row per BioSample, for all BioSamples that had both
+![](DownloadGenoPhenoData_files/figure-html/ppv-2.png) This produces a
+binary matrix with 1 row per BioSample, for all BioSamples that had both
 phenotype data for doxycycline in `staph_ast_ebi_filtered` AND any
 genotype data (associated with any marker, not just Tetracyclines) in
 `staph_geno_ebi_filtered`. This ensures that we include samples for

@@ -27,7 +27,7 @@
 #' @param node_col Character string specifying the hierarchy node column.
 #' @param subclass_col Character string specifying the AMRFinderPlus subclass column.
 #' @param class_col Character string specifying the AMRFinderPlus class column.
-#' @importFrom AMR as.ab
+#' @importFrom AMR as.ab ab_group
 #' @importFrom dplyr all_of everything filter left_join mutate select case_when if_else relocate any_of
 #' @importFrom tibble tibble add_column
 #' @importFrom tidyr separate_longer_delim separate
@@ -176,12 +176,19 @@ import_amrfp <- function(input_table,
 
   # first, identify any subclasses we _know_ aren't in the AMR package, using the internal data
   # join introduces these as new drug_class column
-  in_table_ab <- in_table_label %>% left_join(amrfp_drugs, by= setNames("AMRFP_Subclass", subclass_col))
+  in_table_ab <- in_table_label %>% 
+    left_join(amrfp_drugs, by= setNames("AMRFP_Subclass", subclass_col)) 
   
   # then for the columns which are NA, we want to use the Subclass col and convert to ab using AMR pkg
   in_table_ab <- in_table_ab %>% 
-    mutate(drug_agent = if_else(is.na(drug_class), AMR::as.ab(Subclass), NA)) %>%
-    mutate(drug_class = if_else(is.na(drug_class), AMR::ab_group(Subclass), drug_class)) %>%
+    mutate(subclass_to_parse = if_else(!is.na(drug_class), NA, Subclass)) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
+    mutate(drug_agent = AMR::as.ab(subclass_to_parse)) %>%
+    mutate(drug_class = if_else(!is.na(drug_agent), AMR::ab_group(Subclass), drug_class)) %>% # change to call on subclass_to_parse without if_else, once ab_group() is fixed to return ab_group(NA)=NA
+    # use this once ab_group(NA) correctly evaluates as NA:
+    # mutate(drug_class_from_agent = AMR::ab_group(subclass_to_parse)) %>% 
+    # mutate(drug_class_final = coalesce(drug_class, drug_class_from_agent)) %>% 
+    # select(-drug_class_from_agent, -drug_class) %>% 
+    # rename(drug_class=drug_class_final) %>% 
     dplyr::relocate(any_of(c(sample_col, "gene", "mutation", "node", "marker", "marker.label", "drug_agent", "drug_class")), .before = dplyr::everything())
 
   return(in_table_ab)

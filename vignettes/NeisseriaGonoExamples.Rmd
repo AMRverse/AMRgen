@@ -1,10 +1,10 @@
 ---
-title: "Analysing *Neisseria gonorrhoeae* genotype-phenotype data with AMRgen"
+title: "Analysing Neisseria gonorrhoeae genotype-phenotype data with AMRgen"
 author: "LSB"
 date: "2026-03-06"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analysing *Neisseria gonorrhoeae* genotype-phenotype data with AMRgen}
+  %\VignetteIndexEntry{Analysing Neisseria gonorrhoeae genotype-phenotype data with AMRgen}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

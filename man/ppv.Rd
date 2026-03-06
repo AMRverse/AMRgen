@@ -11,7 +11,7 @@ ppv(
   geno_table,
   pheno_table,
   antibiotic = NULL,
-  drug_class_list,
+  drug_class_list = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = NULL,
@@ -55,7 +55,7 @@ ppv(
 
 \item{antibiotic}{(Required if \code{binary_matrix} not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the \code{drug_agent} column of \code{pheno_table}. Only used if \code{binary_matrix} not provided or if breakpoints required.}
 
-\item{drug_class_list}{(Required if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. Only used if \code{binary_matrix} not provided.}
+\item{drug_class_list}{(Only relevant if \code{binary_matrix} not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).}
 
 \item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
 
@@ -140,7 +140,6 @@ ppv <- ppv(
   geno_table = ecoli_geno,
   pheno_table = ecoli_ast,
   antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
   sir_col = "pheno_clsi"
 )
 }

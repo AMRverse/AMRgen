@@ -20,7 +20,7 @@
 #' @param geno_table A data frame containing genotype data, in long form with one row per sample and genetic marker. Expected format is that output by [import_amrfp()] and must include a column labeled `drug_class` (indicating the antibiotic class associated with each marker), in addition to a column indicating the marker (column name specified via `marker_col`) and a column for sample identifiers (specified via `geno_sample_col`, otherwise it is assumed the first column contains identifiers).
 #' @param pheno_table A data frame containing phenotype data, in long form with one row per sample, drug and assay result. Expected format is that output by [import_ast()] and must include a column `drug_agent` (indicating the drug agent, interpretable as AMR pkg class `ab`), in addition to a column for sample identifiers (specified via `pheno_sample_col`, otherwise it is assumed the first column contains identifiers), a column with the resistance interpretation (S/I/R, specified via `sir_col`), and optionally a column with the ECOFF interpretation (WT/NWT or S/R, specified via `ecoff_col`).
 #' @param antibiotic A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the `drug_agent` column of `pheno_table` or be coercible to a match using [as.ab].
-#' @param drug_class_list A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list.
+#' @param drug_class_list A character vector (optional) of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
@@ -64,10 +64,18 @@
 #'   keep_assay_values = TRUE
 #' )
 #' }
-get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_list, keep_SIR = TRUE,
-                              keep_assay_values = FALSE, keep_assay_values_from = c("mic", "disk"),
-                              geno_sample_col = NULL, pheno_sample_col = NULL,
-                              sir_col = "pheno_clsi", ecoff_col = "ecoff", marker_col = "marker",
+get_binary_matrix <- function(geno_table, 
+                              pheno_table, 
+                              antibiotic, 
+                              drug_class_list = NULL, 
+                              keep_SIR = TRUE,
+                              keep_assay_values = FALSE, 
+                              keep_assay_values_from = c("mic", "disk"),
+                              geno_sample_col = NULL, 
+                              pheno_sample_col = NULL,
+                              sir_col = "pheno_clsi", 
+                              ecoff_col = "ecoff", 
+                              marker_col = "marker",
                               most_resistant = TRUE) {
   # check there is a SIR column specified
   if (is.null(sir_col)) {
@@ -106,8 +114,21 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
   if (!("drug_class" %in% colnames(geno_table))) {
     stop(paste("input", deparse(substitute(geno_table)), "must have a column labelled `drug_class`"))
   }
-  if (sum(drug_class_list %in% geno_table$drug_class) == 0) {
-    stop(paste("No markers matching drug class", paste(drug_class_list, collapse = ","), "were identified in input geno_table"))
+  
+  # generate drug_class_list from antibiotic, if not provided
+  if (is.null(drug_class_list)) {
+    cat(paste0(" Checking for drug classes for antibiotic: ", ab_name(antibiotic), "\n"))
+    drug_class_candidates <- AMR::ab_group(antibiotic, all_groups = TRUE)
+    if ("Carbapenems" %in% drug_class_candidates) { # ensure when testing carbapenems we include cephalosporin markers
+      drug_class_candidates <- c(drug_class_candidates, "Cephalosporins (3rd gen.)", "Cephalosporins", "Beta-lactams")
+    }
+    cat(paste0("  Associated classes: ", paste(drug_class_candidates, collapse=", "), "\n"))
+    drug_class_list <- drug_class_candidates[drug_class_candidates %in% geno_table$drug_class]
+    if (length(drug_class_list) ==0 ) {
+      stop(paste("  None of these classes were found in the drug_class column of genotype table. Please specify which markers to include via 'drug_class_list'."))
+    } else{
+      cat(paste0("  Found markers mapped to: ", paste(drug_class_list, collapse=", "), "\n"))
+    }
   }
 
   # subset pheno & geno dataframes to those samples with overlap

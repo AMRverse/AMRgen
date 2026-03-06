@@ -8,7 +8,7 @@ get_binary_matrix(
   geno_table,
   pheno_table,
   antibiotic,
-  drug_class_list,
+  drug_class_list = NULL,
   keep_SIR = TRUE,
   keep_assay_values = FALSE,
   keep_assay_values_from = c("mic", "disk"),
@@ -27,7 +27,7 @@ get_binary_matrix(
 
 \item{antibiotic}{A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the \code{drug_agent} column of \code{pheno_table} or be coercible to a match using \link[AMR:as.ab]{AMR::as.ab}.}
 
-\item{drug_class_list}{A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list.}
+\item{drug_class_list}{A character vector (optional) of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).}
 
 \item{keep_SIR}{A logical indicating whether to retain the full S/I/R phenotype column in the output. Defaults to \code{TRUE}.}
 

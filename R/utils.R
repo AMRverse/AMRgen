@@ -232,7 +232,10 @@ utils::globalVariables(c(
   "scientific_name",
   "standard",
   ".data",
-  "subclass_to_parse"
+  "subclass_to_parse", 
+  "amrfp_drugs_table", 
+  "drug_class_internal",
+  "drug_class_from_agent"
 ))
 
 

@@ -85,7 +85,7 @@ NCBI data can be accessed via Google Cloud BigQuery. This requires a Google Clou
 
 The `query_ncbi_bq_ast()` function lets you download antibiogram data from NCBI via Google Cloud BigQuery using the bigrquery R pacakge. You must specify a species, and can optionally limit the download to one or more specific drugs. The function can also re-format the data into an AMRgen phenotype table, and re-interpret phenotypes against clinical breakpoints from EUCAST or CLSI. 
 
-This function is fast but requires authentication via a [Google Cloud account](https://docs.cloud.google.com/docs/get-started) and may require payment. Free trial accounts can be set up, but require credit card authorizatio. Google currently provides enough free tier usage for >150 different queries for genotype data per month. To use this you will also need to install the `bigrquery` package and authorize it to use your Google cloud account.
+This function is fast but requires authentication via a [Google Cloud account](https://docs.cloud.google.com/docs/get-started) and may require payment. Free trial accounts can be set up, but require credit card authorization. Google currently provides enough free tier usage for >150 different queries for genotype data per month. To use this you will also need to install the `bigrquery` package and authorize it to use your Google cloud account.
 
 ```{r install_bigrquery, eval=F}
 install.packages('bigrquery')

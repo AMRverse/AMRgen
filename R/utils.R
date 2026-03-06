@@ -231,7 +231,8 @@ utils::globalVariables(c(
   "reagent",
   "scientific_name",
   "standard",
-  ".data"
+  ".data",
+  "subclass_to_parse"
 ))
 
 

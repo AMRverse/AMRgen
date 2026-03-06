@@ -45,7 +45,7 @@
 <span>  <span class="va">geno_table</span>,</span>
 <span>  <span class="va">pheno_table</span>,</span>
 <span>  antibiotic <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">drug_class_list</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geno_sample_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pheno_sample_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -105,7 +105,7 @@
 
 
 <dt id="arg-drug-class-list">drug_class_list<a class="anchor" aria-label="anchor" href="#arg-drug-class-list"></a></dt>
-<dd><p>(Required if <code>binary_matrix</code> not provided) A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in <code>geno_table</code> will be filtered based on whether their <code>drug_class</code> matches any value in this list. Only used if <code>binary_matrix</code> not provided.</p></dd>
+<dd><p>(Only relevant if <code>binary_matrix</code> not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).</p></dd>
 
 
 <dt id="arg-geno-sample-col">geno_sample_col<a class="anchor" aria-label="anchor" href="#arg-geno-sample-col"></a></dt>
@@ -208,7 +208,6 @@
 <span class="r-in"><span>  geno_table <span class="op">=</span> <span class="va">ecoli_geno</span>,</span></span>
 <span class="r-in"><span>  pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>,</span></span>
 <span class="r-in"><span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span></span>
-<span class="r-in"><span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>

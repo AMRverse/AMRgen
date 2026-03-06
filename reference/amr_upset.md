@@ -16,7 +16,7 @@ amr_upset(
   geno_table,
   pheno_table,
   antibiotic = NULL,
-  drug_class_list,
+  drug_class_list = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = NULL,
@@ -99,11 +99,10 @@ amr_upset(
 
 - drug_class_list:
 
-  (Required if `binary_matrix` not provided) A character vector of drug
-  classes to filter genotype data for markers related to the specified
-  antibiotic. Markers in `geno_table` will be filtered based on whether
-  their `drug_class` matches any value in this list. Only used if
-  `binary_matrix` not provided.
+  (Only relevant if `binary_matrix` not provided) If not provided, the
+  AMR pkg is used to check what class name/s are associated with the
+  antibiotic and uses those (these are printed to screen so the user can
+  see what is being filtered).
 
 - geno_sample_col:
 
@@ -250,7 +249,6 @@ cip_mic_upset <- amr_upset(
   geno_table = ecoli_geno,
   pheno_table = ecoli_ast,
   antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
   sir_col = "pheno_clsi"
 )
 } # }

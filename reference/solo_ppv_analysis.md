@@ -56,11 +56,10 @@ solo_ppv_analysis(
 
 - drug_class_list:
 
-  (Required if `binary_matrix` not provided) A character vector of drug
-  classes to filter genotype data for markers related to the specified
-  antibiotic. Markers in `geno_table` will be filtered based on whether
-  their `drug_class` matches any value in this list. Only used if
-  `binary_matrix` not provided.
+  (Only relevant if `binary_matrix` not provided) If not provided, the
+  AMR pkg is used to check what class name/s are associated with the
+  antibiotic and uses those (these are printed to screen so the user can
+  see what is being filtered).
 
 - geno_sample_col:
 

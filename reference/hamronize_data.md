@@ -5,7 +5,7 @@ hamronize_data
 ## Usage
 
 ``` r
-harmonize_data(
+hamronize_data(
   user_software_name,
   user_software_version,
   user_database_version,

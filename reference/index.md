@@ -74,6 +74,8 @@ from public repositories or internal formats.
 - [`query_ncbi_bq_geno()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.md)
   : Query antimicrobial genotype (MicroBIGG-E) data from NCBI Pathogen
   Detection BigQuery
+- [`hamronize_data()`](https://AMRverse.github.io/AMRgen/reference/hamronize_data.md)
+  : hamronize_data
 
 ## Resistance Interpretation
 

@@ -1511,7 +1511,7 @@ print(result$overlap_ids)
 #> [3625] "SAMN28235850" "SAMN28235848" "SAMN28235846" "SAMN28235834"
 #> [3629] "SAMN03892121"
 print(result$geno_matched)
-#> # A tibble: 36,088 × 36
+#> # A tibble: 36,088 × 37
 #>    Name         gene    mutation node  marker marker.label drug_agent drug_class
 #>    <chr>        <chr>   <chr>    <chr> <chr>  <chr>        <ab>       <chr>     
 #>  1 SAMN03177615 blaEC   NA       blaEC blaEC  blaEC        NA         Beta-lact…
@@ -1525,7 +1525,7 @@ print(result$geno_matched)
 #>  9 SAMN03177615 aph(3'… NA       aph(… aph(3… aph(3'')-Ib  STR1       Aminoglyc…
 #> 10 SAMN03177615 aph(6)… NA       aph(… aph(6… aph(6)-Id    STR1       Aminoglyc…
 #> # ℹ 36,078 more rows
-#> # ℹ 28 more variables: `Protein identifier` <lgl>, `Contig id` <chr>,
+#> # ℹ 29 more variables: `Protein identifier` <lgl>, `Contig id` <chr>,
 #> #   Start <dbl>, Stop <dbl>, Strand <chr>, `Gene symbol` <chr>,
 #> #   `Sequence name` <chr>, Scope <chr>, `Element type` <chr>,
 #> #   `Element subtype` <chr>, Class <chr>, Subclass <chr>, Method <chr>,

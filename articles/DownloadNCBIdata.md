@@ -243,7 +243,7 @@ staph_geno_ncbi_cloud_raw
 staph_geno_ncbi_cloud <- import_amrfp(staph_geno_ncbi_cloud_raw, sample_col = "biosample_acc")
 
 staph_geno_ncbi_cloud
-#> # A tibble: 148 × 17
+#> # A tibble: 148 × 18
 #>    biosample_acc gene   mutation node  marker marker.label drug_agent drug_class
 #>    <chr>         <chr>  <chr>    <chr> <chr>  <chr>        <ab>       <chr>     
 #>  1 SAMN07291566  mepA   NA       mepA  mepA   mepA         TGC        Tetracycl…
@@ -257,9 +257,10 @@ staph_geno_ncbi_cloud
 #>  9 SAMN07291564  mepA   NA       mepA  mepA   mepA         TGC        Tetracycl…
 #> 10 SAMN04901609  tet(M) NA       tet(… tet(M) tet(M)       NA         Tetracycl…
 #> # ℹ 138 more rows
-#> # ℹ 9 more variables: `Gene symbol` <chr>, Class <chr>, Subclass <chr>,
+#> # ℹ 10 more variables: `Gene symbol` <chr>, Class <chr>, Subclass <chr>,
 #> #   `Element type` <chr>, `Element subtype` <chr>, Method <chr>,
-#> #   Hierarchy_node <chr>, scientific_name <chr>, `variation type` <chr>
+#> #   Hierarchy_node <chr>, scientific_name <chr>, `variation type` <chr>,
+#> #   subclass_to_parse <chr>
 ```
 
 #### Visualise the downloaded phenotype data to check the distribution of the AST data

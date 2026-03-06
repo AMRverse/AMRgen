@@ -84,7 +84,7 @@ ecoli_geno <- import_amrfp(
 
 # Check the format of the processed genotype table
 head(ecoli_geno)
-#> # A tibble: 6 × 36
+#> # A tibble: 6 × 37
 #>   Name         gene  mutation  node  marker   marker.label drug_agent drug_class
 #>   <chr>        <chr> <chr>     <chr> <chr>    <chr>        <ab>       <chr>     
 #> 1 SAMN03177615 blaEC NA        blaEC blaEC    blaEC        NA         Beta-lact…
@@ -93,7 +93,7 @@ head(ecoli_geno)
 #> 4 SAMN03177615 floR  NA        floR  floR     floR         CHL        Phenicols 
 #> 5 SAMN03177615 floR  NA        floR  floR     floR         FLR        Phenicols 
 #> 6 SAMN03177615 mdtM  NA        mdtM  mdtM     mdtM         NA         Efflux    
-#> # ℹ 28 more variables: `Protein identifier` <lgl>, `Contig id` <chr>,
+#> # ℹ 29 more variables: `Protein identifier` <lgl>, `Contig id` <chr>,
 #> #   Start <dbl>, Stop <dbl>, Strand <chr>, `Gene symbol` <chr>,
 #> #   `Sequence name` <chr>, Scope <chr>, `Element type` <chr>,
 #> #   `Element subtype` <chr>, Class <chr>, Subclass <chr>, Method <chr>,

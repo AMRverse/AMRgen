@@ -59,6 +59,7 @@ articles:
     contents:
       - AnalysingGenoPhenoData
       - DownloadGenoPhenoData
+      - NeisseriaGonoExamples
 
 # Reference section grouping
 reference:
@@ -128,6 +129,12 @@ reference:
       - amrfp_drugs_table
       - pheno_eco_2075
       - geno_eco_2075
+      - eurogasp_geno_raw
+      - ngono_cro_geno_raw
+      - ngono_tet_geno_raw
+      - ngono_cro_pheno_raw
+      - eurogasp_pheno_raw
+      - ngono_tet_pheno_raw
 
 
 # Footer configuration

@@ -32,7 +32,7 @@
 #' @param single_plot (Optional) A logical value. If `TRUE`, a single plot is produced comparing the estimates for resistance (`R`) and non-resistance (`NWT`). Otherwise, two plots are printed side-by-side. Defaults to `TRUE`.
 #' @param colors (Optional) A vector of two colors, to use for R and NWT models in the plots. Defaults to `c("maroon", "blue4")`.
 #' @param axis_label_size (Optional) A numeric value controlling the size of axis labels in the plot. Defaults to `9`.
-#' @importFrom dplyr any_of select where
+#' @importFrom dplyr any_of select where mutate
 #' @importFrom ggplot2 ggtitle
 #' @importFrom stats glm
 #' @importFrom logistf logistf
@@ -83,6 +83,8 @@ amr_logistic <- function(geno_table, pheno_table,
 
   raw_modelR <- NULL
   raw_modelNWT <- NULL
+  modelR <- NULL
+  modelNWT <- NULL
 
   if (fit_glm) {
     cat("...Fitting logistic regression model to R using glm\n")
@@ -94,8 +96,8 @@ amr_logistic <- function(geno_table, pheno_table,
       summarise_model_input(to_fit)
       raw_modelR <- glm(R ~ ., data = to_fit, family = stats::binomial(link = "logit"))
       modelR <- glm_details(raw_modelR) %>%
-        mutate(marker = gsub("\\.\\.", ":", marker)) %>%
-        mutate(marker = gsub("`", "", marker))
+        dplyr::mutate(marker = gsub("\\.\\.", ":", marker)) %>%
+        dplyr::mutate(marker = gsub("`", "", marker))
     }
     cat("...Fitting logistic regression model to NWT using glm\n")
     if (sum(!is.na(binary_matrix$NWT)) > 0) {
@@ -106,8 +108,8 @@ amr_logistic <- function(geno_table, pheno_table,
       summarise_model_input(to_fit)
       raw_modelNWT <- glm(NWT ~ ., data = to_fit, family = stats::binomial(link = "logit"))
       modelNWT <- glm_details(raw_modelNWT) %>%
-        mutate(marker = gsub("\\.\\.", ":", marker)) %>%
-        mutate(marker = gsub("`", "", marker))
+        dplyr::mutate(marker = gsub("\\.\\.", ":", marker)) %>%
+        dplyr::mutate(marker = gsub("`", "", marker))
     }
   } else {
     cat("...Fitting logistic regression model to R using logistf\n")
@@ -120,8 +122,8 @@ amr_logistic <- function(geno_table, pheno_table,
       summarise_model_input(to_fit)
       raw_modelR <- logistf::logistf(R ~ ., data = to_fit, pl = FALSE)
       modelR <- logistf_details(raw_modelR) %>%
-        mutate(marker = gsub("\\.\\.", ":", marker)) %>%
-        mutate(marker = gsub("`", "", marker))
+        dplyr::mutate(marker = gsub("\\.\\.", ":", marker)) %>%
+        dplyr::mutate(marker = gsub("`", "", marker))
     }
     cat("...Fitting logistic regression model to NWT using logistf\n")
     if (sum(!is.na(binary_matrix$NWT)) > 0) {
@@ -133,17 +135,21 @@ amr_logistic <- function(geno_table, pheno_table,
       summarise_model_input(to_fit)
       raw_modelNWT <- logistf::logistf(NWT ~ ., data = to_fit, pl = FALSE)
       modelNWT <- logistf_details(raw_modelNWT) %>%
-        mutate(marker = gsub("\\.\\.", ":", marker)) %>%
-        mutate(marker = gsub("`", "", marker))
+        dplyr::mutate(marker = gsub("\\.\\.", ":", marker)) %>%
+        dplyr::mutate(marker = gsub("`", "", marker))
     }
   }
 
+  
+  
   cat("Generating plots\n")
-  if (exists("modelR") & exists("modelNWT")) { # if we have 2 models, plot them together
+  if (!is.null(modelR) & !is.null(modelNWT)) {
+    cat("Plotting 2 models\n")
     plot <- compare_estimates(modelR, modelNWT,
-      single_plot = single_plot,
-      title1 = "R", title2 = "NWT",
-      colors = colors, axis_label_size = axis_label_size
+                              single_plot = single_plot,
+                              title1 = "R", title2 = "NWT",
+                              colors = colors, 
+                              axis_label_size = axis_label_size
     )
     if (single_plot) {
       label <- "Effect estimates for R and NWT"
@@ -151,24 +157,21 @@ amr_logistic <- function(geno_table, pheno_table,
         label <- paste(label, "for", antibiotic)
       }
       if (!is.null(drug_class_list)) {
-        subtitle <- paste("for", paste(drug_class_list, collapse = ","), "markers present in at least", maf, "samples")
+        subtitle <- paste("for", paste(drug_class_list, collapse = ","), 
+                          "markers present in at least", maf, "samples")
       } else {
         subtitle <- paste("for markers present in at least", maf, "samples")
       }
       plot <- plot + ggtitle(label = label, subtitle = subtitle)
     }
-  } else if (exists("modelR")) {
+  } else if (!is.null(modelR)) {
+    cat("Plotting R model only\n")
     plot <- plot_estimates(modelR)
-  } else if (exists("modelNWT")) {
+  } else if (!is.null(modelNWT)) {
+    cat("Plotting NWT model only\n")
     plot <- plot_estimates(modelNWT)
   }
-  if (!exists("modelNWT")) {
-    modelNWT <- NULL
-  } # need an object to return, set to null
-  if (!exists("modelR")) {
-    modelR <- NULL
-  } # need an object to return, set to null
-
+  
   print(plot)
 
   return(list(

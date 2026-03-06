@@ -16,7 +16,7 @@ Description:
     visualise multidrug resistance patterns using UpSet plots, and generate NCBI-compliant 
     antibiograms. Designed for AMR research and surveillance, AMRgen aims to support data-driven 
     decision-making in combating AMR on a global scale.
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.1.0)
 Imports:
     AMR (>= 3.0.1),
     arrow,

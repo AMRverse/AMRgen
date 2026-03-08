@@ -7,7 +7,7 @@ Authors@R: c(
     person(family = "Couto",   c("Natacha"),        comment = c(ORCID = "0000-0002-9152-5464"), role = "aut"),
     person(family = "Dyson", c("Zoe", "A."),        comment = c(ORCID = "0000-0002-8887-3492"), email = "zoe.dyson@lshtm.ac.uk", role = "aut"),
     person(family = "Hawkey",  c("Jane"),           comment = c(ORCID = "0000-0001-9661-5293"), role = "aut"),
-    person(family = "Holt",    c("Kat"),            comment = c(ORCID = "0000-0003-3949-2471"), role = "aut"))
+    person(family = "Holt",    c("Kat"),            comment = c(ORCID = "0000-0003-3949-2471"), email = "drkatholt@gmail.com", role = "aut"))
 Description: 
     The AMRgen package provides tools for interpreting antimicrobial resistance (AMR) genes, 
     integrating genomic data with phenotypic antimicrobial susceptibility testing (AST) data, 

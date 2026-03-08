@@ -217,7 +217,7 @@ month. To use this you will also need to install the
 <code>bigrquery</code> package and authorize it to use your Google cloud
 account.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'bigrquery'</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"bigrquery"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bigrquery.r-dbi.org" class="external-link">bigrquery</a></span><span class="op">)</span></span>
 <span><span class="fu">bigrquery</span><span class="fu">::</span><span class="fu"><a href="https://bigrquery.r-dbi.org/reference/bq_auth.html" class="external-link">bq_auth</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="section level5">
@@ -285,22 +285,22 @@ results obtained with more recent versions.</p>
 <span></span>
 <span><span class="va">staph_geno_ncbi_cloud</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 148 × 18</span></span></span>
-<span><span class="co">#&gt;    biosample_acc gene   mutation node  marker marker.label drug_agent drug_class</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN07291566  mepA   <span style="color: #BB0000;">NA</span>       mepA  mepA   mepA         TGC        Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN04901618  ant(9… <span style="color: #BB0000;">NA</span>       ant(… ant(9… ant(9)-Ia    SPT        Other     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN04901605  mepA   <span style="color: #BB0000;">NA</span>       mepA  mepA   mepA         TGC        Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN04901606  mepA   <span style="color: #BB0000;">NA</span>       mepA  mepA   mepA         TGC        Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN07291567  aac(6… <span style="color: #BB0000;">NA</span>       aac(… aac(6… aac(6')-Ie/… AMK        Aminoglyc…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN07291567  aac(6… <span style="color: #BB0000;">NA</span>       aac(… aac(6… aac(6')-Ie/… GEN        Aminoglyc…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN07291567  aac(6… <span style="color: #BB0000;">NA</span>       aac(… aac(6… aac(6')-Ie/… KAN        Aminoglyc…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN07291567  aac(6… <span style="color: #BB0000;">NA</span>       aac(… aac(6… aac(6')-Ie/… TOB        Aminoglyc…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN07291564  mepA   <span style="color: #BB0000;">NA</span>       mepA  mepA   mepA         TGC        Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN04901609  tet(M) <span style="color: #BB0000;">NA</span>       tet(… tet(M) tet(M)       <span style="color: #BB0000;">NA</span>         Tetracycl…</span></span>
+<span><span class="co">#&gt;    biosample_acc gene      mutation drug_agent drug_class `variation type` node </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN07291566  mepA      <span style="color: #BB0000;">NA</span>       TGC        Tetracycl… Gene presence d… mepA </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN04901618  ant(9)-Ia <span style="color: #BB0000;">NA</span>       SPT        Other      Gene presence d… ant(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN04901605  mepA      <span style="color: #BB0000;">NA</span>       TGC        Tetracycl… Gene presence d… mepA </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN04901606  mepA      <span style="color: #BB0000;">NA</span>       TGC        Tetracycl… Gene presence d… mepA </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN07291567  aac(6')-… <span style="color: #BB0000;">NA</span>       AMK        Aminoglyc… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN07291567  aac(6')-… <span style="color: #BB0000;">NA</span>       GEN        Aminoglyc… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN07291567  aac(6')-… <span style="color: #BB0000;">NA</span>       KAN        Aminoglyc… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN07291567  aac(6')-… <span style="color: #BB0000;">NA</span>       TOB        Aminoglyc… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN07291564  mepA      <span style="color: #BB0000;">NA</span>       TGC        Tetracycl… Gene presence d… mepA </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN04901609  tet(M)    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Tetracycl… Gene presence d… tet(…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 138 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10 more variables: `Gene symbol` &lt;chr&gt;, Class &lt;chr&gt;, Subclass &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   `Element type` &lt;chr&gt;, `Element subtype` &lt;chr&gt;, Method &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Hierarchy_node &lt;chr&gt;, scientific_name &lt;chr&gt;, `variation type` &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 11 more variables: marker &lt;chr&gt;, marker.label &lt;chr&gt;, `Gene symbol` &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Class &lt;chr&gt;, Subclass &lt;chr&gt;, `Element type` &lt;chr&gt;, `Element subtype` &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Method &lt;chr&gt;, Hierarchy_node &lt;chr&gt;, scientific_name &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   subclass_to_parse &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
 </div>

@@ -34,4 +34,5 @@ Authors:
 
 - Jane Hawkey ([ORCID](https://orcid.org/0000-0001-9661-5293))
 
-- Kat Holt ([ORCID](https://orcid.org/0000-0003-3949-2471))
+- Kat Holt <drkatholt@gmail.com>
+  ([ORCID](https://orcid.org/0000-0003-3949-2471))

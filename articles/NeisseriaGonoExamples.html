@@ -177,8 +177,10 @@ table:</p>
 <p>Use <code><a href="../reference/import_amrfp.html">import_amrfp()</a></code> to parse the AMRfinderplus
 output:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">eurogasp_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span>input_table <span class="op">=</span> <span class="va">eurogasp_geno_raw</span>,</span>
-<span>                              sample_col <span class="op">=</span> <span class="st">"Name"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">eurogasp_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span></span>
+<span>  input_table <span class="op">=</span> <span class="va">eurogasp_geno_raw</span>,</span>
+<span>  sample_col <span class="op">=</span> <span class="st">"Name"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>For the phenotype file, reshape from wide to long format using
 <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer()</a></code>. MIC values across antibiotics may be stored
 as different types (numeric vs. character) due to inequality prefixes
@@ -189,22 +191,26 @@ while preserving this information for downstream processing by
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eurogasp_pheno</span> <span class="op">&lt;-</span> <span class="va">eurogasp_pheno_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Azithromycin</span>, <span class="va">Ciprofloxacin</span>, <span class="va">Cefixime</span>, <span class="va">Ceftriaxone</span><span class="op">)</span>, <span class="va">as.character</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Azithromycin</span>, <span class="va">Ciprofloxacin</span>, <span class="va">Cefixime</span>, <span class="va">Ceftriaxone</span><span class="op">)</span>,</span>
-<span>               names_to  <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
-<span>               values_to <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Azithromycin</span>, <span class="va">Ciprofloxacin</span>, <span class="va">Cefixime</span>, <span class="va">Ceftriaxone</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"mic"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>Then format with <code><a href="../reference/format_ast.html">format_ast()</a></code>. Setting
 <code>interpret_eucast = TRUE</code> and
 <code>interpret_ecoff = TRUE</code> adds categorical SIR interpretations
 (clinical breakpoints) and WT/NWT classifications (ECOFF) fron
 EUCAST:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">eurogasp_ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/format_ast.html">format_ast</a></span><span class="op">(</span>input <span class="op">=</span> <span class="va">eurogasp_pheno</span>,</span>
-<span>                           sample_col <span class="op">=</span> <span class="st">"id"</span>,</span>
-<span>                           species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span>,</span>
-<span>                           ab_col <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
-<span>                           mic_col <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                           interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                           interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">eurogasp_ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/format_ast.html">format_ast</a></span><span class="op">(</span></span>
+<span>  input <span class="op">=</span> <span class="va">eurogasp_pheno</span>,</span>
+<span>  sample_col <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span>,</span>
+<span>  ab_col <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
+<span>  mic_col <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae </span></span>
 <span><span class="co">#&gt; Parsing column spp_pheno as micro-organism (class 'mo')</span></span>
 <span><span class="co">#&gt; Parsing column antibiotic as antibiotic (class 'ab')</span></span>
@@ -238,10 +244,12 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 </h5>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the distribution of MIC data in the study</span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">eurogasp_double</span>, </span>
-<span>             antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>, </span>
-<span>             measure <span class="op">=</span> <span class="st">"mic"</span>, </span>
-<span>             colour_by <span class="op">=</span> <span class="st">"ecoff"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_double</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  colour_by <span class="op">=</span> <span class="st">"ecoff"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Extract MIC data from the pheno table</span></span>
 <span><span class="va">azm_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -249,23 +257,27 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare with a reference distribution from EUCAST</span></span>
-<span><span class="va">azm_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span>mics <span class="op">=</span> <span class="va">azm_data</span>, </span>
-<span>                                          ab <span class="op">=</span> <span class="st">"Azithromycin"</span>, </span>
-<span>                                          mo <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="va">azm_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span></span>
+<span>  mics <span class="op">=</span> <span class="va">azm_data</span>,</span>
+<span>  ab <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
+<span>  mo <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
 <span></span>
 <span><span class="co"># Convert the output table into long format</span></span>
 <span><span class="va">azm_comp_melt</span> <span class="op">&lt;-</span> <span class="va">azm_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
-<span>               names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
-<span>               values_to <span class="op">=</span><span class="st">"nb"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Plot the distributions with ggplot2 ## --&gt; Is there a way of doing this with assay_by_var()?</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">azm_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">value</span>, y<span class="op">=</span><span class="va">nb</span>, fill<span class="op">=</span><span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat<span class="op">=</span><span class="st">"identity"</span>, position<span class="op">=</span><span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">azm_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">nb</span>, fill <span class="op">=</span> <span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Minimum inhibitory concentration (MIC)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of isolates"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Azithromycin MIC distribution vs EUCAST reference data"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Azithromycin MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pheno_azm-1.png" class="r-plt" alt="" width="100%"><img src="NeisseriaGonoExamples_files/figure-html/pheno_azm-2.png" class="r-plt" alt="" width="100%"></p>
 </div>
@@ -274,34 +286,40 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 </h5>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the distribution of MIC data in the study</span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">eurogasp_double</span>, </span>
-<span>             antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, </span>
-<span>             measure <span class="op">=</span><span class="st">"mic"</span>,</span>
-<span>             colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span></span>
-<span> </span>
+<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_double</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Extract MIC data from the pheno table</span></span>
-<span><span class="va">cip_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CIP"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span>
+<span><span class="va">cip_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CIP"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare with a reference distribution from EUCAST</span></span>
-<span><span class="va">cip_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span>mics <span class="op">=</span> <span class="va">cip_data</span>, </span>
-<span>                                          ab <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, </span>
-<span>                                          mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="va">cip_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span></span>
+<span>  mics <span class="op">=</span> <span class="va">cip_data</span>,</span>
+<span>  ab <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
 <span></span>
 <span><span class="co"># Convert the output table into long format</span></span>
 <span><span class="va">cip_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cip_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
-<span>               names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
-<span>               values_to <span class="op">=</span><span class="st">"nb"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Plot the distributions with ggplot2</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cip_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">value</span>, y<span class="op">=</span><span class="va">nb</span>, fill<span class="op">=</span><span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat<span class="op">=</span><span class="st">"identity"</span>, position<span class="op">=</span><span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cip_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">nb</span>, fill <span class="op">=</span> <span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Minimum inhibitory concentration (MIC)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of isolates"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ciprofloxacin MIC distribution vs EUCAST reference data"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ciprofloxacin MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pheno_cip-1.png" class="r-plt" alt="" width="100%"><img src="NeisseriaGonoExamples_files/figure-html/pheno_cip-2.png" class="r-plt" alt="" width="100%"></p>
 </div>
@@ -310,33 +328,39 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 </h5>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the distribution of MIC data in the study</span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">eurogasp_double</span>, </span>
-<span>             antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>, </span>
-<span>             measure <span class="op">=</span><span class="st">"mic"</span>,</span>
-<span>             colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span></span>
-<span> </span>
+<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_double</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Extract MIC data from the pheno table</span></span>
-<span><span class="va">cro_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CRO"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span>
+<span><span class="va">cro_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CRO"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare with a reference distribution from EUCAST</span></span>
-<span><span class="va">cro_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span>mics <span class="op">=</span> <span class="va">cro_data</span>, </span>
-<span>                                          ab <span class="op">=</span> <span class="st">"Ceftriaxone"</span>, </span>
-<span>                                          mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="va">cro_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span></span>
+<span>  mics <span class="op">=</span> <span class="va">cro_data</span>,</span>
+<span>  ab <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
+<span>  mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
 <span></span>
 <span><span class="co"># Convert the output table into long format</span></span>
 <span><span class="va">cro_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cro_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
-<span>               names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
-<span>               values_to <span class="op">=</span><span class="st">"nb"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cro_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">value</span>, y<span class="op">=</span><span class="va">nb</span>, fill<span class="op">=</span><span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat<span class="op">=</span><span class="st">"identity"</span>, position<span class="op">=</span><span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cro_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">nb</span>, fill <span class="op">=</span> <span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Minimum inhibitory concentration (MIC)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of isolates"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ceftriaxone MIC distribution vs EUCAST reference data"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ceftriaxone MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pheno_cro-1.png" class="r-plt" alt="" width="100%"><img src="NeisseriaGonoExamples_files/figure-html/pheno_cro-2.png" class="r-plt" alt="" width="100%"></p>
 </div>
@@ -345,33 +369,39 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 </h5>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the distribution of MIC data in the study</span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">eurogasp_double</span>, </span>
-<span>             antibiotic <span class="op">=</span> <span class="st">"Cefixime"</span>, </span>
-<span>             measure <span class="op">=</span><span class="st">"mic"</span>,</span>
-<span>             colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span></span>
-<span> </span>
+<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_double</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Extract MIC data from the pheno table</span></span>
-<span><span class="va">cfm_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CFM"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span>
+<span><span class="va">cfm_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CFM"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare with a reference distribution from EUCAST</span></span>
-<span><span class="va">cfm_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span>mics <span class="op">=</span> <span class="va">cfm_data</span>, </span>
-<span>                                          ab <span class="op">=</span> <span class="st">"Cefixime"</span>, </span>
-<span>                                          mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="va">cfm_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span></span>
+<span>  mics <span class="op">=</span> <span class="va">cfm_data</span>,</span>
+<span>  ab <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
+<span>  mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(value)`</span></span>
 <span></span>
 <span><span class="co"># Convert the output table into long format and plot using ggplot2</span></span>
 <span><span class="va">cfm_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cfm_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
-<span>               names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
-<span>               values_to <span class="op">=</span><span class="st">"nb"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cfm_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">value</span>, y<span class="op">=</span><span class="va">nb</span>, fill<span class="op">=</span><span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat<span class="op">=</span><span class="st">"identity"</span>, position<span class="op">=</span><span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cfm_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">nb</span>, fill <span class="op">=</span> <span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Minimum inhibitory concentration (MIC)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of isolates"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cefixime MIC distribution vs EUCAST reference data"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cefixime MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pheno_cfm-1.png" class="r-plt" alt="" width="100%"><img src="NeisseriaGonoExamples_files/figure-html/pheno_cfm-2.png" class="r-plt" alt="" width="100%"></p>
 </div>
@@ -386,24 +416,28 @@ exists for azithromycin in <em>N. gonorrhoeae</em>; we therefore use the
 epidemiological cut-off (ECOFF &gt; 1 mg/L).</p>
 <p>Build the binary matrix combining genotype and phenotype:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">azm_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="va">eurogasp_geno</span>,</span>
-<span>                             pheno_table <span class="op">=</span> <span class="va">eurogasp_ast</span>,</span>
-<span>                             antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
-<span>                             drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Macrolides"</span>,<span class="st">"Lincosamides"</span><span class="op">)</span>,</span>
-<span>                             ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
-<span>                             sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                             keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                             keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">azm_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">eurogasp_geno</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Macrolides"</span>, <span class="st">"Lincosamides"</span><span class="op">)</span>,</span>
+<span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span></code></pre></div>
 <p>Explore the distribution of MIC values across observed marker
 combinations with <code><a href="../reference/amr_upset.html">amr_upset()</a></code>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate upset plots of MIC distributions vs genotype marker combinations</span></span>
-<span><span class="va">azi_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
-<span>                       assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                       min_set_size <span class="op">=</span> <span class="fl">2</span>, </span>
-<span>                       order <span class="op">=</span> <span class="st">"value"</span>,</span>
-<span>                       ecoff_bp <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">azi_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  ecoff_bp <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Warning: no values in pheno column, colouring upset plot by ecoff column</span></span>
 <span><span class="co">#&gt;  Removing 290 rows with no phenotype call</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/azm_upset-1.png" class="r-plt" alt="" width="100%"></p>
@@ -411,9 +445,11 @@ combinations with <code><a href="../reference/amr_upset.html">amr_upset()</a></c
 (i.e. markers occurring in the absence of any other known AMR
 determinant):</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">azm_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
-<span>                                  antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
-<span>                                  reverse_order <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co">## --&gt; does not apply reverse order?</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">azm_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
+<span>  reverse_order <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span> <span class="co">## --&gt; does not apply reverse order?</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/azm_solo_ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Only known mutations in the <em>23S rDNA</em> gene are associated
 with MIC increases sufficient to reach the NWT category (ECOFF &gt; 1
@@ -424,13 +460,15 @@ category..</p>
 <p>Now evaluate PPVs for marker combinations with
 <code><a href="../reference/ppv.html">ppv()</a></code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">azm_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
-<span>               order <span class="op">=</span> <span class="st">"ppv"</span>, <span class="co">## --&gt; this is the default order but it does not work?</span></span>
-<span>               min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>               antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
-<span>               upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               assay <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">azm_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"ppv"</span>, <span class="co">## --&gt; this is the default order but it does not work?</span></span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
+<span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Warning: no values in pheno column, colouring upset plot by ecoff column</span></span>
 <span><span class="co">#&gt;  Removing 290 rows with no phenotype call</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
@@ -443,11 +481,13 @@ with PPV &gt; 0.5. No combination of <em>mtrR</em> with or without
 with <code><a href="../reference/amr_logistic.html">amr_logistic()</a></code>, including markers with a minimum
 allele frequency (MAF) of ≥ 10 isolates:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">azm_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
-<span>                           antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
-<span>                           ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
-<span>                           maf<span class="op">=</span><span class="fl">10</span>,</span>
-<span>                           single_plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">azm_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
+<span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  maf <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  single_plot <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to R using logistf</span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to NWT using logistf</span></span>
 <span><span class="co">#&gt;    Filtered data contains 4896 samples (386 =&gt; 1, 4510 =&gt; 0) and 7 variables.</span></span>
@@ -462,10 +502,12 @@ from the logistic regression. The results of the
 <code>solo_ppv_analisis()</code> or <code><a href="../reference/ppv.html">ppv()</a></code> functions can be
 provided to the <code>ppv_results</code> parameter.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">azm_concordance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/concordance.html">concordance</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
-<span>                               ppv_results <span class="op">=</span> <span class="va">azm_solo_ppv</span>,</span>
-<span>                               prediction_rule <span class="op">=</span> <span class="st">"logistic"</span>,</span>
-<span>                               logreg_results <span class="op">=</span> <span class="va">azm_logist</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">azm_concordance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/concordance.html">concordance</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
+<span>  ppv_results <span class="op">=</span> <span class="va">azm_solo_ppv</span>,</span>
+<span>  prediction_rule <span class="op">=</span> <span class="st">"logistic"</span>,</span>
+<span>  logreg_results <span class="op">=</span> <span class="va">azm_logist</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">azm_concordance</span></span>
 <span><span class="co">#&gt; AMR Genotype-Phenotype Concordance</span></span>
 <span><span class="co">#&gt; Prediction rule: logistic</span></span>
@@ -515,11 +557,13 @@ mutations associated with decreased azithromycin susceptibility (<a href="https:
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ERR1549756 AZM        0.25<span style="color: #555555;">0</span> <span style="color: #BBBBBB; background-color: #5FD7AF;">  WT </span> <span style="color: #B2B2B2;">  NA</span>         <span style="color: #949494;">B_</span>NESSR<span style="color: #949494;">_</span>GNRR        0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ERR1549756 CIP        0.008 <span style="color: #BBBBBB; background-color: #5FD7AF;">  WT </span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">B_</span>NESSR<span style="color: #949494;">_</span>GNRR        0</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">eurogasp_azm_pred</span>, </span>
-<span>             antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>, </span>
-<span>             measure <span class="op">=</span><span class="st">"mic"</span>,</span>
-<span>             colour_by <span class="op">=</span> <span class="st">"NWT_pred"</span>,</span>
-<span>             species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_azm_pred</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  colour_by <span class="op">=</span> <span class="st">"NWT_pred"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in executing command: Could not determine MIC breakpoints using AMR package, please provide your own breakpoints</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/eurogasp_pred-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Many isolates with MICs above the ECOFF (1–4 mg/L) are predicted as
@@ -535,22 +579,26 @@ mutations in the <em>gyrA</em> and <em>parC</em> genes. Build the binary
 matrix and generate upset plots:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get binary matrix</span></span>
-<span><span class="va">cip_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="va">eurogasp_geno</span>,</span>
-<span>                             pheno_table <span class="op">=</span> <span class="va">eurogasp_ast</span>,</span>
-<span>                             antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
-<span>                             drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>,</span>
-<span>                             sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                             keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                             keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<span><span class="va">cip_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">eurogasp_geno</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
-<span> </span>
+<span></span>
 <span><span class="co"># Calculate upset plots of MIC distributions vs genotype marker combinations</span></span>
-<span><span class="va">cip_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
-<span>                       min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       order <span class="op">=</span> <span class="st">"value"</span>,</span>
-<span>                       assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                       antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
-<span>                       species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="va">cip_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Removing 320 rows with no phenotype call</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.032 and R &gt; 0.06</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.032 and R &gt; 0.06</span></span></code></pre></div>
@@ -562,19 +610,23 @@ the top panel indicate clinical breakpoints; the dashed line represents
 the ECOFF.</p>
 <p>Only four markers appear in isolation; evaluate their solo PPVs:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cip_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
-<span>                                  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
-<span>                                  reverse_order <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co">## --&gt; does not apply reverse order?</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cip_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  reverse_order <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span> <span class="co">## --&gt; does not apply reverse order?</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/cip_solo_ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Evaluate PPVs for marker combinations:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
-<span>               order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
-<span>               min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>               antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
-<span>               upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               assay <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Removing 320 rows with no phenotype call</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
@@ -582,12 +634,14 @@ the ECOFF.</p>
 <p>Run logistic regression to assess the individual contribution of each
 marker:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cip_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
-<span>                           antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
-<span>                           sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                           ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
-<span>                           maf<span class="op">=</span><span class="fl">10</span>,</span>
-<span>                           single_plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cip_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  maf <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  single_plot <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to R using logistf</span></span>
 <span><span class="co">#&gt;    Filtered data contains 4866 samples (2605 =&gt; 1, 2261 =&gt; 0) and 13 variables.</span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to NWT using logistf</span></span>
@@ -598,10 +652,12 @@ marker:</p>
 <p>Calculate concordance metrics using the results from the logistic
 regression:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cip_concordance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/concordance.html">concordance</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
-<span>                               ppv_results <span class="op">=</span> <span class="va">cip_solo_ppv</span>,</span>
-<span>                               prediction_rule <span class="op">=</span> <span class="st">"logistic"</span>,</span>
-<span>                               logreg_results <span class="op">=</span> <span class="va">cip_logist</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cip_concordance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/concordance.html">concordance</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
+<span>  ppv_results <span class="op">=</span> <span class="va">cip_solo_ppv</span>,</span>
+<span>  prediction_rule <span class="op">=</span> <span class="st">"logistic"</span>,</span>
+<span>  logreg_results <span class="op">=</span> <span class="va">cip_logist</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">cip_concordance</span></span>
 <span><span class="co">#&gt; AMR Genotype-Phenotype Concordance</span></span>
 <span><span class="co">#&gt; Prediction rule: logistic</span></span>
@@ -667,7 +723,8 @@ for this antibiotic:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eurogasp_cip_pred</span> <span class="op">&lt;-</span> <span class="va">eurogasp_ast</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">cip_concordance</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"R_pred"</span>, <span class="st">"NWT_pred"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>            by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>    by <span class="op">=</span> <span class="st">"id"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">eurogasp_cip_pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
@@ -682,18 +739,22 @@ for this antibiotic:</p>
 <p>Visualise the distribution of ciprofloxacin MICs by the R/NWT
 predictions:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">eurogasp_cip_pred</span>, </span>
-<span>             antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, </span>
-<span>             measure <span class="op">=</span><span class="st">"mic"</span>,</span>
-<span>             colour_by <span class="op">=</span> <span class="st">"R_pred"</span>,</span>
-<span>             species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_cip_pred</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  colour_by <span class="op">=</span> <span class="st">"R_pred"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.032 and R &gt; 0.06</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">eurogasp_cip_pred</span>, </span>
-<span>             antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, </span>
-<span>             measure <span class="op">=</span><span class="st">"mic"</span>,</span>
-<span>             colour_by <span class="op">=</span> <span class="st">"NWT_pred"</span>,</span>
-<span>             species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_cip_pred</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  colour_by <span class="op">=</span> <span class="st">"NWT_pred"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.032 and R &gt; 0.06</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/cip_dist_pred-1.png" class="r-plt" alt="" width="100%"><img src="NeisseriaGonoExamples_files/figure-html/cip_dist_pred-2.png" class="r-plt" alt="" width="100%"></p>
 <p>Results demonstrate a very strong genotype-based prediction of
@@ -710,44 +771,52 @@ discarded due to expansion of <em>penA</em> mosaics generated through
 homologous recombination with other <em>Neisseria</em> species).</p>
 <p>Build binary matrices for each antibiotic:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cfm_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="va">eurogasp_geno</span>,</span>
-<span>                             pheno_table <span class="op">=</span> <span class="va">eurogasp_ast</span>,</span>
-<span>                             antibiotic <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
-<span>                             drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
-<span>                             sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                             ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
-<span>                             keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                             keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cfm_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">eurogasp_geno</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
 <span></span>
-<span><span class="va">cro_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="va">eurogasp_geno</span>,</span>
-<span>                             pheno_table <span class="op">=</span> <span class="va">eurogasp_ast</span>,</span>
-<span>                             antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
-<span>                             drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
-<span>                             sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                             ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
-<span>                             keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                             keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<span><span class="va">cro_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">eurogasp_geno</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">eurogasp_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span></code></pre></div>
 <p>Generate upset plots:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cfm_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cfm_bin</span>,</span>
-<span>                       min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       order <span class="op">=</span> <span class="st">"value"</span>,</span>
-<span>                       assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                       antibiotic <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
-<span>                       species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cfm_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cfm_bin</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.125 and R &gt; 0.125</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.125 and R &gt; 0.125</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/esc_upset-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">cro_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cro_bin</span>,</span>
-<span>                       min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       order <span class="op">=</span> <span class="st">"value"</span>,</span>
-<span>                       assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                       antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
-<span>                       species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="va">cro_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cro_bin</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.125 and R &gt; 0.125</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.125 and R &gt; 0.125</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/esc_upset-2.png" class="r-plt" alt="" width="100%"></p>
@@ -762,37 +831,45 @@ within the susceptible category.</p>
 combination, solo marker analysis provides limited information in this
 case:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cfm_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cfm_bin</span>,</span>
-<span>                                  antibiotic <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
-<span>                                  drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
-<span>                                  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cfm_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cfm_bin</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/esc_solo_ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">cro_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cro_bin</span>,</span>
-<span>                                  antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
-<span>                                  drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
-<span>                                  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">cro_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cro_bin</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/esc_solo_ppv-2.png" class="r-plt" alt="" width="100%"></p>
 <p>Instead, combination PPVs are the more informative metric:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cfm_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cfm_bin</span>,</span>
-<span>               min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>               order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
-<span>               upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               assay <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cfm_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cfm_bin</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
+<span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/esc_ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">cro_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cro_bin</span>,</span>
-<span>               min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>               order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
-<span>               upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               assay <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<span><span class="va">cro_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cro_bin</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
+<span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/esc_ppv-2.png" class="r-plt" alt="" width="100%"></p>
@@ -861,19 +938,23 @@ n=29 genomes.</li>
 <code class="sourceCode R"><span><span class="co"># Genotype file</span></span>
 <span><span class="va">ngono_cro_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ngono_cro_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Input file lacks the expected column: 'Type' (v4.0+) or 'Element type' (pre-v4), assuming all rows report AMR markers.</span></span>
-<span> </span>
+<span></span>
 <span><span class="co"># Phenotype file</span></span>
 <span><span class="va">ngono_cro_pheno</span> <span class="op">&lt;-</span> <span class="va">ngono_cro_pheno_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ceftriaxone</span><span class="op">)</span>,</span>
-<span>               names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
-<span>               values_to <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ceftriaxone</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"mic"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="va">ngono_cro_ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/format_ast.html">format_ast</a></span><span class="op">(</span>input <span class="op">=</span> <span class="va">ngono_cro_pheno</span>,</span>
-<span>                            sample_col <span class="op">=</span> <span class="st">"id"</span>,</span>
-<span>                            species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span>,</span>
-<span>                            ab_col <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
-<span>                            mic_col <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                            interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">ngono_cro_ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/format_ast.html">format_ast</a></span><span class="op">(</span></span>
+<span>  input <span class="op">=</span> <span class="va">ngono_cro_pheno</span>,</span>
+<span>  sample_col <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span>,</span>
+<span>  ab_col <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
+<span>  mic_col <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae </span></span>
 <span><span class="co">#&gt; Parsing column spp_pheno as micro-organism (class 'mo')</span></span>
 <span><span class="co">#&gt; Parsing column antibiotic as antibiotic (class 'ab')</span></span>
@@ -892,46 +973,54 @@ n=29 genomes.</li>
 <p>Build the binary matrix and generate upset plots:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get binary matrix</span></span>
-<span><span class="va">cro_bin_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="va">ngono_cro_geno</span>,</span>
-<span>                              pheno_table <span class="op">=</span> <span class="va">ngono_cro_ast</span>,</span>
-<span>                              antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
-<span>                              drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
-<span>                              sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                              keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                              keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<span><span class="va">cro_bin_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">ngono_cro_geno</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">ngono_cro_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Cephalosporins (3rd gen.)"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix as I/R vs S, as no ECOFF column defined</span></span>
 <span></span>
 <span><span class="co"># Calculate upset plots of MIC vs genotype marker combinations</span></span>
-<span><span class="va">cro_upset_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cro_bin_2</span>,</span>
-<span>                         min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                         order <span class="op">=</span> <span class="st">"value"</span>,</span>
-<span>                         assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                         antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
-<span>                         species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span><span class="op">)</span></span>
+<span><span class="va">cro_upset_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cro_bin_2</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.125 and R &gt; 0.125</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.125 and R &gt; 0.125</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pbp_binary_upset-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Calculate combination PPVs:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cro_ppv_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cro_bin_2</span>,</span>
-<span>                 min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                 order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
-<span>                 upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                 plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                 assay <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cro_ppv_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cro_bin_2</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
+<span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pbp_ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Run logistic regression to evaluate individual marker
 contributions:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cro_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">cro_bin_2</span>,</span>
-<span>                           antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
-<span>                           sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                           ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
-<span>                           fit_glm <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co">## --&gt; does not work with fit_glm = FALSE</span></span>
-<span>                           maf<span class="op">=</span><span class="fl">10</span>,</span>
-<span>                           single_plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cro_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">cro_bin_2</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  fit_glm <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co">## --&gt; does not work with fit_glm = FALSE</span></span>
+<span>  maf <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  single_plot <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to R using glm</span></span>
 <span><span class="co">#&gt;    Filtered data contains 2107 samples (204 =&gt; 1, 1903 =&gt; 0) and 13 variables.</span></span>
 <span><span class="co">#&gt; Waiting for profiling to be done...</span></span>
@@ -964,17 +1053,21 @@ tetracycline resistance in a local gonococcal population.</p>
 <p>Import and format phenotype data:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ngono_tet_pheno</span> <span class="op">&lt;-</span> <span class="va">ngono_tet_pheno_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Tetracycline</span><span class="op">)</span>,</span>
-<span>               names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
-<span>               values_to <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
-<span>  </span>
-<span><span class="va">ngono_tet_ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/format_ast.html">format_ast</a></span><span class="op">(</span>input <span class="op">=</span> <span class="va">ngono_tet_pheno</span>,</span>
-<span>                            sample_col <span class="op">=</span> <span class="st">"id"</span>,</span>
-<span>                            species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span>,</span>
-<span>                            ab_col <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
-<span>                            mic_col <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                            interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                            interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Tetracycline</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"mic"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">ngono_tet_ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/format_ast.html">format_ast</a></span><span class="op">(</span></span>
+<span>  input <span class="op">=</span> <span class="va">ngono_tet_pheno</span>,</span>
+<span>  sample_col <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span>,</span>
+<span>  ab_col <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
+<span>  mic_col <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae </span></span>
 <span><span class="co">#&gt; Parsing column spp_pheno as micro-organism (class 'mo')</span></span>
 <span><span class="co">#&gt; Parsing column antibiotic as antibiotic (class 'ab')</span></span>
@@ -992,28 +1085,34 @@ tetracycline resistance in a local gonococcal population.</p>
 <span><span class="co">#&gt; Interpreting all data as species: Neisseria gonorrhoeae</span></span></code></pre></div>
 <p>Import genotype data:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ngono_tet_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span>input_table <span class="op">=</span> <span class="va">ngono_tet_geno_raw</span>, <span class="co">## --&gt; replace ids by accessions</span></span>
-<span>                               sample_col <span class="op">=</span> <span class="st">"Name"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ngono_tet_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span></span>
+<span>  input_table <span class="op">=</span> <span class="va">ngono_tet_geno_raw</span>, <span class="co">## --&gt; replace ids by accessions</span></span>
+<span>  sample_col <span class="op">=</span> <span class="st">"Name"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Build the binary matrix and generate upset plots:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tet_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span>geno_table <span class="op">=</span> <span class="va">ngono_tet_geno</span>,</span>
-<span>                             pheno_table <span class="op">=</span> <span class="va">ngono_tet_ast</span>,</span>
-<span>                             antibiotic <span class="op">=</span> <span class="st">"Tetracycline"</span>,</span>
-<span>                             drug_class_list <span class="op">=</span> <span class="st">"Tetracyclines"</span>,</span>
-<span>                             ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
-<span>                             sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                             keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                             keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">tet_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">ngono_tet_geno</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">ngono_tet_ast</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Tetracycline"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Tetracyclines"</span>,</span>
+<span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
 <span></span>
-<span><span class="va">tet_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
-<span>                       assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
-<span>                       min_set_size <span class="op">=</span> <span class="fl">2</span>, </span>
-<span>                       order <span class="op">=</span> <span class="st">"value"</span>,</span>
-<span>                       bp_R <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>                       plot_set_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                       print_set_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                       print_category_counts <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">tet_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  bp_R <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  plot_set_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  print_set_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  print_category_counts <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/tet_binary_upset-1.png" class="r-plt" alt="" width="100%"></p>
 <p>The upset plot shows that MIC increases are primarily explained by
 the chromosomal <em>rpsJ</em> V57M mutation and the <em>tet(M)</em>
@@ -1024,7 +1123,7 @@ studied population:</p>
 <code class="sourceCode R"><span><span class="va">pop_size</span> <span class="op">&lt;-</span> <span class="fl">409</span></span>
 <span></span>
 <span><span class="va">ngono_tet_geno</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span><span class="co">#geno_tetR %&gt;% </span></span>
+<span>  <span class="co"># geno_tetR %&gt;%</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">marker</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">marker</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rpsJ_V57M"</span>, <span class="st">"tet(M)"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">100</span> <span class="op">*</span> <span class="va">n</span> <span class="op">/</span> <span class="va">pop_size</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
@@ -1084,25 +1183,29 @@ conjugative plasmid.</p></li>
 <span><span class="co">#&gt; <span style="color: #949494;">#   median_ignoreRanges &lt;dbl&gt;, q25_ignoreRanges &lt;dbl&gt;, q75_ignoreRanges &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>Calculate PPVs for marker combinations:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tet_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
-<span>               min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>               order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
-<span>               upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               assay <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">tet_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
+<span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Run logistic regression to confirm the independent contributions of
 <em>rpsJ</em> V57M and <em>tet(M)</em>:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tet_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
-<span>                           antibiotic <span class="op">=</span> <span class="st">"Tetracycline"</span>,</span>
-<span>                           drug_class_list <span class="op">=</span> <span class="st">"Tetracyclines"</span>,</span>
-<span>                           sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>                           ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
-<span>                           maf<span class="op">=</span><span class="fl">10</span>,</span>
-<span>                           single_plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">tet_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Tetracycline"</span>,</span>
+<span>  drug_class_list <span class="op">=</span> <span class="st">"Tetracyclines"</span>,</span>
+<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
+<span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
+<span>  maf <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  single_plot <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to R using logistf</span></span>
 <span><span class="co">#&gt;    Filtered data contains 402 samples (313 =&gt; 1, 89 =&gt; 0) and 6 variables.</span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to NWT using logistf</span></span>
@@ -1113,11 +1216,13 @@ conjugative plasmid.</p></li>
 gonorrhoeae</em>, we use only clinical breakpoints
 (<code>truth = "R"</code>) in the concordance analysis:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tet_concordance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/concordance.html">concordance</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
-<span>                               ppv_results <span class="op">=</span> <span class="va">tet_ppv</span>,</span>
-<span>                               prediction_rule <span class="op">=</span> <span class="st">"logistic"</span>,</span>
-<span>                               logreg_results <span class="op">=</span> <span class="va">tet_logist</span>,</span>
-<span>                               truth <span class="op">=</span> <span class="st">"R"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">tet_concordance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/concordance.html">concordance</a></span><span class="op">(</span></span>
+<span>  binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
+<span>  ppv_results <span class="op">=</span> <span class="va">tet_ppv</span>,</span>
+<span>  prediction_rule <span class="op">=</span> <span class="st">"logistic"</span>,</span>
+<span>  logreg_results <span class="op">=</span> <span class="va">tet_logist</span>,</span>
+<span>  truth <span class="op">=</span> <span class="st">"R"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">tet_concordance</span></span>
 <span><span class="co">#&gt; AMR Genotype-Phenotype Concordance</span></span>
 <span><span class="co">#&gt; Prediction rule: logistic</span></span>
@@ -1152,14 +1257,17 @@ breakpoint.</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ngono_tet_pred</span> <span class="op">&lt;-</span> <span class="va">ngono_tet_ast</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">tet_concordance</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"R_pred"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>            by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>    by <span class="op">=</span> <span class="st">"id"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">ngono_tet_pred</span>, </span>
-<span>             antibiotic <span class="op">=</span> <span class="st">"Tetracycline"</span>, </span>
-<span>             measure <span class="op">=</span><span class="st">"mic"</span>,</span>
-<span>             colour_by <span class="op">=</span> <span class="st">"R_pred"</span>,</span>
-<span>             species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span>,</span>
-<span>             colour_legend_label <span class="op">=</span> <span class="st">"R prediction"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">ngono_tet_pred</span>,</span>
+<span>  antibiotic <span class="op">=</span> <span class="st">"Tetracycline"</span>,</span>
+<span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  colour_by <span class="op">=</span> <span class="st">"R_pred"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span>,</span>
+<span>  colour_legend_label <span class="op">=</span> <span class="st">"R prediction"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.5 and R &gt; 0.5</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/tet_dist_pred-1.png" class="r-plt" alt="" width="100%"></p>
 <p>The high prevalence of <em>rpsJ</em> V57M (&gt; 90% of the

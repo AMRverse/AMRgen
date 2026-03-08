@@ -85,19 +85,19 @@ ecoli_geno <- import_amrfp(
 # Check the format of the processed genotype table
 head(ecoli_geno)
 #> # A tibble: 6 × 37
-#>   Name         gene  mutation  node  marker   marker.label drug_agent drug_class
-#>   <chr>        <chr> <chr>     <chr> <chr>    <chr>        <ab>       <chr>     
-#> 1 SAMN03177615 blaEC NA        blaEC blaEC    blaEC        NA         Beta-lact…
-#> 2 SAMN03177615 acrF  NA        acrF  acrF     acrF         NA         Efflux    
-#> 3 SAMN03177615 glpT  Glu448Lys glpT  glpT_E4… glpT:Glu448… FOS        Phosphoni…
-#> 4 SAMN03177615 floR  NA        floR  floR     floR         CHL        Phenicols 
-#> 5 SAMN03177615 floR  NA        floR  floR     floR         FLR        Phenicols 
-#> 6 SAMN03177615 mdtM  NA        mdtM  mdtM     mdtM         NA         Efflux    
-#> # ℹ 29 more variables: `Protein identifier` <lgl>, `Contig id` <chr>,
-#> #   Start <dbl>, Stop <dbl>, Strand <chr>, `Gene symbol` <chr>,
-#> #   `Sequence name` <chr>, Scope <chr>, `Element type` <chr>,
-#> #   `Element subtype` <chr>, Class <chr>, Subclass <chr>, Method <chr>,
-#> #   `Target length` <dbl>, `Reference sequence length` <dbl>,
+#>   Name        gene  mutation drug_agent drug_class `variation type` node  marker
+#>   <chr>       <chr> <chr>    <ab>       <chr>      <chr>            <chr> <chr> 
+#> 1 SAMN031776… blaEC NA       NA         Beta-lact… Gene presence d… blaEC blaEC 
+#> 2 SAMN031776… acrF  NA       NA         Efflux     Gene presence d… acrF  acrF  
+#> 3 SAMN031776… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT  glpT_…
+#> 4 SAMN031776… floR  NA       CHL        Phenicols  Gene presence d… floR  floR  
+#> 5 SAMN031776… floR  NA       FLR        Phenicols  Gene presence d… floR  floR  
+#> 6 SAMN031776… mdtM  NA       NA         Efflux     Gene presence d… mdtM  mdtM  
+#> # ℹ 29 more variables: marker.label <chr>, `Protein identifier` <lgl>,
+#> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
+#> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,
+#> #   `Element type` <chr>, `Element subtype` <chr>, Class <chr>, Subclass <chr>,
+#> #   Method <chr>, `Target length` <dbl>, `Reference sequence length` <dbl>,
 #> #   `% Coverage of reference sequence` <dbl>,
 #> #   `% Identity to reference sequence` <dbl>, `Alignment length` <dbl>, …
 ```
@@ -142,6 +142,189 @@ concatenated output file). An easy solution is to run a check to make
 sure that all genome names in your input dataset are represented in the
 genotype table, and if any are missing add empty rows for these using
 e.g. `tibble(Name=missing_samples) %>% bind_rows(genotype_table)`.
+
+You can summarise the content of a genotype table using the inbuilt
+[`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
+function.
+
+``` r
+ecoli_geno_summary <- summarise_geno(ecoli_geno)
+
+# Number of unique samples, markers, genes, drugs, classes, and variation types
+ecoli_geno_summary$uniques
+#> # A tibble: 6 × 2
+#>   column         n_unique
+#>   <chr>             <int>
+#> 1 Name               5258
+#> 2 marker              244
+#> 3 drug_agent           35
+#> 4 drug_class           26
+#> 5 gene                196
+#> 6 variation type        5
+
+# Unique counts of samples, markers, genes, drugs, and classes - per variation type
+ecoli_geno_summary$pertype
+#> # A tibble: 5 × 6
+#>   `variation type`                Name marker drug_agent drug_class  gene
+#>   <chr>                          <int>  <int>      <int>      <int> <int>
+#> 1 Gene presence detected          5258    164         22         17   164
+#> 2 Inactivating mutation detected   615     42         15         14    42
+#> 3 Nucleotide variant detected       57      2          3          3     1
+#> 4 Promoter variant detected         93      4          1          1     1
+#> 5 Protein variant detected        4920     65         18         16    21
+```
+
+The
+[`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
+function also returns a list of drugs and classes represented in the
+table, and the associated number of unique markers, unique samples, and
+total hits for each drug/class. Ordering by sample count, we see the
+most common class is efflux… there are only 3 efflux-associated markers
+but there are 11,828 hits to these across 5,258 samples (i.e. all
+samples have at least one). Next most common are markers associated with
+beta-lactams… there are 22 different markers with 6,379 hits across
+4,989 of our 5,258 samples.
+
+``` r
+ecoli_geno_summary$drugs
+#> # A tibble: 44 × 6
+#>    drug_agent antibiotic                  drug_class       markers samples  hits
+#>    <ab>       <chr>                       <chr>              <int>   <int> <int>
+#>  1 AMC        Amoxicillin/clavulanic acid Aminopenicillins       2      57    57
+#>  2 AMK        Amikacin                    Aminoglycosides        6     176   180
+#>  3 AMP        Ampicillin                  Aminopenicillins       6     749   749
+#>  4 APR        Apramycin                   Aminoglycosides        1      98    98
+#>  5 ATM        Aztreonam                   Monobactams            2      39    39
+#>  6 AZM        Azithromycin                Macrolides             4     472   478
+#>  7 BLM        Bleomycin                   Glycopeptides          2      40    40
+#>  8 CHL        Chloramphenicol             Phenicols             15    1121  1181
+#>  9 CLI        Clindamycin                 Lincosamides           1      26    26
+#> 10 CLR        Clarithromycin              Macrolides             1       1     1
+#> # ℹ 34 more rows
+
+# Order by sample count per drug/class
+ecoli_geno_summary$drugs %>% arrange(-samples)
+#> # A tibble: 44 × 6
+#>    drug_agent antibiotic      drug_class                markers samples  hits
+#>    <ab>       <chr>           <chr>                       <int>   <int> <int>
+#>  1 NA         NA              Efflux                          3    5258 11828
+#>  2 NA         NA              Beta-lactams                   22    4989  6379
+#>  3 FOS        Fosfomycin      Phosphonics                     9    4861  6411
+#>  4 COL        Colistin        Polymyxins                     11    3415  3436
+#>  5 NA         NA              Tetracyclines                  13    2634  2929
+#>  6 NA         NA              Quinolones                     45    1822  4497
+#>  7 STR1       Streptomycin    Aminoglycosides                13    1669  3291
+#>  8 SSS        Sulfonamide     Sulfonamides                    5    1500  1876
+#>  9 CHL        Chloramphenicol Phenicols                      15    1121  1181
+#> 10 NA         NA              Cephalosporins (3rd gen.)      32    1065  1285
+#> # ℹ 34 more rows
+```
+
+Ordering by marker count, we see the classes with the most different
+markers associated are quinolones (45 unique markers detected across
+1,822 unique samples), third generation cephalosporins (32 unique
+markers detected across 1,065 unique samples) and beta-lactams (22
+unique markers detected across 4,989 unique samples).
+
+``` r
+ecoli_geno_summary$drugs %>% arrange(-markers)
+#> # A tibble: 44 × 6
+#>    drug_agent antibiotic      drug_class                markers samples  hits
+#>    <ab>       <chr>           <chr>                       <int>   <int> <int>
+#>  1 NA         NA              Quinolones                     45    1822  4497
+#>  2 NA         NA              Cephalosporins (3rd gen.)      32    1065  1285
+#>  3 NA         NA              Beta-lactams                   22    4989  6379
+#>  4 NA         NA              Trimethoprims                  16     824   877
+#>  5 CHL        Chloramphenicol Phenicols                      15    1121  1181
+#>  6 GEN        Gentamicin      Aminoglycosides                14     687   704
+#>  7 STR1       Streptomycin    Aminoglycosides                13    1669  3291
+#>  8 NA         NA              Carbapenems                    13      62    64
+#>  9 NA         NA              Tetracyclines                  13    2634  2929
+#> 10 COL        Colistin        Polymyxins                     11    3415  3436
+#> # ℹ 34 more rows
+```
+
+The
+[`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
+function also returns a list of markers represented in the table,
+annotated with the associated drugs/classes and variation types. The
+column ‘n’ indicates the count of hits detected per marker. Ordering by
+this column, we see the most common markers are acrF, blaEC and
+glpT_E448K.
+
+``` r
+ecoli_geno_summary$markers %>% arrange(-n)
+#> # A tibble: 349 × 6
+#>    marker     drug_agent antibiotic drug_class    `variation type`             n
+#>    <chr>      <ab>       <chr>      <chr>         <chr>                    <int>
+#>  1 acrF       NA         NA         Efflux        Gene presence detected    5002
+#>  2 blaEC      NA         NA         Beta-lactams  Gene presence detected    4749
+#>  3 glpT_E448K FOS        Fosfomycin Phosphonics   Protein variant detected  4731
+#>  4 mdtM       NA         NA         Efflux        Gene presence detected    3675
+#>  5 emrD       NA         NA         Efflux        Gene presence detected    2914
+#>  6 pmrB_E123D COL        Colistin   Polymyxins    Protein variant detected  1873
+#>  7 pmrB_Y358N COL        Colistin   Polymyxins    Protein variant detected  1531
+#>  8 blaTEM-1   NA         NA         Beta-lactams  Gene presence detected    1279
+#>  9 uhpT_E350Q FOS        Fosfomycin Phosphonics   Protein variant detected  1145
+#> 10 tet(A)     NA         NA         Tetracyclines Gene presence detected    1087
+#> # ℹ 339 more rows
+```
+
+Filtering specifically for markers associated with quinolones, we can
+find out more about the 45 markers for this class that were found in the
+dataset. Summarising by variation type, we see there are 12 markers
+indicating detection of an acquired gene, 2 indicating inactivating
+mutaions, and 31 indicating protein mutations. Sorting by marker
+frequency, we can see the full list of 45 unique markers and that the
+most common is a protein variant in gyrA, gyrA_S83L. Filtering to “Gene
+presence detected” we can that the most common acquired gene was
+aac(6’)-Ib-cr5.
+
+``` r
+# Count the different types of variants found
+ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% count(`variation type`)
+#> # A tibble: 3 × 2
+#>   `variation type`                   n
+#>   <chr>                          <int>
+#> 1 Gene presence detected            12
+#> 2 Inactivating mutation detected     2
+#> 3 Protein variant detected          31
+
+# Sort by marker frequency to see the most common markers
+ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% arrange(-n)
+#> # A tibble: 45 × 6
+#>    marker         drug_agent antibiotic drug_class `variation type`            n
+#>    <chr>          <ab>       <chr>      <chr>      <chr>                   <int>
+#>  1 gyrA_S83L      NA         NA         Quinolones Protein variant detect…   855
+#>  2 marR_S3N       NA         NA         Quinolones Protein variant detect…   726
+#>  3 parC_S80I      NA         NA         Quinolones Protein variant detect…   639
+#>  4 gyrA_D87N      NA         NA         Quinolones Protein variant detect…   622
+#>  5 parE_I529L     NA         NA         Quinolones Protein variant detect…   442
+#>  6 parC_E84V      NA         NA         Quinolones Protein variant detect…   294
+#>  7 aac(6')-Ib-cr5 NA         NA         Quinolones Gene presence detected    153
+#>  8 parE_D475E     NA         NA         Quinolones Protein variant detect…   147
+#>  9 parE_L416F     NA         NA         Quinolones Protein variant detect…   134
+#> 10 parE_S458A     NA         NA         Quinolones Protein variant detect…   111
+#> # ℹ 35 more rows
+
+# Filter to acquired genes and sort by frequency, to see the most common acquired genes
+ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones" & `variation type`=="Gene presence detected") %>% arrange(-n)
+#> # A tibble: 12 × 6
+#>    marker         drug_agent antibiotic drug_class `variation type`           n
+#>    <chr>          <ab>       <chr>      <chr>      <chr>                  <int>
+#>  1 aac(6')-Ib-cr5 NA         NA         Quinolones Gene presence detected   153
+#>  2 qnrS1          NA         NA         Quinolones Gene presence detected    61
+#>  3 qnrB19         NA         NA         Quinolones Gene presence detected    36
+#>  4 qnrB4          NA         NA         Quinolones Gene presence detected    11
+#>  5 qnrB1          NA         NA         Quinolones Gene presence detected     3
+#>  6 qnrB2          NA         NA         Quinolones Gene presence detected     3
+#>  7 qepA1          NA         NA         Quinolones Gene presence detected     2
+#>  8 qnrA1          NA         NA         Quinolones Gene presence detected     2
+#>  9 qnrB6          NA         NA         Quinolones Gene presence detected     2
+#> 10 qnrS2          NA         NA         Quinolones Gene presence detected     2
+#> 11 qnrB           NA         NA         Quinolones Gene presence detected     1
+#> 12 qnrB7          NA         NA         Quinolones Gene presence detected     1
+```
 
 ### 2. Phenotype table
 

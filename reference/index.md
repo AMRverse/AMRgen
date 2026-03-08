@@ -58,6 +58,8 @@ from public repositories or internal formats.
   Portal
 - [`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md)
   : Download NCBI antimicrobial susceptibility testing (AST) data
+- [`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
+  : Summarise a Genotype Table
 - [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
   : Get Binary Matrix of Genotype and Phenotype Data
 - [`get_combo_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_combo_matrix.md)

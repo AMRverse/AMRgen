@@ -1512,24 +1512,24 @@ print(result$overlap_ids)
 #> [3629] "SAMN03892121"
 print(result$geno_matched)
 #> # A tibble: 36,088 × 37
-#>    Name         gene    mutation node  marker marker.label drug_agent drug_class
-#>    <chr>        <chr>   <chr>    <chr> <chr>  <chr>        <ab>       <chr>     
-#>  1 SAMN03177615 blaEC   NA       blaEC blaEC  blaEC        NA         Beta-lact…
-#>  2 SAMN03177615 acrF    NA       acrF  acrF   acrF         NA         Efflux    
-#>  3 SAMN03177615 glpT    Glu448L… glpT  glpT_… glpT:Glu448… FOS        Phosphoni…
-#>  4 SAMN03177615 floR    NA       floR  floR   floR         CHL        Phenicols 
-#>  5 SAMN03177615 floR    NA       floR  floR   floR         FLR        Phenicols 
-#>  6 SAMN03177615 mdtM    NA       mdtM  mdtM   mdtM         NA         Efflux    
-#>  7 SAMN03177615 blaTEM… NA       blaT… blaTE… blaTEM-1     NA         Beta-lact…
-#>  8 SAMN03177615 sul2    NA       sul2  sul2   sul2         SSS        Sulfonami…
-#>  9 SAMN03177615 aph(3'… NA       aph(… aph(3… aph(3'')-Ib  STR1       Aminoglyc…
-#> 10 SAMN03177615 aph(6)… NA       aph(… aph(6… aph(6)-Id    STR1       Aminoglyc…
+#>    Name       gene  mutation drug_agent drug_class `variation type` node  marker
+#>    <chr>      <chr> <chr>    <ab>       <chr>      <chr>            <chr> <chr> 
+#>  1 SAMN03177… blaEC NA       NA         Beta-lact… Gene presence d… blaEC blaEC 
+#>  2 SAMN03177… acrF  NA       NA         Efflux     Gene presence d… acrF  acrF  
+#>  3 SAMN03177… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT  glpT_…
+#>  4 SAMN03177… floR  NA       CHL        Phenicols  Gene presence d… floR  floR  
+#>  5 SAMN03177… floR  NA       FLR        Phenicols  Gene presence d… floR  floR  
+#>  6 SAMN03177… mdtM  NA       NA         Efflux     Gene presence d… mdtM  mdtM  
+#>  7 SAMN03177… blaT… NA       NA         Beta-lact… Gene presence d… blaT… blaTE…
+#>  8 SAMN03177… sul2  NA       SSS        Sulfonami… Gene presence d… sul2  sul2  
+#>  9 SAMN03177… aph(… NA       STR1       Aminoglyc… Gene presence d… aph(… aph(3…
+#> 10 SAMN03177… aph(… NA       STR1       Aminoglyc… Gene presence d… aph(… aph(6…
 #> # ℹ 36,078 more rows
-#> # ℹ 29 more variables: `Protein identifier` <lgl>, `Contig id` <chr>,
-#> #   Start <dbl>, Stop <dbl>, Strand <chr>, `Gene symbol` <chr>,
-#> #   `Sequence name` <chr>, Scope <chr>, `Element type` <chr>,
-#> #   `Element subtype` <chr>, Class <chr>, Subclass <chr>, Method <chr>,
-#> #   `Target length` <dbl>, `Reference sequence length` <dbl>,
+#> # ℹ 29 more variables: marker.label <chr>, `Protein identifier` <lgl>,
+#> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
+#> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,
+#> #   `Element type` <chr>, `Element subtype` <chr>, Class <chr>, Subclass <chr>,
+#> #   Method <chr>, `Target length` <dbl>, `Reference sequence length` <dbl>,
 #> #   `% Coverage of reference sequence` <dbl>, …
 print(result$pheno_matched)
 #> # A tibble: 3,629 × 11

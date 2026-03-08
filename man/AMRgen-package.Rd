@@ -25,7 +25,7 @@ Authors:
   \item Natacha Couto (\href{https://orcid.org/0000-0002-9152-5464}{ORCID})
   \item Zoe A. Dyson \email{zoe.dyson@lshtm.ac.uk} (\href{https://orcid.org/0000-0002-8887-3492}{ORCID})
   \item Jane Hawkey (\href{https://orcid.org/0000-0001-9661-5293}{ORCID})
-  \item Kat Holt (\href{https://orcid.org/0000-0003-3949-2471}{ORCID})
+  \item Kat Holt \email{drkatholt@gmail.com} (\href{https://orcid.org/0000-0003-3949-2471}{ORCID})
 }
 
 }

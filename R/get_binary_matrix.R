@@ -64,17 +64,17 @@
 #'   keep_assay_values = TRUE
 #' )
 #' }
-get_binary_matrix <- function(geno_table, 
-                              pheno_table, 
-                              antibiotic, 
-                              drug_class_list = NULL, 
+get_binary_matrix <- function(geno_table,
+                              pheno_table,
+                              antibiotic,
+                              drug_class_list = NULL,
                               keep_SIR = TRUE,
-                              keep_assay_values = FALSE, 
+                              keep_assay_values = FALSE,
                               keep_assay_values_from = c("mic", "disk"),
-                              geno_sample_col = NULL, 
+                              geno_sample_col = NULL,
                               pheno_sample_col = NULL,
-                              sir_col = "pheno_clsi", 
-                              ecoff_col = "ecoff", 
+                              sir_col = "pheno_clsi",
+                              ecoff_col = "ecoff",
                               marker_col = "marker",
                               most_resistant = TRUE) {
   # check there is a SIR column specified
@@ -114,7 +114,7 @@ get_binary_matrix <- function(geno_table,
   if (!("drug_class" %in% colnames(geno_table))) {
     stop(paste("input", deparse(substitute(geno_table)), "must have a column labelled `drug_class`"))
   }
-  
+
   # generate drug_class_list from antibiotic, if not provided
   if (is.null(drug_class_list)) {
     cat(paste0(" Checking for drug classes for antibiotic: ", ab_name(antibiotic), "\n"))
@@ -122,12 +122,12 @@ get_binary_matrix <- function(geno_table,
     if ("Carbapenems" %in% drug_class_candidates) { # ensure when testing carbapenems we include cephalosporin markers
       drug_class_candidates <- c(drug_class_candidates, "Cephalosporins (3rd gen.)", "Cephalosporins", "Beta-lactams")
     }
-    cat(paste0("  Associated classes: ", paste(drug_class_candidates, collapse=", "), "\n"))
+    cat(paste0("  Associated classes: ", paste(drug_class_candidates, collapse = ", "), "\n"))
     drug_class_list <- drug_class_candidates[drug_class_candidates %in% geno_table$drug_class]
-    if (length(drug_class_list) ==0 ) {
+    if (length(drug_class_list) == 0) {
       stop(paste("  None of these classes were found in the drug_class column of genotype table. Please specify which markers to include via 'drug_class_list'."))
-    } else{
-      cat(paste0("  Found markers mapped to: ", paste(drug_class_list, collapse=", "), "\n"))
+    } else {
+      cat(paste0("  Found markers mapped to: ", paste(drug_class_list, collapse = ", "), "\n"))
     }
   }
 

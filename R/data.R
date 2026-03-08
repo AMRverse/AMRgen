@@ -293,7 +293,7 @@
 "eurogasp_geno_raw"
 
 
-#' N. gonorrhoeae PBP2 Mutations Phenotype Data Use Case 2 
+#' N. gonorrhoeae PBP2 Mutations Phenotype Data Use Case 2
 #'
 #' Ceftriaxone MIC data for *Neisseria gonorrhoeae* isolates from multiple studies
 #' enriched for decreased susceptibility and resistance to ceftriaxone, including
@@ -310,14 +310,14 @@
 #' @source ENA projects [PRJEB58139](https://www.ebi.ac.uk/ena/browser/view/PRJEB58139),
 #' [PRJEB57389](https://www.ebi.ac.uk/ena/browser/view/PRJEB57389),
 #' [PRJEB76977](https://www.ebi.ac.uk/ena/browser/view/PRJEB76977),
-#' [PRJEB45627](https://www.ebi.ac.uk/ena/browser/view/PRJEB45627), 
-#' [PRJNA577446](https://www.ebi.ac.uk/ena/browser/view/PRJNA577446), 
-#' [PRJNA776899](https://www.ebi.ac.uk/ena/browser/view/PRJNA776899), 
-#' [PRJNA778600](https://www.ebi.ac.uk/ena/browser/view/PRJNA778600), 
-#' [PRJNA560592](https://www.ebi.ac.uk/ena/browser/view/PRJNA560592), 
-#' [PRJNA874857](https://www.ebi.ac.uk/ena/browser/view/PRJNA874857), 
-#' [PRJNA909328](https://www.ebi.ac.uk/ena/browser/view/PRJNA909328), 
-#' [PRJNA957547](https://www.ebi.ac.uk/ena/browser/view/PRJNA957547), 
+#' [PRJEB45627](https://www.ebi.ac.uk/ena/browser/view/PRJEB45627),
+#' [PRJNA577446](https://www.ebi.ac.uk/ena/browser/view/PRJNA577446),
+#' [PRJNA776899](https://www.ebi.ac.uk/ena/browser/view/PRJNA776899),
+#' [PRJNA778600](https://www.ebi.ac.uk/ena/browser/view/PRJNA778600),
+#' [PRJNA560592](https://www.ebi.ac.uk/ena/browser/view/PRJNA560592),
+#' [PRJNA874857](https://www.ebi.ac.uk/ena/browser/view/PRJNA874857),
+#' [PRJNA909328](https://www.ebi.ac.uk/ena/browser/view/PRJNA909328),
+#' [PRJNA957547](https://www.ebi.ac.uk/ena/browser/view/PRJNA957547),
 #' [PRJNA1161034](https://www.ebi.ac.uk/ena/browser/view/PRJNA1161034),
 #' [PRJNA1189294](https://www.ebi.ac.uk/ena/browser/view/PRJNA1189294),
 #' [PRJNA1067895](https://www.ebi.ac.uk/ena/browser/view/PRJNA1067895).
@@ -328,7 +328,7 @@
 #' Unemo *et al.* (2024) <doi:10.1093/jac/dkae176>.
 "ngono_cro_pheno_raw"
 
-#' N. gonorrhoeae PBP2 Mutations Genotype Data Use Case 2 
+#' N. gonorrhoeae PBP2 Mutations Genotype Data Use Case 2
 #'
 #' Raw concatenated output from AMRFinderPlus run on *Neisseria gonorrhoeae* genome
 #' assemblies from multiple studies enriched for ceftriaxone decreased susceptibility
@@ -361,14 +361,14 @@
 #' [PRJEB58139](https://www.ebi.ac.uk/ena/browser/view/PRJEB58139),
 #' [PRJEB57389](https://www.ebi.ac.uk/ena/browser/view/PRJEB57389),
 #' [PRJEB76977](https://www.ebi.ac.uk/ena/browser/view/PRJEB76977),
-#' [PRJEB45627](https://www.ebi.ac.uk/ena/browser/view/PRJEB45627), 
-#' [PRJNA577446](https://www.ebi.ac.uk/ena/browser/view/PRJNA577446), 
-#' [PRJNA776899](https://www.ebi.ac.uk/ena/browser/view/PRJNA776899), 
-#' [PRJNA778600](https://www.ebi.ac.uk/ena/browser/view/PRJNA778600), 
-#' [PRJNA560592](https://www.ebi.ac.uk/ena/browser/view/PRJNA560592), 
-#' [PRJNA874857](https://www.ebi.ac.uk/ena/browser/view/PRJNA874857), 
-#' [PRJNA909328](https://www.ebi.ac.uk/ena/browser/view/PRJNA909328), 
-#' [PRJNA957547](https://www.ebi.ac.uk/ena/browser/view/PRJNA957547), 
+#' [PRJEB45627](https://www.ebi.ac.uk/ena/browser/view/PRJEB45627),
+#' [PRJNA577446](https://www.ebi.ac.uk/ena/browser/view/PRJNA577446),
+#' [PRJNA776899](https://www.ebi.ac.uk/ena/browser/view/PRJNA776899),
+#' [PRJNA778600](https://www.ebi.ac.uk/ena/browser/view/PRJNA778600),
+#' [PRJNA560592](https://www.ebi.ac.uk/ena/browser/view/PRJNA560592),
+#' [PRJNA874857](https://www.ebi.ac.uk/ena/browser/view/PRJNA874857),
+#' [PRJNA909328](https://www.ebi.ac.uk/ena/browser/view/PRJNA909328),
+#' [PRJNA957547](https://www.ebi.ac.uk/ena/browser/view/PRJNA957547),
 #' [PRJNA1161034](https://www.ebi.ac.uk/ena/browser/view/PRJNA1161034),
 #' [PRJNA1189294](https://www.ebi.ac.uk/ena/browser/view/PRJNA1189294),
 #' [PRJNA1067895](https://www.ebi.ac.uk/ena/browser/view/PRJNA1067895).
@@ -428,4 +428,3 @@
 #' @source ENA project [PRJEB83795](https://www.ebi.ac.uk/ena/browser/view/PRJEB83795).
 #' See Sánchez-Serrano *et al.* (2026) <doi:10.1016/j.cmi.2025.12.026>.
 "ngono_tet_geno_raw"
-

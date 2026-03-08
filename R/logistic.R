@@ -140,16 +140,15 @@ amr_logistic <- function(geno_table, pheno_table,
     }
   }
 
-  
-  
+
   cat("Generating plots\n")
   if (!is.null(modelR) & !is.null(modelNWT)) {
     cat("Plotting 2 models\n")
     plot <- compare_estimates(modelR, modelNWT,
-                              single_plot = single_plot,
-                              title1 = "R", title2 = "NWT",
-                              colors = colors, 
-                              axis_label_size = axis_label_size
+      single_plot = single_plot,
+      title1 = "R", title2 = "NWT",
+      colors = colors,
+      axis_label_size = axis_label_size
     )
     if (single_plot) {
       label <- "Effect estimates for R and NWT"
@@ -157,8 +156,10 @@ amr_logistic <- function(geno_table, pheno_table,
         label <- paste(label, "for", antibiotic)
       }
       if (!is.null(drug_class_list)) {
-        subtitle <- paste("for", paste(drug_class_list, collapse = ","), 
-                          "markers present in at least", maf, "samples")
+        subtitle <- paste(
+          "for", paste(drug_class_list, collapse = ","),
+          "markers present in at least", maf, "samples"
+        )
       } else {
         subtitle <- paste("for markers present in at least", maf, "samples")
       }
@@ -171,7 +172,7 @@ amr_logistic <- function(geno_table, pheno_table,
     cat("Plotting NWT model only\n")
     plot <- plot_estimates(modelNWT)
   }
-  
+
   print(plot)
 
   return(list(
@@ -190,8 +191,8 @@ summarise_model_input <- function(dat) {
     "   Filtered data contains ",
     nrow(dat),
     " samples (",
-    sum(dat[, 1] == 1, na.rm=T), " => 1, ",
-    sum(dat[, 1] == 0, na.rm=T), " => 0) and ",
+    sum(dat[, 1] == 1, na.rm = T), " => 1, ",
+    sum(dat[, 1] == 0, na.rm = T), " => 0) and ",
     ncol(dat) - 1, " variables.\n"
   ))
 }

@@ -81,6 +81,51 @@ The essential columns for a genotype table to work with downstream `AMRgen` func
 
 NOTE: You should consider whether you have genomes with no AMR markers detected by genotyping, and how to make sure these are include in your analyses. E.g. AMRFinderPlus will output one row per genome/marker combination, but if you have a genome with no markers detected, there will be no row at all for that genome in the concatenated output file. If your species has core genes included in AMRFinderPlus this probably won't be a problem as you would expect some calls for every genome (e.g. AMRFinderPlus will report blaSHV, oqxA, oqxB, fosA in all Klebsiella pneumoniae genomes, so all input genomes will appear in the concatenated output file). An easy solution is to run a check to make sure that all genome names in your input dataset are represented in the genotype table, and if any are missing add empty rows for these using e.g. `tibble(Name=missing_samples) %>% bind_rows(genotype_table)`.
 
+
+You can summarise the content of a genotype table using the inbuilt `summarise_geno()` function.
+``` {r summarise_geno}
+ecoli_geno_summary <- summarise_geno(ecoli_geno)
+
+# Number of unique samples, markers, genes, drugs, classes, and variation types
+ecoli_geno_summary$uniques
+
+# Unique counts of samples, markers, genes, drugs, and classes - per variation type
+ecoli_geno_summary$pertype
+
+```
+
+The `summarise_geno()` function also returns a list of drugs and classes represented in the table, and the associated number of unique markers, unique samples, and total hits for each drug/class. Ordering by sample count, we see the most common class is efflux... there are only 3 efflux-associated markers but there are 11,828 hits to these across 5,258 samples (i.e. all samples have at least one). Next most common are markers associated with beta-lactams... there are 22 different markers with 6,379 hits across 4,989 of our 5,258 samples.
+
+``` {r summarise_geno_drugs}
+ecoli_geno_summary$drugs
+
+# Order by sample count per drug/class
+ecoli_geno_summary$drugs %>% arrange(-samples)
+```
+
+Ordering by marker count, we see the classes with the most different markers associated are quinolones (45 unique markers detected across 1,822 unique samples), third generation cephalosporins (32 unique markers detected across 1,065 unique samples) and beta-lactams (22 unique markers detected across 4,989 unique samples).
+``` {r summarise_geno_drugs_bymarkercount}
+ecoli_geno_summary$drugs %>% arrange(-markers)
+```
+
+The `summarise_geno()` function also returns a list of markers represented in the table, annotated with the associated drugs/classes and variation types. The column 'n' indicates the count of hits detected per marker. Ordering by this column, we see the most common markers are acrF, blaEC and glpT_E448K.
+``` {r summarise_geno_markers}
+ecoli_geno_summary$markers %>% arrange(-n)
+```
+
+Filtering specifically for markers associated with quinolones, we can find out more about the 45 markers for this class that were found in the dataset.
+Summarising by variation type, we see there are 12 markers indicating detection of an acquired gene, 2 indicating inactivating mutaions, and 31 indicating protein mutations. Sorting by marker frequency, we can see the full list of 45 unique markers and that the most common is a protein variant in gyrA, gyrA_S83L. Filtering to "Gene presence detected" we can that the most common acquired gene was aac(6')-Ib-cr5.
+``` {r summarise_geno_markers_quinolones}
+# Count the different types of variants found
+ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% count(`variation type`)
+
+# Sort by marker frequency to see the most common markers
+ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% arrange(-n)
+
+# Filter to acquired genes and sort by frequency, to see the most common acquired genes
+ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones" & `variation type`=="Gene presence detected") %>% arrange(-n)
+```
+
 ## 2. Phenotype table
 The `import_ast()` function imports AST data from NCBI or other standard formats
 

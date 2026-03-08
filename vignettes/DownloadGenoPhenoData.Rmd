@@ -93,7 +93,7 @@ The `query_ncbi_bq_ast()` function lets you download antibiogram data from NCBI 
 This function is fast but requires authentication via a [Google Cloud account](https://docs.cloud.google.com/docs/get-started) and may require payment. Free trial accounts can be set up, but require credit card authorization. Google currently provides enough free tier usage for >150 different queries for genotype data per month. To use this you will also need to install the `bigrquery` package and authorize it to use your Google cloud account.
 
 ```{r install_bigrquery, eval=F}
-install.packages('bigrquery')
+install.packages("bigrquery")
 library(bigrquery)
 bigrquery::bq_auth()
 ```

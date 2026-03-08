@@ -1453,11 +1453,11 @@ import_sensititre_ast <- function(input,
   if (!is.character(input) || !file.exists(input)) {
     stop("import_sensititre_ast requires a file path as input")
   }
-  
+
   # Detect encoding from BOM: UTF-16LE files start with 0xFF 0xFE
   bom <- readBin(input, "raw", n = 2)
   is_utf16le <- length(bom) >= 2 && bom[1] == as.raw(0xFF) && bom[2] == as.raw(0xFE)
-  
+
   raw_lines <- if (is_utf16le) {
     tryCatch(
       {
@@ -1471,30 +1471,30 @@ import_sensititre_ast <- function(input,
   } else {
     readLines(input, warn = FALSE)
   }
-  
+
   # Remove BOM character (if still present) and empty lines
   raw_lines <- sub("^\ufeff", "", raw_lines)
   raw_lines <- raw_lines[nchar(trimws(raw_lines)) > 0]
-  
+
   if (length(raw_lines) == 0) {
     stop("No data found in Sensititre file")
   }
-  
+
   # Auto-detect separator: count tabs vs commas in the first data line
   first_line <- raw_lines[1]
   n_tabs <- nchar(first_line) - nchar(gsub("\t", "", first_line, fixed = TRUE))
   n_commas <- nchar(first_line) - nchar(gsub(",", "", first_line, fixed = TRUE))
   sep <- if (n_tabs >= n_commas) "\t" else ","
-  
+
   cat(paste0("Reading ", length(raw_lines), " rows from Sensititre file\n"))
-  
+
   # Parse each line, extract drug triplets
   all_rows <- list()
   for (row_idx in seq_along(raw_lines)) {
     fields <- strsplit(raw_lines[row_idx], sep, fixed = TRUE)[[1]]
     # Strip surrounding double-quotes from all fields
     fields <- gsub('^"|"$', "", fields)
-    
+
     # Find the datetime field to locate where metadata ends.
     # Supports both ISO format (YYYY-MM-DD HH:MM:SS) and European/US format
     # (DD/MM/YYYY HH:MM or MM/DD/YYYY HH:MM) as produced by some Sensititre exports.
@@ -1506,14 +1506,14 @@ import_sensititre_ast <- function(input,
       cat(paste0("Warning: No timestamp found in row ", row_idx, ", skipping\n"))
       next
     }
-    
+
     # Extract metadata
     sample_id <- if (length(fields) >= id_col) trimws(fields[id_col]) else NA_character_
     panel_code <- if (length(fields) >= 8) trimws(fields[8]) else NA_character_
     organism_code <- if (length(fields) >= 10) trimws(fields[10]) else NA_character_
     specimen <- if (length(fields) >= 12) trimws(fields[12]) else NA_character_
     timestamp <- trimws(fields[ts_idx])
-    
+
     # Parse drug data starting after the timestamp
     # Fields are in triplets (drug_name, mic_value, interpretation) but
     # empty positions may have irregular numbers of blank fields.
@@ -1522,7 +1522,7 @@ import_sensititre_ast <- function(input,
     drug_start <- ts_idx + 1
     if (drug_start > length(fields)) next
     remaining <- fields[drug_start:length(fields)]
-    
+
     i <- 1
     while (i <= length(remaining) - 2) {
       field_val <- trimws(remaining[i])
@@ -1536,7 +1536,7 @@ import_sensititre_ast <- function(input,
         drug_abbrev <- field_val
         mic_raw <- trimws(remaining[i + 1])
         interp_raw <- trimws(remaining[i + 2])
-        
+
         all_rows[[length(all_rows) + 1]] <- data.frame(
           id = sample_id,
           panel = panel_code,
@@ -1554,14 +1554,14 @@ import_sensititre_ast <- function(input,
       }
     }
   }
-  
+
   if (length(all_rows) == 0) {
     stop("No drug data found in Sensititre file")
   }
-  
-  
+
+
   ast_long <- dplyr::bind_rows(all_rows) %>% as_tibble()
-  
+
   # Clean MIC values: remove leading/trailing spaces, normalise signs
   ast_long <- ast_long %>%
     mutate(mic_raw = trimws(mic_raw)) %>%
@@ -1577,7 +1577,7 @@ import_sensititre_ast <- function(input,
     # Convert European decimal comma to period (e.g. "<=0,06" -> "<=0.06")
     mutate(mic = gsub(",", ".", mic, fixed = TRUE)) %>%
     mutate(mic = as.mic(mic))
-  
+
   # Map interpretation codes to S/I/R
   ast_long <- ast_long %>%
     mutate(pheno_provided = case_when(
@@ -1591,41 +1591,41 @@ import_sensititre_ast <- function(input,
       TRUE ~ NA_character_
     )) %>%
     mutate(pheno_provided = as.sir(pheno_provided))
-  
+
   # Parse drug_agent from abbreviation
   ast_long <- ast_long %>%
     mutate(drug_agent = as.ab(drug_name_raw))
-  
+
   # Add standard columns
   ast_long <- ast_long %>%
     mutate(method = "broth dilution") %>%
     mutate(platform = "Sensititre") %>%
     mutate(disk = as.disk(NA))
-  
+
   # Add guideline if specified
   if (!is.null(instrument_guideline)) {
     ast_long <- ast_long %>% mutate(guideline = instrument_guideline)
   }
-  
+
   # Add source only if specified
   if (!is.null(source)) {
     ast_long <- ast_long %>% mutate(source = source)
   }
-  
+
   # Parse organism if present
   if ("organism_code" %in% colnames(ast_long)) {
     ast_long <- ast_long %>%
       mutate(spp_pheno = as.mo(organism_code))
   }
-  
+
   # Interpret phenotypes
   ast_long <- interpret_ast(ast_long,
-                            interpret_ecoff = interpret_ecoff,
-                            interpret_eucast = interpret_eucast,
-                            interpret_clsi = interpret_clsi,
-                            species = species, ab = ab
+    interpret_ecoff = interpret_ecoff,
+    interpret_eucast = interpret_eucast,
+    interpret_clsi = interpret_clsi,
+    species = species, ab = ab
   )
-  
+
   # Reorder columns
   ast_long <- ast_long %>%
     relocate(any_of(c(
@@ -1634,7 +1634,7 @@ import_sensititre_ast <- function(input,
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno"
     )))
-  
+
   return(ast_long)
 }
 
@@ -1904,7 +1904,6 @@ import_whonet_ast <- function(input,
 #'   species_col = "Organism"
 #' )
 #' }
-
 import_phoenix_ast <- function(input,
                                sample_col = NULL,
                                drug_col = NULL,
@@ -1919,7 +1918,6 @@ import_phoenix_ast <- function(input,
                                interpret_eucast = FALSE,
                                interpret_clsi = FALSE,
                                interpret_ecoff = FALSE) {
-
   is_file <- is.character(input) && file.exists(input)
   ext <- if (is_file) tolower(tools::file_ext(input)) else NULL
 
@@ -1927,15 +1925,21 @@ import_phoenix_ast <- function(input,
   # Helper: resolve a column reference (name or 1-based index)
   # -------------------------------------------------------------------
   .resolve_col <- function(col_ref, df) {
-    if (is.null(col_ref)) return(NULL)
+    if (is.null(col_ref)) {
+      return(NULL)
+    }
     if (is.numeric(col_ref)) {
-      if (col_ref < 1 || col_ref > ncol(df))
+      if (col_ref < 1 || col_ref > ncol(df)) {
         stop(paste("Column index", col_ref, "is out of range (", ncol(df), "columns)."))
+      }
       return(colnames(df)[col_ref])
     }
-    if (!col_ref %in% colnames(df))
-      stop(paste0("Column '", col_ref, "' not found.\nAvailable columns: ",
-                  paste(colnames(df), collapse = ", ")))
+    if (!col_ref %in% colnames(df)) {
+      stop(paste0(
+        "Column '", col_ref, "' not found.\nAvailable columns: ",
+        paste(colnames(df), collapse = ", ")
+      ))
+    }
     col_ref
   }
 
@@ -1946,7 +1950,9 @@ import_phoenix_ast <- function(input,
     cols_lower <- tolower(colnames(df))
     for (p in patterns) {
       idx <- grep(p, cols_lower)[1]
-      if (!is.na(idx)) return(colnames(df)[idx])
+      if (!is.na(idx)) {
+        return(colnames(df)[idx])
+      }
     }
     NULL
   }
@@ -1976,19 +1982,22 @@ import_phoenix_ast <- function(input,
       readxl::read_excel(input, col_names = TRUE, .name_repair = "minimal", n_max = 0),
       error = function(e) NULL
     )
-    known_pats <- c("antimicrobial", "antibiotic", "drug", "^mic$",
-                    "interp", "interpretation", "^sample$", "organism", "species")
+    known_pats <- c(
+      "antimicrobial", "antibiotic", "drug", "^mic$",
+      "interp", "interpretation", "^sample$", "organism", "species"
+    )
     has_header <- !is.null(peek) &&
       any(sapply(known_pats, function(p) any(grepl(p, tolower(colnames(peek))))))
 
     ast <- readxl::read_excel(input, col_names = has_header, .name_repair = "minimal")
     if (!has_header) colnames(ast) <- paste0("V", seq_len(ncol(ast)))
-
   } else if (is_file && ext %in% c("txt", "tsv")) {
     lines <- readLines(input, warn = FALSE)
     # Locate the header row (first line starting with a recognised field name)
     header_idx <- which(grepl("^(Antimicrobial|Drug|Sample|Antibiotic)",
-                               lines, ignore.case = TRUE))[1]
+      lines,
+      ignore.case = TRUE
+    ))[1]
     if (is.na(header_idx)) header_idx <- 1
     # Strip trailing non-data sections appended by Phoenix
     stop_pat <- "^\\s*$|^Resistance Markers|^Expert Triggered Rules|^Interpretation Criteria"
@@ -1998,7 +2007,6 @@ import_phoenix_ast <- function(input,
       I(paste(lines[header_idx:data_end], collapse = "\n")),
       show_col_types = FALSE, name_repair = "minimal"
     ) %>% dplyr::filter(!is.na(.[[1]]) & trimws(.[[1]]) != "")
-
   } else if (is.data.frame(input)) {
     ast <- input
   } else {
@@ -2010,32 +2018,38 @@ import_phoenix_ast <- function(input,
   # -------------------------------------------------------------------
 
   # Apply any user-supplied overrides first
-  r_sample  <- .resolve_col(sample_col,  ast)
-  r_drug    <- .resolve_col(drug_col,    ast)
-  r_mic     <- .resolve_col(mic_col,     ast)
-  r_sir     <- .resolve_col(sir_col,     ast)
+  r_sample <- .resolve_col(sample_col, ast)
+  r_drug <- .resolve_col(drug_col, ast)
+  r_mic <- .resolve_col(mic_col, ast)
+  r_sir <- .resolve_col(sir_col, ast)
   r_species <- .resolve_col(species_col, ast)
 
   # Auto-detect columns not yet resolved
-  if (is.null(r_drug))
+  if (is.null(r_drug)) {
     r_drug <- .find_col(ast, c("antimicrobial", "antibiotic", "^drug$", "^agent$", "^ab$"))
-  if (is.null(r_mic))
-    r_mic  <- .find_col(ast, c("^mic$", "mic or concentration", "concentration"))
+  }
+  if (is.null(r_mic)) {
+    r_mic <- .find_col(ast, c("^mic$", "mic or concentration", "concentration"))
+  }
   if (is.null(r_sir)) {
     if (use_expertized) {
       r_sir <- .find_col(ast, c("final.*sir", "expert.*sir", "^expertized$"))
-      if (is.null(r_sir))
+      if (is.null(r_sir)) {
         r_sir <- .find_col(ast, c("^interp$", "^interpretation$", "^sir$"))
+      }
     } else {
       r_sir <- .find_col(ast, c("^interp$", "^interpretation$"))
-      if (is.null(r_sir))
+      if (is.null(r_sir)) {
         r_sir <- .find_col(ast, c("final.*sir", "expert.*sir", "^sir$"))
+      }
     }
   }
-  if (is.null(r_sample))
+  if (is.null(r_sample)) {
     r_sample <- .find_col(ast, c("^sample$", "^id$", "^isolate$", "sample_id", "patient_id"))
-  if (is.null(r_species) && is.null(species))
+  }
+  if (is.null(r_species) && is.null(species)) {
     r_species <- .find_col(ast, c("^organism$", "^species$", "^spp$", "^pathogen$"))
+  }
 
   # Positional fallback for headerless files (columns named V1, V2, ...)
   if (is.null(r_drug) && all(grepl("^V\\d+$", colnames(ast)))) {
@@ -2046,34 +2060,45 @@ import_phoenix_ast <- function(input,
         "col 3 = drug, col 4 = MIC, col 5 = instrument SIR, col 6 = expert SIR.\n",
         "Supply 'drug_col', 'mic_col', 'sir_col' etc. to override."
       )
-      if (is.null(r_sample))  r_sample  <- colnames(ast)[1]
+      if (is.null(r_sample)) r_sample <- colnames(ast)[1]
       if (is.null(r_species)) r_species <- if (ncol(ast) >= 2) colnames(ast)[2] else NULL
       r_drug <- colnames(ast)[3]
-      r_mic  <- colnames(ast)[4]
-      r_sir  <- if (use_expertized && ncol(ast) >= 6) colnames(ast)[6] else colnames(ast)[5]
+      r_mic <- colnames(ast)[4]
+      r_sir <- if (use_expertized && ncol(ast) >= 6) colnames(ast)[6] else colnames(ast)[5]
     }
   }
 
   # Validate that all required columns were resolved
-  if (is.null(r_drug))
-    stop("Could not auto-detect the drug/antimicrobial column.\n",
-         "Available columns: ", paste(colnames(ast), collapse = ", "),
-         "\nUse 'drug_col' to specify.")
-  if (is.null(r_mic))
-    stop("Could not auto-detect the MIC column.\n",
-         "Available columns: ", paste(colnames(ast), collapse = ", "),
-         "\nUse 'mic_col' to specify.")
-  if (is.null(r_sir))
-    stop("Could not auto-detect the S/I/R interpretation column.\n",
-         "Available columns: ", paste(colnames(ast), collapse = ", "),
-         "\nUse 'sir_col' to specify.")
+  if (is.null(r_drug)) {
+    stop(
+      "Could not auto-detect the drug/antimicrobial column.\n",
+      "Available columns: ", paste(colnames(ast), collapse = ", "),
+      "\nUse 'drug_col' to specify."
+    )
+  }
+  if (is.null(r_mic)) {
+    stop(
+      "Could not auto-detect the MIC column.\n",
+      "Available columns: ", paste(colnames(ast), collapse = ", "),
+      "\nUse 'mic_col' to specify."
+    )
+  }
+  if (is.null(r_sir)) {
+    stop(
+      "Could not auto-detect the S/I/R interpretation column.\n",
+      "Available columns: ", paste(colnames(ast), collapse = ", "),
+      "\nUse 'sir_col' to specify."
+    )
+  }
 
   # Handle missing sample column
   if (is.null(r_sample)) {
     if (is_file) {
       derived_id <- gsub("\\.[^.]*$", "", basename(input))
-      message("No sample ID column found -- using filename '", derived_id,
-              "' as sample ID. Use 'sample_col' to specify the sample ID column.")
+      message(
+        "No sample ID column found -- using filename '", derived_id,
+        "' as sample ID. Use 'sample_col' to specify the sample ID column."
+      )
       ast[["__id__"]] <- derived_id
       r_sample <- "__id__"
     } else {
@@ -2081,10 +2106,13 @@ import_phoenix_ast <- function(input,
     }
   }
 
-  if (is.null(r_species) && is.null(species))
-    message("No species column found and 'species' not supplied.\n",
-            "Breakpoint interpretation will not be possible without organism information.\n",
-            "Use 'species_col' or 'species' to provide organism information.")
+  if (is.null(r_species) && is.null(species)) {
+    message(
+      "No species column found and 'species' not supplied.\n",
+      "Breakpoint interpretation will not be possible without organism information.\n",
+      "Use 'species_col' or 'species' to provide organism information."
+    )
+  }
 
   # -------------------------------------------------------------------
   # 3. Map to standardised columns and apply AMR package classes
@@ -2112,17 +2140,19 @@ import_phoenix_ast <- function(input,
   # 4. Common processing
   # -------------------------------------------------------------------
   ast <- ast %>%
-    mutate(platform = "Phoenix",
-           method   = "broth dilution",
-           disk     = as.disk(NA))
+    mutate(
+      platform = "Phoenix",
+      method = "broth dilution",
+      disk = as.disk(NA)
+    )
 
   if (!is.null(instrument_guideline)) ast <- ast %>% mutate(guideline = instrument_guideline)
-  if (!is.null(source))               ast <- ast %>% mutate(source = source)
+  if (!is.null(source)) ast <- ast %>% mutate(source = source)
 
   ast <- interpret_ast(ast,
-    interpret_ecoff  = interpret_ecoff,
+    interpret_ecoff = interpret_ecoff,
     interpret_eucast = interpret_eucast,
-    interpret_clsi   = interpret_clsi,
+    interpret_clsi = interpret_clsi,
     species = species, ab = ab
   )
 

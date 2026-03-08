@@ -176,18 +176,18 @@ import_amrfp <- function(input_table,
 
   # first, identify any subclasses we _know_ aren't in the AMR package, using the internal data
   # join introduces these as new drug_class column
-  in_table_ab <- in_table_label %>% 
-    left_join(amrfp_drugs, by= setNames("AMRFP_Subclass", subclass_col)) %>% 
-    rename(drug_class_internal=drug_class)
-  
+  in_table_ab <- in_table_label %>%
+    left_join(amrfp_drugs, by = setNames("AMRFP_Subclass", subclass_col)) %>%
+    rename(drug_class_internal = drug_class)
+
   # then for the columns which are NA, we want to use the Subclass col and convert to ab using AMR pkg
-  in_table_ab <- in_table_ab %>% 
+  in_table_ab <- in_table_ab %>%
     mutate(subclass_to_parse = if_else(!is.na(drug_class_internal), NA, !!sym(subclass_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
     mutate(drug_agent = AMR::as.ab(subclass_to_parse)) %>%
-    mutate(drug_class_from_agent = AMR::ab_group(subclass_to_parse)) %>% 
-    mutate(drug_class = coalesce(drug_class_internal, drug_class_from_agent)) %>% 
-    select(-drug_class_from_agent, -drug_class_internal) %>% 
-    dplyr::relocate(any_of(c(sample_col, "gene", "mutation", "node", "marker", "marker.label", "drug_agent", "drug_class")), .before = dplyr::everything())
+    mutate(drug_class_from_agent = AMR::ab_group(subclass_to_parse)) %>%
+    mutate(drug_class = coalesce(drug_class_internal, drug_class_from_agent)) %>%
+    select(-drug_class_from_agent, -drug_class_internal) %>%
+    dplyr::relocate(any_of(c(sample_col, "gene", "mutation", "drug_agent", "drug_class", "variation type", "node", "marker", "marker.label")), .before = dplyr::everything())
 
   return(in_table_ab)
 }

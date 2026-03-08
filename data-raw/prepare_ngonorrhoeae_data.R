@@ -40,5 +40,3 @@ ngono_tet_pheno_raw <- read_tsv("data-raw/ngono_tet_pheno.tsv.gz")
 
 usethis::use_data(ngono_tet_geno_raw, internal = FALSE, overwrite = TRUE)
 usethis::use_data(ngono_tet_pheno_raw, internal = FALSE, overwrite = TRUE)
-
-

@@ -763,7 +763,6 @@ cro_upset <- amr_upset(binary_matrix = cro_bin,
                        assay = "mic",
                        antibiotic = "Ceftriaxone",
                        species = "Neisseria gonorrhoeae")
-#>  Removing 2 rows with no phenotype call
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 ```
@@ -824,7 +823,6 @@ cro_ppv <- ppv(binary_matrix = cro_bin,
                upset_grid = TRUE,
                plot_assay = TRUE,
                assay = "mic")
-#>  Removing 2 rows with no phenotype call
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```

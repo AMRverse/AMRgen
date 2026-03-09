@@ -428,3 +428,14 @@
 #' @source ENA project [PRJEB83795](https://www.ebi.ac.uk/ena/browser/view/PRJEB83795).
 #' See Sánchez-Serrano *et al.* (2026) <doi:10.1016/j.cmi.2025.12.026>.
 "ngono_tet_geno_raw"
+
+#' Example Salmonella Genotype-Phenotype Data
+#'
+#' Raw genotype-phenotype data for *Salmonella enterica* genome, one row per sample.
+#'
+#' @format `salm_raw` A data frame with 115 rows and 7 columns:
+#' - `Sample`: Sample identifier
+#' - `Source`, `Serovar`: Non-AMR related information about each isolate
+#' - `CpL_Genotype`: List of genotypic parkers (separated by `;`)
+#' - `Ciprofloxacin`, `Levofloxacin`, `Moxifloxacin`: MIC value for each drug
+"salm_raw"

@@ -91,7 +91,6 @@ ecoli_geno_summary$uniques
 
 # Unique counts of samples, markers, genes, drugs, and classes - per variation type
 ecoli_geno_summary$pertype
-
 ```
 
 The `summarise_geno()` function also returns a list of drugs and classes represented in the table, and the associated number of unique markers, unique samples, and total hits for each drug/class. Ordering by sample count, we see the most common class is efflux... there are only 3 efflux-associated markers but there are 11,828 hits to these across 5,258 samples (i.e. all samples have at least one). Next most common are markers associated with beta-lactams... there are 22 different markers with 6,379 hits across 4,989 of our 5,258 samples.
@@ -117,13 +116,19 @@ Filtering specifically for markers associated with quinolones, we can find out m
 Summarising by variation type, we see there are 12 markers indicating detection of an acquired gene, 2 indicating inactivating mutaions, and 31 indicating protein mutations. Sorting by marker frequency, we can see the full list of 45 unique markers and that the most common is a protein variant in gyrA, gyrA_S83L. Filtering to "Gene presence detected" we can that the most common acquired gene was aac(6')-Ib-cr5.
 ``` {r summarise_geno_markers_quinolones}
 # Count the different types of variants found
-ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% count(`variation type`)
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones") %>%
+  count(`variation type`)
 
 # Sort by marker frequency to see the most common markers
-ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% arrange(-n)
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones") %>%
+  arrange(-n)
 
 # Filter to acquired genes and sort by frequency, to see the most common acquired genes
-ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones" & `variation type`=="Gene presence detected") %>% arrange(-n)
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones" & `variation type` == "Gene presence detected") %>%
+  arrange(-n)
 ```
 
 ## 2. Phenotype table

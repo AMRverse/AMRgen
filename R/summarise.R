@@ -67,14 +67,14 @@ summarise_geno <- function(geno_table,
           count(!!sym(drug_col), !!sym(class_col), !!sym(sample_col)) %>%
           count(!!sym(drug_col), !!sym(class_col)) %>%
           rename(samples = n) %>%
-          full_join(drugs, by=c(drug_col, class_col))
+          full_join(drugs, by = c(drug_col, class_col))
       }
       if (marker_col %in% colnames(geno_table)) {
         drugs <- geno_table %>%
           count(!!sym(drug_col), !!sym(class_col), !!sym(marker_col)) %>%
           count(!!sym(drug_col), !!sym(class_col)) %>%
           rename(markers = n) %>%
-          full_join(drugs, by=c(drug_col, class_col))
+          full_join(drugs, by = c(drug_col, class_col))
       }
     } else {
       # only have agents, no classes
@@ -85,14 +85,14 @@ summarise_geno <- function(geno_table,
           count(!!sym(drug_col), !!sym(sample_col)) %>%
           count(!!sym(drug_col)) %>%
           rename(samples = n) %>%
-          full_join(drugs, by=c(drug_col))
+          full_join(drugs, by = c(drug_col))
       }
       if (marker_col %in% colnames(geno_table)) {
         drugs <- geno_table %>%
           count(!!sym(drug_col), !!sym(marker_col)) %>%
           count(!!sym(drug_col)) %>%
           rename(markers = n) %>%
-          full_join(drugs, by=c(drug_col))
+          full_join(drugs, by = c(drug_col))
       }
     }
     # add full drug name
@@ -108,14 +108,14 @@ summarise_geno <- function(geno_table,
         count(!!sym(class_col), !!sym(sample_col)) %>%
         count(!!sym(class_col)) %>%
         rename(samples = n) %>%
-        full_join(drugs, by=c(class_col))
+        full_join(drugs, by = c(class_col))
     }
     if (marker_col %in% colnames(geno_table)) {
       drugs <- geno_table %>%
         count(!!sym(class_col), !!sym(marker_col)) %>%
         count(!!sym(class_col)) %>%
         rename(markers = n) %>%
-        full_join(drugs, by=c(class_col))
+        full_join(drugs, by = c(class_col))
     }
   }
 

@@ -1,0 +1,116 @@
+Sample,Source,Serovar,CpL_Genotype,Ciprofloxacin,Levofloxacin,Moxifloxacin
+SAL001,Animal,other,gyrA_S83F;parC_T57S,0.19,0.5,0.5
+SAL002,Human,S. Enteritidis,gyrA_S83Y,0.38,1.5,1.5
+SAL003,Human,other,gyrA_S83F;parC_T57S;qnrB19,3,12,24
+SAL004,other,S. Infantis,gyrA_D87G,0.125,0.5,0.5
+SAL005,Human,other,gyrA_D87Y,0.094,0.25,0.38
+SAL006,Human,S. Kentucky,gyrA_S83F;gyrA_D87N,8,8,32
+SAL007,Human,other,parC_T57S;qnrB19,0.25,0.75,1.5
+SAL008,Animal,other,parC_T57S,0.012,0.047,0.047
+SAL009,Human,other,parC_T57S;qnrB19,0.38,0.75,2
+SAL010,Human,S. Infantis,gyrA_S83Y;parC_T57S;qnrS1,3,6,12
+SAL011,Human,S. Newport,qnrA1,0.125,0.38,0.5
+SAL012,Human,S. Enteritidis,gyrA_D87X,0.094,0.5,0.5
+SAL013,Human,other,parC_T57S;qnrS1;qepA1,4,2,2
+SAL014,Human,other,gyrA_D87Y;parC_T57S,0.094,0.38,0.38
+SAL015,Human,other,qnrS1,0.25,1,1
+SAL016,Human,other,gyrA_D87Y,0.125,0.19,0.38
+SAL017,Human,other,gyrA_D87Y;qnrS1,0.75,3,3
+SAL018,Animal,S. Newport,gyrA_D87N;parC_T57S,0.094,0.25,0.38
+SAL019,Human,other,gyrA_S83F,0.25,0.5,0.5
+SAL020,Human,S. Kentucky,gyrA_S83F;gyrA_D87Y;parC_T57S;parC_S80I,12,12,32
+SAL021,Animal,other,qnrS1;qnrB19,0.38,1,1.5
+SAL022,Animal,S. Infantis,gyrA_D87G;parC_T57S,0.25,0.75,1
+SAL023,Human,other,qnrB19,0.38,1,2
+SAL024,Animal,S. Infantis,gyrA_S83Y;parC_T57S,0.25,0.75,0.5
+SAL025,other,S. Infantis,gyrA_S83Y;parC_T57S,0.19,0.75,0.5
+SAL026,Human,S. Newport,gyrA_u;parC_T57S,0.008,0.032,0.064
+SAL027,Human,other,gyrA_D82N,0.064,0.25,0.25
+SAL028,Human,other,gyrA_S83Y;qnrS1,6,8,24
+SAL029,Human,S. Enteritidis,qnrB19,0.38,1,2
+SAL030,Human,S. Kentucky,gyrA_S83F;gyrA_D87Y,32,32,32
+SAL031,Human,other,parC_T57S,0.19,0.38,0.75
+SAL032,Human,other,gyrA_D82N,0.25,0.75,0.75
+SAL033,Human,S. Infantis,gyrA_S83Y;parC_T57S,0.38,1.5,1
+SAL034,Human,other,gyrA_D87Y;parC_T57S;qnrS1,0.5,2,2
+SAL035,Human,other,parC_T57S;qnrB19,0.25,0.75,1.5
+SAL036,other,S. Infantis,gyrA_D87G,0.19,0.75,0.75
+SAL037,Human,S. Typhimurium,qnrS1,0.25,0.75,1.5
+SAL038,Human,S. Enteritidis,gyrA_u,0.125,0.25,0.38
+SAL039,Animal,other,qnrB19,0.25,0.75,1.5
+SAL040,Human,S. Typhimurium,qnrB2,0.19,0.38,0.75
+SAL041,Animal,S. Typhimurium,qnrD,0.023,0.064,0.094
+SAL042,Human,S. Enteritidis,gyrA_D87G,0.064,0.25,0.38
+SAL043,Human,S. Enteritidis,gyrA_S83Y,0.25,0.5,0.5
+SAL044,Human,S. Typhimurium,gyrB_E446D,0.094,0.38,1
+SAL045,Human,other,gyrA_D87Y;parC_T57S;qnrS1,1.5,6,8
+SAL046,Animal,S. Enteritidis,gyrA_S83Y,0.25,0.75,0.75
+SAL047,Human,S. Newport,gyrA_D87N;parC_T57S,0.094,0.38,0.38
+SAL048,Animal,other,qnrS1,0.38,1,1.5
+SAL049,Human,S. Typhimurium,gyrA_S83F,0.19,0.5,0.5
+SAL050,other,other,parC_T57S,0.012,0.047,0.064
+SAL051,Human,S. Enteritidis,gyrA_D87G,0.094,0.38,0.5
+SAL052,Human,S. Enteritidis,qnrD,0.19,0.38,0.75
+SAL053,Human,other,gyrA_D87N;parC_T57S,0.19,0.5,0.5
+SAL054,Human,S. Kentucky,gyrA_S83F;gyrA_D87N;parC_T57S;parC_S80I,0.25,0.75,2
+SAL055,Human,other,gyrA_S83F,0.19,0.5,0.5
+SAL056,Human,other,gyrA_D87G;parC_T57S;qnrDv1;qnrD,0.38,1.5,2
+SAL057,Human,S. Typhimurium,gyrA_S83F;gyrA_D87G;parC_S80I,8,6,32
+SAL058,Human,S. Newport,parC_T57S;qnrA1,0.094,0.38,0.5
+SAL059,Human,other,gyrA_S83Y;qnrS1,3,6,6
+SAL060,Human,S. Enteritidis,gyrA_D87G,0.047,0.19,0.38
+SAL061,Human,other,parE_S474G,0.016,0.064,0.094
+SAL062,Human,S. Enteritidis,gyrA_Y100H,0.012,0.064,0.094
+SAL063,Human,other,parC_T57S,0.012,0.047,0.125
+SAL064,Human,other,parC_T57S;parC_S80X;qnrB19,0.25,0.75,2
+SAL065,Human,S. Kentucky,gyrA_S83F;gyrA_D87N;parC_S80I,6,8,32
+SAL066,Human,S. Infantis,gyrA_S83Y;parC_T57S;parC_F60L,0.5,1.5,1.5
+SAL067,Human,S. Enteritidis,gyrA_Y100H,0.012,0.047,0.064
+SAL068,Human,other,gyrA_S83Y;parC_T57S;qnrS1,1,3,6
+SAL069,Animal,S. Enteritidis,gyrA_S83Y,0.19,0.5,0.75
+SAL070,Human,other,parC_T57S;qnrS1,0.125,0.38,0.5
+SAL071,Human,S. Kentucky,gyrA_S83F;gyrA_D87G;parC_T57S;parC_S80I,12,12,24
+SAL072,Human,S. Newport,parC_T57S;qnrA1;qnrB19,0.19,0.75,1.5
+SAL073,Human,S. Newport,gyrA_S83F;parC_T57S,0.19,0.38,0.38
+SAL074,Human,S. Newport,qnrA1,0.094,0.38,0.38
+SAL075,Human,other,parC_T57S;parE_D475Y,0.023,0.047,0.064
+SAL076,Human,other,parC_T57S;qnrB19,0.75,1.5,4
+SAL077,Animal,S. Typhimurium,qnrB19,0.25,0.75,1.5
+SAL078,Human,S. Newport,parC_T57S;qnrA1,0.064,0.38,0.38
+SAL079,Human,S. Enteritidis,gyrA_S83Y,0.125,0.75,0.5
+SAL080,Animal,other,qnrS1;qnrB19,0.25,0.5,1
+SAL081,Human,S. Newport,gyrA_D87N,0.125,0.38,0.38
+SAL082,other,other,parC_T57S,0.012,0.064,0.064
+SAL083,Animal,S. Enteritidis,gyrA_S83Y,0.25,0.75,0.75
+SAL084,Human,S. Typhimurium,qnrD,0.023,0.094,0.125
+SAL085,Human,S. Enteritidis,gyrA_D87N,0.125,0.38,0.5
+SAL086,Human,S. Enteritidis,gyrA_D87Y,0.094,0.38,0.5
+SAL087,Animal,other,gyrA_S83F,0.19,0.5,0.5
+SAL088,Human,S. Kentucky,gyrA_S83F;gyrA_D87Y;parC_S80I,>32,>32,>32
+SAL089,Human,other,qnrS4,0.19,0.5,1
+SAL090,Human,S. Kentucky,gyrA_S83F;gyrA_D87Y;parC_S80I,>32,>32,>32
+SAL091,Animal,S. Typhimurium,gyrA_D87N,0.125,0.38,0.38
+SAL092,Human,other,qnrS1,0.012,0.047,0.064
+SAL093,Human,other,gyrB_L446M;parC_T57S,0.012,0.047,0.064
+SAL094,Human,other,gyrA_D87N,0.125,0.5,0.75
+SAL095,Human,other,parC_T57S;qnrS1,0.25,0.5,1
+SAL096,Human,S. Infantis,gyrA_S83Y;parC_T57S,0.19,0.75,0.5
+SAL097,Human,S. Infantis,gyrA_D87Y;parC_T57S,0.094,0.25,0.38
+SAL098,Human,other,gyrA_D87Y;qnrS1,0.75,3,4
+SAL099,Human,S. Infantis,gyrA_D87G;parC_T57S,0.125,0.5,0.75
+SAL100,Human,S. Enteritidis,gyrA_Y100H;qnrB19,0.38,1,2
+SAL101,Animal,S. Typhimurium,gyrA_D87N,0.125,0.25,0.38
+SAL102,other,other,parC_T57S,0.012,0.047,0.094
+SAL103,Human,other,qnrB19,0.19,0.75,1.5
+SAL104,other,other,parC_T57S,0.016,0.047,0.064
+SAL105,Human,other,gyrA_S83Y;parC_T57S,0.19,0.5,0.5
+SAL106,Animal,S. Enteritidis,gyrA_S83Y,0.25,0.75,0.75
+SAL107,other,S. Infantis,gyrA_S83Y;qnrS1,2,6,12
+SAL108,Human,S. Enteritidis,gyrA_Y100H,0.012,0.047,0.064
+SAL109,Human,other,qnrS4,0.125,0.38,0.5
+SAL110,Human,S. Kentucky,gyrA_S83F;gyrA_D87N;parC_T57S;parC_S80I,0.012,0.047,0.125
+SAL111,Human,S. Enteritidis,parC_A81X,0.012,0.047,0.094
+SAL112,Human,S. Kentucky,gyrA_S83F;gyrA_D87Y;parC_T57S;parC_S80I,8,12,32
+SAL113,Human,other,parC_T57S,0.016,0.047,0.064
+SAL114,Human,S. Infantis,gyrA_D87G;parC_T57S,0.125,0.5,0.5
+SAL115,other,other,qnrB19,0.25,0.75,2

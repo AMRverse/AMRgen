@@ -112,7 +112,9 @@ make_non_mutation_AMR_table <- function(input_table, column_names) {
         cols = !!rlang::sym(column_name),
         delim = ";"
       ) %>%
-      dplyr::rename(gene = !!rlang::sym(column_name))
+      dplyr::rename(gene = !!rlang::sym(column_name)) %>%
+      # remove all '^' from gene which indicates exact protein sequence match, inexact nucleotide match 
+      dplyr::mutate(gene = str_remove_all(gene, "\\^"))
     
     df$marker <- df$gene
     df$marker.label <- df$gene

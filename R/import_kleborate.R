@@ -16,19 +16,19 @@
 
 #' Import and Process Kleborate Results
 #'
-#' This function imports and processes Kleborate results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised drug classes. The function also converts gene symbols to a harmonised format and ensures compatibility with the AMRgen package.
+#' This function imports and processes Kleborate (https://github.com/klebgenomics/Kleborate) results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised drug classes. 
 #' @param input_table A character string specifying a dataframe or path to the Kleborate results table (TSV format).
 #' @param sample_col A character string specifying the column that identifies samples in the dataset (default `strain`).
 #' @importFrom dplyr filter left_join mutate select bind_rows rename_with
 #' @importFrom tidyr separate_longer_delim separate
 #' @importFrom rlang sym
-#' @return A tibble containing the processed AMR determinants and drug classes. 
+#' @return A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible. 
 #' @details
 #' The function performs the following steps:
 #' - Reads the Kleborate output table.
-#' - Tranforms dataframe into one AMR determinant per row.
+#' - Transforms Kleborate output into long form (i.e., one AMR determinant per row).
 #' - Maps Kleborate drug classes to standardised drug class.
-#' This processing ensures compatibility with downstream AMR analysis workflows.
+#' This processing ensures compatibility with downstream AMRgen analysis workflows.
 #' @export
 #' @examples
 #' \dontrun{
@@ -75,19 +75,19 @@ import_kleborate <- function(input_table,
   if (!"species" %in% colnames(in_table)) {
     stop("Input file lacks the expected column: species")}
   else {
-    species_tbl <- in_table %>% 
+    species_table <- in_table %>% 
       select(strain, species)
     
-    species_tbl$genus <- strsplit(species_tbl$species, " ")[[1]][1]
-    species_tbl$organism <- species_tbl$species
+    species_table$genus <- strsplit(species_table$species, " ")[[1]][1]
+    species_table$organism <- species_table$species
   }
   
-  kleborate_AMR_table <- dplyr::left_join(AMR_table, species_tbl, by = "strain")
+  kleborate_AMR_table <- dplyr::left_join(AMR_table, species_table, by = "strain")
   return(kleborate_AMR_table)
 }
 
 
-
+# Function to transform AMR gene (non-mutation) columns into long form
 make_non_mutation_AMR_table <- function(input_table, column_names) {
   
   in_table <- process_input(input_table)
@@ -187,7 +187,7 @@ make_non_mutation_AMR_table <- function(input_table, column_names) {
       df$subclass <- "BETA-LACTAM"
       
     } else if (grepl("^Bla_inhR_acquired", column_name)) {
-      df$drug_class <- "Beta-lactams"
+      df$drug_class <- "Beta-lactams/penicillins"
       df$class <- "BETA-LACTAM"
       df$subclass <- "BETA-LACTAM"
       
@@ -222,7 +222,7 @@ make_non_mutation_AMR_table <- function(input_table, column_names) {
   dplyr::bind_rows(results)
 }
 
-
+# Function to transform AMR mutation columns into long form
 make_mutation_AMR_table <- function(input_table, column_names) {
   
   in_table <- process_input(input_table)
@@ -248,6 +248,7 @@ make_mutation_AMR_table <- function(input_table, column_names) {
         delim = ";"
       ) %>%
       dplyr::rename(marker.label = !!rlang::sym(column_name)) %>%
+      # To split protein/nucleotide mutations separated by ':' and trunctions separated by '_' 
       tidyr::separate(
         marker.label,
         into = c("gene", "mutation"),
@@ -256,6 +257,7 @@ make_mutation_AMR_table <- function(input_table, column_names) {
         extra = "merge",
         fill = "right"
       ) %>%
+      # For pmrB$ or mgrB$ which indicate a mutation in the start codon that may disrupt translation 
       dplyr::mutate(
         gene = ifelse(stringr::str_ends(marker.label, "\\$"),
                       stringr::str_remove(marker.label, "\\$"),

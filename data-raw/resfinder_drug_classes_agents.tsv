@@ -1,0 +1,127 @@
+AMRFP_subclass	ab	drug_class	drug_agent
+AMINOCOUMARIN	NA	Aminocoumarin	NA
+CARBAPENEMS	DOR	Aminoglycoside	None
+FLUOROQUINOLONES	NEM	Aminoglycoside	Unknown
+CEPHALOSPORINS (3RD GEN.)	CMX	Aminoglycoside	see Notes
+FLUOROQUINOLONES	CIP	"Aminoglycoside,Fluoroquinolone"	Ciprofloxacin
+AMIKACIN	AMK	Aminoglycosides	Amikacin
+APRAMYCIN	APR	Aminoglycosides	Apramycin
+G418	GEN	Aminoglycosides	Geneticin
+GENTAMICIN	GEN	Aminoglycosides	Gentamicin
+GENTAMICIN C	GEN	Aminoglycosides	Gentamicin C
+HYGROMYCIN	HYG	Aminoglycosides	Hygromycin
+KANAMYCIN	KAN	Aminoglycosides	Kanamycin
+KASUGAMYCIN	KAS	Aminoglycosides	Kasugamycin
+NEOMYCIN	NEO	Aminoglycosides	Neomycin
+STREPTOTHRICIN	STR	Aminoglycosides	Streptoduocin
+STREPTOMYCIN	STR1	Aminoglycosides	Streptomycin
+TOBRAMYCIN	TOB	Aminoglycosides	Tobramycin
+CHLORAMPHENICOL	CHL	Phenicols	Chloramphenicol
+THIAMPHENICOL	THI	Phenicols	Thiamphenicol
+CAPREOMYCIN	CAP	Antimycobacterials	Capreomycin
+ISONIAZID	INH	Antimycobacterials	Isoniazid
+RIFAMPIN	RIF	Antimycobacterials	Rifampicin
+RIFAMYCIN	RFM	Antimycobacterials	Rifamycin
+VIOMYCIN	VIO	Antimycobacterials	Viomycin
+AMINOPENICILLINS	AMX	Beta-lactams/penicillins	Amoxicillin
+AMINOPENICILLINS	AMC	Beta-lactams/penicillins	Amoxicillin+Clavulanic acid
+CEPHALOSPORINS (4TH GEN.)	FEP	Cephalosporins (4th gen.)	Cefepime
+CEPHALOSPORINS (3RD GEN.)	CFM	Cephalosporins (3rd gen.)	Cefixime
+CEPHALOSPORINS (3RD GEN.)	CTX	Cephalosporins (3rd gen.)	Cefotaxime
+CEPHALOSPORINS (3RD GEN.)	CTC	Cephalosporins (3rd gen.)	Cefotaxime+Clavulanic acid
+CEPHALOSPORINS (2ND GEN.)	FOX	Cephalosporins (2nd gen.)	Cefoxitin
+CEPHALOSPORINS (3RD GEN.)	CAZ	Cephalosporins (3rd gen.)	Ceftazidime
+CEPHALOSPORINS (3RD GEN.)	CZA	Cephalosporins (3rd gen.)	Ceftazidime+avibactam
+CEPHALOSPORINS (3RD GEN.)	CRO	Cephalosporins (3rd gen.)	Ceftriaxone
+CEPHALOSPORINS (2ND GEN.)	CXM	Cephalosporins (2nd gen.)	Cefuroxime
+CEPHALOSPORINS (1ST GEN.)	CEP	Cephalosporins (1st gen.)	Cephalothin
+CARBAPENEMS	ETP	Carbapenems	Ertapenem
+PENICILLINS	PEN	Beta-lactams/penicillins	Penicillin
+UREIDOPENICILLINS	PIP	Beta-lactams/penicillins	Piperacillin
+UREIDOPENICILLINS	TZP	Beta-lactams/penicillins	Piperacillin+Tazobactam
+PENICILLINS	TCC	Beta-lactams/penicillins	Ticarcillin+Clavulanic acid
+AMOXICILLIN-CLAVULANIC ACID	AMC	Beta-lactams/penicillins	Amoxicillin/clavulanic acid
+AMPICILLIN	AMP	Beta-lactams/penicillins	Ampicillin
+AVIBACTAM	AVB	Beta-lactams/penicillins	Avibactam
+AZTREONAM	ATM	Beta-lactams/penicillins	Aztreonam
+METHICILLIN	MET	Beta-lactams/penicillins	Meticillin
+PIPERACILLIN-TAZOBACTAM	TZP	Beta-lactams/penicillins	Piperacillin/tazobactam
+SULBACTAM-DURLOBACTAM	SUL	Beta-lactams/penicillins	Sulbactam durlobactam
+TANIBORBACTAM	TAN	Beta-lactams/penicillins	Taniborbactam
+TAZOBACTAM	TAZ	Beta-lactams/penicillins	Tazobactam
+TEMOCILLIN	TEM	Beta-lactams/penicillins	Temocillin
+TICARCILLIN	TIC	Beta-lactams/penicillins	Ticarcillin
+TICARCILLIN-CLAVULANIC ACID	TCC	Beta-lactams/penicillins	Ticarcillin/clavulanic acid
+XERUBORBACTAM	XER	Beta-lactams/penicillins	Xeruborbactam
+IMIPENEM	IPM	Carbapenems	Imipenem
+MEROPENEM	MEM	Carbapenems	Meropenem
+CEFIDEROCOL	FDC	Cephalosporins (unclassified gen.)	Cefiderocol
+CEPHALOTIN	CEP	Cephalosporins (1st gen.)	Cefalotin
+CEFTAZIDIME-AVIBACTAM	CZA	Cephalosporins (3rd gen.)	Ceftazidime/avibactam
+CEFTAROLINE	CPT	Cephalosporins (5th gen.)	Ceftaroline
+QUATERNARY AMMONIUM	SLT3	Compounds	Quaternary ammonium
+TRICLOSAN	FLU	Compounds	Triclosan
+TRIMETHOPRIMS	SMX	Folate pathway antagonist	Sulfamethoxazole
+TRIMETHOPRIMS	TMP	Folate pathway antagonist	Trimethoprim
+GLYCOPEPTIDES	TEC	Glycopeptide	Teicoplanin
+BLEOMYCIN	BLM	Glycopeptides	Bleomycin
+VANCOMYCIN	VAN	Glycopeptides	Vancomycin
+ZORBAMYCIN	ZOR	Other antibacterials	Zorbamycin
+KIRROMYCIN	GEN	Kirromycins	Kirromycin
+STREPTOGRAMINS	QDA	"Lincosamide, Streptogramin A"	Dalfopristin
+STREPTOGRAMINS	PRI	"Lincosamide, Streptogramin A"	Pristinamycin IIA
+STREPTOGRAMINS	VIR	"Lincosamide, Streptogramin A"	Virginiamycin M
+ANTIMYCOBACTERIALS	CAP	Macrolide	Carbomycin
+TETRACYCLINES	TCY	"Macrolide, Lincosamide, Streptogramin A, Streptogramin B, Tetracycline"	Tetracycline
+STREPTOGRAMINS	PRI	"Macrolide, Lincosamide, Streptogramin B"	Pristinamycin IA
+STREPTOGRAMINS	QDA	"Macrolide, Lincosamide, Streptogramin B"	Quinupristin
+STREPTOGRAMINS	VIR	"Macrolide, Lincosamide, Streptogramin B"	Virginiamycin S
+AZITHROMYCIN	AZM	Macrolides/lincosamides	Azithromycin
+CLARITHROMYCIN	CLR	Macrolides/lincosamides	Clarithromycin
+CLINDAMYCIN	CLI	Macrolides/lincosamides	Clindamycin
+ERYTHROMYCIN	ERY	Macrolides/lincosamides	Erythromycin
+LINCOMYCIN	LIN	Macrolides/lincosamides	Lincomycin
+OLEANDOMYCIN	OLE	Macrolides/lincosamides	Oleandomycin
+PRISTINAMYCIN	PRI	Macrolides/lincosamides	Pristinamycin
+SPIRAMYCIN	SPI	Macrolides/lincosamides	Spiramycin
+TELITHROMYCIN	TLT	Macrolides/lincosamides	Telithromycin
+TYLOSIN	TYL	Macrolides/lincosamides	Tylosin
+AVILAMYCIN	AVI	Other antibacterials	Avilamycin
+BACITRACIN	BAC	Other antibacterials	Bacitracin
+DAPTOMYCIN	DAP	Other antibacterials	Daptomycin
+EDEINE	INH	Other antibacterials	Edeine
+FIDAXOMICIN	FDX	Other antibacterials	Fidaxomicin
+FLORFENICOL	FLR	Phenicols	Florfenicol
+FOSFOMYCIN	FOS	Phosphonics	Fosfomycin
+FOSMIDOMYCIN	FMD	Other antibacterials	Fosmidomycin
+FUSIDIC ACID	FUS	Other antibacterials	Fusidic acid
+METRONIDAZOLE	MTR	Other antibacterials	Metronidazole
+MUPIROCIN	MUP	Other antibacterials	Mupirocin
+NARASIN	NAR	Other antibacterials	Narasin
+NITROFURANTOIN	NIT	Other antibacterials	Nitrofurantoin
+PAROMOMYCIN	PAR	Other antibacterials	Paromomycin
+PULVOMYCIN	FLA	Other antibacterials	Pulvomycin
+RETAPAMULIN	RTP	Other antibacterials	Retapamulin
+RIFAXIMIN	RFX	Other antibacterials	Rifaximin
+SALINOMYCIN	SAL	Other antibacterials	Salinomycin
+SPECTINOMYCIN	SPT	Other antibacterials	Spectinomycin
+SULFONAMIDE	SSS	Other antibacterials	Sulfonamide
+THIOSTREPTON	THS	Other antibacterials	Thiostrepton
+TIAMULIN	TIA	Other antibacterials	Tiamulin
+OSTREOGRYCIN	VIR	Streptogramins	Virginiamycine
+MADURAMICIN	GEN	Other antiprotozoals	Maduramicin
+NITROIMIDAZOLE	CTR	Other antiprotozoals	Nitromidazole
+LINEZOLID	LNZ	Oxazolidinones	Linezolid
+TEDIZOLID	TZD	Oxazolidinones	Tedizolid
+TETRACYCLINES	DOX	"Phenicol, Oxazolidinone, Tetracycline"	Doxycycline
+PLEUROMUTILIN	LMU	Pleuromutilins	Pleuromutilin
+COLISTIN	COL	Polymyxins	Colistin
+NALIDIXIC ACID	NAL	Quinolones	Nalidixic acid
+NITROXOLINE	NTR	Quinolones	Nitroxoline
+STREPTOGRAMINS	QDA	"Streptogramin A, Streptogramin B"	Quinupristin-Dalfopristin
+TETRACYCLINES	MNO	Tetracycline	Minocycline
+FLUOROQUINOLONES	NEM	Tetracycline	unknown
+TETRACENOMYCIN	TLT	Other antibacterials	Tetracenomycin
+TIGECYCLINE	TGC	Tetracyclines	Tigecycline
+TRIMETHOPRIM-SULFAMETHOXAZOLE	SXT	Trimethoprims	Trimethoprim/sulfamethoxazole
+ZOLIFLODACIN	ZFD	NA	Zoliflodacin

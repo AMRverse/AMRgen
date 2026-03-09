@@ -231,3 +231,17 @@
 #' - ...: Additional data columns from AMRfinderplus
 #' @source <https://github.com/AllTheBacteria/AllTheBacteria>
 "geno_eco_2075"
+
+#' Resfinder Drug Classes and Agents Mapping Database
+#'
+#' A dataset containing the mapping between Resfinder drug agents and their standardised drug classes.
+#'
+#' @format A data frame (or tibble) containing mapping columns:
+#' \describe{
+#'   \item{AMRFP_subclass}{AMRFinderPlus subclass equivalent}
+#'   \item{ab}{AMR package antibiotic code}
+#'   \item{drug_class}{The standardised class of the antimicrobial agent}
+#'   \item{drug_agent}{The name of the antimicrobial agent}
+#' }
+#' @source internal
+"resfinder"

@@ -137,6 +137,7 @@ reference:
       - ngono_cro_pheno_raw
       - eurogasp_pheno_raw
       - ngono_tet_pheno_raw
+      - salm_raw
 
 
 # Footer configuration

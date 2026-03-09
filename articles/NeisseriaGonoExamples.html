@@ -86,6 +86,7 @@ and predict resistance based on this concordance.</p></li>
 <p>Load the necessary libraries before running this vignette:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://AMRverse.github.io/AMRgen/">AMRgen</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://amr-for-r.org" class="external-link">AMR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
@@ -249,7 +250,7 @@ properly accounted for in downstream analyses:</p>
 reference data</strong><a class="anchor" aria-label="anchor" href="#exploring-phenotype-distributions-and-comparing-with-eucast-reference-data"></a>
 </h3>
 <p>Round MIC values to the nearest doubling dilution using
-<code>as.mic()</code> with <code>round_to_next_log2 = TRUE</code>:</p>
+<code><a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">as.mic()</a></code> with <code>round_to_next_log2 = TRUE</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eurogasp_double</span> <span class="op">&lt;-</span> <span class="va">eurogasp_ast</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="st">"mic"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">AMR</span><span class="fu">::</span><span class="fu"><a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">as.mic</a></span><span class="op">(</span><span class="va">.x</span>, round_to_next_log2 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>

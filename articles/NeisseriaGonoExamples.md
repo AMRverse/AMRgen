@@ -28,6 +28,7 @@ Load the necessary libraries before running this vignette:
 
 ``` r
 library(AMRgen)
+library(AMR)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -190,7 +191,8 @@ eurogasp_geno <- eurogasp_geno %>% bind_rows(tibble(Name = negative_eurogasp))
 
 ### **Exploring phenotype distributions and comparing with EUCAST reference data**
 
-Round MIC values to the nearest doubling dilution using `as.mic()` with
+Round MIC values to the nearest doubling dilution using
+[`as.mic()`](https://amr-for-r.org/reference/as.mic.html) with
 `round_to_next_log2 = TRUE`:
 
 ``` r

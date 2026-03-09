@@ -43,6 +43,7 @@ Load the necessary libraries before running this vignette:
 
 ```{r setup, warning=FALSE, message=FALSE}
 library(AMRgen)
+library(AMR)
 library(dplyr)
 library(tidyr)
 library(ggplot2)

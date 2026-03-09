@@ -399,6 +399,8 @@ Example datasets for demonstration and reproducible analysis.
   : N. gonorrhoeae Euro-GASP Phenotype Data Use Case 1
 - [`ngono_tet_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_tet_pheno_raw.md)
   : N. gonorrhoeae Tetracycline Resistance Phenotype Data Use Case 3
+- [`salm_raw`](https://AMRverse.github.io/AMRgen/reference/salm_raw.md)
+  : Example Salmonella Genotype-Phenotype Data
 
 # Articles
 
@@ -408,5 +410,7 @@ Example datasets for demonstration and reproducible analysis.
   Data](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.md):
 - [Download NCBI and EBI
   Data](https://AMRverse.github.io/AMRgen/articles/DownloadGenoPhenoData.md):
-- [Analysing Neisseria gonorrhoeae genotype-phenotype data with
-  AMRgen](https://AMRverse.github.io/AMRgen/articles/NeisseriaGonoExamples.md):
+- [Analysing Neisseria gonorrhoeae genotype-phenotype
+  data](https://AMRverse.github.io/AMRgen/articles/NeisseriaGonoExamples.md):
+- [Analysing a small user-generated Salmonella geno-pheno
+  dataset](https://AMRverse.github.io/AMRgen/articles/SalmonellaExamples.md):

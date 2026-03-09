@@ -1,4 +1,4 @@
-# Analysing Neisseria gonorrhoeae genotype-phenotype data with AMRgen
+# Analysing Neisseria gonorrhoeae genotype-phenotype data
 
 ## Introduction
 

@@ -282,7 +282,9 @@ aac(6’)-Ib-cr5.
 
 ``` r
 # Count the different types of variants found
-ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% count(`variation type`)
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones") %>%
+  count(`variation type`)
 #> # A tibble: 3 × 2
 #>   `variation type`                   n
 #>   <chr>                          <int>
@@ -291,7 +293,9 @@ ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% count(`varia
 #> 3 Protein variant detected          31
 
 # Sort by marker frequency to see the most common markers
-ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% arrange(-n)
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones") %>%
+  arrange(-n)
 #> # A tibble: 45 × 6
 #>    marker         drug_agent antibiotic drug_class `variation type`            n
 #>    <chr>          <ab>       <chr>      <chr>      <chr>                   <int>
@@ -308,7 +312,9 @@ ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones") %>% arrange(-n)
 #> # ℹ 35 more rows
 
 # Filter to acquired genes and sort by frequency, to see the most common acquired genes
-ecoli_geno_summary$markers %>% filter(drug_class=="Quinolones" & `variation type`=="Gene presence detected") %>% arrange(-n)
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones" & `variation type` == "Gene presence detected") %>%
+  arrange(-n)
 #> # A tibble: 12 × 6
 #>    marker         drug_agent antibiotic drug_class `variation type`           n
 #>    <chr>          <ab>       <chr>      <chr>      <chr>                  <int>

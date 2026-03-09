@@ -1,7 +1,7 @@
 ---
 title: "Analysing Neisseria gonorrhoeae genotype-phenotype data"
-author: "LSB"
-date: "2026-03-06"
+author: "Leonor Sánchez-Busó"
+date: "2026-03-09"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Analysing Neisseria gonorrhoeae genotype-phenotype data}
@@ -23,7 +23,7 @@ if (!requireNamespace("AMRgen", quietly = TRUE)) {
 }
 ```
 
-# Introduction
+# **Introduction**
 
 This vignette demonstrates three usage examples of `AMRgen` functions to investigate associations between genotype and phenotype data in *Neisseria gonorrhoeae*. Specifically, we illustrate how to:
 
@@ -48,9 +48,9 @@ library(tidyr)
 library(ggplot2)
 ```
 
-## **Use case 1:** Investigation of genotype-phenotype AMR data from Euro-GASP genomic surveys
+# **Use case 1:** Investigation of genotype-phenotype AMR data from Euro-GASP genomic surveys
 
-### Data preparation
+## Data preparation
 
 For this example, we have collated whole-genome sequencing data from three European Gonococcal Antimicrobial Surveillance Programme (Euro-GASP) genomic surveys. Raw FASTQ data was downloaded from the European Nucleotide Archive (ENA).
 
@@ -78,7 +78,7 @@ The dataset (total n = 5,361) includes MIC data for:
 * Cefixime (n=5,361 isolates)
 * Ceftriaxone (n=5,361 isolates)
 
-### Identification of genetic AMR determinants using `AMRfinderplus`
+## **Identification of genetic AMR determinants using `AMRfinderplus`**
 
 [`AMRfinderplus v4.0.23`](https://doi.org/10.1038/s41598-021-91456-0) (database version 2025-03-25.1) was run on all assemblies using the following command:
 
@@ -97,7 +97,7 @@ awk 'FNR>1 || NR==1' *_amrfp.tsv > eurogasps_amrfp.tsv
 
 This concatenated table is pre-loaded as `eurogasp_geno_raw`, the **genotype input** for `AMRgen`.
 
-### Importing genotype and phenotype data into `AMRgen`
+## **Importing genotype and phenotype data into `AMRgen`**
 
 Use `import_amrfp()` to parse the AMRfinderplus output:
 
@@ -134,7 +134,18 @@ eurogasp_ast <- format_ast(
 )
 ```
 
-### Exploring phenotype distributions and comparing with EUCAST reference data
+Importantly, out of the 5,361 strains under study and with phenotype data, genetic determinants of AMR were found for 5,186 by AMRfinderplus. Negative samples should be added to the genotype table so they are properly accounted for in downstream analyses:
+
+```{r eurogasp_neg}
+negative_eurogasp <- eurogasp_pheno_raw %>%
+  anti_join(eurogasp_geno, by = c("id" = "Name")) %>%
+  pull(id)
+
+eurogasp_geno <- eurogasp_geno %>% bind_rows(tibble(Name = negative_eurogasp))
+```
+
+
+## **Exploring phenotype distributions and comparing with EUCAST reference data**
 
 Round MIC values to the nearest doubling dilution using `as.mic()` with `round_to_next_log2 = TRUE`:
 
@@ -145,22 +156,25 @@ eurogasp_double <- eurogasp_ast %>%
 
 For each antibiotic, we visualise the MIC distribution with `assay_by_var()` and compare it to the EUCAST reference distribution using `compare_mic_with_eucast()`.
 
-#### Azithromycin
+### **Azithromycin**
 
-```{r pheno_azm, warning=FALSE, fig.show="hold"}
+```{r pheno_azm, warning=FALSE}
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
   antibiotic = "Azithromycin",
   measure = "mic",
-  colour_by = "ecoff"
+  colour_by = "ecoff",
+  species = "Neisseria gonorrhoeae"
 )
 
 # Extract MIC data from the pheno table
 azm_data <- eurogasp_double %>%
   filter(drug_agent == "AZM") %>%
   pull(mic)
+```
 
+```{r azm_eucast, warning=FALSE, eval=F}
 # Compare with a reference distribution from EUCAST
 azm_comparison <- compare_mic_with_eucast(
   mics = azm_data,
@@ -168,6 +182,11 @@ azm_comparison <- compare_mic_with_eucast(
   mo = "Neisseria gonorrhoeae"
 )
 
+# automated plot comparing to reference distribution
+autoplot(azm_comparison)
+```
+
+```{r azm_plot, warning=FALSE, eval=F}
 # Convert the output table into long format
 azm_comp_melt <- azm_comparison %>%
   pivot_longer(
@@ -176,7 +195,7 @@ azm_comp_melt <- azm_comparison %>%
     values_to = "nb"
   )
 
-# Plot the distributions with ggplot2 ## --> Is there a way of doing this with assay_by_var()?
+# Plot the distributions with ggplot2
 ggplot(azm_comp_melt, aes(x = value, y = nb, fill = variable)) +
   geom_bar(stat = "identity", position = "dodge") +
   xlab("Minimum inhibitory concentration (MIC)") +
@@ -185,22 +204,35 @@ ggplot(azm_comp_melt, aes(x = value, y = nb, fill = variable)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-#### Ciprofloxacin
+### **Ciprofloxacin**
 
-```{r pheno_cip, warning=FALSE, fig.show="hold"}
+```{r pheno_cip, warning=FALSE}
 # Plot the distribution of MIC data in the study
+# The breakpoint for R is 0.06 but cannot be represented directly as it is not a doubling dilution (values in x axis).
 assay_by_var(
   pheno_table = eurogasp_double,
   antibiotic = "Ciprofloxacin",
   measure = "mic",
-  colour_by = "pheno_eucast"
+  colour_by = "pheno_eucast",
+  species = "Neisseria gonorrhoeae"
+)
+
+# If the AST data without doublig dilutions is represented, then both breakpoints can be plotted.
+assay_by_var(
+  pheno_table = eurogasp_ast,
+  antibiotic = "Ciprofloxacin",
+  measure = "mic",
+  colour_by = "pheno_eucast",
+  species = "Neisseria gonorrhoeae"
 )
 
 # Extract MIC data from the pheno table
 cip_data <- eurogasp_double %>%
   filter(drug_agent == "CIP") %>%
   pull(mic)
+```
 
+```{r cip_eucast, warning=FALSE, eval=F}
 # Compare with a reference distribution from EUCAST
 cip_comparison <- compare_mic_with_eucast(
   mics = cip_data,
@@ -208,6 +240,11 @@ cip_comparison <- compare_mic_with_eucast(
   mo = "N. gonorrhoeae"
 )
 
+# plot the data with the reference distribution
+autoplot(cip_comparison)
+```
+
+```{r cip_plot, warning=FALSE, eval=F}
 # Convert the output table into long format
 cip_comp_melt <- cip_comparison %>%
   pivot_longer(
@@ -225,22 +262,25 @@ ggplot(cip_comp_melt, aes(x = value, y = nb, fill = variable)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-#### Ceftriaxone
+### **Ceftriaxone**
 
-```{r pheno_cro, warning=FALSE, fig.show="hold"}
+```{r pheno_cro, warning=FALSE}
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
   antibiotic = "Ceftriaxone",
   measure = "mic",
-  colour_by = "pheno_eucast"
+  colour_by = "pheno_eucast",
+  species = "Neisseria gonorrhoeae"
 )
 
 # Extract MIC data from the pheno table
 cro_data <- eurogasp_double %>%
   filter(drug_agent == "CRO") %>%
   pull(mic)
+```
 
+```{r cro_eucast, warning=FALSE, eval=F}
 # Compare with a reference distribution from EUCAST
 cro_comparison <- compare_mic_with_eucast(
   mics = cro_data,
@@ -248,6 +288,10 @@ cro_comparison <- compare_mic_with_eucast(
   mo = "N. gonorrhoeae"
 )
 
+autoplot(cro_comparison)
+```
+
+```{r cro_plot, warning=FALSE, eval=F}
 # Convert the output table into long format
 cro_comp_melt <- cro_comparison %>%
   pivot_longer(
@@ -264,22 +308,25 @@ ggplot(cro_comp_melt, aes(x = value, y = nb, fill = variable)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-#### Cefixime
+### **Cefixime**
 
-```{r pheno_cfm, warning=FALSE, fig.show="hold"}
+```{r pheno_cfm, warning=FALSE}
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
   antibiotic = "Cefixime",
   measure = "mic",
-  colour_by = "pheno_eucast"
+  colour_by = "pheno_eucast",
+  species = "Neisseria gonorrhoeae"
 )
 
 # Extract MIC data from the pheno table
 cfm_data <- eurogasp_double %>%
   filter(drug_agent == "CFM") %>%
   pull(mic)
+```
 
+```{r cfm_eucast, warning=FALSE, eval=F}
 # Compare with a reference distribution from EUCAST
 cfm_comparison <- compare_mic_with_eucast(
   mics = cfm_data,
@@ -287,6 +334,10 @@ cfm_comparison <- compare_mic_with_eucast(
   mo = "N. gonorrhoeae"
 )
 
+autoplot(cfm_comparison)
+```
+
+```{r cfm_plot, warning=FALSE, eval=F}
 # Convert the output table into long format and plot using ggplot2
 cfm_comp_melt <- cfm_comparison %>%
   pivot_longer(
@@ -303,7 +354,7 @@ ggplot(cfm_comp_melt, aes(x = value, y = nb, fill = variable)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-### Analysing **azithromycin** genotype-phenotype data
+## **Analysing azithromycin genotype-phenotype data**
 
 Azithromycin was historically used in dual therapy for gonorrhoea but has been replaced in many countries by ceftriaxone monotherapy due to the expansion of resistant lineages. No EUCAST clinical breakpoint exists for azithromycin in *N. gonorrhoeae*; we therefore use the epidemiological cut-off (ECOFF > 1 mg/L).
 
@@ -331,7 +382,7 @@ azi_upset <- amr_upset(
   assay = "mic",
   min_set_size = 2,
   order = "value",
-  ecoff_bp = 1
+  species = "Neisseria gonorrhoeae"
 )
 ```
 
@@ -341,18 +392,18 @@ Evaluate the positive predictive value (PPV) of solo markers (i.e. markers occur
 azm_solo_ppv <- solo_ppv_analysis(
   binary_matrix = azm_bin,
   antibiotic = "Azithromycin",
-  reverse_order = TRUE
-) ## --> does not apply reverse order?
+  reverse_order = FALSE
+)
 ```
 
-Only known mutations in the *23S rDNA* gene are associated with MIC increases sufficient to reach the NWT category (ECOFF > 1 mg/L). Mutations in the *mtrR* gene or its promoter, or the *rplD* G70D mutation alone, do not. PPV > 0.50 indicates that more than 50% of isolates carrying a given marker fall in the NWT category..
+Only known mutations in the *23S* rDNA gene are associated with MIC increases sufficient to reach the NWT category (ECOFF > 1 mg/L). Mutations in the *mtrR* gene or its promoter, or the *rplD* G70D mutation alone, do not. PPV > 0.50 indicates that more than 50% of isolates carrying a given marker fall in the NWT category..
 
 Now evaluate PPVs for marker combinations with `ppv()`:
 
 ```{r azm_ppv, fig.height=8, warning=FALSE}
 azm_ppv <- ppv(
   binary_matrix = azm_bin,
-  order = "ppv", ## --> this is the default order but it does not work?
+  order = "value",
   min_set_size = 2,
   antibiotic = "Azithromycin",
   upset_grid = TRUE,
@@ -361,11 +412,11 @@ azm_ppv <- ppv(
 )
 ```
 
-Combinations including *23S rDNA* mutations are the only ones with PPV > 0.5. No combination of *mtrR* with or without *rplD* mutations alone raises MIC above the NWT threshold.
+Combinations including *23S* rDNA mutations are the only ones with PPV > 0.5. No combination of *mtrR* with or without *rplD* mutations alone raises MIC above the NWT threshold.
 
 Run a Firth's bias-reduced penalised-likelihood logistic regression with `amr_logistic()`, including markers with a minimum allele frequency (MAF) of ≥ 10 isolates:
 
-```{r azm_logist, fig.height=8, fig.width=8, warning=FALSE}
+```{r azm_logist, fig.height=6, fig.width=6, warning=FALSE}
 azm_logist <- amr_logistic(
   binary_matrix = azm_bin,
   antibiotic = "Azithromycin",
@@ -375,7 +426,7 @@ azm_logist <- amr_logistic(
 )
 ```
 
-The regression confirms that *mtrR* G45D, A39T, and A-53del do not contribute to increased azithromycin MICs, while *23S rDNA* mutations do.
+The regression confirms that *mtrR* G45D, A39T, and A-53del do not contribute to increased azithromycin MICs, while *23S* rDNA mutations do.
 
 Calculate concordance and resistance prediction metrics using results from the logistic regression. The results of the `solo_ppv_analisis()` or `ppv()` functions can be provided to the `ppv_results` parameter.
 
@@ -404,13 +455,15 @@ assay_by_var(
   antibiotic = "Azithromycin",
   measure = "mic",
   colour_by = "NWT_pred",
-  species = "Neisseria gonorrhoeae"
+  species = "Neisseria gonorrhoeae",
+  bar_cols = c("#3CAEA3", "#ED553B"),
+  colour_legend_label = "NWT prediction"
 )
 ```
 
 Many isolates with MICs above the ECOFF (1–4 mg/L) are predicted as WT, consistent with uncharacterised efflux pump variants.
 
-### Analysing **ciprofloxacin** genotype-phenotype data
+## **Analysing ciprofloxacin genotype-phenotype data**
 
 Ciprofloxacin resistance is widespread in *N. gonorrhoeae* and is strongly associated with known genetic determinants — primarily mutations in the *gyrA* and *parC* genes. Build the binary matrix and generate upset plots:
 
@@ -445,8 +498,8 @@ Only four markers appear in isolation; evaluate their solo PPVs:
 cip_solo_ppv <- solo_ppv_analysis(
   binary_matrix = cip_bin,
   antibiotic = "Ciprofloxacin",
-  reverse_order = TRUE
-) ## --> does not apply reverse order?
+  reverse_order = FALSE
+)
 ```
 
 Evaluate PPVs for marker combinations:
@@ -454,7 +507,7 @@ Evaluate PPVs for marker combinations:
 ```{r cip_ppv, fig.height=8, warning=FALSE}
 cip_ppv <- ppv(
   binary_matrix = cip_bin,
-  order = "ppv",
+  order = "value",
   min_set_size = 2,
   antibiotic = "Ciprofloxacin",
   upset_grid = TRUE,
@@ -511,7 +564,9 @@ assay_by_var(
   antibiotic = "Ciprofloxacin",
   measure = "mic",
   colour_by = "R_pred",
-  species = "Neisseria gonorrhoeae"
+  species = "Neisseria gonorrhoeae",
+  bar_cols = c("#3CAEA3", "#ED553B"),
+  colour_legend_label = "R prediction"
 )
 
 assay_by_var(
@@ -519,7 +574,9 @@ assay_by_var(
   antibiotic = "Ciprofloxacin",
   measure = "mic",
   colour_by = "NWT_pred",
-  species = "Neisseria gonorrhoeae"
+  species = "Neisseria gonorrhoeae",
+  bar_cols = c("#3CAEA3", "#ED553B"),
+  colour_legend_label = "NWT prediction"
 )
 ```
 
@@ -597,7 +654,7 @@ cro_solo_ppv <- solo_ppv_analysis(
 )
 ```
 
-Instead, combination PPVs are the more informative metric:
+Instead, combination PPVs are a more informative metric:
 
 ```{r esc_ppv, fig.height=8, warning=FALSE}
 cfm_ppv <- ppv(
@@ -621,7 +678,7 @@ cro_ppv <- ppv(
 
 Due to the very limited number of isolates classified as resistant to cefixime or ceftriaxone in this dataset, logistic regression analyses are not feasible here.
 
-## Use case 2: Study of mosaic PBP2 mutations associated with decreased susceptibility and resistance to ceftriaxone
+# **Use case 2:** Study of mosaic PBP2 mutations associated with decreased susceptibility and resistance to ceftriaxone
 
 In this use case, we explore combinations of PBP2 mutations and their associated MIC ranges for mosaic *penA* variants, using a broader dataset that enriches for ceftriaxone-resistant and decreased-susceptibility isolates. The dataset combines AMRFinderPlus results from the following sources (total n = 2,101 genomes):
 
@@ -659,6 +716,13 @@ ngono_cro_ast <- format_ast(
   mic_col = "mic",
   interpret_eucast = TRUE
 )
+
+# Include empty rows for samples with phenotype but no genotype data
+negative_cro <- ngono_cro_pheno_raw %>%
+  anti_join(ngono_cro_geno, by = c("id" = "Name")) %>%
+  pull(id)
+
+ngono_cro_geno <- ngono_cro_geno %>% bind_rows(tibble(Name = negative_cro))
 ```
 
 Build the binary matrix and generate upset plots:
@@ -707,15 +771,16 @@ cro_logist <- amr_logistic(
   antibiotic = "Ceftriaxone",
   sir_col = "pheno_eucast",
   ecoff_col = "ecoff",
-  fit_glm = TRUE, ## --> does not work with fit_glm = FALSE
+  fit_glm = TRUE,
   maf = 10,
   single_plot = TRUE
 )
 ```
 
-Results confirm that individual *penA* mutations do not independently increase cephalosporin MICs; rather, specific combinations of mutations are required.
+Results confirm that individual *penA* mutations do not independently increase cephalosporin MICs; rather, specific combinations of mutations are required. *penA* I312M has a very wide coefficient interval, likely reflecting their contribution to *penA* mosaics associated with resistance.
 
-## Use case 3: Investigation of tetracycline resistance and implications for STI prevention strategies
+
+# **Use case 3:** Investigation of tetracycline resistance and implications for STI prevention strategies
 
 Doxy-PEP (doxycycline post-exposure prophylaxis) involves taking a single dose of doxycycline within 24–72 hours after a sexual risk event to prevent STIs. While evidence supports its short-term efficacy, a modelling study by [Reichert *et al.* (2026)](https://www.thelancet.com/journals/lanmic/article/PIIS2666-5247(24)00168-X/fulltext) suggests that broad doxy-PEP implementation may select resistant lineages, potentially limiting its long-term effectiveness against gonorrhoea.
 
@@ -742,13 +807,19 @@ ngono_tet_ast <- format_ast(
 )
 ```
 
-Import genotype data:
+Import genotype data and add empty rows for samples with phenotype information but for which no genetic AMR determinants are identified by AMRfinderplus. For this example, there are 409 samples with MIC in the phenotype file but AMR determinants were only found for 402.
 
 ```{r import_geno_tetR, warning=FALSE}
 ngono_tet_geno <- import_amrfp(
-  input_table = ngono_tet_geno_raw, ## --> replace ids by accessions
+  input_table = ngono_tet_geno_raw,
   sample_col = "Name"
 )
+
+negative_samples <- ngono_tet_ast %>%
+  anti_join(ngono_tet_geno, by = c("id" = "Name")) %>%
+  pull(id)
+
+ngono_tet_geno <- ngono_tet_geno %>% bind_rows(tibble(Name = negative_samples))
 ```
 
 Build the binary matrix and generate upset plots:
@@ -785,7 +856,6 @@ Calculate prevalence of the two key resistance determinants in the studied popul
 pop_size <- 409
 
 ngono_tet_geno %>%
-  # geno_tetR %>%
   count(marker) %>%
   filter(marker %in% c("rpsJ_V57M", "tet(M)")) %>%
   mutate(percent = round(100 * n / pop_size, 1))
@@ -793,7 +863,7 @@ ngono_tet_geno %>%
 
 Of the 409 isolates with tetracycline phenotypic data:
 
-* **373 (91.9%)** carry the *rpsJ* V57M chromosomal mutation.
+* **373 (91.2%)** carry the *rpsJ* V57M chromosomal mutation.
 
 * **34 (8.3%)** carry the *tet(M)* gene on the conjugative plasmid.
 
@@ -865,8 +935,9 @@ assay_by_var(
   measure = "mic",
   colour_by = "R_pred",
   species = "Neisseria gonorrhoeae",
+  bar_cols = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "R prediction"
 )
 ```
 
-The high prevalence of *rpsJ* V57M (> 90% of the population) combined with a significant prevalence of the plasmid-borne *tet(M)* gene — which can be readily acquired by other circulating lineages through conjugation — means that doxy-PEP is likely to select for these pre-existing resistant lineages. Together, these findings support the conclusion that doxy-PEP is unlikely to provide a durable long-term solution for reducing the burden of gonorrhoea infections.
+The high prevalence of *rpsJ* V57M (>90% of the population) combined with a significant prevalence of the plasmid-borne *tet(M)* gene — which can be readily acquired by other circulating lineages through conjugation — means that doxy-PEP is likely to select for these pre-existing resistant lineages. Together, these findings support the conclusion that doxy-PEP is unlikely to provide a durable long-term solution for reducing the burden of gonorrhoea infections.

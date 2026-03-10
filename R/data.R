@@ -431,7 +431,7 @@
 
 #' Example Salmonella Genotype-Phenotype Data
 #'
-#' Raw genotype-phenotype data for *Salmonella enterica* genome, one row per sample.
+#' Raw genotype-phenotype data for *Salmonella enterica* genomes, one row per sample.
 #'
 #' @format `salm_raw` A data frame with 115 rows and 7 columns:
 #' - `Sample`: Sample identifier
@@ -439,3 +439,12 @@
 #' - `CpL_Genotype`: List of genotypic parkers (separated by `;`)
 #' - `Ciprofloxacin`, `Levofloxacin`, `Moxifloxacin`: MIC value for each drug
 "salm_raw"
+
+#' Example Kleborate Genotype Data
+#'
+#' Raw Kleborate results file for *Klebsiella pneumoniae* genomes, one row per sample.
+#'
+#' @format `kleborate_raw` A data frame with 1,689 rows and 122 columns:
+#' - `strain`: Sample identifier
+#' - ...: Kleborate results columns
+"kleborate_raw"

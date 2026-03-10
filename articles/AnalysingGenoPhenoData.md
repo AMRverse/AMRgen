@@ -38,6 +38,8 @@ library(dplyr)
 
 ### 1. Genotype table
 
+#### 1a. Importing genotype data to AMRgen’s standard table format
+
 The
 [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
 function lets you load genotype data from AMRFinderPlus output files,
@@ -142,6 +144,8 @@ concatenated output file). An easy solution is to run a check to make
 sure that all genome names in your input dataset are represented in the
 genotype table, and if any are missing add empty rows for these using
 e.g. `tibble(Name=missing_samples) %>% bind_rows(genotype_table)`.
+
+#### 1b. Summarising a genotype table
 
 You can summarise the content of a genotype table using the inbuilt
 [`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
@@ -334,6 +338,8 @@ ecoli_geno_summary$markers %>%
 
 ### 2. Phenotype table
 
+#### 2a. Importing phenotype datato AMRgen’s standard table format
+
 The
 [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
 function imports AST data from NCBI or other standard formats
@@ -446,6 +452,86 @@ fields:
 - `source`: An identifier for the dataset from which each data point was
   sourced (e.g. study or hospital name, pubmed ID, bioproject
   accession).
+
+#### 2b. Summarising a phenotype table
+
+You can summarise the content of a phenotype table using the inbuilt
+[`summarise_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_pheno.md)
+function.
+
+``` r
+ecoli_pheno_summary <- summarise_pheno(ecoli_ast, pheno_cols = c("pheno_clsi", "pheno_provided", "ecoff"))
+
+# Number of samples, drugs, species, and methods included in phenotype table
+ecoli_pheno_summary$uniques
+#> # A tibble: 6 × 2
+#>   column     n_unique
+#>   <chr>         <int>
+#> 1 id             4164
+#> 2 drug_agent        1
+#> 3 spp_pheno         1
+#> 4 method            2
+#> 5 platform          8
+#> 6 guideline         1
+```
+
+The
+[`summarise_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_pheno.md)
+function returns a list of drugs and species represented in the table,
+and the associated number of samples with MIC measures, disk measures,
+both, or neither (S/I/R calls only).
+
+``` r
+# Number of samples with measurements from MIC vs disk vs both or neither, per bug-drug combination
+ecoli_pheno_summary$drugs
+#> # A tibble: 1 × 4
+#>   drug_agent antibiotic_name spp_pheno          mic
+#>   <ab>       <chr>           <chr>            <int>
+#> 1 CIP        Ciprofloxacin   Escherichia coli  4168
+
+# Number of samples with measurements from different methods, platforms, and guidelines
+ecoli_pheno_summary$details
+#> # A tibble: 8 × 7
+#>   drug_agent antibiotic_name spp_pheno        method    platform guideline   mic
+#>   <ab>       <chr>           <chr>            <chr>     <chr>    <chr>     <int>
+#> 1 CIP        Ciprofloxacin   Escherichia coli Etest     Etest    CLSI          1
+#> 2 CIP        Ciprofloxacin   Escherichia coli broth di… Microsc… CLSI          2
+#> 3 CIP        Ciprofloxacin   Escherichia coli broth di… Phoenix  CLSI        483
+#> 4 CIP        Ciprofloxacin   Escherichia coli broth di… Phoenix… CLSI          1
+#> 5 CIP        Ciprofloxacin   Escherichia coli broth di… Sensiti… CLSI         59
+#> 6 CIP        Ciprofloxacin   Escherichia coli broth di… Sensiti… CLSI       2708
+#> 7 CIP        Ciprofloxacin   Escherichia coli broth di… Vitek    CLSI        502
+#> 8 CIP        Ciprofloxacin   Escherichia coli broth di… NA       CLSI        412
+```
+
+The
+[`summarise_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_pheno.md)
+can also summarise, for each categorical phenotype column, the number in
+each category (S/I/R for interpretation against breakpoints, or NWT/WT
+for interpretation against ECOFF). This is helpful to explore whether
+your data set has sufficient numbers of R vs S, or NWT vs NWT, to be
+informative for downstream analyses of genotypes.
+
+``` r
+ecoli_pheno_summary$pheno_counts_list
+#> $pheno_clsi
+#> # A tibble: 1 × 6
+#>   drug_agent antibiotic_name spp_pheno            S     I     R
+#>   <ab>       <chr>           <chr>            <int> <int> <int>
+#> 1 CIP        Ciprofloxacin   Escherichia coli  3011    63  1094
+#> 
+#> $pheno_provided
+#> # A tibble: 1 × 7
+#>   drug_agent antibiotic_name spp_pheno            S     R    NI  `NA`
+#>   <ab>       <chr>           <chr>            <int> <int> <int> <int>
+#> 1 CIP        Ciprofloxacin   Escherichia coli  3113   970    37    48
+#> 
+#> $ecoff
+#> # A tibble: 1 × 6
+#>   drug_agent antibiotic_name spp_pheno           NI    WT   NWT
+#>   <ab>       <chr>           <chr>            <int> <int> <int>
+#> 1 CIP        Ciprofloxacin   Escherichia coli   170  2768  1230
+```
 
 ### 3. Plot phenotype data distribution
 

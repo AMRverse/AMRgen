@@ -43,6 +43,8 @@ library(dplyr)
 ```
 
 ## 1. Genotype table
+
+### 1a. Importing genotype data to AMRgen's standard table format
 The `import_amrfp()` function lets you load genotype data from AMRFinderPlus output files, and process it to generate an object with the key columns needed to work with the `AMRgen` package.
 
 ``` {r import_amrfp}
@@ -81,7 +83,7 @@ The essential columns for a genotype table to work with downstream `AMRgen` func
 
 NOTE: You should consider whether you have genomes with no AMR markers detected by genotyping, and how to make sure these are include in your analyses. E.g. AMRFinderPlus will output one row per genome/marker combination, but if you have a genome with no markers detected, there will be no row at all for that genome in the concatenated output file. If your species has core genes included in AMRFinderPlus this probably won't be a problem as you would expect some calls for every genome (e.g. AMRFinderPlus will report blaSHV, oqxA, oqxB, fosA in all Klebsiella pneumoniae genomes, so all input genomes will appear in the concatenated output file). An easy solution is to run a check to make sure that all genome names in your input dataset are represented in the genotype table, and if any are missing add empty rows for these using e.g. `tibble(Name=missing_samples) %>% bind_rows(genotype_table)`.
 
-
+### 1b. Summarising a genotype table
 You can summarise the content of a genotype table using the inbuilt `summarise_geno()` function.
 ``` {r summarise_geno}
 ecoli_geno_summary <- summarise_geno(ecoli_geno)
@@ -132,8 +134,9 @@ ecoli_geno_summary$markers %>%
 ```
 
 ## 2. Phenotype table
-The `import_ast()` function imports AST data from NCBI or other standard formats
 
+### 2a. Importing phenotype datato AMRgen's standard table format
+The `import_ast()` function imports AST data from NCBI or other standard formats
 ``` {r import_ncbi_ast}
 # Example E. coli AST data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
@@ -185,6 +188,28 @@ The import functions also standardise names for the following common fields:
 
 * `source`: An identifier for the dataset from which each data point was sourced (e.g. study or hospital name, pubmed ID, bioproject accession).
 
+### 2b. Summarising a phenotype table
+You can summarise the content of a phenotype table using the inbuilt `summarise_pheno()` function.
+``` {r summarise_peno}
+ecoli_pheno_summary <- summarise_pheno(ecoli_ast, pheno_cols = c("pheno_clsi", "pheno_provided", "ecoff"))
+
+# Number of samples, drugs, species, and methods included in phenotype table
+ecoli_pheno_summary$uniques
+```
+
+The `summarise_pheno()` function returns a list of drugs and species represented in the table, and the associated number of samples with MIC measures, disk measures, both, or neither (S/I/R calls only).
+``` {r summarise_pheno_drugs}
+# Number of samples with measurements from MIC vs disk vs both or neither, per bug-drug combination
+ecoli_pheno_summary$drugs
+
+# Number of samples with measurements from different methods, platforms, and guidelines
+ecoli_pheno_summary$details
+```
+
+The `summarise_pheno()` can also summarise, for each categorical phenotype column, the number in each category (S/I/R for interpretation against breakpoints, or NWT/WT for interpretation against ECOFF). This is helpful to explore whether your data set has sufficient numbers of R vs S, or NWT vs NWT, to be informative for downstream analyses of genotypes.
+``` {r summarise_pheno_categories}
+ecoli_pheno_summary$pheno_counts_list
+```
 
 ## 3. Plot phenotype data distribution
 

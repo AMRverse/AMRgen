@@ -17,6 +17,6 @@
 salm_raw
 }
 \description{
-Raw genotype-phenotype data for \emph{Salmonella enterica} genome, one row per sample.
+Raw genotype-phenotype data for \emph{Salmonella enterica} genomes, one row per sample.
 }
 \keyword{datasets}

@@ -138,6 +138,7 @@ reference:
       - eurogasp_pheno_raw
       - ngono_tet_pheno_raw
       - salm_raw
+      - kleborate_raw
 
 
 # Footer configuration

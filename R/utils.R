@@ -235,7 +235,10 @@ utils::globalVariables(c(
   "subclass_to_parse",
   "amrfp_drugs_table",
   "drug_class_internal",
-  "drug_class_from_agent"
+  "drug_class_from_agent",
+  "Kleborate_Class",
+  "kleborate_classes",
+  "strain"
 ))
 
 

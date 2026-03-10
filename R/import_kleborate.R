@@ -46,22 +46,26 @@ import_kleborate <- function(input_table,
 
   geno_table <- in_table %>%
     select(any_of(c(sample_col, kleborate_classes$Kleborate_Class))) %>%
-    pivot_longer(-strain, names_to = "class", values_to = "marker") %>%
+    pivot_longer(-strain, names_to = "Kleborate_Class", values_to = "marker") %>%
     filter(marker != "-") %>%
     tidyr::separate_longer_delim(marker, delim = ";") %>%
-    left_join(kleborate_classes, join_by("class" == "Kleborate_Class")) %>%
+    left_join(kleborate_classes) %>%
     mutate(marker = str_remove_all(marker, "\\^"))
 
   geno_table <- geno_table %>%
     mutate(`variation type` = case_when(
       grepl("Ter", marker) ~ "Inactivating mutation detected",
       grepl("del", marker) ~ "Inactivating mutation detected",
-      grepl("_mut", class) & grepl(":p.", marker) ~ "Protein variant detected",
-      grepl("_mut", class) & grepl(":c.", marker) ~ "Nucleotide variant detected",
+      grepl("_mut", Kleborate_Class) & grepl(":p.", marker) ~ "Protein variant detected",
+      grepl("_mut", Kleborate_Class) & grepl(":c.", marker) ~ "Nucleotide variant detected",
       TRUE ~ "Gene presence detected"
     )) %>%
     separate(marker, into = c("gene", "mutation"), sep = ":", remove = FALSE, fill = "right") %>%
-    relocate(class, .after = "variation type")
+    mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
+      paste0(gene, ":-"),
+      marker
+    )) %>%
+    relocate(Kleborate_Class, .after = "variation type")
 
   return(geno_table)
 }

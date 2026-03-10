@@ -1,6 +1,6 @@
 # Example Salmonella Genotype-Phenotype Data
 
-Raw genotype-phenotype data for *Salmonella enterica* genome, one row
+Raw genotype-phenotype data for *Salmonella enterica* genomes, one row
 per sample.
 
 ## Usage

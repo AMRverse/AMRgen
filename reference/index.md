@@ -23,6 +23,8 @@ from public repositories or internal formats.
   the EBI AMR portal FTP site
 - [`import_gtdb()`](https://AMRverse.github.io/AMRgen/reference/import_gtdb.md)
   : Import GTDB Output
+- [`import_kleborate()`](https://AMRverse.github.io/AMRgen/reference/import_kleborate.md)
+  : Import and Process Kleborate Results
 - [`import_microscan_ast()`](https://AMRverse.github.io/AMRgen/reference/import_microscan_ast.md)
   : Import and process antimicrobial phenotype data exported from
   MicroScan instruments
@@ -196,3 +198,5 @@ Example datasets for demonstration and reproducible analysis.
   : N. gonorrhoeae Tetracycline Resistance Phenotype Data Use Case 3
 - [`salm_raw`](https://AMRverse.github.io/AMRgen/reference/salm_raw.md)
   : Example Salmonella Genotype-Phenotype Data
+- [`kleborate_raw`](https://AMRverse.github.io/AMRgen/reference/kleborate_raw.md)
+  : Example Kleborate Genotype Data

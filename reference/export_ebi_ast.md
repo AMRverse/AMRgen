@@ -8,7 +8,7 @@ for submission to EBI, and optionally generate JSON submission files
 ## Usage
 
 ``` r
-export_ebi_antibiogram(
+export_ebi_ast(
   data,
   pheno_col = "pheno_provided",
   breakpoint_version,
@@ -47,7 +47,7 @@ export_ebi_antibiogram(
   will not be generated and the function will return the formated table
   only, which can be further updated and converted to submission-ready
   JSON later using
-  [format_ebi_json](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
+  [`format_ebi_json()`](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
 
 - domain:
 
@@ -56,7 +56,7 @@ export_ebi_antibiogram(
   not be generated and the function will return the formated table only,
   which can be further updated and converted to submission-ready JSON
   later using
-  [format_ebi_json](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
+  [`format_ebi_json()`](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
 
 - output_dir:
 
@@ -64,7 +64,7 @@ export_ebi_antibiogram(
   written. If not provided, JSON output files will not be generated and
   the function will return the formated table only, which can be further
   updated and converted to submission-ready JSON later using
-  [format_ebi_json](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
+  [`format_ebi_json()`](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
 
 ## Value
 
@@ -84,10 +84,10 @@ Species names are derived from the `spp_pheno` column via
 
 ``` r
 # Return formatted data frame without writing files
-ebi_df <- export_ebi_antibiogram(staph_ast_ebi)
+ebi_df <- export_ebi_ast(staph_ast_ebi)
 if (FALSE) { # \dontrun{
 # Write out data for each BioSample to an individual JSON file for submission
-ebi_df <- export_ebi_antibiogram(staph_ast_ebi,
+ebi_df <- export_ebi_ast(staph_ast_ebi,
   breakpoint_version = "EUCAST 2015",
   submission_account = "Webin-###",
   domain = "self.ExampleDomain",

@@ -45,9 +45,9 @@ from public repositories or internal formats.
   instruments
 - [`import_whonet_ast()`](https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.md)
   : Import and process antimicrobial phenotype data from WHONET files
-- [`export_ebi_antibiogram()`](https://AMRverse.github.io/AMRgen/reference/export_ebi_antibiogram.md)
+- [`export_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/export_ebi_ast.md)
   : Export EBI Antibiogram
-- [`export_ncbi_biosample()`](https://AMRverse.github.io/AMRgen/reference/export_ncbi_biosample.md)
+- [`export_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/export_ncbi_ast.md)
   : Export NCBI BioSample Antibiogram
 - [`convert_aa_code()`](https://AMRverse.github.io/AMRgen/reference/convert_aa_code.md)
   : Convert single-letter amino acid code(s) to three-letter code(s)

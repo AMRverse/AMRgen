@@ -7,7 +7,7 @@ submission file.
 ## Usage
 
 ``` r
-export_ncbi_biosample(
+export_ncbi_ast(
   data,
   file = NULL,
   overwrite = FALSE,
@@ -65,10 +65,10 @@ replaced by `"-"` (NCBI convention, e.g.
 ``` r
 if (FALSE) { # \dontrun{
 # Return formatted data frame without writing a file
-ncbi_df <- export_ncbi_biosample(ecoli_ast)
+ncbi_df <- export_ncbi_ast(ecoli_ast)
 
 # Write out the ecoli_ast data to file in NCBI format
-export_ncbi_biosample(ecoli_ast, "Ec_NCBI.tsv")
+export_ncbi_ast(ecoli_ast, "Ec_NCBI.tsv")
 
 # Download data from EBI, then write it out to file in NCBI format
 ebi_kq <- download_ebi(
@@ -76,6 +76,6 @@ ebi_kq <- download_ebi(
   species = "Klebsiella quasipneumoniae",
   reformat = T
 )
-export_ncbi_biosample(ebi_kq, "Kq_NCBI.tsv")
+export_ncbi_ast(ebi_kq, "Kq_NCBI.tsv")
 } # }
 ```

@@ -189,7 +189,8 @@ assay_by_var(ast, measure="mic", colour_by = "pheno_clsi", facet_var = "platform
 ?import_ast
 
 # Export phenotype data in NCBI or EBI formats
-?export_ast
+?export_ncbi_ast
+?export_ebi_ast
 ```
 
 For more see the

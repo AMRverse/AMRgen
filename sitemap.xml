@@ -31,8 +31,8 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/eucast_supported_ab_distributions.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/eurogasp_geno_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/eurogasp_pheno_raw.html</loc></url>
-<url><loc>https://AMRverse.github.io/AMRgen/reference/export_ebi_antibiogram.html</loc></url>
-<url><loc>https://AMRverse.github.io/AMRgen/reference/export_ncbi_biosample.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/export_ebi_ast.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/export_ncbi_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/format_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/format_ebi_json.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/geno_eco_2075.html</loc></url>

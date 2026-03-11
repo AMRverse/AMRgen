@@ -19,7 +19,8 @@
 #' This function imports and processes genotyping results from Kleborate (https://github.com/klebgenomics/Kleborate), extracting antimicrobial resistance determinants and mapping them to standardised drug classes.
 #' @param input_table A character string specifying a dataframe or path to the Kleborate results table (TSV format).
 #' @param sample_col A character string specifying the column that identifies samples in the dataset (default `strain`).
-#' @importFrom dplyr filter left_join mutate select bind_rows rename_with
+#' @param kleborate_class_table A tibble containing a reference table mapping Kleborate drug class column names (`Kleborate_Class`) to standardised drug classes (`drug_class`). Defaults to `kleborate_classes`, which is provided internally.
+#' @importFrom dplyr filter left_join mutate select bind_rows rename_with join_by
 #' @importFrom tidyr separate_longer_delim separate
 #' @importFrom rlang sym
 #' @importFrom stringr str_remove_all
@@ -32,24 +33,22 @@
 #' This processing ensures compatibility with downstream AMRgen analysis workflows.
 #' @export
 #' @examples
-#' \dontrun{
 #' # example Kleborate data from EUSCAPE project
 #' kleborate_raw
 #'
 #' # import first few rows of this data frame and parse it as AMRfp data
 #' kleborate_geno <- import_kleborate(kleborate_raw %>% head(n = 10), "strain")
-#' geno
-#' }
 import_kleborate <- function(input_table,
-                             sample_col = "strain") {
+                             sample_col = "strain",
+                             kleborate_class_table = kleborate_classes) {
   in_table <- process_input(input_table)
 
   geno_table <- in_table %>%
-    select(any_of(c(sample_col, kleborate_classes$Kleborate_Class))) %>%
+    select(any_of(c(sample_col, kleborate_class_table$Kleborate_Class))) %>%
     pivot_longer(-strain, names_to = "Kleborate_Class", values_to = "marker") %>%
     filter(marker != "-") %>%
     tidyr::separate_longer_delim(marker, delim = ";") %>%
-    left_join(kleborate_classes) %>%
+    left_join(kleborate_class_table, by = join_by(Kleborate_Class)) %>%
     mutate(marker = str_remove_all(marker, "\\^"))
 
   geno_table <- geno_table %>%

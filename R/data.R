@@ -448,3 +448,12 @@
 #' - `strain`: Sample identifier
 #' - ...: Kleborate results columns
 "kleborate_raw"
+
+#' Table mapping Kleborate drug class columns
+#'
+#' Table mapping Kleborate drug class columns to class names recognised by AMR pkg
+#'
+#' @format `kleborate_classes` A data frame with 21 rows and 2 columns:
+#' - `Kleborate_Class`: Column name in Kleborate output files
+#' - `drug_class`: Valid drug class name recognised by AMR pkg
+"kleborate_classes"

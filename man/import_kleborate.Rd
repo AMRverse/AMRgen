@@ -4,12 +4,18 @@
 \alias{import_kleborate}
 \title{Import and Process Kleborate Results}
 \usage{
-import_kleborate(input_table, sample_col = "strain")
+import_kleborate(
+  input_table,
+  sample_col = "strain",
+  kleborate_class_table = kleborate_classes
+)
 }
 \arguments{
 \item{input_table}{A character string specifying a dataframe or path to the Kleborate results table (TSV format).}
 
 \item{sample_col}{A character string specifying the column that identifies samples in the dataset (default \code{strain}).}
+
+\item{kleborate_class_table}{A tibble containing a reference table mapping Kleborate drug class column names (\code{Kleborate_Class}) to standardised drug classes (\code{drug_class}). Defaults to \code{kleborate_classes}, which is provided internally.}
 }
 \value{
 A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible.
@@ -27,12 +33,9 @@ This processing ensures compatibility with downstream AMRgen analysis workflows.
 }
 }
 \examples{
-\dontrun{
 # example Kleborate data from EUSCAPE project
 kleborate_raw
 
 # import first few rows of this data frame and parse it as AMRfp data
 kleborate_geno <- import_kleborate(kleborate_raw \%>\% head(n = 10), "strain")
-geno
-}
 }

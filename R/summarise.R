@@ -14,7 +14,7 @@
 #' @return A named list with the following elements:
 #' \describe{
 #'   \item{uniques}{A tibble of the number of unique samples, markers, genes, drugs, classes and variation types detected in `geno_table`.}
-#'   \item{pertype}{A tibble of unique counts of samples, markers, genes, drugs, and classes per variation type.}
+#'   \item{per_type}{A tibble of unique counts of samples, markers, genes, drugs, and classes per variation type.}
 #'   \item{drugs}{A tibble listing the drugs and/or drug classes represented in the table, and the associated number of unique markers, unique samples, and total hits for each drug/class.}
 #'   \item{markers}{A tibble listing the markers represented in the table, and the associated drugs/classes and variation types (if present). Number indicates the count of hits detected per marker.}
 #' }
@@ -132,7 +132,7 @@ summarise_geno <- function(geno_table,
 
   return(list(
     uniques = uniques,
-    pertype = uniques_pervartype,
+    per_type = uniques_pervartype,
     drugs = drugs,
     markers = markers
   ))

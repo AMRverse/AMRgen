@@ -73,12 +73,12 @@ reference:
       - starts_with("convert")
       - starts_with("download")
       - starts_with("summarise")
+      - starts_with("format")
       - get_binary_matrix
       - get_combo_matrix
       - combo_stats
       - as.gene
       - gtdb.mo
-      - format_ast
       - starts_with("query_ncbi")
       - hamronize_data
 

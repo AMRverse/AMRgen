@@ -6,10 +6,11 @@
 \usage{
 export_ebi_antibiogram(
   data,
-  file = NULL,
-  overwrite = FALSE,
   pheno_col = "pheno_provided",
-  sep = "\\t"
+  breakpoint_version,
+  submission_account,
+  domain = "self.ExampleDomain",
+  output_dir = NULL
 )
 }
 \arguments{
@@ -17,29 +18,43 @@ export_ebi_antibiogram(
 \code{\link[=import_ast]{import_ast()}} or \code{\link[=format_ast]{format_ast()}}).
 Expected columns: \code{id}, \code{drug_agent}, \code{spp_pheno}, and at least
 one phenotype column (see \code{pheno_col}). Optional columns: \code{mic},
-\code{disk}, \code{method}, \code{guideline}, \code{platform}.}
-
-\item{file}{File path for the output file. If \code{NULL} (default), no
-file is written and the formatted data frame is returned visibly.}
-
-\item{overwrite}{Logical; overwrite an existing file? Default \code{FALSE}.}
+\code{disk}, \code{method}, \code{platform}.}
 
 \item{pheno_col}{Character string naming the column that contains
 SIR interpretations (class \code{sir}). Default \code{"pheno_provided"}.}
 
-\item{sep}{Field separator for the output file. Default \code{"\\t"}
-(tab-delimited). Use \code{","} for CSV.}
+\item{breakpoint_version}{Character string specifying the breakpoint
+version used for interpretation (e.g. \code{"EUCAST 2024"}).}
+
+\item{submission_account}{Character string specifying the EBI Webin
+submission account identifier (e.g. \code{"Webin-###"}). If not provided,
+JSON output files will not be generated and the function will return
+the formated table only, which can be further updated and converted to
+submission-ready JSON later using \link{format_ebi_json}.}
+
+\item{domain}{Character string specifying the domain used in the
+submission metadata (e.g. \code{"self.ExampleDomain"}). If not provided,
+JSON output files will not be generated and the function will return
+the formated table only, which can be further updated and converted to
+submission-ready JSON later using \link{format_ebi_json}.}
+
+\item{output_dir}{Character string specifying the directory where JSON
+files should be written. If not provided,
+JSON output files will not be generated and the function will return
+the formated table only, which can be further updated and converted to
+submission-ready JSON later using \link{format_ebi_json}.}
 }
 \value{
-When \code{file} is provided, the formatted data frame is
-returned invisibly and a file is written to \code{file}. When
-\code{file = NULL}, the formatted data frame is returned visibly and
-no file is written.
+Formatted data frame. When \code{output_dir} is provided, the AST data
+is also written to individual JSON submission files, one per BioSample, in
+the specified directory.
 }
 \description{
-Convert AMRgen long-format AST data to an EBI antibiogram
-submission file (see
-\href{https://github.com/EBI-COMMUNITY/compare-amr}{EBI COMPARE-AMR}).
+Format AMRgen long-format AST data to a table with the fields required
+for submission to EBI, and optionally generate JSON submission files (one
+per BioSample).
+See
+\url{https://www.ebi.ac.uk/amr/amr_submission_guide/}).
 }
 \details{
 Antibiotic names are in Title Case with \code{"/"} separating
@@ -50,11 +65,15 @@ Species names are derived from the \code{spp_pheno} column via
 \code{\link[AMR:mo_property]{AMR::mo_name()}}.
 }
 \examples{
+# Return formatted data frame without writing files
+ebi_df <- export_ebi_antibiogram(staph_ast_ebi)
 \dontrun{
-# Return formatted data frame without writing a file
-ebi_df <- export_ebi_antibiogram(ecoli_ast)
-
-# Write out the ecoli_ast data to file in EBI format
-export_ebi_antibiogram(ecoli_ast, "Ec_EBI.tsv")
+# Write out data for each BioSample to an individual JSON file for submission
+ebi_df <- export_ebi_antibiogram(staph_ast_ebi,
+  breakpoint_version = "EUCAST 2015",
+  submission_account = "Webin-###",
+  domain = "self.ExampleDomain",
+  output_dir = "/path/to/output/"
+)
 }
 }

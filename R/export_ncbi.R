@@ -207,22 +207,36 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
 
 #' Export EBI Antibiogram
 #'
-#' Convert AMRgen long-format AST data to an EBI antibiogram
-#' submission file (see
-#' [EBI COMPARE-AMR](https://github.com/EBI-COMMUNITY/compare-amr)).
+#' Format AMRgen long-format AST data to a table with the fields required
+#' for submission to EBI, and optionally generate JSON submission files (one
+#' per BioSample).
+#' See
+#' [https://www.ebi.ac.uk/amr/amr_submission_guide/](https://www.ebi.ac.uk/amr/amr_submission_guide/)).
 #'
 #' @param data A data frame in AMRgen long format (e.g. output of
 #'   [import_ast()] or [format_ast()]).
 #'   Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least
 #'   one phenotype column (see `pheno_col`). Optional columns: `mic`,
-#'   `disk`, `method`, `guideline`, `platform`.
-#' @param file File path for the output file. If `NULL` (default), no
-#'   file is written and the formatted data frame is returned visibly.
-#' @param overwrite Logical; overwrite an existing file? Default `FALSE`.
+#'   `disk`, `method`, `platform`.
 #' @param pheno_col Character string naming the column that contains
 #'   SIR interpretations (class `sir`). Default `"pheno_provided"`.
-#' @param sep Field separator for the output file. Default `"\t"`
-#'   (tab-delimited). Use `","` for CSV.
+#' @param breakpoint_version Character string specifying the breakpoint
+#' version used for interpretation (e.g. `"EUCAST 2024"`).
+#' @param submission_account Character string specifying the EBI Webin
+#' submission account identifier (e.g. `"Webin-###"`). If not provided,
+#' JSON output files will not be generated and the function will return
+#' the formated table only, which can be further updated and converted to
+#' submission-ready JSON later using [format_ebi_json].
+#' @param domain Character string specifying the domain used in the
+#' submission metadata (e.g. `"self.ExampleDomain"`). If not provided,
+#' JSON output files will not be generated and the function will return
+#' the formated table only, which can be further updated and converted to
+#' submission-ready JSON later using [format_ebi_json].
+#' @param output_dir Character string specifying the directory where JSON
+#' files should be written. If not provided,
+#' JSON output files will not be generated and the function will return
+#' the formated table only, which can be further updated and converted to
+#' submission-ready JSON later using [format_ebi_json].
 #'
 #' @details
 #' Antibiotic names are in Title Case with `"/"` separating
@@ -232,10 +246,9 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
 #' Species names are derived from the `spp_pheno` column via
 #' [AMR::mo_name()].
 #'
-#' @return When `file` is provided, the formatted data frame is
-#'   returned invisibly and a file is written to `file`. When
-#'   `file = NULL`, the formatted data frame is returned visibly and
-#'   no file is written.
+#' @return Formatted data frame. When `output_dir` is provided, the AST data
+#' is also written to individual JSON submission files, one per BioSample, in
+#' the specified directory.
 #'
 #' @importFrom AMR ab_name mo_name
 #' @importFrom dplyr if_else case_when
@@ -243,21 +256,24 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
 #' @importFrom readr write_tsv
 #' @export
 #' @examples
+#' # Return formatted data frame without writing files
+#' ebi_df <- export_ebi_antibiogram(staph_ast_ebi)
 #' \dontrun{
-#' # Return formatted data frame without writing a file
-#' ebi_df <- export_ebi_antibiogram(ecoli_ast)
-#'
-#' # Write out the ecoli_ast data to file in EBI format
-#' export_ebi_antibiogram(ecoli_ast, "Ec_EBI.tsv")
+#' # Write out data for each BioSample to an individual JSON file for submission
+#' ebi_df <- export_ebi_antibiogram(staph_ast_ebi,
+#'   breakpoint_version = "EUCAST 2015",
+#'   submission_account = "Webin-###",
+#'   domain = "self.ExampleDomain",
+#'   output_dir = "/path/to/output/"
+#' )
 #' }
-export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
+export_ebi_antibiogram <- function(data,
                                    pheno_col = "pheno_provided",
-                                   sep = "\t") {
+                                   breakpoint_version,
+                                   submission_account,
+                                   domain = "self.ExampleDomain",
+                                   output_dir = NULL) {
   # --- input validation ---
-  if (!is.null(file) && file.exists(file) && !overwrite) {
-    stop("The file '", file, "' already exists and `overwrite` is set to `FALSE`.")
-  }
-
   required <- c("id", "drug_agent", pheno_col, "spp_pheno")
   missing_req <- setdiff(required, colnames(data))
   if (length(missing_req) > 0) {
@@ -349,8 +365,8 @@ export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
     TRUE ~ NA_character_
   )
 
-  # --- assemble output ---
-  out <- data.frame(
+  # --- assemble tabular output ---
+  out_df <- data.frame(
     biosample_id = data$id,
     species = species,
     antibiotic_name = antibiotic_name,
@@ -374,77 +390,152 @@ export_ebi_antibiogram <- function(data, file = NULL, overwrite = FALSE,
   )
 
   # --- write ---
-  if (!is.null(file)) {
-    write_tsv(
-      x = out,
-      file = file,
-      append = FALSE,
-      na = "",
-      col_names = TRUE,
-      quote = "all",
-      eol = "\n"
-    )
-    return(invisible(out))
+  if (!is.null(output_dir)) {
+    safe_execute(format_ebi_json(out_df,
+      output_dir = output_dir,
+      breakpoint_version = breakpoint_version,
+      submission_account = submission_account,
+      domain = domain
+    ))
+    return(invisible(out_df))
   }
 
-  out
+  out_df
 }
 
 
-#' Export AST Data
+#' Generate EBI antibiogram submission in JSON
 #'
-#' Generic dispatcher that exports AMRgen long-format AST data to a
-#' submission-ready file. Currently supports NCBI BioSample
-#' Antibiogram and EBI Antibiogram formats.
+#' Converts the tabular output of [export_ebi_antibiogram] into JSON
+#' files formatted for submission to EBI as BioSample data
+#' (https://www.ebi.ac.uk/amr/amr_submission_guide/). Each row of the input
+#' dataset is converted into JSON records and printed to file.
 #'
-#' @param data A data frame in AMRgen long format (e.g. output of
-#'   [import_ast()] or [format_ast()]).
-#'   Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least
-#'   one phenotype column (see `pheno_col`). Optional columns: `mic`,
-#'   `disk`, `method`, `guideline`, `platform`.
-#' @param file File path for the output file. If `NULL` (default), no
-#'   file is written and the formatted data frame is returned visibly.
-#' @param format Target format: `"ncbi"` (default) or `"ebi"`.
-#' @param overwrite Logical; overwrite an existing file? Default `FALSE`.
-#' @param pheno_col Character string naming the column that contains
-#'   SIR interpretations. Default `"pheno_provided"`.
-#' @param ... Additional arguments passed to the format-specific
-#'   export function.
+#' @param ebi_antibiogram_table A data frame in the format output by
+#' [export_ebi_antibiogram].
+#' @param breakpoint_version Character string specifying the
+#' breakpoint version used for interpretation (e.g. `"EUCAST 2024"`).
+#' @param submission_account Character string specifying the Webin
+#' submission account identifier (e.g. `"Webin-###"`).
+#' @param domain Character string specifying the domain used in the
+#' submission metadata (default `"self.ExampleDomain"`).
+#' @param output_dir Character string specifying the directory where JSON
+#' files should be written.
+#' @return Invisibly returns `NULL`. The function prints JSON-formatted
+#' AMR submission records to file.
 #'
-#' @return When `file` is provided, the formatted data frame is
-#'   returned invisibly and a file is written. When `file = NULL`,
-#'   the formatted data frame is returned visibly and no file is
-#'   written.
+#' @details
+#' The function iterates over each biosample in `ebi_antibiogram_table` and
+#' constructs
+#' a nested JSON object describing the antimicrobial susceptibility
+#' testing result. Each record contains antibiotic metadata, AST
+#' standards, measurement values, and resistance phenotype information.
 #'
-#' @export
+#' JSON formatting is performed using \code{jsonlite::toJSON()} with
+#' `pretty = TRUE` and `auto_unbox = TRUE` .
+#'
 #' @examples
 #' \dontrun{
-#' # Return NCBI formatted data frame without writing a file
-#' ncbi_df <- export_ast(ecoli_ast)
-#'
-#' # Write out the ecoli_ast data to file in EBI format
-#' export_ast(ecoli_ast, "Ec_EBI.tsv", format = "ebi")
-#'
-#' # Download data from EBI, then write it out to file in NCBI format
-#' ebi_kq <- download_ebi(
-#'   data = "phenotype",
-#'   species = "Klebsiella quasipneumoniae",
-#'   reformat = T
+#' format_ebi_json(
+#'   ast_dataset,
+#'   breakpoint_version = "EUCAST 2015",
+#'   submission_account = "Webin-###",
+#'   domain = "self.ExampleDomain",
+#'   output_dir = "/path/to/output/"
 #' )
-#' export_ast(ebi_kq, "Kq_NCBI.tsv", format = "ncbi")
 #' }
-export_ast <- function(data, file = NULL, format = "ncbi", overwrite = FALSE,
-                       pheno_col = "pheno_provided", ...) {
-  format <- tolower(format)
-  switch(format,
-    ncbi = export_ncbi_biosample(data, file,
-      overwrite = overwrite,
-      pheno_col = pheno_col
-    ),
-    ebi = export_ebi_antibiogram(data, file,
-      overwrite = overwrite,
-      pheno_col = pheno_col, ...
-    ),
-    stop("Unsupported format '", format, "'. Use 'ncbi' or 'ebi'.")
+#'
+#' @importFrom jsonlite write_json
+#' @export
+format_ebi_json <- function(ebi_antibiogram_table,
+                            breakpoint_version,
+                            submission_account,
+                            domain = "self.ExampleDomain",
+                            output_dir) {
+  if (!dir.exists(output_dir)) {
+    safe_execute(dir.create(output_dir, recursive = TRUE))
+    cat(paste0("Directory '", output_dir, "' created successfully.\n"))
+  }
+
+  records_by_sample <- split(ebi_antibiogram_table, ebi_antibiogram_table$biosample_id)
+
+  for (biosample in names(records_by_sample)) {
+    output_records <- list()
+
+    for (entry in 1:nrow(records_by_sample[[biosample]])) {
+      output_records[[entry]] <- list(
+        "antibioticName" = list(
+          value = records_by_sample[[biosample]]$antibiotic_name[entry],
+          iri = "null"
+        ),
+        "astStandard" = list(
+          value = records_by_sample[[biosample]]$ast_standard[entry],
+          iri = "null"
+        ),
+        "breakpointVersion" = list(
+          value = breakpoint_version,
+          iri = "null"
+        ),
+        "laboratoryTypingMethod" = list(
+          value = records_by_sample[[biosample]]$laboratory_typing_method[entry],
+          iri = "null"
+        ),
+        "measurement" = list(
+          value = records_by_sample[[biosample]]$measurement[entry],
+          iri = "null"
+        ),
+        "measurementUnits" = list(
+          value = records_by_sample[[biosample]]$measurement_units[entry],
+          iri = "null"
+        ),
+        "measurementSign" = list(
+          value = records_by_sample[[biosample]]$measurement_sign[entry],
+          iri = "null"
+        ),
+        "resistancePhenotype" = list(
+          value = records_by_sample[[biosample]]$resistance_phenotype[entry],
+          iri = "null"
+        ),
+        "platform" = list(
+          value = records_by_sample[[biosample]]$platform[entry],
+          iri = "null"
+        )
+      )
+    }
+
+    biosample_amr_record <- list(
+      accession = biosample,
+      data = list(
+        list(
+          domain = domain,
+          webinSubmissionAccountId = submission_account,
+          type = "AMR",
+          schema = "null",
+          content = output_records
+        )
+      )
+    )
+
+    json_outfile <- file.path(output_dir, paste0(biosample, ".json"))
+
+    safe_execute(write_json(
+      biosample_amr_record,
+      json_outfile,
+      pretty = TRUE,
+      auto_unbox = TRUE
+    ))
+  }
+}
+
+# Helper functions
+safe_execute <- function(expr) {
+  tryCatch(
+    {
+      expr
+    },
+    error = function(e) {
+      message("Error in executing command: ", e$message)
+      return(NULL)
+    }
   )
 }

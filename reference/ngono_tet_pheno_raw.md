@@ -24,4 +24,5 @@ ngono_tet_pheno_raw
 
 ENA project
 [PRJEB83795](https://www.ebi.ac.uk/ena/browser/view/PRJEB83795). See
-Sánchez-Serrano *et al.* (2026) <doi:10.1016/j.cmi.2025.12.026>.
+Sánchez-Serrano *et al.* (2026)
+<https://doi.org/10.1016/j.cmi.2025.12.026>.

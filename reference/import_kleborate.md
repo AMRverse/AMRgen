@@ -10,7 +10,8 @@ resistance determinants and mapping them to standardised drug classes.
 import_kleborate(
   input_table,
   sample_col = "strain",
-  kleborate_class_table = kleborate_classes
+  kleborate_class_table = kleborate_classes,
+  hgvs = TRUE
 )
 ```
 
@@ -32,6 +33,14 @@ import_kleborate(
   column names (`Kleborate_Class`) to standardised drug classes
   (`drug_class`). Defaults to `kleborate_classes`, which is provided
   internally.
+
+- hgvs:
+
+  Logical indicating whether to expect mutations in HGVS format (used in
+  Kleborate releases since v3.1.3). Default `TRUE`, which expects
+  mutations formatted as e.g. "GyrA:p.S83F". Set to `FALSE` if your
+  results were generated using older versions where mutations were
+  formatted as e.g. "GyrA_83F".
 
 ## Value
 

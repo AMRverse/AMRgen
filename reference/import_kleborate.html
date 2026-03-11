@@ -40,7 +40,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">import_kleborate</span><span class="op">(</span></span>
 <span>  <span class="va">input_table</span>,</span>
 <span>  sample_col <span class="op">=</span> <span class="st">"strain"</span>,</span>
-<span>  kleborate_class_table <span class="op">=</span> <span class="va">kleborate_classes</span></span>
+<span>  kleborate_class_table <span class="op">=</span> <span class="va">kleborate_classes</span>,</span>
+<span>  hgvs <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -58,6 +59,10 @@
 
 <dt id="arg-kleborate-class-table">kleborate_class_table<a class="anchor" aria-label="anchor" href="#arg-kleborate-class-table"></a></dt>
 <dd><p>A tibble containing a reference table mapping Kleborate drug class column names (<code>Kleborate_Class</code>) to standardised drug classes (<code>drug_class</code>). Defaults to <code>kleborate_classes</code>, which is provided internally.</p></dd>
+
+
+<dt id="arg-hgvs">hgvs<a class="anchor" aria-label="anchor" href="#arg-hgvs"></a></dt>
+<dd><p>Logical indicating whether to expect mutations in HGVS format (used in Kleborate releases since v3.1.3). Default <code>TRUE</code>, which expects mutations formatted as e.g. "GyrA:p.S83F". Set to <code>FALSE</code> if your results were generated using older versions where mutations were formatted as e.g. "GyrA_83F".</p></dd>
 
 </dl></div>
     <div class="section level2">

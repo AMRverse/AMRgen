@@ -44,8 +44,9 @@ ENA projects
 [PRJNA1161034](https://www.ebi.ac.uk/ena/browser/view/PRJNA1161034),
 [PRJNA1189294](https://www.ebi.ac.uk/ena/browser/view/PRJNA1189294),
 [PRJNA1067895](https://www.ebi.ac.uk/ena/browser/view/PRJNA1067895). See
-also Golparian *et al.* (2024) <doi:10.1016/S2666-5247(23)00370-1>, Day
-*et al.* (2022) <doi:10.2807/1560-7917.ES.2022.27.46.2200803>, Fifer *et
-al.* (2024) <doi:10.1093/jac/dkae369>, van der Veen *et al.* (2026)
-<doi:10.1093/cid/ciaf530>, Unemo *et al.* (2024)
-<doi:10.1093/jac/dkae176>.
+also Golparian *et al.* (2024)
+<https://doi.org/10.1016/S2666-5247(23)00370-1>, Day *et al.* (2022)
+<https://doi.org/10.2807/1560-7917.ES.2022.27.46.2200803>, Fifer *et
+al.* (2024) <https://doi.org/10.1093/jac/dkae369>, van der Veen *et al.*
+(2026) <https://doi.org/10.1093/cid/ciaf530>, Unemo *et al.* (2024)
+<https://doi.org/10.1093/jac/dkae176>.

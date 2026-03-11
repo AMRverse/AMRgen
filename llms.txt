@@ -407,7 +407,9 @@ Example datasets for demonstration and reproducible analysis.
 - [`salm_raw`](https://AMRverse.github.io/AMRgen/reference/salm_raw.md)
   : Example Salmonella Genotype-Phenotype Data
 - [`kleborate_raw`](https://AMRverse.github.io/AMRgen/reference/kleborate_raw.md)
-  : Example Kleborate Genotype Data
+  : Example Kleborate Genotype Data from EuSCAPE project
+- [`kleborate_raw_v313`](https://AMRverse.github.io/AMRgen/reference/kleborate_raw_v313.md)
+  : Example Kleborate v3.1.3 Genotype Data from EuSCAPE project
 - [`kleborate_classes`](https://AMRverse.github.io/AMRgen/reference/kleborate_classes.md)
   : Table mapping Kleborate drug class columns
 

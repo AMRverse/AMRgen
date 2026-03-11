@@ -75,6 +75,7 @@ ENA projects
 [PRJEB9227](https://www.ebi.ac.uk/ena/browser/view/PRJEB9227),
 [PRJEB34068](https://www.ebi.ac.uk/ena/browser/view/PRJEB34068),
 [PRJEB58139](https://www.ebi.ac.uk/ena/browser/view/PRJEB58139). See
-also Harris *et al.* (2018) <doi:10.1016/S1473-3099(18)30225-1>,
-Sánchez-Busó *et al.* (2022) <doi:10.1016/S2666-5247(22)00044-1>, and
-Golparian *et al.* (2024) <doi:10.1016/S2666-5247(23)00370-1>.
+also Harris *et al.* (2018)
+<https://doi.org/10.1016/S1473-3099(18)30225-1>, Sánchez-Busó *et al.*
+(2022) <https://doi.org/10.1016/S2666-5247(22)00044-1>, and Golparian
+*et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>.

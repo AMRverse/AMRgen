@@ -139,8 +139,8 @@ reference:
       - ngono_tet_pheno_raw
       - salm_raw
       - kleborate_raw
+      - kleborate_raw_v313
       - kleborate_classes
-
 
 # Footer configuration
 footer:

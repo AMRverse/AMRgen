@@ -26,8 +26,8 @@ eurogasp_pheno_raw
 Minimum inhibitory concentration (MIC) data for \emph{Neisseria gonorrhoeae} isolates
 from three European Gonococcal Antimicrobial Surveillance Programme (Euro-GASP)
 genomic surveys (2013, 2018, 2020), from
-Harris \emph{et al.} (2018) \url{doi:10.1016/S1473-3099(18)30225-1},
-Sánchez-Busó \emph{et al.} (2022) \url{doi:10.1016/S2666-5247(22)00044-1}, and
-Golparian \emph{et al.} (2024) \url{doi:10.1016/S2666-5247(23)00370-1}.
+Harris \emph{et al.} (2018) \url{https://doi.org/10.1016/S1473-3099(18)30225-1},
+Sánchez-Busó \emph{et al.} (2022) \url{https://doi.org/10.1016/S2666-5247(22)00044-1}, and
+Golparian \emph{et al.} (2024) \url{https://doi.org/10.1016/S2666-5247(23)00370-1}.
 }
 \keyword{datasets}

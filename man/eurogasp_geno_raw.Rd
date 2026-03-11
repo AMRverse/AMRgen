@@ -33,9 +33,9 @@
 ENA projects \href{https://www.ebi.ac.uk/ena/browser/view/PRJEB9227}{PRJEB9227},
 \href{https://www.ebi.ac.uk/ena/browser/view/PRJEB34068}{PRJEB34068},
 \href{https://www.ebi.ac.uk/ena/browser/view/PRJEB58139}{PRJEB58139}.
-See also Harris \emph{et al.} (2018) \url{doi:10.1016/S1473-3099(18)30225-1},
-Sánchez-Busó \emph{et al.} (2022) \url{doi:10.1016/S2666-5247(22)00044-1}, and
-Golparian \emph{et al.} (2024) \url{doi:10.1016/S2666-5247(23)00370-1}.
+See also Harris \emph{et al.} (2018) \url{https://doi.org/10.1016/S1473-3099(18)30225-1},
+Sánchez-Busó \emph{et al.} (2022) \url{https://doi.org/10.1016/S2666-5247(22)00044-1}, and
+Golparian \emph{et al.} (2024) \url{https://doi.org/10.1016/S2666-5247(23)00370-1}.
 }
 \usage{
 eurogasp_geno_raw

@@ -71,7 +71,7 @@
 #' export_ncbi_ast(ebi_kq, "Kq_NCBI.tsv")
 #' }
 export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
-                                  pheno_col = "pheno_provided") {
+                            pheno_col = "pheno_provided") {
   # --- input validation ---
   if (!is.null(file)) {
     if (file.exists(file) && !overwrite) {
@@ -268,11 +268,11 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #' )
 #' }
 export_ebi_ast <- function(data,
-                                   pheno_col = "pheno_provided",
-                                   breakpoint_version,
-                                   submission_account,
-                                   domain = "self.ExampleDomain",
-                                   output_dir = NULL) {
+                           pheno_col = "pheno_provided",
+                           breakpoint_version,
+                           submission_account,
+                           domain = "self.ExampleDomain",
+                           output_dir = NULL) {
   # --- input validation ---
   required <- c("id", "drug_agent", pheno_col, "spp_pheno")
   missing_req <- setdiff(required, colnames(data))

@@ -28,11 +28,11 @@ ENA projects \href{https://www.ebi.ac.uk/ena/browser/view/PRJEB58139}{PRJEB58139
 \href{https://www.ebi.ac.uk/ena/browser/view/PRJNA1161034}{PRJNA1161034},
 \href{https://www.ebi.ac.uk/ena/browser/view/PRJNA1189294}{PRJNA1189294},
 \href{https://www.ebi.ac.uk/ena/browser/view/PRJNA1067895}{PRJNA1067895}.
-See also Golparian \emph{et al.} (2024) \url{doi:10.1016/S2666-5247(23)00370-1},
-Day \emph{et al.} (2022) \url{doi:10.2807/1560-7917.ES.2022.27.46.2200803},
-Fifer \emph{et al.} (2024) \url{doi:10.1093/jac/dkae369},
-van der Veen \emph{et al.} (2026) \url{doi:10.1093/cid/ciaf530},
-Unemo \emph{et al.} (2024) \url{doi:10.1093/jac/dkae176}.
+See also Golparian \emph{et al.} (2024) \url{https://doi.org/10.1016/S2666-5247(23)00370-1},
+Day \emph{et al.} (2022) \url{https://doi.org/10.2807/1560-7917.ES.2022.27.46.2200803},
+Fifer \emph{et al.} (2024) \url{https://doi.org/10.1093/jac/dkae369},
+van der Veen \emph{et al.} (2026) \url{https://doi.org/10.1093/cid/ciaf530},
+Unemo \emph{et al.} (2024) \url{https://doi.org/10.1093/jac/dkae176}.
 }
 \usage{
 ngono_cro_pheno_raw

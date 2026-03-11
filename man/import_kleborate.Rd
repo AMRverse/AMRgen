@@ -7,7 +7,8 @@
 import_kleborate(
   input_table,
   sample_col = "strain",
-  kleborate_class_table = kleborate_classes
+  kleborate_class_table = kleborate_classes,
+  hgvs = TRUE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ import_kleborate(
 \item{sample_col}{A character string specifying the column that identifies samples in the dataset (default \code{strain}).}
 
 \item{kleborate_class_table}{A tibble containing a reference table mapping Kleborate drug class column names (\code{Kleborate_Class}) to standardised drug classes (\code{drug_class}). Defaults to \code{kleborate_classes}, which is provided internally.}
+
+\item{hgvs}{Logical indicating whether to expect mutations in HGVS format (used in Kleborate releases since v3.1.3). Default \code{TRUE}, which expects mutations formatted as e.g. "GyrA:p.S83F". Set to \code{FALSE} if your results were generated using older versions where mutations were formatted as e.g. "GyrA_83F".}
 }
 \value{
 A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible.

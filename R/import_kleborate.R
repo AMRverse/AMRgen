@@ -20,6 +20,7 @@
 #' @param input_table A character string specifying a dataframe or path to the Kleborate results table (TSV format).
 #' @param sample_col A character string specifying the column that identifies samples in the dataset (default `strain`).
 #' @param kleborate_class_table A tibble containing a reference table mapping Kleborate drug class column names (`Kleborate_Class`) to standardised drug classes (`drug_class`). Defaults to `kleborate_classes`, which is provided internally.
+#' @param hgvs Logical indicating whether to expect mutations in HGVS format (used in Kleborate releases since v3.1.3). Default `TRUE`, which expects mutations formatted as e.g. "GyrA:p.S83F". Set to `FALSE` if your results were generated using older versions where mutations were formatted as e.g. "GyrA_83F".
 #' @importFrom dplyr filter left_join mutate select bind_rows rename_with join_by
 #' @importFrom tidyr separate_longer_delim separate
 #' @importFrom rlang sym
@@ -40,7 +41,8 @@
 #' kleborate_geno <- import_kleborate(kleborate_raw %>% head(n = 10), "strain")
 import_kleborate <- function(input_table,
                              sample_col = "strain",
-                             kleborate_class_table = kleborate_classes) {
+                             kleborate_class_table = kleborate_classes,
+                             hgvs = TRUE) {
   in_table <- process_input(input_table)
 
   geno_table <- in_table %>%
@@ -51,20 +53,39 @@ import_kleborate <- function(input_table,
     left_join(kleborate_class_table, by = join_by(Kleborate_Class)) %>%
     mutate(marker = str_remove_all(marker, "\\^"))
 
-  geno_table <- geno_table %>%
-    mutate(`variation type` = case_when(
-      grepl("Ter", marker) ~ "Inactivating mutation detected",
-      grepl("del", marker) ~ "Inactivating mutation detected",
-      grepl("_mut", Kleborate_Class) & grepl(":p.", marker) ~ "Protein variant detected",
-      grepl("_mut", Kleborate_Class) & grepl(":c.", marker) ~ "Nucleotide variant detected",
-      TRUE ~ "Gene presence detected"
-    )) %>%
-    separate(marker, into = c("gene", "mutation"), sep = ":", remove = FALSE, fill = "right") %>%
-    mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
-      paste0(gene, ":-"),
-      marker
-    )) %>%
-    relocate(Kleborate_Class, .after = "variation type")
+  # version-specific processing
+
+  if (hgvs) { # newer versions use HGVS nomenclature (e.g. [gene]_:p.[mutation])
+    geno_table <- geno_table %>%
+      mutate(`variation type` = case_when(
+        grepl("Ter", marker) ~ "Inactivating mutation detected",
+        grepl("del", marker) ~ "Inactivating mutation detected",
+        grepl("_mut", Kleborate_Class) & grepl(":p.", marker) ~ "Protein variant detected",
+        grepl("_mut", Kleborate_Class) & grepl(":c.", marker) ~ "Nucleotide variant detected",
+        TRUE ~ "Gene presence detected"
+      )) %>%
+      separate(marker, into = c("gene", "mutation"), sep = ":", remove = FALSE, fill = "right") %>%
+      mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
+        paste0(gene, ":-"),
+        marker
+      )) %>%
+      relocate(Kleborate_Class, .after = "variation type")
+  } else { # older versions use informal nomenclature (e.g. [gene]-[mutation], [gene]-X%, OmpK36GD)
+    geno_table <- geno_table %>%
+      mutate(`variation type` = case_when(
+        grepl("-[0-9]+%$", marker) ~ "Inactivating mutation detected",
+        grepl("_mut", Kleborate_Class) & grepl("_[a-z][0-9]+[a-z]$", marker) ~ "Nucleotide variant detected", # Omp mutation c>t
+        grepl("_mut", Kleborate_Class) & grepl("-[0-9]+[A-Z]$", marker) ~ "Protein variant detected", # gyrA/parC mutations
+        grepl("_mut", Kleborate_Class) & marker %in% c("OmpK36GD", "OmpK36TD") ~ "Protein variant detected",
+        TRUE ~ "Gene presence detected"
+      )) %>%
+      separate(marker, into = c("gene", "mutation"), sep = ":", remove = FALSE, fill = "right") %>%
+      mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
+        paste0(gene, ":-"),
+        marker
+      )) %>%
+      relocate(Kleborate_Class, .after = "variation type")
+  }
 
   return(geno_table)
 }

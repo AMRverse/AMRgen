@@ -238,9 +238,9 @@
 #' Minimum inhibitory concentration (MIC) data for *Neisseria gonorrhoeae* isolates
 #' from three European Gonococcal Antimicrobial Surveillance Programme (Euro-GASP)
 #' genomic surveys (2013, 2018, 2020), from
-#' Harris *et al.* (2018) <doi:10.1016/S1473-3099(18)30225-1>,
-#' Sánchez-Busó *et al.* (2022) <doi:10.1016/S2666-5247(22)00044-1>, and
-#' Golparian *et al.* (2024) <doi:10.1016/S2666-5247(23)00370-1>.
+#' Harris *et al.* (2018) <https://doi.org/10.1016/S1473-3099(18)30225-1>,
+#' Sánchez-Busó *et al.* (2022) <https://doi.org/10.1016/S2666-5247(22)00044-1>, and
+#' Golparian *et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>.
 #'
 #' @format `eurogasp_pheno_raw` A data frame with 5,361 rows and 5 columns:
 #' - `id`: Sample identifier (ENA run accession).
@@ -287,9 +287,9 @@
 #' @source ENA projects [PRJEB9227](https://www.ebi.ac.uk/ena/browser/view/PRJEB9227),
 #' [PRJEB34068](https://www.ebi.ac.uk/ena/browser/view/PRJEB34068),
 #' [PRJEB58139](https://www.ebi.ac.uk/ena/browser/view/PRJEB58139).
-#' See also Harris *et al.* (2018) <doi:10.1016/S1473-3099(18)30225-1>,
-#' Sánchez-Busó *et al.* (2022) <doi:10.1016/S2666-5247(22)00044-1>, and
-#' Golparian *et al.* (2024) <doi:10.1016/S2666-5247(23)00370-1>.
+#' See also Harris *et al.* (2018) <https://doi.org/10.1016/S1473-3099(18)30225-1>,
+#' Sánchez-Busó *et al.* (2022) <https://doi.org/10.1016/S2666-5247(22)00044-1>, and
+#' Golparian *et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>.
 "eurogasp_geno_raw"
 
 
@@ -321,11 +321,11 @@
 #' [PRJNA1161034](https://www.ebi.ac.uk/ena/browser/view/PRJNA1161034),
 #' [PRJNA1189294](https://www.ebi.ac.uk/ena/browser/view/PRJNA1189294),
 #' [PRJNA1067895](https://www.ebi.ac.uk/ena/browser/view/PRJNA1067895).
-#' See also Golparian *et al.* (2024) <doi:10.1016/S2666-5247(23)00370-1>,
-#' Day *et al.* (2022) <doi:10.2807/1560-7917.ES.2022.27.46.2200803>,
-#' Fifer *et al.* (2024) <doi:10.1093/jac/dkae369>,
-#' van der Veen *et al.* (2026) <doi:10.1093/cid/ciaf530>,
-#' Unemo *et al.* (2024) <doi:10.1093/jac/dkae176>.
+#' See also Golparian *et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>,
+#' Day *et al.* (2022) <https://doi.org/10.2807/1560-7917.ES.2022.27.46.2200803>,
+#' Fifer *et al.* (2024) <https://doi.org/10.1093/jac/dkae369>,
+#' van der Veen *et al.* (2026) <https://doi.org/10.1093/cid/ciaf530>,
+#' Unemo *et al.* (2024) <https://doi.org/10.1093/jac/dkae176>.
 "ngono_cro_pheno_raw"
 
 #' N. gonorrhoeae PBP2 Mutations Genotype Data Use Case 2
@@ -372,11 +372,11 @@
 #' [PRJNA1161034](https://www.ebi.ac.uk/ena/browser/view/PRJNA1161034),
 #' [PRJNA1189294](https://www.ebi.ac.uk/ena/browser/view/PRJNA1189294),
 #' [PRJNA1067895](https://www.ebi.ac.uk/ena/browser/view/PRJNA1067895).
-#' See also Golparian *et al.* (2024) <doi:10.1016/S2666-5247(23)00370-1>,
-#' Day *et al.* (2022) <doi:10.2807/1560-7917.ES.2022.27.46.2200803>,
-#' Fifer *et al.* (2024) <doi:10.1093/jac/dkae369>,
-#' van der Veen *et al.* (2026) <doi:10.1093/cid/ciaf530>,
-#' Unemo *et al.* (2024) <doi:10.1093/jac/dkae176>.
+#' See also Golparian *et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>,
+#' Day *et al.* (2022) <https://doi.org/10.2807/1560-7917.ES.2022.27.46.2200803>,
+#' Fifer *et al.* (2024) <https://doi.org/10.1093/jac/dkae369>,
+#' van der Veen *et al.* (2026) <https://doi.org/10.1093/cid/ciaf530>,
+#' Unemo *et al.* (2024) <https://doi.org/10.1093/jac/dkae176>.
 "ngono_cro_geno_raw"
 
 
@@ -392,7 +392,7 @@
 #' - `Tetracycline`: MIC value in mg/L for tetracycline (numeric).
 #'
 #' @source ENA project [PRJEB83795](https://www.ebi.ac.uk/ena/browser/view/PRJEB83795).
-#' See Sánchez-Serrano *et al.* (2026) <doi:10.1016/j.cmi.2025.12.026>.
+#' See Sánchez-Serrano *et al.* (2026) <https://doi.org/10.1016/j.cmi.2025.12.026>.
 "ngono_tet_pheno_raw"
 
 
@@ -425,8 +425,8 @@
 #' - `HMM accession`, `HMM description`: HMM-based annotation fields (all `NA`).
 #' - `Hierarchy node`: Gene hierarchy node name required for [import_amrfp].
 #'
-#' @source ENA project [PRJEB83795](https://www.ebi.ac.uk/ena/browser/view/PRJEB83795).
-#' See Sánchez-Serrano *et al.* (2026) <doi:10.1016/j.cmi.2025.12.026>.
+#' @source ENA BioProject [PRJEB83795](https://www.ebi.ac.uk/ena/browser/view/PRJEB83795).
+#' See Sánchez-Serrano *et al.* (2026) <https://doi.org/10.1016/j.cmi.2025.12.026>.
 "ngono_tet_geno_raw"
 
 #' Example Salmonella Genotype-Phenotype Data
@@ -440,14 +440,27 @@
 #' - `Ciprofloxacin`, `Levofloxacin`, `Moxifloxacin`: MIC value for each drug
 "salm_raw"
 
-#' Example Kleborate Genotype Data
+#' Example Kleborate Genotype Data from EuSCAPE project
 #'
 #' Raw Kleborate results file for *Klebsiella pneumoniae* genomes, one row per sample.
 #'
 #' @format `kleborate_raw` A data frame with 1,689 rows and 122 columns:
 #' - `strain`: Sample identifier
 #' - ...: Kleborate results columns
+#' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).
+#' See David *et al.* (2019) <https://doi.org/10.1038/s41564-019-0492-8>.
 "kleborate_raw"
+
+#' Example Kleborate v3.1.3 Genotype Data from EuSCAPE project
+#'
+#' Raw Kleborate v3.1.3 results file for *Klebsiella pneumoniae* genomes, one row per sample.
+#'
+#' @format `kleborate_raw_v313` A data frame with 1,490 rows and 113 columns:
+#' - `strain`: Sample identifier
+#' - ...: Kleborate results columns
+#' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).
+#' See David *et al.* (2019) <https://doi.org/10.1038/s41564-019-0492-8>.
+"kleborate_raw_v313"
 
 #' Table mapping Kleborate drug class columns
 #'

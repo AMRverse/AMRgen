@@ -29,8 +29,8 @@
 }
 }
 \source{
-ENA project \href{https://www.ebi.ac.uk/ena/browser/view/PRJEB83795}{PRJEB83795}.
-See Sánchez-Serrano \emph{et al.} (2026) \url{doi:10.1016/j.cmi.2025.12.026}.
+ENA BioProject \href{https://www.ebi.ac.uk/ena/browser/view/PRJEB83795}{PRJEB83795}.
+See Sánchez-Serrano \emph{et al.} (2026) \url{https://doi.org/10.1016/j.cmi.2025.12.026}.
 }
 \usage{
 ngono_tet_geno_raw

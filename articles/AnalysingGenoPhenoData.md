@@ -168,14 +168,7 @@ ecoli_geno_summary$uniques
 
 # Unique counts of samples, markers, genes, drugs, and classes - per variation type
 ecoli_geno_summary$pertype
-#> # A tibble: 5 × 6
-#>   `variation type`                Name marker drug_agent drug_class  gene
-#>   <chr>                          <int>  <int>      <int>      <int> <int>
-#> 1 Gene presence detected          5258    164         22         17   164
-#> 2 Inactivating mutation detected   615     42         15         14    42
-#> 3 Nucleotide variant detected       57      2          3          3     1
-#> 4 Promoter variant detected         93      4          1          1     1
-#> 5 Protein variant detected        4920     65         18         16    21
+#> NULL
 ```
 
 The

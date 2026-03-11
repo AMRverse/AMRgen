@@ -45,8 +45,6 @@ from public repositories or internal formats.
   instruments
 - [`import_whonet_ast()`](https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.md)
   : Import and process antimicrobial phenotype data from WHONET files
-- [`export_ast()`](https://AMRverse.github.io/AMRgen/reference/export_ast.md)
-  : Export AST Data
 - [`export_ebi_antibiogram()`](https://AMRverse.github.io/AMRgen/reference/export_ebi_antibiogram.md)
   : Export EBI Antibiogram
 - [`export_ncbi_biosample()`](https://AMRverse.github.io/AMRgen/reference/export_ncbi_biosample.md)
@@ -64,6 +62,11 @@ from public repositories or internal formats.
   : Summarise a Genotype Table
 - [`summarise_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_pheno.md)
   : Summarise a Phenotype Table
+- [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
+  : Import and process antimicrobial phenotype data from a generic
+  format
+- [`format_ebi_json()`](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md)
+  : Generate EBI antibiogram submission in JSON
 - [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
   : Get Binary Matrix of Genotype and Phenotype Data
 - [`get_combo_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_combo_matrix.md)
@@ -74,9 +77,6 @@ from public repositories or internal formats.
   : Gene Class and AMR Parsing Functions
 - [`gtdb.mo()`](https://AMRverse.github.io/AMRgen/reference/gtdb.mo.md)
   : Get Microorganism from GTDB Species Name
-- [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
-  : Import and process antimicrobial phenotype data from a generic
-  format
 - [`query_ncbi_bq_ast()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.md)
   : Query antimicrobial phenotype (AST) data from NCBI Pathogen
   Detection BigQuery

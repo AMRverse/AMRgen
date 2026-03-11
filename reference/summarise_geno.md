@@ -74,7 +74,7 @@ A named list with the following elements:
   A tibble of the number of unique samples, markers, genes, drugs,
   classes and variation types detected in `geno_table`.
 
-- pertype:
+- per_type:
 
   A tibble of unique counts of samples, markers, genes, drugs, and
   classes per variation type.
@@ -114,7 +114,7 @@ summarise_geno(geno_table)
 #> 5 gene                196
 #> 6 variation type        5
 #> 
-#> $pertype
+#> $per_type
 #> # A tibble: 5 × 6
 #>   `variation type`                Name marker drug_agent drug_class  gene
 #>   <chr>                          <int>  <int>      <int>      <int> <int>

@@ -218,14 +218,7 @@ e.g. <code>tibble(Name=missing_samples) %&gt;% bind_rows(genotype_table)</code>
 <span></span>
 <span><span class="co"># Unique counts of samples, markers, genes, drugs, and classes - per variation type</span></span>
 <span><span class="va">ecoli_geno_summary</span><span class="op">$</span><span class="va">pertype</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
-<span><span class="co">#&gt;   `variation type`                Name marker drug_agent drug_class  gene</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Gene presence detected          <span style="text-decoration: underline;">5</span>258    164         22         17   164</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Inactivating mutation detected   615     42         15         14    42</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Nucleotide variant detected       57      2          3          3     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Promoter variant detected         93      4          1          1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Protein variant detected        <span style="text-decoration: underline;">4</span>920     65         18         16    21</span></span></code></pre></div>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>The <code><a href="../reference/summarise_geno.html">summarise_geno()</a></code> function also returns a list of
 drugs and classes represented in the table, and the associated number of
 unique markers, unique samples, and total hits for each drug/class.

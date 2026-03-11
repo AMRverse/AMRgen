@@ -7,7 +7,11 @@ resistance determinants and mapping them to standardised drug classes.
 ## Usage
 
 ``` r
-import_kleborate(input_table, sample_col = "strain")
+import_kleborate(
+  input_table,
+  sample_col = "strain",
+  kleborate_class_table = kleborate_classes
+)
 ```
 
 ## Arguments
@@ -21,6 +25,13 @@ import_kleborate(input_table, sample_col = "strain")
 
   A character string specifying the column that identifies samples in
   the dataset (default `strain`).
+
+- kleborate_class_table:
+
+  A tibble containing a reference table mapping Kleborate drug class
+  column names (`Kleborate_Class`) to standardised drug classes
+  (`drug_class`). Defaults to `kleborate_classes`, which is provided
+  internally.
 
 ## Value
 
@@ -43,12 +54,29 @@ The function performs the following steps:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 # example Kleborate data from EUSCAPE project
 kleborate_raw
+#> # A tibble: 1,689 × 122
+#>    strain    species species_match contig_count    N50 largest_contig total_size
+#>    <chr>     <chr>   <chr>                <dbl>  <dbl>          <dbl>      <dbl>
+#>  1 SAMEA349… Klebsi… strong                 107 270158         668396    5550237
+#>  2 SAMEA349… Klebsi… strong                  72 367024        1153387    5328304
+#>  3 SAMEA349… Klebsi… strong                 154 290037         723108    5865430
+#>  4 SAMEA349… Klebsi… strong                 113 270158         668396    5551355
+#>  5 SAMEA349… Klebsi… strong                 100 273060        1309748    5509346
+#>  6 SAMEA349… Klebsi… strong                 181 203669         523738    5706273
+#>  7 SAMEA349… Klebsi… strong                 193 203666         523738    5602637
+#>  8 SAMEA349… Klebsi… strong                  53 383004         704598    5207015
+#>  9 SAMEA349… Klebsi… strong                 151 206496         619259    5474980
+#> 10 SAMEA349… Klebsi… strong                  84 371555         984007    5600579
+#> # ℹ 1,679 more rows
+#> # ℹ 115 more variables: GC_content <dbl>, ambiguous_bases <chr>,
+#> #   QC_warnings <chr>, ST <chr>, gapA <dbl>, infB <dbl>, mdh <dbl>, pgi <dbl>,
+#> #   phoE <dbl>, rpoB <dbl>, tonB <dbl>, YbST <chr>, Yersiniabactin <chr>,
+#> #   ybtS <chr>, ybtX <chr>, ybtQ <chr>, ybtP <chr>, ybtA <chr>, irp2 <chr>,
+#> #   irp1 <chr>, ybtU <chr>, ybtT <chr>, ybtE <chr>, fyuA <chr>,
+#> #   spurious_ybt_hits <chr>, CbST <chr>, Colibactin <chr>, clbA <chr>, …
 
 # import first few rows of this data frame and parse it as AMRfp data
 kleborate_geno <- import_kleborate(kleborate_raw %>% head(n = 10), "strain")
-geno
-} # }
 ```

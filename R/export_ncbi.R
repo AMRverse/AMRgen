@@ -57,10 +57,10 @@
 #' @examples
 #' \dontrun{
 #' # Return formatted data frame without writing a file
-#' ncbi_df <- export_ncbi_biosample(ecoli_ast)
+#' ncbi_df <- export_ncbi_ast(ecoli_ast)
 #'
 #' # Write out the ecoli_ast data to file in NCBI format
-#' export_ncbi_biosample(ecoli_ast, "Ec_NCBI.tsv")
+#' export_ncbi_ast(ecoli_ast, "Ec_NCBI.tsv")
 #'
 #' # Download data from EBI, then write it out to file in NCBI format
 #' ebi_kq <- download_ebi(
@@ -68,9 +68,9 @@
 #'   species = "Klebsiella quasipneumoniae",
 #'   reformat = T
 #' )
-#' export_ncbi_biosample(ebi_kq, "Kq_NCBI.tsv")
+#' export_ncbi_ast(ebi_kq, "Kq_NCBI.tsv")
 #' }
-export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
+export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
                                   pheno_col = "pheno_provided") {
   # --- input validation ---
   if (!is.null(file)) {
@@ -226,17 +226,17 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
 #' submission account identifier (e.g. `"Webin-###"`). If not provided,
 #' JSON output files will not be generated and the function will return
 #' the formated table only, which can be further updated and converted to
-#' submission-ready JSON later using [format_ebi_json].
+#' submission-ready JSON later using [format_ebi_json()].
 #' @param domain Character string specifying the domain used in the
 #' submission metadata (e.g. `"self.ExampleDomain"`). If not provided,
 #' JSON output files will not be generated and the function will return
 #' the formated table only, which can be further updated and converted to
-#' submission-ready JSON later using [format_ebi_json].
+#' submission-ready JSON later using [format_ebi_json()].
 #' @param output_dir Character string specifying the directory where JSON
 #' files should be written. If not provided,
 #' JSON output files will not be generated and the function will return
 #' the formated table only, which can be further updated and converted to
-#' submission-ready JSON later using [format_ebi_json].
+#' submission-ready JSON later using [format_ebi_json()].
 #'
 #' @details
 #' Antibiotic names are in Title Case with `"/"` separating
@@ -257,17 +257,17 @@ export_ncbi_biosample <- function(data, file = NULL, overwrite = FALSE,
 #' @export
 #' @examples
 #' # Return formatted data frame without writing files
-#' ebi_df <- export_ebi_antibiogram(staph_ast_ebi)
+#' ebi_df <- export_ebi_ast(staph_ast_ebi)
 #' \dontrun{
 #' # Write out data for each BioSample to an individual JSON file for submission
-#' ebi_df <- export_ebi_antibiogram(staph_ast_ebi,
+#' ebi_df <- export_ebi_ast(staph_ast_ebi,
 #'   breakpoint_version = "EUCAST 2015",
 #'   submission_account = "Webin-###",
 #'   domain = "self.ExampleDomain",
 #'   output_dir = "/path/to/output/"
 #' )
 #' }
-export_ebi_antibiogram <- function(data,
+export_ebi_ast <- function(data,
                                    pheno_col = "pheno_provided",
                                    breakpoint_version,
                                    submission_account,
@@ -406,13 +406,13 @@ export_ebi_antibiogram <- function(data,
 
 #' Generate EBI antibiogram submission in JSON
 #'
-#' Converts the tabular output of [export_ebi_antibiogram] into JSON
+#' Converts the tabular output of [export_ebi_ast()] into JSON
 #' files formatted for submission to EBI as BioSample data
 #' (https://www.ebi.ac.uk/amr/amr_submission_guide/). Each row of the input
 #' dataset is converted into JSON records and printed to file.
 #'
 #' @param ebi_antibiogram_table A data frame in the format output by
-#' [export_ebi_antibiogram].
+#' [export_ebi_ast()].
 #' @param breakpoint_version Character string specifying the
 #' breakpoint version used for interpretation (e.g. `"EUCAST 2024"`).
 #' @param submission_account Character string specifying the Webin

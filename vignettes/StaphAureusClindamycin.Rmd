@@ -1,5 +1,5 @@
 ---
-title: "Analysing clindamycin resistance in <i>Staphylococcus aureus</i>"
+title: "Analysing clindamycin resistance in <em>Staphylococcus aureus</em>"
 author: "Natacha Couto"
 date: "2026-03-12"
 output: rmarkdown::html_vignette

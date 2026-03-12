@@ -1,10 +1,10 @@
 ---
-title: "Analysing clindamycin resistance in _Staphylococcus aureus_"
+title: "Analysing clindamycin resistance in Staphylococcus aureus"
 author: "Natacha Couto"
 date: "2026-03-12"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analysing clindamycin resistance in _Staphylococcus aureus_}
+  %\VignetteIndexEntry{Analysing clindamycin resistance in Staphylococcus aureus}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

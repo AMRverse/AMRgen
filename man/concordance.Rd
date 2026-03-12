@@ -9,7 +9,9 @@ concordance(
   markers = NULL,
   exclude_markers = NULL,
   ppv_threshold = NULL,
+  solo_ppv_results = NULL,
   ppv_results = NULL,
+  prediction_col = NULL,
   truth = c("R", "NWT"),
   prediction_rule = "any",
   min_count = NULL,
@@ -29,15 +31,24 @@ Default \code{NULL} includes all marker columns.}
 \item{exclude_markers}{A character vector of marker column names to exclude
 from the genotypic prediction. Applied after \code{markers} filtering.}
 
-\item{ppv_threshold}{A numeric PPV threshold (0-1). Markers with solo PPV below
-this value are excluded. Requires \code{ppv_results}.}
+\item{ppv_threshold}{A numeric PPV threshold (0-1). Used for solo PPV-based
+marker filtering when \code{solo_ppv_results} is provided, or as the combination
+PPV threshold when \code{prediction_rule = "combo_ppv"}.}
 
-\item{ppv_results}{Output of \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}} \strong{or} \code{\link[=ppv]{ppv()}},
-used for solo PPV-based marker filtering when \code{ppv_threshold} is set.
-When the output of \code{\link[=ppv]{ppv()}} is supplied, single-marker entries
-(\code{marker_count == 1}) in the \code{summary} table are used to obtain per-marker
-PPVs, making the behaviour equivalent to supplying \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}
-output directly.}
+\item{solo_ppv_results}{Output of \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, used for PPV-based
+marker filtering when \code{ppv_threshold} is set.}
+
+\item{ppv_results}{Output of \code{\link[=ppv]{ppv()}}, required when
+\code{prediction_rule = "combo_ppv"}. The \code{summary} table from this object is
+used to identify marker combinations with PPV >= \code{ppv_threshold} for the
+relevant outcome (\code{R.ppv} or \code{NWT.ppv}). Samples whose marker combination
+matches any passing combination are predicted positive.}
+
+\item{prediction_col}{A character string naming a column in \code{binary_matrix}
+that contains a user-defined prediction (coded 0/1). When supplied, all
+marker filtering and prediction generation are bypassed; the specified column
+is used directly as the prediction for all outcomes in \code{truth}. This allows
+arbitrary prediction logic to be evaluated using the concordance metrics.}
 
 \item{truth}{A character vector specifying the phenotypic truth column(s) to
 evaluate: \code{"R"} (resistant vs susceptible/intermediate), \code{"NWT"}
@@ -47,7 +58,8 @@ evaluate: \code{"R"} (resistant vs susceptible/intermediate), \code{"NWT"}
 \code{"any"} (default) predicts positive if any marker is present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
 \code{"all"} predicts positive only if all markers are present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
 a positive integer predicts positive if at least that many markers are present (after applying filters as specified by \code{markers}, \code{exclude_markers}, \code{ppv_threshold}, \code{pval_threshold}, \code{min_count});
-\code{"logistic"} uses a logistic regression model from \code{logreg_results} to predict outcomes for each sample.}
+\code{"logistic"} uses a logistic regression model from \code{logreg_results} to predict outcomes for each sample;
+\code{"combo_ppv"} predicts positive if a sample's marker combination has PPV >= \code{ppv_threshold} in \code{ppv_results}.}
 
 \item{min_count}{An integer or \code{NULL}. Exclude markers with total frequency
 (column sum in binary_matrix) below this value. Default \code{NULL} (no filtering).}
@@ -73,10 +85,14 @@ An S3 object of class \code{"amr_concordance"}, a list containing:
 }
 \description{
 Compares genotypes (presence of resistance markers) to observed phenotypes
-(resistant vs susceptible) using a binary matrix from \code{\link[=get_binary_matrix]{get_binary_matrix()}}.
-A genotypic prediction variable is defined on the basis of presence of
-genotype markers (either any marker in the input table, or those defined by
-an input inclusion list or exclusion list). This genotypic prediction is then
+(R vs S, and/or NWT vs NWT) using a binary matrix from \code{\link[=get_binary_matrix]{get_binary_matrix()}}.
+A genotypic prediction variable is defined on the basis of
+genotype marker data (based on a variety of possible rules including
+any/all/minimum number of markers; specifically those
+markers or combinations exceeding a threshold positive
+predictive value (PPV);  predictions from a logistic regression model; or a
+user-defined field providing predictions).
+This genotypic prediction is then
 compared to the observed phenotypes using standard classification metrics
 (via the \code{yardstick} pkg) and AMR-specific error rates (major error, ME
 and very major error, VME) per ISO 20776-2 (and see
@@ -92,6 +108,18 @@ filtering in order: inclusion list \code{markers}, exclusion list \code{exclude_
 
 Marker filtering is performed per outcome (R, NWT), since PPV-based and
 p-value-based filters are category/outcome-specific.
+
+When \code{prediction_col} is supplied, all marker filtering and prediction
+generation are bypassed. The named column (0/1-coded) is used directly as
+the genotypic prediction. This is useful when the user has computed a
+custom prediction (e.g. based on marker combinations from \code{\link[=ppv]{ppv()}}) and
+wants to evaluate concordance metrics against the truth columns.
+
+When \code{prediction_rule = "combo_ppv"}, the function calls \code{\link[=get_combo_matrix]{get_combo_matrix()}}
+internally to derive a combination identifier for each sample. Samples whose
+combination identifier matches any entry in \code{ppv_results$summary} with
+outcome PPV >= \code{ppv_threshold} are predicted positive. The unique individual
+markers contributing to passing combinations are reported in \code{markers_used}.
 
 Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
 F-measure) are calculated using pkg \code{yardstick}. AMR-specific error rates are
@@ -125,20 +153,12 @@ result <- concordance(binary_matrix, truth = "R")
 # Exclude specific markers
 result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
 
-# Filter markers by solo PPV threshold, using solo_ppv_analysis() output
+# Filter markers by solo PPV threshold
 solo_ppv <- solo_ppv_analysis(binary_matrix = binary_matrix)
 result <- concordance(
   binary_matrix,
   ppv_threshold = 0.5,
-  ppv_results = solo_ppv
-)
-
-# Filter markers by solo PPV threshold, using ppv() output
-ppv_res <- ppv(binary_matrix = binary_matrix)
-result <- concordance(
-  binary_matrix,
-  ppv_threshold = 0.5,
-  ppv_results = ppv_res
+  solo_ppv_results = solo_ppv
 )
 
 # Require at least 2 markers present for prediction
@@ -152,10 +172,26 @@ result <- concordance(
   logreg_results = logreg
 )
 
+# Predict based on marker combinations with PPV >= 0.5 (from ppv())
+ppv_res <- ppv(binary_matrix = binary_matrix)
+result <- concordance(
+  binary_matrix,
+  prediction_rule = "combo_ppv",
+  ppv_results = ppv_res,
+  ppv_threshold = 0.5
+)
+
+# Use a custom user-defined prediction column
+binary_matrix$my_pred <- as.integer(binary_matrix$gyrA_S83L == 1 | binary_matrix$gyrA_D87N == 1)
+result <- concordance(binary_matrix, prediction_col = "my_pred", truth = "R")
+
 # Access components
 result$conf_mat$R
 result$metrics
 result$markers_used
+
+# predictions vs observed SIR calls
+result$data \%>\% count(R_pred, pheno)
 }
 }
 \seealso{

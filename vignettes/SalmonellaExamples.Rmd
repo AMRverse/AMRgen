@@ -1,5 +1,5 @@
 ---
-title: "Analysing a small user-generated <em>Salmonella</em> geno-pheno dataset"
+title: "Analysing a small user-generated Salmonella geno-pheno dataset"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Analysing a small user-generated Salmonella geno-pheno dataset}

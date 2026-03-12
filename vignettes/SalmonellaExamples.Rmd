@@ -2,7 +2,7 @@
 title: "Analysing a small user-generated <i>Salmonella</i> geno-pheno dataset"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analysing a small user-generated <i>Salmonella</i> geno-pheno dataset}
+  %\VignetteIndexEntry{Analysing a small user-generated Salmonella geno-pheno dataset}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

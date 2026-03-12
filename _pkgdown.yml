@@ -48,7 +48,7 @@ navbar:
       href: "reference/index.html"
     - text: "Vignettes"
       icon: "fa-book"
-      href: "vignettes"
+      href: "articles"
   right:
     - text: "Source Code"
       icon: "fab fa-github"
@@ -56,7 +56,6 @@ navbar:
 
 articles:
   - title: "Vignettes"
-    slug: vignettes
     contents:
       - AnalysingGenoPhenoData
       - DownloadGenoPhenoData

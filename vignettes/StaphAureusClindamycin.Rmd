@@ -9,6 +9,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<style>
+h1.title { display: none; }
+</style>
+
+# Analysing clindamycin resistance in *Staphylococcus aureus*
+
 ```{r, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,

@@ -1,4 +1,4 @@
-# Analysing a small user-generated Salmonella geno-pheno dataset
+# Example Analysis using Salmonella data
 
 ## Introduction
 

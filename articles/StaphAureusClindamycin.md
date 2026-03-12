@@ -1,4 +1,4 @@
-# Analysing clindamycin resistance in Staphylococcus aureus
+# Example analysing clindamycin resistance in Staphylococcus aureus
 
 ## Analysing clindamycin resistance in *Staphylococcus aureus*
 

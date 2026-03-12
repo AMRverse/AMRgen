@@ -4,11 +4,11 @@
 
 - [Analysing Geno-Pheno
   Data](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.md):
-- [Download NCBI and EBI
-  Data](https://AMRverse.github.io/AMRgen/articles/DownloadGenoPhenoData.md):
-- [Analysing Neisseria gonorrhoeae geno-pheno
+- [Downloading geno-pheno data from NCBI and
+  EBI](https://AMRverse.github.io/AMRgen/articles/DownloadGenoPhenoData.md):
+- [Example analysis of Neisseria gonorrhoeae geno-pheno
   data](https://AMRverse.github.io/AMRgen/articles/NeisseriaGonoExamples.md):
-- [Analysing a small user-generated Salmonella geno-pheno
-  dataset](https://AMRverse.github.io/AMRgen/articles/SalmonellaExamples.md):
-- [Analysing clindamycin resistance in Staphylococcus
+- [Example Analysis using Salmonella
+  data](https://AMRverse.github.io/AMRgen/articles/SalmonellaExamples.md):
+- [Example analysing clindamycin resistance in Staphylococcus
   aureus](https://AMRverse.github.io/AMRgen/articles/StaphAureusClindamycin.md):

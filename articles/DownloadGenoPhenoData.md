@@ -1,4 +1,4 @@
-# Download NCBI and EBI Data
+# Downloading geno-pheno data from NCBI and EBI
 
 ## Introduction
 

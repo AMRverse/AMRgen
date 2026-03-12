@@ -1,4 +1,4 @@
-# Analysing \<i\>Neisseria gonorrhoeae\</i\> geno-pheno data
+# Analysing \<em\>Neisseria gonorrhoeae\</em\> geno-pheno data
 
 ## **Introduction**
 
@@ -126,8 +126,8 @@ eurogasp_geno <- import_amrfp(
 ```
 
 For the phenotype file, reshape from wide to long format using
-[`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html).
-MIC values across antibiotics may be stored as different types (numeric
+[`pivot_longer()`](https://rdrr.io/pkg/tidyr/man/pivot_longer.html). MIC
+values across antibiotics may be stored as different types (numeric
 vs. character) due to inequality prefixes such as `<0.016` or `>32`. We
 coerce all antibiotic columns to character before pivoting to avoid type
 conflicts while preserving this information for downstream processing by

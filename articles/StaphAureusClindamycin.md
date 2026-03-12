@@ -1,4 +1,4 @@
-# Analysing clindamycin resistance in \<i\>Staphylococcus aureus\</i\>
+# Analysing clindamycin resistance in \<em\>Staphylococcus aureus\</em\>
 
 ## Introduction
 

@@ -1,10 +1,10 @@
 ---
-title: "Analysing Neisseria gonorrhoeae geno-pheno data"
+title: "Analysing <i>Neisseria gonorrhoeae</i> geno-pheno data"
 author: "Leonor Sánchez-Busó"
 date: "2026-03-09"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analysing Neisseria gonorrhoeae genotype-phenotype data}
+  %\VignetteIndexEntry{Analysing <i>Neisseria gonorrhoeae</i> genotype-phenotype data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

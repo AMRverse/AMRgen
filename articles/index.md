@@ -12,3 +12,5 @@
   source](https://AMRverse.github.io/AMRgen/articles/SalmonellaExamples.md):
 - [Example with custom classification of genotype
   hits](https://AMRverse.github.io/AMRgen/articles/StaphAureusClindamycin.md):
+- [Analysing phenotype-genotype
+  concordance](https://AMRverse.github.io/AMRgen/articles/Concordance.md):

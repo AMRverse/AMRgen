@@ -14,6 +14,8 @@ combating AMR on a global scale.
 
 Useful links:
 
+- <https://amrgen.org>
+
 - <https://AMRverse.github.io/AMRgen/>
 
 - <https://github.com/AMRverse/AMRgen>
@@ -27,12 +29,30 @@ Useful links:
 
 Authors:
 
+- Kathryn E. Holt <drkatholt@gmail.com>
+  ([ORCID](https://orcid.org/0000-0003-3949-2471))
+
+- Jane Hawkey ([ORCID](https://orcid.org/0000-0001-9661-5293))
+
 - Natacha Couto ([ORCID](https://orcid.org/0000-0002-9152-5464))
 
 - Zoe A. Dyson <zoe.dyson@lshtm.ac.uk>
   ([ORCID](https://orcid.org/0000-0002-8887-3492))
 
-- Jane Hawkey ([ORCID](https://orcid.org/0000-0001-9661-5293))
+- Dominique L. Chaput ([ORCID](https://orcid.org/0000-0002-9736-2619))
 
-- Kat Holt <drkatholt@gmail.com>
-  ([ORCID](https://orcid.org/0000-0003-3949-2471))
+- Silvia Argímon ([ORCID](https://orcid.org/0000-0002-2884-3857))
+
+- Ebenezer Foster-Nyarko
+
+- Gwen M. Knight
+
+- Dorottya Nagy
+
+- Richard Goodman ([ORCID](https://orcid.org/0009-0008-0578-789X))
+
+- Arjun B. Prasad ([ORCID](https://orcid.org/0000-0002-1343-8664))
+
+- Leonor Sánchez-Busó ([ORCID](https://orcid.org/0000-0002-4162-0228))
+
+- Kara K. Tsang ([ORCID](https://orcid.org/0000-0001-7742-8855))

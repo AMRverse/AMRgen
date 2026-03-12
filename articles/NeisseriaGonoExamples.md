@@ -1,4 +1,4 @@
-# Analysing Neisseria gonorrhoeae geno-pheno data
+# Analysing \<i\>Neisseria gonorrhoeae\</i\> geno-pheno data
 
 ## **Introduction**
 

@@ -1,11 +1,13 @@
 ---
-title: "Example Analysis using Salmonella data"
+title: "Example with custom stratification by isolate source"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example Analysis using Salmonella data}
+  %\VignetteIndexEntry{Example with custom stratification by isolate source}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+# Analysing a small user-generated geno-pheno dataset of *Salmonella enterica*
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -21,7 +23,7 @@ if (!requireNamespace("AMRgen", quietly = TRUE)) {
 }
 ```
 
-# Introduction
+## Introduction
 
 This vignette shows how `AMRgen` can be used to explore a small user-generated dataset with genotypic and phenotypic data for non-typhoidal, non-invasive *Salmonella enterica* isolates. Phenotypic data consists of MIC E-test results for ciprofloxacin, levofloxacin, and moxifloxacin. Genotypic data includes AMRFinderPlus results for quinolone resistance markers.
 

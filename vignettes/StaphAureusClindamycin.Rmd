@@ -1,17 +1,13 @@
 ---
-title: "Example analysing clindamycin resistance in Staphylococcus aureus"
+title: "Example with custom classification of genotype hits"
 author: "Natacha Couto"
 date: "2026-03-12"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example analysing clindamycin resistance in Staphylococcus aureus}
+  %\VignetteIndexEntry{Example with custom classification of genotype hits}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
-<style>
-h1.title { display: none; }
-</style>
 
 # Analysing clindamycin resistance in *Staphylococcus aureus*
 

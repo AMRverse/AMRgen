@@ -1,6 +1,8 @@
 # Analysing clindamycin resistance in Staphylococcus aureus
 
-## Introduction
+## Analysing clindamycin resistance in *Staphylococcus aureus*
+
+### Introduction
 
 This is document summarises the analysis of clindamycin resistance in
 *S. aureus*. More specifically, we will look at the distribution of
@@ -15,7 +17,7 @@ library(ggplot2)
 library(dplyr)
 ```
 
-## Data preparation
+### Data preparation
 
 For this example, we have collated genotype-phenotype data from NCBI,
 EBI through the ESGEM-AMR Staphylococcus subgroup. Phenotypic data were
@@ -43,7 +45,7 @@ cli_accession <- afp_CLI_public %>%
   select(-obs_id)
 ```
 
-## Genotype-phenotype analysis
+### Genotype-phenotype analysis
 
 Next, we will create a binary matrix for clindamycin resistance. We can
 do this with the just the markers and with the variants of the markers.
@@ -115,7 +117,7 @@ cli_mic_upset <- amr_upset(
 
 ![](StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-2.png)
 
-## Solo PPV analysis
+### Solo PPV analysis
 
 Next, we will calculate the solo positive predictive value (soloPPV) for
 each marker and variant. This will allow us to see which markers and
@@ -151,7 +153,7 @@ This is a known phenomenon for clindamycin resistance in *S. aureus*,
 where the presence of an erm gene can lead to inducible resistance that
 may not be detected in a standard AST test.
 
-## Assocation of specific variants with sequence types
+### Assocation of specific variants with sequence types
 
 Finally, we can also look at the association of specific marker variants
 with sequence types, if this data are available. This can be done by

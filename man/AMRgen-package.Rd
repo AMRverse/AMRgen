@@ -11,6 +11,7 @@ The AMRgen package provides tools for interpreting antimicrobial resistance (AMR
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://amrgen.org}
   \item \url{https://AMRverse.github.io/AMRgen/}
   \item \url{https://github.com/AMRverse/AMRgen}
   \item Report bugs at \url{https://github.com/AMRverse/AMRgen/issues}
@@ -22,10 +23,19 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Kathryn E. Holt \email{drkatholt@gmail.com} (\href{https://orcid.org/0000-0003-3949-2471}{ORCID})
+  \item Jane Hawkey (\href{https://orcid.org/0000-0001-9661-5293}{ORCID})
   \item Natacha Couto (\href{https://orcid.org/0000-0002-9152-5464}{ORCID})
   \item Zoe A. Dyson \email{zoe.dyson@lshtm.ac.uk} (\href{https://orcid.org/0000-0002-8887-3492}{ORCID})
-  \item Jane Hawkey (\href{https://orcid.org/0000-0001-9661-5293}{ORCID})
-  \item Kat Holt \email{drkatholt@gmail.com} (\href{https://orcid.org/0000-0003-3949-2471}{ORCID})
+  \item Dominique L. Chaput (\href{https://orcid.org/0000-0002-9736-2619}{ORCID})
+  \item Silvia Argímon (\href{https://orcid.org/0000-0002-2884-3857}{ORCID})
+  \item Ebenezer Foster-Nyarko
+  \item Gwen M. Knight
+  \item Dorottya Nagy
+  \item Richard Goodman (\href{https://orcid.org/0009-0008-0578-789X}{ORCID})
+  \item Arjun B. Prasad (\href{https://orcid.org/0000-0002-1343-8664}{ORCID})
+  \item Leonor Sánchez-Busó (\href{https://orcid.org/0000-0002-4162-0228}{ORCID})
+  \item Kara K. Tsang (\href{https://orcid.org/0000-0001-7742-8855}{ORCID})
 }
 
 }

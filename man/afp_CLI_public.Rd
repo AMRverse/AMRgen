@@ -29,6 +29,9 @@
 \item \verb{variation type}: Type of genetic variation interpreted by \link{import_amrfp}.
 }
 }
+\source{
+\url{https://github.com/AllTheBacteria/AllTheBacteria}
+}
 \usage{
 afp_CLI_public
 }

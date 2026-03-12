@@ -3,9 +3,7 @@
 \docType{data}
 \name{ast_CLI_public}
 \alias{ast_CLI_public}
-\title{Clindamycin MIC data for 5914 \emph{Staphylococcus aureus} isolates,
-used to investigate genetic determinants of clindamycin resistance.
-Downloaded from NCBI and EBI.}
+\title{Clindamycin MIC data for 5914 \emph{Staphylococcus aureus} isolates}
 \format{
 \code{ast_CLI_public} A data frame with 5914 rows and 34 columns:
 \itemize{
@@ -22,12 +20,16 @@ Downloaded from NCBI and EBI.}
 \item \code{spp_pheno}: Species identifier, interpreted from \verb{Scientific name} using \code{as.mo}, used to interpret \code{ecoff} and \code{pheno} columns.
 }
 }
+\source{
+\url{https://www.ncbi.nlm.nih.gov/pathogens/ast}
+
+\url{https://www.ebi.ac.uk/amr}
+}
 \usage{
 ast_CLI_public
 }
 \description{
-Clindamycin MIC data for 5914 \emph{Staphylococcus aureus} isolates,
-used to investigate genetic determinants of clindamycin resistance.
+Used to investigate genetic determinants of clindamycin resistance.
 Downloaded from NCBI and EBI.
 }
 \keyword{datasets}

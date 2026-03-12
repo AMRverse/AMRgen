@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   fig.retina = 2,
   dpi = 300,
   out.width = "100%"
-  )
+)
 # If the package is not installed, load the development version
 if (!requireNamespace("AMRgen", quietly = TRUE)) {
   devtools::load_all()
@@ -33,7 +33,7 @@ Start by loading the package:
 ```{r setup, warning=FALSE, message=FALSE}
 library(AMRgen)
 library(ggplot2)
-library(tidyverse)
+library(dplyr)
 ```
 
 ## Data preparation
@@ -42,11 +42,11 @@ For this example, we have collated genotype-phenotype data from NCBI, EBI throug
 
 ```{r extract subvariants, warning=FALSE, message=FALSE}
 # Create the new marker.label column
-cli_accession <- afp_CLI_public %>% 
-  mutate(obs_id = row_number()) %>% 
+cli_accession <- afp_CLI_public %>%
+  mutate(obs_id = row_number()) %>%
   mutate(exact_match = if_else(
-    `% Coverage of reference sequence` == 100 & 
-    `% Identity to reference sequence` == 100.00, 
+    `% Coverage of reference sequence` == 100 &
+      `% Identity to reference sequence` == 100.00,
     "", "x_"
   )) %>%
   mutate(node_hit = paste0(node, "__", exact_match, `Accession of closest sequence`)) %>%
@@ -139,13 +139,13 @@ high_freq_sts <- ST_data_CLI %>%
 
 # Merge with ST data
 cli_accession_st <- cli_accession %>%
-  inner_join(ST_data_CLI, by = "Name") %>% 
+  inner_join(ST_data_CLI, by = "Name") %>%
   filter(ST %in% high_freq_sts)
 
 # Calculate prevalence of variant in each ST
 balloon_data <- cli_accession_st %>%
   group_by(ST, marker.label) %>%
-  summarise(n_samples = n_distinct(Name), .groups = 'drop') %>%
+  summarise(n_samples = n_distinct(Name), .groups = "drop") %>%
   left_join(ST_data_CLI %>% count(ST, name = "total_st_n"), by = "ST") %>%
   mutate(percent_prevalence = (n_samples / total_st_n) * 100) %>%
   filter(percent_prevalence >= 10)
@@ -154,14 +154,14 @@ balloon_data <- cli_accession_st %>%
 ggplot(balloon_data, aes(x = ST, y = marker.label)) +
   geom_point(aes(size = n_samples, color = percent_prevalence)) +
   scale_color_viridis_c(option = "viridis", direction = -1) +
-  scale_size_continuous(range = c(1, 10)) + 
+  scale_size_continuous(range = c(1, 10)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(size = 16, angle = 45, hjust = 1),
     axis.text.y = element_text(size = 16),
     legend.title = element_text(size = 16),
     legend.text = element_text(size = 14)
-    ) +
+  ) +
   labs(
     title = "Clindamycin Markers by Major Sequence Types",
     subtitle = "Analysis of STs with n >= 100",

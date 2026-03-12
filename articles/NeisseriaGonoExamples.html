@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Example analysis of Neisseria gonorrhoeae geno-pheno data • AMRgen</title>
+<title>Example using large-scale regional/national surveillance data • AMRgen</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Nunito-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Example analysis of Neisseria gonorrhoeae geno-pheno data">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Example using large-scale regional/national surveillance data">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -49,7 +49,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Example analysis of Neisseria gonorrhoeae geno-pheno data</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Example using large-scale regional/national surveillance data</h1>
                         <h4 data-toc-skip class="author">Leonor
 Sánchez-Busó</h4>
             
@@ -61,16 +61,12 @@ Sánchez-Busó</h4>
 
     
     
-<style>
-h1.title { display: none; }
-</style>
-<h1 class="title">
-Analysing <em>Neisseria gonorrhoeae</em> geno-pheno data
-</h1>
 <div class="section level2">
-<h2 id="introduction">
-<strong>Introduction</strong><a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="analysing-neisseria-gonorrhoeae-geno-pheno-data">Analysing <em>Neisseria gonorrhoeae</em> geno-pheno data<a class="anchor" aria-label="anchor" href="#analysing-neisseria-gonorrhoeae-geno-pheno-data"></a>
 </h2>
+<div class="section level3">
+<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h3>
 <p>This vignette demonstrates three usage examples of
 <code>AMRgen</code> functions to investigate associations between
 genotype and phenotype data in <em>Neisseria gonorrhoeae</em>.
@@ -97,14 +93,14 @@ and predict resistance based on this concordance.</p></li>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="use-case-1-investigation-of-genotype-phenotype-amr-data-from-euro-gasp-genomic-surveys">
+<div class="section level3">
+<h3 id="use-case-1-investigation-of-genotype-phenotype-amr-data-from-euro-gasp-genomic-surveys">
 <strong>Use case 1:</strong> Investigation of genotype-phenotype AMR
 data from Euro-GASP genomic surveys<a class="anchor" aria-label="anchor" href="#use-case-1-investigation-of-genotype-phenotype-amr-data-from-euro-gasp-genomic-surveys"></a>
-</h2>
-<div class="section level3">
-<h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
 </h3>
+<div class="section level4">
+<h4 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h4>
 <p>For this example, we have collated whole-genome sequencing data from
 three European Gonococcal Antimicrobial Surveillance Programme
 (Euro-GASP) genomic surveys. Raw FASTQ data was downloaded from the
@@ -161,11 +157,11 @@ serves as the <strong>phenotype input</strong> for
 <li>Ceftriaxone (n=5,361 isolates)</li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="identification-of-genetic-amr-determinants-using-amrfinderplus">
+<div class="section level4">
+<h4 id="identification-of-genetic-amr-determinants-using-amrfinderplus">
 <strong>Identification of genetic AMR determinants using
 <code>AMRfinderplus</code></strong><a class="anchor" aria-label="anchor" href="#identification-of-genetic-amr-determinants-using-amrfinderplus"></a>
-</h3>
+</h4>
 <p><a href="https://doi.org/10.1038/s41598-021-91456-0" class="external-link"><code>AMRfinderplus v4.0.23</code></a>
 (database version 2025-03-25.1) was run on all assemblies using the
 following command:</p>
@@ -182,11 +178,11 @@ table:</p>
 <code>eurogasp_geno_raw</code>, the <strong>genotype input</strong> for
 <code>AMRgen</code>.</p>
 </div>
-<div class="section level3">
-<h3 id="importing-genotype-and-phenotype-data-into-amrgen">
+<div class="section level4">
+<h4 id="importing-genotype-and-phenotype-data-into-amrgen">
 <strong>Importing genotype and phenotype data into
 <code>AMRgen</code></strong><a class="anchor" aria-label="anchor" href="#importing-genotype-and-phenotype-data-into-amrgen"></a>
-</h3>
+</h4>
 <p>Use <code><a href="../reference/import_amrfp.html">import_amrfp()</a></code> to parse the AMRfinderplus
 output:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -250,11 +246,11 @@ properly accounted for in downstream analyses:</p>
 <span></span>
 <span><span class="va">eurogasp_geno</span> <span class="op">&lt;-</span> <span class="va">eurogasp_geno</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>Name <span class="op">=</span> <span class="va">negative_eurogasp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="exploring-phenotype-distributions-and-comparing-with-eucast-reference-data">
+<div class="section level4">
+<h4 id="exploring-phenotype-distributions-and-comparing-with-eucast-reference-data">
 <strong>Exploring phenotype distributions and comparing with EUCAST
 reference data</strong><a class="anchor" aria-label="anchor" href="#exploring-phenotype-distributions-and-comparing-with-eucast-reference-data"></a>
-</h3>
+</h4>
 <p>Round MIC values to the nearest doubling dilution using
 <code><a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">as.mic()</a></code> with <code>round_to_next_log2 = TRUE</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -263,10 +259,10 @@ reference data</strong><a class="anchor" aria-label="anchor" href="#exploring-ph
 <p>For each antibiotic, we visualise the MIC distribution with
 <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code> and compare it to the EUCAST reference
 distribution using <code><a href="../reference/get_eucast_amr_distribution.html">compare_mic_with_eucast()</a></code>.</p>
-<div class="section level4">
-<h4 id="azithromycin">
+<div class="section level5">
+<h5 id="azithromycin">
 <strong>Azithromycin</strong><a class="anchor" aria-label="anchor" href="#azithromycin"></a>
-</h4>
+</h5>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the distribution of MIC data in the study</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
@@ -311,10 +307,10 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Azithromycin MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="ciprofloxacin">
+<div class="section level5">
+<h5 id="ciprofloxacin">
 <strong>Ciprofloxacin</strong><a class="anchor" aria-label="anchor" href="#ciprofloxacin"></a>
-</h4>
+</h5>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the distribution of MIC data in the study</span></span>
 <span><span class="co"># The breakpoint for R is 0.06 but cannot be represented directly as it is not a doubling dilution (values in x axis).</span></span>
@@ -372,10 +368,10 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ciprofloxacin MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="ceftriaxone">
+<div class="section level5">
+<h5 id="ceftriaxone">
 <strong>Ceftriaxone</strong><a class="anchor" aria-label="anchor" href="#ceftriaxone"></a>
-</h4>
+</h5>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the distribution of MIC data in the study</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
@@ -418,10 +414,10 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ceftriaxone MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="cefixime">
+<div class="section level5">
+<h5 id="cefixime">
 <strong>Cefixime</strong><a class="anchor" aria-label="anchor" href="#cefixime"></a>
-</h4>
+</h5>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the distribution of MIC data in the study</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
@@ -465,10 +461,10 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level3">
-<h3 id="analysing-azithromycin-genotype-phenotype-data">
+<div class="section level4">
+<h4 id="analysing-azithromycin-genotype-phenotype-data">
 <strong>Analysing azithromycin genotype-phenotype data</strong><a class="anchor" aria-label="anchor" href="#analysing-azithromycin-genotype-phenotype-data"></a>
-</h3>
+</h4>
 <p>Azithromycin was historically used in dual therapy for gonorrhoea but
 has been replaced in many countries by ceftriaxone monotherapy due to
 the expansion of resistant lineages. No EUCAST clinical breakpoint
@@ -631,11 +627,11 @@ mutations associated with decreased azithromycin susceptibility (<a href="https:
 <p>Many isolates with MICs above the ECOFF (1–4 mg/L) are predicted as
 WT, consistent with uncharacterised efflux pump variants.</p>
 </div>
-<div class="section level3">
-<h3 id="analysing-ciprofloxacin-genotype-phenotype-data">
+<div class="section level4">
+<h4 id="analysing-ciprofloxacin-genotype-phenotype-data">
 <strong>Analysing ciprofloxacin genotype-phenotype
 data</strong><a class="anchor" aria-label="anchor" href="#analysing-ciprofloxacin-genotype-phenotype-data"></a>
-</h3>
+</h4>
 <p>Ciprofloxacin resistance is widespread in <em>N. gonorrhoeae</em> and
 is strongly associated with known genetic determinants — primarily
 mutations in the <em>gyrA</em> and <em>parC</em> genes. Build the binary
@@ -827,10 +823,10 @@ predictions:</p>
 <p>Results demonstrate a very strong genotype-based prediction of
 ciprofloxacin resistance/susceptibility using the currently available
 AMR markers.</p>
-<div class="section level4">
-<h4 id="analysing-extended-spectrum-cephalosporin-genotype-phenotype-data">Analysing <strong>extended-spectrum cephalosporin</strong>
+<div class="section level5">
+<h5 id="analysing-extended-spectrum-cephalosporin-genotype-phenotype-data">Analysing <strong>extended-spectrum cephalosporin</strong>
 genotype-phenotype data<a class="anchor" aria-label="anchor" href="#analysing-extended-spectrum-cephalosporin-genotype-phenotype-data"></a>
-</h4>
+</h5>
 <p>Euro-GASP provides MIC data for both ceftriaxone (first-line
 monotherapy for gonorrhoea) and cefixime (historically used but largely
 discarded due to expansion of <em>penA</em> mosaics generated through
@@ -945,12 +941,12 @@ are not feasible here.</p>
 </div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="use-case-2-study-of-mosaic-pbp2-mutations-associated-with-decreased-susceptibility-and-resistance-to-ceftriaxone">
+<div class="section level3">
+<h3 id="use-case-2-study-of-mosaic-pbp2-mutations-associated-with-decreased-susceptibility-and-resistance-to-ceftriaxone">
 <strong>Use case 2:</strong> Study of mosaic PBP2 mutations
 associated with decreased susceptibility and resistance to
 ceftriaxone<a class="anchor" aria-label="anchor" href="#use-case-2-study-of-mosaic-pbp2-mutations-associated-with-decreased-susceptibility-and-resistance-to-ceftriaxone"></a>
-</h2>
+</h3>
 <p>In this use case, we explore combinations of PBP2 mutations and their
 associated MIC ranges for mosaic <em>penA</em> variants, using a broader
 dataset that enriches for ceftriaxone-resistant and
@@ -1112,11 +1108,11 @@ of mutations are required. <em>penA</em> I312M has a very wide
 coefficient interval, likely reflecting their contribution to
 <em>penA</em> mosaics associated with resistance.</p>
 </div>
-<div class="section level2">
-<h2 id="use-case-3-investigation-of-tetracycline-resistance-and-implications-for-sti-prevention-strategies">
+<div class="section level3">
+<h3 id="use-case-3-investigation-of-tetracycline-resistance-and-implications-for-sti-prevention-strategies">
 <strong>Use case 3:</strong> Investigation of tetracycline
 resistance and implications for STI prevention strategies<a class="anchor" aria-label="anchor" href="#use-case-3-investigation-of-tetracycline-resistance-and-implications-for-sti-prevention-strategies"></a>
-</h2>
+</h3>
 <p>Doxy-PEP (doxycycline post-exposure prophylaxis) involves taking a
 single dose of doxycycline within 24–72 hours after a sexual risk event
 to prevent STIs. While evidence supports its short-term efficacy, a
@@ -1366,6 +1362,7 @@ to select for these pre-existing resistant lineages. Together, these
 findings support the conclusion that doxy-PEP is unlikely to provide a
 durable long-term solution for reducing the burden of gonorrhoea
 infections.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

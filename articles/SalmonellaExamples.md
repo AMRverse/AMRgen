@@ -1,6 +1,8 @@
-# Example Analysis using Salmonella data
+# Example with custom stratification by isolate source
 
-## Introduction
+## Analysing a small user-generated geno-pheno dataset of *Salmonella enterica*
+
+### Introduction
 
 This vignette shows how `AMRgen` can be used to explore a small
 user-generated dataset with genotypic and phenotypic data for

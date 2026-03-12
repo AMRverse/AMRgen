@@ -1,8 +1,8 @@
-# Example analysis of Neisseria gonorrhoeae geno-pheno data
+# Example using large-scale regional/national surveillance data
 
-# Analysing *Neisseria gonorrhoeae* geno-pheno data
+## Analysing *Neisseria gonorrhoeae* geno-pheno data
 
-## **Introduction**
+### Introduction
 
 This vignette demonstrates three usage examples of `AMRgen` functions to
 investigate associations between genotype and phenotype data in
@@ -36,9 +36,9 @@ library(tidyr)
 library(ggplot2)
 ```
 
-## **Use case 1:** Investigation of genotype-phenotype AMR data from Euro-GASP genomic surveys
+### **Use case 1:** Investigation of genotype-phenotype AMR data from Euro-GASP genomic surveys
 
-### Data preparation
+#### Data preparation
 
 For this example, we have collated whole-genome sequencing data from
 three European Gonococcal Antimicrobial Surveillance Programme
@@ -91,7 +91,7 @@ The dataset (total n = 5,361) includes MIC data for:
 - Cefixime (n=5,361 isolates)
 - Ceftriaxone (n=5,361 isolates)
 
-### **Identification of genetic AMR determinants using `AMRfinderplus`**
+#### **Identification of genetic AMR determinants using `AMRfinderplus`**
 
 [`AMRfinderplus v4.0.23`](https://doi.org/10.1038/s41598-021-91456-0)
 (database version 2025-03-25.1) was run on all assemblies using the
@@ -114,7 +114,7 @@ awk 'FNR>1 || NR==1' *_amrfp.tsv > eurogasps_amrfp.tsv
 This concatenated table is pre-loaded as `eurogasp_geno_raw`, the
 **genotype input** for `AMRgen`.
 
-### **Importing genotype and phenotype data into `AMRgen`**
+#### **Importing genotype and phenotype data into `AMRgen`**
 
 Use
 [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
@@ -191,7 +191,7 @@ negative_eurogasp <- eurogasp_pheno_raw %>%
 eurogasp_geno <- eurogasp_geno %>% bind_rows(tibble(Name = negative_eurogasp))
 ```
 
-### **Exploring phenotype distributions and comparing with EUCAST reference data**
+#### **Exploring phenotype distributions and comparing with EUCAST reference data**
 
 Round MIC values to the nearest doubling dilution using
 [`as.mic()`](https://amr-for-r.org/reference/as.mic.html) with
@@ -207,7 +207,7 @@ For each antibiotic, we visualise the MIC distribution with
 and compare it to the EUCAST reference distribution using
 [`compare_mic_with_eucast()`](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md).
 
-#### **Azithromycin**
+##### **Azithromycin**
 
 ``` r
 # Plot the distribution of MIC data in the study
@@ -261,7 +261,7 @@ ggplot(azm_comp_melt, aes(x = value, y = nb, fill = variable)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-#### **Ciprofloxacin**
+##### **Ciprofloxacin**
 
 ``` r
 # Plot the distribution of MIC data in the study
@@ -331,7 +331,7 @@ ggplot(cip_comp_melt, aes(x = value, y = nb, fill = variable)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-#### **Ceftriaxone**
+##### **Ceftriaxone**
 
 ``` r
 # Plot the distribution of MIC data in the study
@@ -383,7 +383,7 @@ ggplot(cro_comp_melt, aes(x = value, y = nb, fill = variable)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-#### **Cefixime**
+##### **Cefixime**
 
 ``` r
 # Plot the distribution of MIC data in the study
@@ -435,7 +435,7 @@ ggplot(cfm_comp_melt, aes(x = value, y = nb, fill = variable)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-### **Analysing azithromycin genotype-phenotype data**
+#### **Analysing azithromycin genotype-phenotype data**
 
 Azithromycin was historically used in dual therapy for gonorrhoea but
 has been replaced in many countries by ceftriaxone monotherapy due to
@@ -632,7 +632,7 @@ assay_by_var(
 Many isolates with MICs above the ECOFF (1–4 mg/L) are predicted as WT,
 consistent with uncharacterised efflux pump variants.
 
-### **Analysing ciprofloxacin genotype-phenotype data**
+#### **Analysing ciprofloxacin genotype-phenotype data**
 
 Ciprofloxacin resistance is widespread in *N. gonorrhoeae* and is
 strongly associated with known genetic determinants — primarily
@@ -851,7 +851,7 @@ Results demonstrate a very strong genotype-based prediction of
 ciprofloxacin resistance/susceptibility using the currently available
 AMR markers.
 
-#### Analysing **extended-spectrum cephalosporin** genotype-phenotype data
+##### Analysing **extended-spectrum cephalosporin** genotype-phenotype data
 
 Euro-GASP provides MIC data for both ceftriaxone (first-line monotherapy
 for gonorrhoea) and cefixime (historically used but largely discarded
@@ -991,7 +991,7 @@ Due to the very limited number of isolates classified as resistant to
 cefixime or ceftriaxone in this dataset, logistic regression analyses
 are not feasible here.
 
-## **Use case 2:** Study of mosaic PBP2 mutations associated with decreased susceptibility and resistance to ceftriaxone
+### **Use case 2:** Study of mosaic PBP2 mutations associated with decreased susceptibility and resistance to ceftriaxone
 
 In this use case, we explore combinations of PBP2 mutations and their
 associated MIC ranges for mosaic *penA* variants, using a broader
@@ -1154,7 +1154,7 @@ are required. *penA* I312M has a very wide coefficient interval, likely
 reflecting their contribution to *penA* mosaics associated with
 resistance.
 
-## **Use case 3:** Investigation of tetracycline resistance and implications for STI prevention strategies
+### **Use case 3:** Investigation of tetracycline resistance and implications for STI prevention strategies
 
 Doxy-PEP (doxycycline post-exposure prophylaxis) involves taking a
 single dose of doxycycline within 24–72 hours after a sexual risk event

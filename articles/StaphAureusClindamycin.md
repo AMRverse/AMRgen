@@ -1,4 +1,4 @@
-# Example analysing clindamycin resistance in Staphylococcus aureus
+# Example with custom classification of genotype hits
 
 ## Analysing clindamycin resistance in *Staphylococcus aureus*
 

@@ -6,9 +6,9 @@
   Data](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.md):
 - [Downloading geno-pheno data from NCBI and
   EBI](https://AMRverse.github.io/AMRgen/articles/DownloadGenoPhenoData.md):
-- [Example analysis of Neisseria gonorrhoeae geno-pheno
+- [Example using large-scale regional/national surveillance
   data](https://AMRverse.github.io/AMRgen/articles/NeisseriaGonoExamples.md):
-- [Example Analysis using Salmonella
-  data](https://AMRverse.github.io/AMRgen/articles/SalmonellaExamples.md):
-- [Example analysing clindamycin resistance in Staphylococcus
-  aureus](https://AMRverse.github.io/AMRgen/articles/StaphAureusClindamycin.md):
+- [Example with custom stratification by isolate
+  source](https://AMRverse.github.io/AMRgen/articles/SalmonellaExamples.md):
+- [Example with custom classification of genotype
+  hits](https://AMRverse.github.io/AMRgen/articles/StaphAureusClindamycin.md):

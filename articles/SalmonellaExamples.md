@@ -1,4 +1,4 @@
-# Analysing a small user-generated Salmonella geno-pheno dataset
+# Analysing a small user-generated \<i\>Salmonella\</i\> geno-pheno dataset
 
 ## Introduction
 

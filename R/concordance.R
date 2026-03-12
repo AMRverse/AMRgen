@@ -17,10 +17,14 @@
 #' Calculate genotype-phenotype concordance from binary matrix
 #'
 #' Compares genotypes (presence of resistance markers) to observed phenotypes
-#' (resistant vs susceptible) using a binary matrix from [get_binary_matrix()].
-#' A genotypic prediction variable is defined on the basis of presence of
-#' genotype markers (either any marker in the input table, or those defined by
-#' an input inclusion list or exclusion list). This genotypic prediction is then
+#' (R vs S, and/or NWT vs NWT) using a binary matrix from [get_binary_matrix()].
+#' A genotypic prediction variable is defined on the basis of
+#' genotype marker data (based on a variety of possible rules including
+#' any/all/minimum number of markers; specifically those
+#' markers or combinations exceeding a threshold positive
+#' predictive value (PPV);  predictions from a logistic regression model; or a
+#' user-defined field providing predictions).
+#' This genotypic prediction is then
 #' compared to the observed phenotypes using standard classification metrics
 #' (via the `yardstick` pkg) and AMR-specific error rates (major error, ME
 #' and very major error, VME) per ISO 20776-2 (and see
@@ -31,11 +35,19 @@
 #' @param binary_matrix A data frame output by [get_binary_matrix()], containing
 #'   one row per sample, columns indicating binary phenotypes (`R`, `I`, `NWT`)
 #'   and binary marker presence/absence.
+#' @param prediction_rule The rule for generating genotypic predictions:
+#'   `"any"` (default) predicts positive if any marker is present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
+#'   `"all"` predicts positive only if all markers are present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
+#'   a positive integer predicts positive if at least that many markers are present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
+#'   `"logistic"` uses a logistic regression model from `logreg_results` to predict outcomes for each sample;
+#'   `"combo_ppv"` predicts positive if a sample's marker combination has PPV >= `ppv_threshold` in `ppv_results`.
 #' @param markers A character vector of marker column names to include in a
 #'   new binary outcome variable `genotypic_prediction`.
 #'   Default `NULL` includes all marker columns.
 #' @param exclude_markers A character vector of marker column names to exclude
 #'   from the genotypic prediction. Applied after `markers` filtering.
+#' @param min_count An integer or `NULL`. Exclude markers with total frequency
+#'   (column sum in binary_matrix) below this value. Default `NULL` (no filtering).
 #' @param ppv_threshold A numeric PPV threshold (0-1). Used for solo PPV-based
 #'   marker filtering when `solo_ppv_results` is provided, or as the combination
 #'   PPV threshold when `prediction_rule = "combo_ppv"`.
@@ -46,6 +58,10 @@
 #'   used to identify marker combinations with PPV >= `ppv_threshold` for the
 #'   relevant outcome (`R.ppv` or `NWT.ppv`). Samples whose marker combination
 #'   matches any passing combination are predicted positive.
+#' @param logreg_results Output of [amr_logistic()]. Used for p-value filtering
+#'   (when `pval_threshold` is set) and for `prediction_rule = "logistic"`.
+#' @param pval_threshold A numeric p-value threshold. Exclude markers with
+#'   logistic regression p-value >= this value. Requires `logreg_results`.
 #' @param prediction_col A character string naming a column in `binary_matrix`
 #'   that contains a user-defined prediction (coded 0/1). When supplied, all
 #'   marker filtering and prediction generation are bypassed; the specified column
@@ -54,18 +70,6 @@
 #' @param truth A character vector specifying the phenotypic truth column(s) to
 #'   evaluate: `"R"` (resistant vs susceptible/intermediate), `"NWT"`
 #'   (non-wildtype vs wildtype), or `c("R", "NWT")` (default) to evaluate both.
-#' @param prediction_rule The rule for generating genotypic predictions:
-#'   `"any"` (default) predicts positive if any marker is present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
-#'   `"all"` predicts positive only if all markers are present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
-#'   a positive integer predicts positive if at least that many markers are present (after applying filters as specified by `markers`, `exclude_markers`, `ppv_threshold`, `pval_threshold`, `min_count`);
-#'   `"logistic"` uses a logistic regression model from `logreg_results` to predict outcomes for each sample;
-#'   `"combo_ppv"` predicts positive if a sample's marker combination has PPV >= `ppv_threshold` in `ppv_results`.
-#' @param min_count An integer or `NULL`. Exclude markers with total frequency
-#'   (column sum in binary_matrix) below this value. Default `NULL` (no filtering).
-#' @param logreg_results Output of [amr_logistic()]. Used for p-value filtering
-#'   (when `pval_threshold` is set) and for `prediction_rule = "logistic"`.
-#' @param pval_threshold A numeric p-value threshold. Exclude markers with
-#'   logistic regression p-value >= this value. Requires `logreg_results`.
 #'
 #' @details
 #' The function identifies marker columns as all columns not in the reserved set
@@ -153,14 +157,13 @@
 #'   logreg_results = logreg
 #' )
 #'
-#' # Predict based on marker combinations with R PPV >= 0.5 (from ppv())
+#' # Predict based on marker combinations with PPV >= 0.5 (from ppv())
 #' ppv_res <- ppv(binary_matrix = binary_matrix)
 #' result <- concordance(
 #'   binary_matrix,
 #'   prediction_rule = "combo_ppv",
 #'   ppv_results = ppv_res,
-#'   ppv_threshold = 0.5,
-#'   truth = "R"
+#'   ppv_threshold = 0.5
 #' )
 #'
 #' # Use a custom user-defined prediction column
@@ -171,6 +174,9 @@
 #' result$conf_mat$R
 #' result$metrics
 #' result$markers_used
+#'
+#' # predictions vs observed SIR calls
+#' result$data %>% count(R_pred, pheno)
 #' }
 concordance <- function(binary_matrix,
                         markers = NULL,

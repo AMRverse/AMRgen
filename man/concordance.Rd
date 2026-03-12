@@ -85,10 +85,14 @@ An S3 object of class \code{"amr_concordance"}, a list containing:
 }
 \description{
 Compares genotypes (presence of resistance markers) to observed phenotypes
-(resistant vs susceptible) using a binary matrix from \code{\link[=get_binary_matrix]{get_binary_matrix()}}.
-A genotypic prediction variable is defined on the basis of presence of
-genotype markers (either any marker in the input table, or those defined by
-an input inclusion list or exclusion list). This genotypic prediction is then
+(R vs S, and/or NWT vs NWT) using a binary matrix from \code{\link[=get_binary_matrix]{get_binary_matrix()}}.
+A genotypic prediction variable is defined on the basis of
+genotype marker data (based on a variety of possible rules including
+any/all/minimum number of markers; specifically those
+markers or combinations exceeding a threshold positive
+predictive value (PPV);  predictions from a logistic regression model; or a
+user-defined field providing predictions).
+This genotypic prediction is then
 compared to the observed phenotypes using standard classification metrics
 (via the \code{yardstick} pkg) and AMR-specific error rates (major error, ME
 and very major error, VME) per ISO 20776-2 (and see
@@ -168,14 +172,13 @@ result <- concordance(
   logreg_results = logreg
 )
 
-# Predict based on marker combinations with R PPV >= 0.5 (from ppv())
+# Predict based on marker combinations with PPV >= 0.5 (from ppv())
 ppv_res <- ppv(binary_matrix = binary_matrix)
 result <- concordance(
   binary_matrix,
   prediction_rule = "combo_ppv",
   ppv_results = ppv_res,
-  ppv_threshold = 0.5,
-  truth = "R"
+  ppv_threshold = 0.5
 )
 
 # Use a custom user-defined prediction column
@@ -186,6 +189,9 @@ result <- concordance(binary_matrix, prediction_col = "my_pred", truth = "R")
 result$conf_mat$R
 result$metrics
 result$markers_used
+
+# predictions vs observed SIR calls
+result$data \%>\% count(R_pred, pheno)
 }
 }
 \seealso{

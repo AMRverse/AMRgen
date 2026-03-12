@@ -4,10 +4,16 @@ author: "Leonor Sánchez-Busó"
 date: "2026-03-09"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analysing Neisseria gonorrhoeae< genotype-phenotype data}
+  %\VignetteIndexEntry{Analysing Neisseria gonorrhoeae genotype-phenotype data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+<style>
+h1.title { display: none; }
+</style>
+
+<h1 class="title">Analysing <em>Neisseria gonorrhoeae</em> geno-pheno data</h1>
 
 ```{r knitr, include = FALSE}
 knitr::opts_chunk$set(

@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Analysing &lt;em&gt;Neisseria gonorrhoeae&lt;/em&gt; geno-pheno data • AMRgen</title>
+<title>Analysing Neisseria gonorrhoeae geno-pheno data • AMRgen</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Nunito-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Analysing &lt;em&gt;Neisseria gonorrhoeae&lt;/em&gt; geno-pheno data">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Analysing Neisseria gonorrhoeae geno-pheno data">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -49,7 +49,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Analysing &lt;em&gt;Neisseria gonorrhoeae&lt;/em&gt; geno-pheno data</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Analysing Neisseria gonorrhoeae geno-pheno data</h1>
                         <h4 data-toc-skip class="author">Leonor
 Sánchez-Busó</h4>
             
@@ -189,7 +189,7 @@ output:</p>
 <span>  sample_col <span class="op">=</span> <span class="st">"Name"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>For the phenotype file, reshape from wide to long format using
-<code><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer()</a></code>. MIC values across antibiotics may be stored
+<code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer()</a></code>. MIC values across antibiotics may be stored
 as different types (numeric vs. character) due to inequality prefixes
 such as <code>&lt;0.016</code> or <code>&gt;32</code>. We coerce all
 antibiotic columns to character before pivoting to avoid type conflicts
@@ -198,7 +198,7 @@ while preserving this information for downstream processing by
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eurogasp_pheno</span> <span class="op">&lt;-</span> <span class="va">eurogasp_pheno_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Azithromycin</span>, <span class="va">Ciprofloxacin</span>, <span class="va">Cefixime</span>, <span class="va">Ceftriaxone</span><span class="op">)</span>, <span class="va">as.character</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Azithromycin</span>, <span class="va">Ciprofloxacin</span>, <span class="va">Cefixime</span>, <span class="va">Ceftriaxone</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"mic"</span></span>
@@ -291,7 +291,7 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert the output table into long format</span></span>
 <span><span class="va">azm_comp_melt</span> <span class="op">&lt;-</span> <span class="va">azm_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
@@ -352,7 +352,7 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert the output table into long format</span></span>
 <span><span class="va">cip_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cip_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
@@ -399,7 +399,7 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert the output table into long format</span></span>
 <span><span class="va">cro_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cro_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
@@ -445,7 +445,7 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert the output table into long format and plot using ggplot2</span></span>
 <span><span class="va">cfm_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cfm_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
@@ -1004,7 +1004,7 @@ n=29 genomes.</li>
 <span></span>
 <span><span class="co"># Phenotype file</span></span>
 <span><span class="va">ngono_cro_pheno</span> <span class="op">&lt;-</span> <span class="va">ngono_cro_pheno_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ceftriaxone</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"mic"</span></span>
@@ -1126,7 +1126,7 @@ tetracycline resistance in a local gonococcal population.</p>
 <p>Import and format phenotype data:</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ngono_tet_pheno</span> <span class="op">&lt;-</span> <span class="va">ngono_tet_pheno_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Tetracycline</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"mic"</span></span>

@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Analysing a small user-generated &lt;em&gt;Salmonella&lt;/em&gt; geno-pheno dataset • AMRgen</title>
+<title>Analysing a small user-generated Salmonella geno-pheno dataset • AMRgen</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Nunito-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Analysing a small user-generated &lt;em&gt;Salmonella&lt;/em&gt; geno-pheno dataset">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Analysing a small user-generated Salmonella geno-pheno dataset">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -49,7 +49,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Analysing a small user-generated &lt;em&gt;Salmonella&lt;/em&gt; geno-pheno dataset</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Analysing a small user-generated Salmonella geno-pheno dataset</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/AMRverse/AMRgen/blob/main/vignettes/SalmonellaExamples.Rmd" class="external-link"><code>vignettes/SalmonellaExamples.Rmd</code></a></small>
@@ -141,11 +141,11 @@ that all these markers are associated with resistance to quinolones</p>
 <span><span class="va">salm_geno</span> <span class="op">&lt;-</span> <span class="va">salm_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sample</span>, <span class="va">CpL_Genotype</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>Name <span class="op">=</span> <span class="va">Sample</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/separate_wider_delim.html" class="external-link">separate_wider_delim</a></span><span class="op">(</span><span class="va">CpL_Genotype</span>,</span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate_wider_delim.html" class="external-link">separate_wider_delim</a></span><span class="op">(</span><span class="va">CpL_Genotype</span>,</span>
 <span>    delim <span class="op">=</span> <span class="st">";"</span>, names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Marker_1"</span>, <span class="st">"Marker_2"</span>, <span class="st">"Marker_3"</span>, <span class="st">"Marker_4"</span><span class="op">)</span>,</span>
 <span>    too_few <span class="op">=</span> <span class="st">"align_start"</span>, cols_remove <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Marker_1</span>, <span class="va">Marker_2</span>, <span class="va">Marker_3</span>, <span class="va">Marker_4</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"marker_no"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"marker"</span>,</span>
@@ -200,7 +200,7 @@ pivot the table to long form.</p>
 <span><span class="va">salm_pheno</span> <span class="op">&lt;-</span> <span class="va">salm_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sample</span>, <span class="va">Source</span>, <span class="va">Serovar</span>, <span class="va">Ciprofloxacin</span>, <span class="va">Levofloxacin</span>, <span class="va">Moxifloxacin</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ciprofloxacin</span>, <span class="va">Levofloxacin</span>, <span class="va">Moxifloxacin</span><span class="op">)</span>, <span class="va">as.character</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ciprofloxacin</span>, <span class="va">Levofloxacin</span>, <span class="va">Moxifloxacin</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"antibiotic"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"MIC.values"</span>,</span>

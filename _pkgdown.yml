@@ -150,4 +150,4 @@ footer:
     right: [logo]
   components:
     devtext: 'Free and Open Source (GPL-3), brought by AMRverse/AMRgen Development Team'
-    logo: 'Our goal is to develop interpretive standards for AMR genotypes, akin to the interpretive standards developed by EUCAST and CLSI for antimicrobial susceptibility phenotyping.'
+    logo: 'AMRverse is an ecosystem for AMR data science. We aim to make common tasks easier and faster, via interoperable tools and resources.'

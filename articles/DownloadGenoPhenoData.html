@@ -225,13 +225,14 @@ account.</p>
 </h5>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline</span></span>
-<span><span class="co"># NOTE: you may need to add 'PROJECT_ID="xxx"' to the command if you have not set up application default credentials</span></span>
+<span><span class="co"># NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials</span></span>
 <span><span class="va">staph_ast_ncbi_cloud_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_ncbi_bq_ast.html">query_ncbi_bq_ast</a></span><span class="op">(</span></span>
 <span>  taxgroup <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span>
 <span>  antibiotic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Import and reinterpret using CLSI breakpoints</span></span>
+<span><span class="co"># NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials</span></span>
 <span><span class="va">staph_ast_ncbi_cloud</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_ncbi_ast.html">import_ncbi_ast</a></span><span class="op">(</span><span class="va">staph_ast_ncbi_cloud_raw</span>, interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: There was 1 warning in `mutate()`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `pheno_provided = as.sir(`Resistance phenotype`)`.</span></span>
@@ -257,7 +258,7 @@ older versions of AMRfinderplus, and newer genomes will have genotype
 results obtained with more recent versions.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download Staphylococcus aureus genotype data from NCBI, filtering for variants associated with class 'AMINOGLYCOSIDES' or 'TETRACYCLINES'</span></span>
-<span><span class="co"># NOTE: you may need to add 'PROJECT_ID="xxx"' to the command if you have not set up application default credentials</span></span>
+<span><span class="co"># NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials</span></span>
 <span><span class="va">staph_geno_ncbi_cloud_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_ncbi_bq_geno.html">query_ncbi_bq_geno</a></span><span class="op">(</span></span>
 <span>  taxgroup <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span>
 <span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AMINOGLYCOSIDE"</span>, <span class="st">"TETRACYCLINE"</span><span class="op">)</span></span>

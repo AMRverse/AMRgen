@@ -186,7 +186,7 @@ bigrquery::bq_auth()
 
 ``` r
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline
-# NOTE: you may need to add 'PROJECT_ID="xxx"' to the command if you have not set up application default credentials
+# NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
 staph_ast_ncbi_cloud_raw <- query_ncbi_bq_ast(
   taxgroup = "Staphylococcus aureus",
   antibiotic = c("amikacin", "DOX")
@@ -195,6 +195,7 @@ staph_ast_ncbi_cloud_raw <- query_ncbi_bq_ast(
 
 ``` r
 # Import and reinterpret using CLSI breakpoints
+# NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
 staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi = TRUE)
 #> Warning: There was 1 warning in `mutate()`.
 #> ℹ In argument: `pheno_provided = as.sir(`Resistance phenotype`)`.
@@ -226,7 +227,7 @@ results obtained with more recent versions.
 
 ``` r
 # Download Staphylococcus aureus genotype data from NCBI, filtering for variants associated with class 'AMINOGLYCOSIDES' or 'TETRACYCLINES'
-# NOTE: you may need to add 'PROJECT_ID="xxx"' to the command if you have not set up application default credentials
+# NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
 staph_geno_ncbi_cloud_raw <- query_ncbi_bq_geno(
   taxgroup = "Staphylococcus aureus",
   geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE")

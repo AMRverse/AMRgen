@@ -155,52 +155,88 @@ Example datasets for demonstration and reproducible analysis.
 
 - [`ecoli_ast`](https://AMRverse.github.io/AMRgen/reference/ecoli_ast.md)
   : E. coli NCBI AST Example Data, Re-interpreted with AMR Package
+
 - [`ecoli_ast_raw`](https://AMRverse.github.io/AMRgen/reference/ecoli_ast_raw.md)
   : E. coli NCBI AST Example Data
+
 - [`ecoli_geno_raw`](https://AMRverse.github.io/AMRgen/reference/ecoli_geno_raw.md)
   : E. coli Genotype Example Data
+
 - [`ecoli_cip_vs_ref`](https://AMRverse.github.io/AMRgen/reference/ecoli_cip_vs_ref.md)
   : E. coli Ciprofloxacin MIC Distribution Example Data
+
 - [`ecoli_cip_mic_data`](https://AMRverse.github.io/AMRgen/reference/ecoli_cip_mic_data.md)
   : EUCAST Reference distribution for Ciprofloxacin in E. coli
+
 - [`staph_ast_ncbi`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi.md)
   : S. aureus Example of Imported NCBI Phenotype Data
+
 - [`staph_ast_ncbi_raw`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_raw.md)
   : S. aureus Example of Raw Phenotype Data Downloaded from NCBI
   BioSamples via Entrez API
+
 - [`staph_ast_ncbi_cloud_raw`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ncbi_cloud_raw.md)
   : S. aureus Example of Raw Phenotype Data Downloaded from NCBI via
   Google Cloud BigQuery
+
 - [`staph_geno_ncbi_cloud_raw`](https://AMRverse.github.io/AMRgen/reference/staph_geno_ncbi_cloud_raw.md)
   : S. aureus Example of Raw Genotype Data Downloaded from NCBI via
   Google Cloud BigQuery
+
 - [`staph_ast_ebi`](https://AMRverse.github.io/AMRgen/reference/staph_ast_ebi.md)
   : S. aureus Example of Imported EBI Phenotype Data
+
 - [`staph_geno_ebi`](https://AMRverse.github.io/AMRgen/reference/staph_geno_ebi.md)
   : S. aureus Example of Imported EBI Genotype Data
+
 - [`amrfp_drugs_table`](https://AMRverse.github.io/AMRgen/reference/amrfp_drugs_table.md)
   : NCBI Subclass mapping to drug class
+
 - [`pheno_eco_2075`](https://AMRverse.github.io/AMRgen/reference/pheno_eco_2075.md)
   : E. coli AST data from Mills et al 2022
+
 - [`geno_eco_2075`](https://AMRverse.github.io/AMRgen/reference/geno_eco_2075.md)
   : E. coli genotype data from Mills et al 2022
+
 - [`eurogasp_geno_raw`](https://AMRverse.github.io/AMRgen/reference/eurogasp_geno_raw.md)
   : N. gonorrhoeae Euro-GASP Genotype Data Use Case 1
+
 - [`ngono_cro_geno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_cro_geno_raw.md)
   : N. gonorrhoeae PBP2 Mutations Genotype Data Use Case 2
+
 - [`ngono_tet_geno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_tet_geno_raw.md)
   : N. gonorrhoeae Tetracycline Resistance Genotype Data Use Case 3
+
 - [`ngono_cro_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_cro_pheno_raw.md)
   : N. gonorrhoeae PBP2 Mutations Phenotype Data Use Case 2
+
 - [`eurogasp_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/eurogasp_pheno_raw.md)
   : N. gonorrhoeae Euro-GASP Phenotype Data Use Case 1
+
 - [`ngono_tet_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_tet_pheno_raw.md)
   : N. gonorrhoeae Tetracycline Resistance Phenotype Data Use Case 3
+
 - [`salm_raw`](https://AMRverse.github.io/AMRgen/reference/salm_raw.md)
   : Example Salmonella Genotype-Phenotype Data
+
 - [`kleborate_raw`](https://AMRverse.github.io/AMRgen/reference/kleborate_raw.md)
   : Example Kleborate Genotype Data from EuSCAPE project
+
 - [`kleborate_raw_v313`](https://AMRverse.github.io/AMRgen/reference/kleborate_raw_v313.md)
   : Example Kleborate v3.1.3 Genotype Data from EuSCAPE project
+
 - [`kleborate_classes`](https://AMRverse.github.io/AMRgen/reference/kleborate_classes.md)
   : Table mapping Kleborate drug class columns
+
+- [`ast_CLI_public`](https://AMRverse.github.io/AMRgen/reference/ast_CLI_public.md)
+  :
+
+  Clindamycin MIC data for 5914 *Staphylococcus aureus* isolates
+
+- [`afp_CLI_public`](https://AMRverse.github.io/AMRgen/reference/afp_CLI_public.md)
+  : S. aureus Clindamycin Resistance Genotype Data
+
+- [`ST_data_CLI`](https://AMRverse.github.io/AMRgen/reference/ST_data_CLI.md)
+  :
+
+  ST data for *Staphylococcus aureus* genomes for clindamycin vignette

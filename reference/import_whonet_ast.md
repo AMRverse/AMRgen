@@ -61,3 +61,50 @@ import_whonet_ast(
 ## Value
 
 Standardised AST data frame
+
+## Examples
+
+``` r
+# Built-in AMR package WHONET example dataset (standard uppercase format)
+result <- import_whonet_ast(AMR::WHONET)
+#> Warning: There were 2 warnings in `mutate()`.
+#> The first warning was:
+#> ℹ In argument: `mic = as.mic(...)`.
+#> Caused by warning:
+#> ! in `as.mic()`: 1311 results in column 'mic' truncated (9%) that were
+#> invalid MICs: "S", "I", and "R"
+#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
+head(result)
+#> # A tibble: 6 × 31
+#>   id         drug_agent   mic  disk guideline method       platform disk_potency
+#>   <chr>      <ab>       <mic> <dsk> <chr>     <chr>        <chr>    <chr>       
+#> 1 fe41d7bafa AMP           NA    NA CLSI      disk diffus… NA       10          
+#> 2 fe41d7bafa AMC           NA    NA EUCAST    disk diffus… NA       20          
+#> 3 fe41d7bafa TZP           NA    NA EUCAST    disk diffus… NA       30          
+#> 4 fe41d7bafa FEP           NA    NA EUCAST    disk diffus… NA       30          
+#> 5 fe41d7bafa CTX           NA    NA EUCAST    disk diffus… NA       5           
+#> 6 fe41d7bafa FOX           NA    NA EUCAST    disk diffus… NA       30          
+#> # ℹ 23 more variables: pheno_provided <sir>, spp_pheno <mo>,
+#> #   `Specimen number` <int>, Organism <chr>, Country <chr>, Laboratory <chr>,
+#> #   collection_date <date>, `Specimen type` <chr>,
+#> #   `Specimen type (Numeric)` <dbl>, Reason <chr>, `Isolate number` <int>,
+#> #   `Organism type` <chr>, Serotype <chr>, `Beta-lactamase` <lgl>, ESBL <lgl>,
+#> #   Carbapenemase <lgl>, `MRSA screening test` <lgl>,
+#> #   `Inducible clindamycin resistance` <lgl>, Comment <chr>, …
+if (FALSE) { # \dontrun{
+# WHONET file with lowercase columns and _SIR suffix (e.g. amc_nd20, amc_nd20_SIR)
+# import_whonet_ast("path/to/whonet_export.csv", sample_col = "patient_id")
+
+# Include patient demographics in output
+import_whonet_ast("path/to/whonet_export.csv",
+  sample_col = "patient_id",
+  include_patient_info = TRUE
+)
+
+# Interpret against EUCAST breakpoints for a specific species
+result_interp <- import_whonet_ast(AMR::WHONET,
+  interpret_eucast = TRUE,
+  species = "Escherichia coli"
+)
+} # }
+```

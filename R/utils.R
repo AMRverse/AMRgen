@@ -238,7 +238,9 @@ utils::globalVariables(c(
   "drug_class_from_agent",
   "Kleborate_Class",
   "kleborate_classes",
-  "strain"
+  "strain",
+  ".row_id",
+  "sir_interp"
 ))
 
 

@@ -42,3 +42,24 @@ Standardised AST data frame
 This function imports antimicrobial susceptibility testing (AST) data from WHONET software output files (wide CSV format)
 and converts it to the standardised long-format used by AMRgen.
 }
+\examples{
+# Built-in AMR package WHONET example dataset (standard uppercase format)
+result <- import_whonet_ast(AMR::WHONET)
+head(result)
+\dontrun{
+# WHONET file with lowercase columns and _SIR suffix (e.g. amc_nd20, amc_nd20_SIR)
+# import_whonet_ast("path/to/whonet_export.csv", sample_col = "patient_id")
+
+# Include patient demographics in output
+import_whonet_ast("path/to/whonet_export.csv",
+  sample_col = "patient_id",
+  include_patient_info = TRUE
+)
+
+# Interpret against EUCAST breakpoints for a specific species
+result_interp <- import_whonet_ast(AMR::WHONET,
+  interpret_eucast = TRUE,
+  species = "Escherichia coli"
+)
+}
+}

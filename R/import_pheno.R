@@ -1663,19 +1663,22 @@ import_sensititre_ast <- function(input,
 #' # Built-in AMR package WHONET example dataset (standard uppercase format)
 #' result <- import_whonet_ast(AMR::WHONET)
 #' head(result)
-#'
+#' \dontrun{
 #' # WHONET file with lowercase columns and _SIR suffix (e.g. amc_nd20, amc_nd20_SIR)
 #' # import_whonet_ast("path/to/whonet_export.csv", sample_col = "patient_id")
 #'
 #' # Include patient demographics in output
-#' # import_whonet_ast("path/to/whonet_export.csv",
-#' #                   sample_col = "patient_id",
-#' #                   include_patient_info = TRUE)
+#' import_whonet_ast("path/to/whonet_export.csv",
+#'   sample_col = "patient_id",
+#'   include_patient_info = TRUE
+#' )
 #'
 #' # Interpret against EUCAST breakpoints for a specific species
 #' result_interp <- import_whonet_ast(AMR::WHONET,
-#'                                    interpret_eucast = TRUE,
-#'                                    species = "Escherichia coli")
+#'   interpret_eucast = TRUE,
+#'   species = "Escherichia coli"
+#' )
+#' }
 #' @export
 import_whonet_ast <- function(input,
                               sample_col = "Identification number",
@@ -1700,7 +1703,8 @@ import_whonet_ast <- function(input,
 
   # Detect _SIR suffix format
   sir_suffix_cols <- all_cols[grepl("^[A-Za-z]{2,4}_[A-Za-z0-9]+_SIR$", all_cols,
-                                    ignore.case = TRUE)]
+    ignore.case = TRUE
+  )]
   has_sir_suffix <- length(sir_suffix_cols) > 0
 
   if (has_sir_suffix) {
@@ -1753,8 +1757,10 @@ import_whonet_ast <- function(input,
     # Pivot the _SIR columns, renaming them to their base names for the join
     sir_interp_long <- ast %>%
       select(.row_id, any_of(sir_suffix_cols)) %>%
-      dplyr::rename_with(~ sub("_SIR$", "", ., ignore.case = TRUE),
-                         any_of(sir_suffix_cols)) %>%
+      dplyr::rename_with(
+        ~ sub("_SIR$", "", ., ignore.case = TRUE),
+        any_of(sir_suffix_cols)
+      ) %>%
       tidyr::pivot_longer(
         cols = any_of(ab_cols),
         names_to = "ab_col",
@@ -1892,8 +1898,10 @@ import_whonet_ast <- function(input,
   # Drop patient demographic columns when not requested (case-insensitive to handle
   # WHONET files that use lowercase column names)
   if (!include_patient_info) {
-    patient_cols_standard <- c("Last name", "First name", "Sex", "Age",
-                               "Age category", "Date of admission")
+    patient_cols_standard <- c(
+      "Last name", "First name", "Sex", "Age",
+      "Age category", "Date of admission"
+    )
     cols_to_drop <- colnames(ast_long)[
       tolower(colnames(ast_long)) %in% tolower(patient_cols_standard)
     ]

@@ -20,7 +20,7 @@ import_amrfp(
 \arguments{
 \item{input_table}{A character string specifying a dataframe or path to the AMRFinderPlus results table (TSV format).}
 
-\item{sample_col}{A character string specifying the column that identifies samples in the dataset (default \code{Name}).}
+\item{sample_col}{A character string specifying the column that identifies samples in the dataset (default "\code{Name}").}
 
 \item{element_symbol_col}{Optional character string specifying the column containing gene or element symbols if non-standard column names are used.}
 

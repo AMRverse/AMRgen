@@ -70,7 +70,7 @@ import_kleborate <- function(input_table,
         marker
       )) %>%
       relocate(Kleborate_Class, .after = "variation type") %>%
-      mutate(drug_agent=NA)
+      mutate(drug_agent = NA)
   } else { # older versions use informal nomenclature (e.g. [gene]-[mutation], [gene]-X%, OmpK36GD)
     geno_table <- geno_table %>%
       mutate(`variation type` = case_when(
@@ -80,15 +80,16 @@ import_kleborate <- function(input_table,
         grepl("_mut", Kleborate_Class) & marker %in% c("OmpK36GD", "OmpK36TD") ~ "Protein variant detected",
         TRUE ~ "Gene presence detected"
       )) %>%
-      mutate(gene = if_else(grepl("%", marker), sub("-.*", "", marker), marker),
-             mutation = if_else(grepl("%", marker), sub(".*-", "", marker),NA
-            )) %>%
+      mutate(
+        gene = if_else(grepl("%", marker), sub("-.*", "", marker), marker),
+        mutation = if_else(grepl("%", marker), sub(".*-", "", marker), NA)
+      ) %>%
       mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
-          paste0(gene, ":-"),
-          marker
-      ))%>%
+        paste0(gene, ":-"),
+        marker
+      )) %>%
       relocate(Kleborate_Class, .after = "variation type") %>%
-      mutate(drug_agent=NA)
+      mutate(drug_agent = NA)
   }
 
   return(geno_table)

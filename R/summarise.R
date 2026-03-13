@@ -59,7 +59,7 @@ summarise_geno <- function(geno_table,
         summarise(across(setdiff(names(.), variation_col), n_distinct))
     }
   }
-  
+
   # drugs
   drugs <- NULL
   if (drug_col %in% colnames(geno_table)) {

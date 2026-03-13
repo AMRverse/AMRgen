@@ -18,7 +18,7 @@
 #'
 #' This function imports and processes AMRFinderPlus results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised antibiotic names and drug classes. The function also converts gene symbols to a harmonised format and ensures compatibility with the AMR package.
 #' @param input_table A character string specifying a dataframe or path to the AMRFinderPlus results table (TSV format).
-#' @param sample_col A character string specifying the column that identifies samples in the dataset (default `Name`).
+#' @param sample_col A character string specifying the column that identifies samples in the dataset (default "`Name`").
 #' @param amrfp_drugs A tibble containing a reference table mapping AMRFinderPlus subclasses (`AMRFP_Subclass`) to standardised drug classes (`drug_class`). Defaults to `amrfp_drugs_table`, which is provided internally.
 #' @param element_symbol_col Optional character string specifying the column containing gene or element symbols if non-standard column names are used.
 #' @param element_type_col Optional character string specifying the column indicating element type (e.g. AMR).

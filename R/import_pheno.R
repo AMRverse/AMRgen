@@ -1659,6 +1659,23 @@ import_sensititre_ast <- function(input,
 #' @importFrom stringr str_match
 #' @importFrom rlang sym
 #' @return Standardised AST data frame
+#' @examples
+#' # Built-in AMR package WHONET example dataset (standard uppercase format)
+#' result <- import_whonet_ast(AMR::WHONET)
+#' head(result)
+#'
+#' # WHONET file with lowercase columns and _SIR suffix (e.g. amc_nd20, amc_nd20_SIR)
+#' # import_whonet_ast("path/to/whonet_export.csv", sample_col = "patient_id")
+#'
+#' # Include patient demographics in output
+#' # import_whonet_ast("path/to/whonet_export.csv",
+#' #                   sample_col = "patient_id",
+#' #                   include_patient_info = TRUE)
+#'
+#' # Interpret against EUCAST breakpoints for a specific species
+#' result_interp <- import_whonet_ast(AMR::WHONET,
+#'                                    interpret_eucast = TRUE,
+#'                                    species = "Escherichia coli")
 #' @export
 import_whonet_ast <- function(input,
                               sample_col = "Identification number",
@@ -1746,7 +1763,8 @@ import_whonet_ast <- function(input,
 
     ast_long <- ast_long %>%
       dplyr::left_join(sir_interp_long, by = c(".row_id", "ab_col")) %>%
-      dplyr::select(-.row_id)
+      dplyr::select(-.row_id) %>%
+      dplyr::select(-any_of(sir_suffix_cols))
   } else {
     ast_long <- ast %>%
       tidyr::pivot_longer(
@@ -1870,6 +1888,17 @@ import_whonet_ast <- function(input,
     interpret_clsi = interpret_clsi,
     species = species, ab = ab
   )
+
+  # Drop patient demographic columns when not requested (case-insensitive to handle
+  # WHONET files that use lowercase column names)
+  if (!include_patient_info) {
+    patient_cols_standard <- c("Last name", "First name", "Sex", "Age",
+                               "Age category", "Date of admission")
+    cols_to_drop <- colnames(ast_long)[
+      tolower(colnames(ast_long)) %in% tolower(patient_cols_standard)
+    ]
+    ast_long <- ast_long %>% dplyr::select(-any_of(cols_to_drop))
+  }
 
   # Reorder columns
   ast_long <- ast_long %>%

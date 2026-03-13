@@ -1,8 +1,8 @@
 ---
-title: "Download NCBI and EBI Data"
+title: "Downloading geno-pheno data from NCBI and EBI"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Download NCBI and EBI Data}
+  %\VignetteIndexEntry{Downloading geno-pheno data from NCBI and EBI}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

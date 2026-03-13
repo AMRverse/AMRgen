@@ -61,6 +61,8 @@ articles:
       - DownloadGenoPhenoData
       - NeisseriaGonoExamples
       - SalmonellaExamples
+      - StaphAureusClindamycin
+      - Concordance
 
 # Reference section grouping
 reference:
@@ -141,6 +143,9 @@ reference:
       - kleborate_raw
       - kleborate_raw_v313
       - kleborate_classes
+      - ast_CLI_public
+      - afp_CLI_public
+      - ST_data_CLI
 
 # Footer configuration
 footer:

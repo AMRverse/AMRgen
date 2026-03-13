@@ -4,10 +4,20 @@ Version: 0.0.1.9000
 Date: 2025-09-01
 Authors@R: c(
     person(family = "Berends", c("Matthijs", "S."), comment = c(ORCID = "0000-0001-7620-1800"), email = "m.s.berends@umcg.nl", role = c("aut", "cre")),
+    person(family = "Holt",    c("Kathryn", "E."),  comment = c(ORCID = "0000-0003-3949-2471"), email = "drkatholt@gmail.com", role = "aut"),
+    person(family = "Hawkey",  c("Jane"),           comment = c(ORCID = "0000-0001-9661-5293"), role = "aut"),
     person(family = "Couto",   c("Natacha"),        comment = c(ORCID = "0000-0002-9152-5464"), role = "aut"),
     person(family = "Dyson", c("Zoe", "A."),        comment = c(ORCID = "0000-0002-8887-3492"), email = "zoe.dyson@lshtm.ac.uk", role = "aut"),
-    person(family = "Hawkey",  c("Jane"),           comment = c(ORCID = "0000-0001-9661-5293"), role = "aut"),
-    person(family = "Holt",    c("Kat"),            comment = c(ORCID = "0000-0003-3949-2471"), email = "drkatholt@gmail.com", role = "aut"))
+    person(family = "Chaput", c("Dominique", "L."), comment = c(ORCID = "0000-0002-9736-2619"), role = "aut"),
+    person(family = "Argímon",  c("Silvia"),        comment = c(ORCID = "0000-0002-2884-3857"), role = "aut"),
+    person(family = "Foster-Nyarko", c("Ebenezer"), role = "aut"),
+    person(family = "Knight", c("Gwen", "M."), role = "aut"),
+    person(family = "Nagy", c("Dorottya"), role = "aut"),
+    person(family = "Goodman",  c("Richard"),       comment = c(ORCID = "0009-0008-0578-789X"), role = "aut"),
+    person(family = "Prasad",  c("Arjun", "B."),    comment = c(ORCID = "0000-0002-1343-8664"), role = "aut"),
+    person(family = "Sánchez-Busó",  c("Leonor"),   comment = c(ORCID = "0000-0002-4162-0228"), role = "aut"),
+    person(family = "Tsang",  c("Kara", "K."),      comment = c(ORCID = "0000-0001-7742-8855"), role = "aut")
+    )
 Description: 
     The AMRgen package provides tools for interpreting antimicrobial resistance (AMR) genes, 
     integrating genomic data with phenotypic antimicrobial susceptibility testing (AST) data, 
@@ -51,11 +61,12 @@ Suggests:
 Remotes:
     msberends/AMR
 License: GPL-3 | file LICENSE
-URL: https://AMRverse.github.io/AMRgen/, https://github.com/AMRverse/AMRgen
+URL: https://amrgen.org, https://AMRverse.github.io/AMRgen/, https://github.com/AMRverse/AMRgen
 BugReports: https://github.com/AMRverse/AMRgen/issues
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 LazyData: true
+LazyDataCompression: xz
 VignetteBuilder: knitr

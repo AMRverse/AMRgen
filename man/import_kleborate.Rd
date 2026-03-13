@@ -39,6 +39,9 @@ This processing ensures compatibility with downstream AMRgen analysis workflows.
 # example Kleborate data from EUSCAPE project
 kleborate_raw
 
-# import first few rows of this data frame and parse it as AMRfp data
-kleborate_geno <- import_kleborate(kleborate_raw \%>\% head(n = 10), "strain")
+# import first few rows of this data frame and parse it to standard genotype table format
+kleborate_geno <- import_kleborate(kleborate_raw \%>\% head(n = 10))
+
+# parse the output of an older version of Kleborate (v3.1.3) before HGVS syntax was introduced for mutations
+kleborate_geno <- import_kleborate(kleborate_raw_v313 \%>\% head(n = 10), hgvs = F)
 }

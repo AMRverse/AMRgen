@@ -43,5 +43,5 @@ kleborate_raw
 kleborate_geno <- import_kleborate(kleborate_raw \%>\% head(n = 10))
 
 # parse the output of an older version of Kleborate (v3.1.3) before HGVS syntax was introduced for mutations
-kleborate_geno <- import_kleborate(kleborate_raw_v313 \%>\% head(n = 10), hgvs = F)
+kleborate_geno <- import_kleborate(kleborate_raw_v313 \%>\% head(n = 10), hgvs = FALSE)
 }

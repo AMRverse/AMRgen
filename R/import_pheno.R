@@ -1676,9 +1676,28 @@ import_whonet_ast <- function(input,
     stop(paste("Invalid column name:", sample_col))
   }
 
-  # Identify antibiotic columns (CODE_METHOD pattern, e.g., AMP_ND10, CIP_ED5, AMP_EE)
+  # Identify antibiotic columns (CODE_METHOD pattern, e.g., AMP_ND10, CIP_ED5, amc_nd20)
+  # Also handles WHONET variant where SIR interpretation columns have a _SIR suffix
+  # (e.g. amc_nd20 = raw zone/MIC value, amc_nd20_SIR = S/I/R interpretation)
   all_cols <- colnames(ast)
-  ab_cols <- all_cols[grepl("^[A-Z]{2,4}_[A-Z]{2}", all_cols)]
+
+  # Detect _SIR suffix format
+  sir_suffix_cols <- all_cols[grepl("^[A-Za-z]{2,4}_[A-Za-z0-9]+_SIR$", all_cols,
+                                    ignore.case = TRUE)]
+  has_sir_suffix <- length(sir_suffix_cols) > 0
+
+  if (has_sir_suffix) {
+    # Raw measurement columns are the same names with _SIR stripped
+    ab_cols_base <- sub("_SIR$", "", sir_suffix_cols, ignore.case = TRUE)
+    ab_cols <- ab_cols_base[ab_cols_base %in% all_cols]
+    if (length(ab_cols) == 0) {
+      # Only SIR columns present (no raw measurement columns) — treat normally
+      ab_cols <- sir_suffix_cols
+      has_sir_suffix <- FALSE
+    }
+  } else {
+    ab_cols <- all_cols[grepl("^[A-Za-z]{2,4}_[A-Za-z]{2}", all_cols, ignore.case = TRUE)]
+  }
 
   if (length(ab_cols) == 0) {
     stop("No antibiotic columns found in WHONET format")
@@ -1700,15 +1719,43 @@ import_whonet_ast <- function(input,
 
   # Convert antibiotic columns to character to avoid type conflicts
   ast <- ast %>%
-    mutate(across(any_of(ab_cols), as.character))
+    mutate(across(any_of(c(ab_cols, sir_suffix_cols)), as.character))
 
-  # Pivot to long format
-  ast_long <- ast %>%
-    tidyr::pivot_longer(
-      cols = any_of(ab_cols),
-      names_to = "ab_col",
-      values_to = "sir_value"
-    )
+  # Pivot to long format; when _SIR suffix columns are present, also extract their
+  # SIR interpretations and join them in so downstream parsing can prefer them
+  if (has_sir_suffix) {
+    ast$.row_id <- seq_len(nrow(ast))
+
+    ast_long <- ast %>%
+      tidyr::pivot_longer(
+        cols = any_of(ab_cols),
+        names_to = "ab_col",
+        values_to = "sir_value"
+      )
+
+    # Pivot the _SIR columns, renaming them to their base names for the join
+    sir_interp_long <- ast %>%
+      select(.row_id, any_of(sir_suffix_cols)) %>%
+      dplyr::rename_with(~ sub("_SIR$", "", ., ignore.case = TRUE),
+                         any_of(sir_suffix_cols)) %>%
+      tidyr::pivot_longer(
+        cols = any_of(ab_cols),
+        names_to = "ab_col",
+        values_to = "sir_interp"
+      )
+
+    ast_long <- ast_long %>%
+      dplyr::left_join(sir_interp_long, by = c(".row_id", "ab_col")) %>%
+      dplyr::select(-.row_id)
+  } else {
+    ast_long <- ast %>%
+      tidyr::pivot_longer(
+        cols = any_of(ab_cols),
+        names_to = "ab_col",
+        values_to = "sir_value"
+      )
+    ast_long$sir_interp <- NA_character_
+  }
 
   # Parse antibiotic directly from column name (as.ab handles WHONET format)
   ast_long <- ast_long %>%
@@ -1732,7 +1779,7 @@ import_whonet_ast <- function(input,
   #
   # Reference: https://whonet.org/WebDocs/WHONET%202.Laboratory%20configuration.html
   ast_long <- ast_long %>%
-    mutate(method_code = stringr::str_match(ab_col, "^[A-Z]{2,4}_(.*)$")[, 2]) %>%
+    mutate(method_code = toupper(stringr::str_match(ab_col, "(?i)^[A-Za-z]{2,4}_(.*)$")[, 2])) %>%
     # Parse guideline (for standard codes N/E/D)
     mutate(guideline = case_when(
       grepl("^N", method_code) ~ "CLSI",
@@ -1770,13 +1817,16 @@ import_whonet_ast <- function(input,
       TRUE ~ NA_character_
     ))
 
-  # Parse SIR values
+  # Parse SIR values — prefer the explicit _SIR column when present, then fall back
+  # to reading S/I/R directly from the raw value column (standard WHONET format)
   ast_long <- ast_long %>%
     mutate(pheno_provided = case_when(
+      !is.na(sir_interp) & sir_interp %in% c("S", "I", "R") ~ sir_interp,
       sir_value %in% c("S", "I", "R") ~ sir_value,
       TRUE ~ NA_character_
     )) %>%
-    mutate(pheno_provided = as.sir(pheno_provided))
+    mutate(pheno_provided = as.sir(pheno_provided)) %>%
+    dplyr::select(-sir_interp)
 
   # Extract numeric measurements from sir_value where applicable.
   # WHONET column values may contain MIC strings (e.g. "<=0.5", ">32") for

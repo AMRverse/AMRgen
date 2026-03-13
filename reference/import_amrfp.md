@@ -33,7 +33,7 @@ import_amrfp(
 - sample_col:
 
   A character string specifying the column that identifies samples in
-  the dataset (default `Name`).
+  the dataset (default "`Name`").
 
 - element_symbol_col:
 

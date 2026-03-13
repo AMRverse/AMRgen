@@ -36,23 +36,24 @@ Authors:
 
 - Natacha Couto ([ORCID](https://orcid.org/0000-0002-9152-5464))
 
+- Ebenezer Foster-Nyarko
+  ([ORCID](https://orcid.org/0000-0001-6620-9403))
+
+- Gwen M. Knight ([ORCID](https://orcid.org/0000-0002-7263-9896))
+
 - Zoe A. Dyson <zoe.dyson@lshtm.ac.uk>
   ([ORCID](https://orcid.org/0000-0002-8887-3492))
 
-- Dominique L. Chaput ([ORCID](https://orcid.org/0000-0002-9736-2619))
-
-- Silvia Argímon ([ORCID](https://orcid.org/0000-0002-2884-3857))
-
-- Ebenezer Foster-Nyarko
-
-- Gwen M. Knight
-
-- Dorottya Nagy
-
-- Richard Goodman ([ORCID](https://orcid.org/0009-0008-0578-789X))
+- Kara K. Tsang ([ORCID](https://orcid.org/0000-0001-7742-8855))
 
 - Arjun B. Prasad ([ORCID](https://orcid.org/0000-0002-1343-8664))
 
 - Leonor Sánchez-Busó ([ORCID](https://orcid.org/0000-0002-4162-0228))
 
-- Kara K. Tsang ([ORCID](https://orcid.org/0000-0001-7742-8855))
+- Silvia Argimón ([ORCID](https://orcid.org/0000-0002-2884-3857))
+
+- Dorottya Nagy
+
+- Dominique L. Chaput ([ORCID](https://orcid.org/0000-0002-9736-2619))
+
+- Richard Goodman ([ORCID](https://orcid.org/0009-0008-0578-789X))

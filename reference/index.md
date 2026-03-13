@@ -5,6 +5,8 @@
 Functions to import, harmonise, and prepare genotype and phenotype data
 from public repositories or internal formats.
 
+- [`import_abricate()`](https://AMRverse.github.io/AMRgen/reference/import_abricate.md)
+  : Import and Process Abricate Results
 - [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
   : Import and Process AMRFinderPlus Results
 - [`import_amrfp_ebi()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi.md)

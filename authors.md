@@ -11,42 +11,43 @@
 
 - **Natacha Couto**. Author. [](https://orcid.org/0000-0002-9152-5464)
 
+- **Ebenezer Foster-Nyarko**. Author.
+  [](https://orcid.org/0000-0001-6620-9403)
+
+- **Gwen M. Knight**. Author. [](https://orcid.org/0000-0002-7263-9896)
+
 - **Zoe A. Dyson**. Author. [](https://orcid.org/0000-0002-8887-3492)
 
-- **Dominique L. Chaput**. Author.
-  [](https://orcid.org/0000-0002-9736-2619)
-
-- **Silvia Argímon**. Author. [](https://orcid.org/0000-0002-2884-3857)
-
-- **Ebenezer Foster-Nyarko**. Author.
-
-- **Gwen M. Knight**. Author.
-
-- **Dorottya Nagy**. Author.
-
-- **Richard Goodman**. Author. [](https://orcid.org/0009-0008-0578-789X)
+- **Kara K. Tsang**. Author. [](https://orcid.org/0000-0001-7742-8855)
 
 - **Arjun B. Prasad**. Author. [](https://orcid.org/0000-0002-1343-8664)
 
 - **Leonor Sánchez-Busó**. Author.
   [](https://orcid.org/0000-0002-4162-0228)
 
-- **Kara K. Tsang**. Author. [](https://orcid.org/0000-0001-7742-8855)
+- **Silvia Argimón**. Author. [](https://orcid.org/0000-0002-2884-3857)
+
+- **Dorottya Nagy**. Author.
+
+- **Dominique L. Chaput**. Author.
+  [](https://orcid.org/0000-0002-9736-2619)
+
+- **Richard Goodman**. Author. [](https://orcid.org/0009-0008-0578-789X)
 
 ## Citation
 
 Source:
 [`DESCRIPTION`](https://github.com/AMRverse/AMRgen/blob/main/DESCRIPTION)
 
-Berends MS, Holt KE, Hawkey J, Couto N, Dyson ZA, Chaput DL, Argímon S,
-Foster-Nyarko E, Knight GM, Nagy D, Goodman R, Prasad AB, Sánchez-Busó
-L, Tsang KK (2026). *AMRgen: Genotype-Phenotype Integration for
+Berends MS, Holt KE, Hawkey J, Couto N, Foster-Nyarko E, Knight GM,
+Dyson ZA, Tsang KK, Prasad AB, Sánchez-Busó L, Argimón S, Nagy D, Chaput
+DL, Goodman R (2026). *AMRgen: Genotype-Phenotype Integration for
 Antimicrobial Resistance Research*. R package version 0.0.1.9000,
 <https://amrgen.org>.
 
     @Manual{,
       title = {AMRgen: Genotype-Phenotype Integration for Antimicrobial Resistance Research},
-      author = {Matthijs S. Berends and Kathryn E. Holt and Jane Hawkey and Natacha Couto and Zoe A. Dyson and Dominique L. Chaput and Silvia Argímon and Ebenezer Foster-Nyarko and Gwen M. Knight and Dorottya Nagy and Richard Goodman and Arjun B. Prasad and Leonor Sánchez-Busó and Kara K. Tsang},
+      author = {Matthijs S. Berends and Kathryn E. Holt and Jane Hawkey and Natacha Couto and Ebenezer Foster-Nyarko and Gwen M. Knight and Zoe A. Dyson and Kara K. Tsang and Arjun B. Prasad and Leonor Sánchez-Busó and Silvia Argimón and Dorottya Nagy and Dominique L. Chaput and Richard Goodman},
       year = {2026},
       note = {R package version 0.0.1.9000},
       url = {https://amrgen.org},

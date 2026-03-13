@@ -95,10 +95,9 @@ The resulting phenotype table was imported to the AMRgen package and
 called `pheno_eco_2075`.
 
 ``` r
-# Create an object with the phenotype table pre-loaded in the AMRgen package
-pheno_eco_2075 <- pheno_eco_2075
+# Check the format of the phenotype table pre-loaded in the AMRgen package
+data(pheno_eco_2075)
 
-# Check the format of the phenotype table
 head(pheno_eco_2075)
 #> # A tibble: 6 × 37
 #>   id      drug_agent   mic  disk pheno_provided guideline method platform source
@@ -133,17 +132,17 @@ work with `AMRgen` functions are:
 - a phenotype column: S/I/R phenotype calls in the form of an AMR
   package `sir` class. In this example, SIR phenotype calls are as
   provided in the EBI AMR portal (`pheno_provided`) as we did not
-  reinterpret data based on CLSI/EUCAST breakpoints during download.
+  re-interpret data based on CLSI/EUCAST breakpoints during download.
 
-This vignette also uses raw mic data for the analyses. The corresponding
+This vignette also uses raw MIC data for the analyses. The corresponding
 column is:
 
-- `mic`: MIC in the form of an AMR package `mic` class.
+- `mic`: MIC measurements in the form of an AMR package `mic` class.
 
 ### 2. Genotype table
 
 The AMRFinderPlus results for the 2075 isolates in this study were
-retrieved from the All The Bacteria project, following these steps:
+retrieved from the Allthebacteria project, following these steps:
 
 1.  Downloaded a compressed TSV file containing the aggregated results
     of running AMRFinderPlus on all samples in the Allthebacteria
@@ -155,6 +154,7 @@ retrieved from the All The Bacteria project, following these steps:
 
 ``` r
 # Load AMRFinderPlus data to create an object with the key columns needed to work with the AMRgen package
+data(geno_eco_2075)
 geno_eco_2075 <- import_amrfp(geno_eco_2075, "Name")
 
 # Check the format of the processed genotype table
@@ -252,7 +252,7 @@ or computed from the S/I/R phenotype as NWT=R/I and WT=S. In this
 example, NWT was defined as R/I vs S. No ECOFF column was defined
 because of the nature of the AST data: the minimum MIC values of \<=0.5
 in the BD Phoenix AST data are above the ECOFF of 0.064 and cannot be
-interpreted by AMRgen. We can inspect the distribution of the
+interpreted against ECOFF. We can inspect the distribution of the
 Ciprofloxacin phenotype data to better understand this.
 
 ### 4. Plot Ciprofloxacin phenotype data distribution
@@ -262,11 +262,11 @@ The function
 can be used to plot the distribution of MIC values coloured by a
 variable. In this case, the S/I/R values were coloured by the column
 “pheno_provided”, which were interpreted by the authors with the
-breakpoints from CLSI 2018. We can also compare them to the breakpoints
-from CLSI 2025.
+breakpoints from CLSI 2018. We can also compare them to the updated
+breakpoints from CLSI 2025.
 
 ``` r
-# EUCAST 2018 guidelines (as in the publication from Mills et al).
+# CLSI 2018 guidelines (as in the publication from Mills et al).
 # The breakpoints are provided manually.
 assay_by_var(
   pheno_table = pheno_eco_2075,
@@ -283,7 +283,7 @@ assay_by_var(
 
 ``` r
 
-# EUCAST 2025 guidelines
+# CLSI 2025 guidelines
 # The breakpoints are provided by passing the option "guideline"
 assay_by_var(
   pheno_table = pheno_eco_2075,
@@ -367,14 +367,19 @@ concordance_cip
 The output shows that 31 markers were identified linked to Ciprofloxacin
 resistance in this dataset.
 
-The 2x2 confusion matrix shows the following values: \* 338 - no. of
-true positives (TP), resistant isolates predicted to be resistant by the
-presence of AMR markers \* 891 - no. of false positives (FP),
-susceptible isolates predicted to be resistant by the presence of AMR
-markers \* 837 - no. of true negatives (TN), susceptible isolates
-predicted to be susceptible by the absence of resistance markers \* 9 -
-no. of false negatives (FN), resistant isolates predicted to be
-susceptible by the absence of resistance markers
+The 2x2 confusion matrix shows the following values:
+
+- 338 - no. of true positives (TP), resistant isolates predicted to be
+  resistant by the presence of AMR markers
+
+- 891 - no. of false positives (FP), susceptible isolates predicted to
+  be resistant by the presence of AMR markers
+
+- 837 - no. of true negatives (TN), susceptible isolates predicted to be
+  susceptible by the absence of resistance markers
+
+- 9 - no. of false negatives (FN), resistant isolates predicted to be
+  susceptible by the absence of resistance markers
 
 The sensitivity value (or true positive rate, i.e. the proportion of
 resistant isolates predicted to be resistant by the presence of AMR

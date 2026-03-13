@@ -50,12 +50,18 @@ summarise_geno <- function(geno_table,
     )
 
   # uniques per variation type
-  uniques_pervartype <- geno_table %>%
-    select(any_of(c(sample_col, marker_col, drug_col, class_col, gene_col, variation_col))) %>%
-    group_by(!!sym(variation_col)) %>%
-    summarise(across(setdiff(names(.), variation_col), n_distinct))
-
+  uniques_pervartype <- NULL
+  if (!is.null(variation_col)) {
+    if (variation_col %in% colnames(geno_table)) {
+      uniques_pervartype <- geno_table %>%
+        select(any_of(c(sample_col, marker_col, drug_col, class_col, gene_col, variation_col))) %>%
+        group_by(!!sym(variation_col)) %>%
+        summarise(across(setdiff(names(.), variation_col), n_distinct))
+    }
+  }
+  
   # drugs
+  drugs <- NULL
   if (drug_col %in% colnames(geno_table)) {
     if (class_col %in% colnames(geno_table)) {
       # agents and classes
@@ -119,6 +125,7 @@ summarise_geno <- function(geno_table,
     }
   }
 
+  markers <- NULL
   if (marker_col %in% colnames(geno_table)) {
     markers <- geno_table %>%
       select(any_of(c(marker_col, drug_col, class_col, variation_col))) %>%

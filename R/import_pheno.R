@@ -2269,8 +2269,7 @@ import_phoenix_ast <- function(input,
 #' @param interpr_file Path to the SIRscan INTERPR (SIR interpretation) export file.
 #'   Optional. At least one of \code{mic_file}, \code{disk_file}, or
 #'   \code{interpr_file} must be supplied.
-#' @param source Optional source label for the \code{source} output column. If
-#'   \code{NULL}, the lab name read from the file header (row 2) is used.
+#' @param source Optional source label for the \code{source} output column.
 #' @param species Optional fixed species string applied to all rows (parsed via
 #'   [AMR::as.mo()]). If \code{NULL}, the \code{Germe} column from the file is used.
 #' @param ab Optional antibiotic filter/override passed to [interpret_ast()].
@@ -2328,15 +2327,8 @@ import_sirscan_ast <- function(
   # ── Helper: read one SIRscan file ──────────────────────────────────────────
   # SIRscan CSVs are semicolon-delimited, Latin-1 encoded, with a 4-row metadata
   # header. Row 5 is the column header; rows 6+ are isolate data.
-  # Returns a list: $data (data frame), $lab (lab name from row 2).
   read_sirscan_file <- function(path) {
     if (!file.exists(path)) stop(paste("File not found:", path))
-
-    raw <- readLines(path, encoding = "latin1", warn = FALSE)
-    raw <- raw[nchar(trimws(raw)) > 0]
-
-    # Row 2 typically holds the lab/network name (e.g. "CNR SALMONELLA;")
-    lab_name <- trimws(strsplit(raw[2], ";", fixed = TRUE)[[1]][1])
 
     df <- readr::read_delim(
       path,
@@ -2354,7 +2346,7 @@ import_sirscan_ast <- function(
     # Drop completely empty rows
     df <- df[rowSums(!is.na(df[, -1, drop = FALSE])) > 0, , drop = FALSE]
 
-    list(data = df, lab = lab_name)
+    df
   }
 
   # ── Helper: identify antibiotic columns ─────────────────────────────────────
@@ -2387,26 +2379,13 @@ import_sirscan_ast <- function(
   }
 
   # ── Read and pivot each provided file ───────────────────────────────────────
-  lab_source     <- NULL
   result_interpr <- NULL
   result_mic     <- NULL
   result_disk    <- NULL
 
-  if (!is.null(interpr_file)) {
-    res            <- read_sirscan_file(interpr_file)
-    result_interpr <- pivot_sirscan(res$data, "pheno_provided")
-    lab_source     <- res$lab
-  }
-  if (!is.null(mic_file)) {
-    res        <- read_sirscan_file(mic_file)
-    result_mic <- pivot_sirscan(res$data, "mic_raw")
-    if (is.null(lab_source)) lab_source <- res$lab
-  }
-  if (!is.null(disk_file)) {
-    res         <- read_sirscan_file(disk_file)
-    result_disk <- pivot_sirscan(res$data, "disk_raw")
-    if (is.null(lab_source)) lab_source <- res$lab
-  }
+  if (!is.null(interpr_file)) result_interpr <- pivot_sirscan(read_sirscan_file(interpr_file), "pheno_provided")
+  if (!is.null(mic_file))     result_mic     <- pivot_sirscan(read_sirscan_file(mic_file),     "mic_raw")
+  if (!is.null(disk_file))    result_disk    <- pivot_sirscan(read_sirscan_file(disk_file),    "disk_raw")
 
   # ── Build combined long frame ────────────────────────────────────────────────
   # Use interpretation as the base when available (it carries all metadata
@@ -2491,8 +2470,6 @@ import_sirscan_ast <- function(
   # Source
   if (!is.null(source)) {
     ast_long <- ast_long %>% mutate(source = source)
-  } else if (!is.null(lab_source) && nchar(lab_source) > 0) {
-    ast_long <- ast_long %>% mutate(source = lab_source)
   }
 
   # Parse MIC and disk values

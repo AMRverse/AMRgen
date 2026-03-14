@@ -1,0 +1,5 @@
+RGI_DrugClassAgent	drug_class	drug_agent
+disinfecting agents and antiseptics	Other	NA
+fluoroquinolone antibiotic	Fluoroquinolones	NA
+G418	NA	geneticin
+antibiotic efflux	Efflux	NA

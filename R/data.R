@@ -547,3 +547,50 @@
 #' - `yqiL allele`: Allele identifier for the `yqiL` locus in the PubMLST scheme.
 #' @source <https://github.com/AllTheBacteria/AllTheBacteria>
 "ST_data_CLI"
+
+
+#' Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data
+#'
+#' Raw RGI v6.0.6 results file (run with `--include_loose`) for 12 genomes of multiple species, one AMR determinant per row.
+#' Includes multiple species to cover all four model types currently detected by RGI (protein homolog model, protein variant model, protein overexpression model, and rRNA gene variant model)
+#' Includes Perfect, Strict, and Loose hits to test `exclude_loose` parameter
+#' 
+#' @format `rgi_raw` A data frame with 21,203 rows and 28 columns:
+#' - `ORF_ID`: Sample identifier
+#' - ...: RGI results columns
+#' @source Four colistin-resistant isolates from Bioproject PRJNA966919 <https://www.ncbi.nlm.nih.gov/datasets/genome/?bioproject=PRJNA966919>.
+#' @source One genome with rRNA gene variant models detected (GCF_000249055.1).
+"rgi_raw"
+
+#' Table mapping CARD/RGI drug class and antibiotic columns
+#'
+#' Table mapping CARD/RGI drug class / antibiotic columns to class / antibiotic names recognised by AMR pkg
+#'
+#' @format `rgi_drugs_table` A data frame with 3 rows and 4 columns:
+#' - `RGI_DrugClassAgent`: RGI/CARD drug class / antibiotic that is not recognized by AMR pkg
+#' - `drug_class`: Valid drug class name recognised by AMR pkg
+#' - `drug_agent`: Valid antibiotic name recognised by AMR pkg
+"rgi_drugs_table"
+
+#' Table mapping CARD/RGI Model ID and CARD Short Name
+#'
+#' Table mapping all CARD/RGI Model ID and CARD Short Name to convert long names into shortened AMR determinant names
+#' 
+#' @format `rgi_short_name_table` A data frame with 6445 rows and 2 columns:
+#' - `Model ID`: RGI/CARD model ID column
+#' - `CARD Short Name`: Shortened AMR determinant names
+#' @source Two columns extracted from: <https://card.mcmaster.ca/latest/data> in aro_index.tsv
+"rgi_short_name_table"
+
+
+#' Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data from EuSCAPE project
+#'
+#' Raw RGI v6.0.6 results file for Klebsiella pneumoniae from EuSCAPE project, one AMR determinant per row. 
+#' Includes only Perfect and Strict hits
+#' 
+#' @format `rgi_EuSCAPE_raw` A data frame with 59,403 rows and 28 columns:
+#' - `ORF_ID`: Sample identifier
+#' - ...: RGI results columns
+#' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).
+#' See David *et al.* (2019) <https://doi.org/10.1038/s41564-019-0492-8>.
+"rgi_EuSCAPE_raw"

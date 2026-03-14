@@ -2250,3 +2250,256 @@ import_phoenix_ast <- function(input,
     "pheno_provided", "spp_pheno"
   )))
 }
+
+
+#' Import and process antimicrobial susceptibility data from SIRscan (Bio-Rad)
+#'
+#' SIRscan (Bio-Rad) exports AST results as three separate semicolon-delimited CSV
+#' files: MIC values (CMI), disk diffusion diameters (DIAM), and SIR interpretations
+#' (INTERPR). Each file shares the same row structure (one row per isolate) and
+#' antibiotic columns. This function reads one or more of these files, pivots to
+#' long format, and returns a standardised AMRgen data frame.
+#'
+#' Files have a 4-row metadata header (institution, lab, export date, period)
+#' followed by a semicolon-delimited data block. Latin-1 (Windows-1252) encoding
+#' is assumed, as is standard for French-locale SIRscan exports.
+#'
+#' @param mic_file Path to the SIRscan CMI (MIC) export file. Optional.
+#' @param disk_file Path to the SIRscan DIAM (disk diffusion) export file. Optional.
+#' @param interpr_file Path to the SIRscan INTERPR (SIR interpretation) export file.
+#'   Optional. At least one of \code{mic_file}, \code{disk_file}, or
+#'   \code{interpr_file} must be supplied.
+#' @param source Optional source label for the \code{source} output column.
+#' @param species Optional fixed species string applied to all rows (parsed via
+#'   [AMR::as.mo()]). If \code{NULL}, the \code{Germe} column from the file is used.
+#' @param ab Optional antibiotic filter/override passed to [interpret_ast()].
+#' @param instrument_guideline Optional guideline string for the \code{guideline}
+#'   column (e.g. \code{"EUCAST 2023"}).
+#' @param interpret_eucast Interpret MIC/disk values against EUCAST human breakpoints
+#'   (default \code{FALSE}).
+#' @param interpret_clsi Interpret MIC/disk values against CLSI human breakpoints
+#'   (default \code{FALSE}).
+#' @param interpret_ecoff Interpret MIC/disk values against ECOFF values
+#'   (default \code{FALSE}).
+#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom dplyr any_of left_join mutate relocate rename select
+#' @importFrom readr read_delim locale
+#' @importFrom rlang sym
+#' @importFrom tidyr pivot_longer
+#' @return A standardised long-format data frame with columns:
+#'   \code{id}, \code{drug_agent}, \code{mic}, \code{disk},
+#'   \code{pheno_provided}, \code{pheno_eucast}, \code{pheno_clsi}, \code{ecoff},
+#'   \code{method}, \code{platform}, \code{guideline}, \code{source},
+#'   \code{spp_pheno}, \code{collection_date}, \code{specimen_type}.
+#' @export
+#' @examples
+#' \dontrun{
+#' # Import all three SIRscan export files
+#' pheno <- import_sirscan_ast(
+#'   mic_file     = "CMI_SALMO.csv",
+#'   disk_file    = "DIAM_SALMO.csv",
+#'   interpr_file = "INTERPR_SALMO.csv"
+#' )
+#'
+#' # MIC + interpretations only, with EUCAST re-interpretation
+#' pheno <- import_sirscan_ast(
+#'   mic_file     = "CMI_SALMO.csv",
+#'   interpr_file = "INTERPR_SALMO.csv",
+#'   species      = "Salmonella enterica",
+#'   interpret_eucast = TRUE
+#' )
+#' }
+import_sirscan_ast <- function(
+    mic_file          = NULL,
+    disk_file         = NULL,
+    interpr_file      = NULL,
+    source            = NULL,
+    species           = NULL,
+    ab                = NULL,
+    instrument_guideline = NULL,
+    interpret_eucast  = FALSE,
+    interpret_clsi    = FALSE,
+    interpret_ecoff   = FALSE) {
+  if (is.null(mic_file) && is.null(disk_file) && is.null(interpr_file)) {
+    stop("At least one of 'mic_file', 'disk_file', or 'interpr_file' must be provided")
+  }
+
+  # ── Helper: read one SIRscan file ──────────────────────────────────────────
+  # SIRscan CSVs are semicolon-delimited, Latin-1 encoded, with a 4-row metadata
+  # header. Row 5 is the column header; rows 6+ are isolate data.
+  read_sirscan_file <- function(path) {
+    if (!file.exists(path)) stop(paste("File not found:", path))
+
+    df <- readr::read_delim(
+      path,
+      delim          = ";",
+      skip           = 4,
+      col_names      = TRUE,
+      locale         = readr::locale(encoding = "latin1"),
+      show_col_types = FALSE,
+      name_repair    = "minimal"
+    )
+
+    # Drop empty trailing columns (artefact of trailing semicolons)
+    df <- df[, nchar(trimws(colnames(df))) > 0, drop = FALSE]
+
+    # Drop completely empty rows
+    df <- df[rowSums(!is.na(df[, -1, drop = FALSE])) > 0, , drop = FALSE]
+
+    df
+  }
+
+  # ── Helper: identify antibiotic columns ─────────────────────────────────────
+  # SIRscan antibiotic codes are short alphanumeric strings with no special
+  # characters. Non-drug columns either contain non-alphanumeric characters
+  # (accents, degree sign, spaces, periods), are known resistance-summary flags
+  # (C3GR, FQR, AZIR), known plain-ASCII metadata fields (Patient, Germe), or
+  # internal SIRscan codes (OPERA*).
+  get_ab_cols <- function(df) {
+    cols <- colnames(df)
+    is_ab <- !grepl("[^A-Za-z0-9]", cols) &
+      !cols %in% c("C3GR", "FQR", "AZIR", "Patient", "Germe") &
+      !grepl("^OPERA", cols, ignore.case = TRUE)
+    cols[is_ab]
+  }
+
+  # ── Helper: pivot one SIRscan wide frame to long format ─────────────────────
+  # Adds a .row_id (row position in the wide file) so that separate long frames
+  # can be joined unambiguously even when isolate IDs are not unique.
+  pivot_sirscan <- function(df, value_name) {
+    ab_cols <- get_ab_cols(df)
+    df %>%
+      mutate(.row_id = seq_len(dplyr::n())) %>%
+      mutate(across(any_of(ab_cols), as.character)) %>%
+      tidyr::pivot_longer(
+        cols      = any_of(ab_cols),
+        names_to  = "ab_col",
+        values_to = value_name
+      )
+  }
+
+  # ── Read and pivot each provided file ───────────────────────────────────────
+  result_interpr <- NULL
+  result_mic     <- NULL
+  result_disk    <- NULL
+
+  if (!is.null(interpr_file)) result_interpr <- pivot_sirscan(read_sirscan_file(interpr_file), "pheno_provided")
+  if (!is.null(mic_file))     result_mic     <- pivot_sirscan(read_sirscan_file(mic_file),     "mic_raw")
+  if (!is.null(disk_file))    result_disk    <- pivot_sirscan(read_sirscan_file(disk_file),    "disk_raw")
+
+  # ── Build combined long frame ────────────────────────────────────────────────
+  # Use interpretation as the base when available (it carries all metadata
+  # columns). Additional value columns are joined by (.row_id, ab_col).
+  ast_long <- if (!is.null(result_interpr)) result_interpr else
+    if (!is.null(result_mic)) result_mic else
+      result_disk
+
+  if (!is.null(result_mic) && !"mic_raw" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>%
+      dplyr::left_join(
+        result_mic %>% select(.row_id, ab_col, mic_raw),
+        by = c(".row_id", "ab_col")
+      )
+  }
+  if (!is.null(result_disk) && !"disk_raw" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>%
+      dplyr::left_join(
+        result_disk %>% select(.row_id, ab_col, disk_raw),
+        by = c(".row_id", "ab_col")
+      )
+  }
+
+  ast_long <- ast_long %>% select(-.row_id)
+
+  # Initialise any missing value columns
+  if (!"mic_raw"       %in% colnames(ast_long)) ast_long$mic_raw       <- NA_character_
+  if (!"disk_raw"      %in% colnames(ast_long)) ast_long$disk_raw      <- NA_character_
+  if (!"pheno_provided" %in% colnames(ast_long)) ast_long$pheno_provided <- NA_character_
+
+  # ── Standard column assignments ─────────────────────────────────────────────
+
+  # Sample ID — first column (N° CNR or localised equivalent)
+  id_col   <- colnames(ast_long)[1]
+  ast_long <- ast_long %>% rename(id = !!sym(id_col))
+
+  # Drug agent — from antibiotic column name (as.ab handles many short codes)
+  ast_long <- ast_long %>%
+    mutate(drug_agent = as.ab(ab_col)) %>%
+    select(-ab_col)
+
+  # Organism
+  if (!is.null(species)) {
+    ast_long <- ast_long %>% mutate(spp_pheno = as.mo(species))
+  } else if ("Germe" %in% colnames(ast_long)) {
+    ast_long <- ast_long %>%
+      mutate(spp_pheno = as.mo(Germe)) %>%
+      select(-Germe)
+  }
+
+  # Collection date — column whose name starts with "Date" (encoding-robust)
+  date_col <- colnames(ast_long)[grepl("^Date", colnames(ast_long), ignore.case = TRUE)][1]
+  if (!is.na(date_col)) {
+    ast_long <- ast_long %>% rename(collection_date = !!sym(date_col))
+  }
+
+  # Specimen type — column whose name contains "l.vement" / "levement" (Prélèvement)
+  spec_col <- colnames(ast_long)[grepl("l.{0,2}vement", colnames(ast_long),
+                                       ignore.case = TRUE, perl = TRUE)][1]
+  if (!is.na(spec_col)) {
+    ast_long <- ast_long %>% rename(specimen_type = !!sym(spec_col))
+  }
+
+  # Method — derived from which file(s) contributed data for each row
+  ast_long <- ast_long %>%
+    mutate(method = case_when(
+      !is.na(.data$mic_raw)  & is.na(.data$disk_raw)  ~ "broth dilution",
+      is.na(.data$mic_raw)   & !is.na(.data$disk_raw) ~ "disk diffusion",
+      !is.na(.data$mic_raw)  & !is.na(.data$disk_raw) ~ "broth dilution",
+      TRUE                                              ~ NA_character_
+    ))
+
+  ast_long <- ast_long %>% mutate(platform = "SIRscan")
+
+  # Guideline
+  if (!is.null(instrument_guideline)) {
+    ast_long <- ast_long %>% mutate(guideline = instrument_guideline)
+  } else {
+    ast_long$guideline <- NA_character_
+  }
+
+  # Source
+  if (!is.null(source)) {
+    ast_long <- ast_long %>% mutate(source = source)
+  }
+
+  # Parse MIC and disk values
+  # SIRscan uses French locale: normalise comma decimal separator to period
+  ast_long <- ast_long %>%
+    mutate(
+      mic  = as.mic(gsub(",", ".", .data$mic_raw, fixed = TRUE)),
+      disk = as.disk(.data$disk_raw)
+    ) %>%
+    select(-any_of(c("mic_raw", "disk_raw")))
+
+  # Parse SIR phenotype
+  ast_long <- ast_long %>%
+    mutate(pheno_provided = as.sir(.data$pheno_provided))
+
+  # Re-interpret phenotypes if requested
+  ast_long <- interpret_ast(
+    ast_long,
+    interpret_ecoff  = interpret_ecoff,
+    interpret_eucast = interpret_eucast,
+    interpret_clsi   = interpret_clsi,
+    species          = species,
+    ab               = ab
+  )
+
+  ast_long %>%
+    relocate(any_of(c(
+      "id", "drug_agent", "mic", "disk",
+      "pheno_eucast", "pheno_clsi", "ecoff",
+      "guideline", "method", "platform", "source",
+      "pheno_provided", "spp_pheno", "collection_date", "specimen_type"
+    )))
+}

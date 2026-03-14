@@ -22,7 +22,7 @@
 #' @param gene_col A character string specifying the column that identifies gene symbols in the dataset (default `"GENE"`).
 #' @param product_col A character string specifying the column that identifies product names in the dataset (default `"PRODUCT"`).
 #' @param ab_col A character string specifying the column that identifies which drug/s each detected gene is associated with (default `"RESISTANCE"`).
-#' @param db A character string specifying which AMR gene database Abricate was run with (currently only `"resfinder"` is supported).
+#' @param db A character string specifying which AMR gene database Abricate was run with (default `"resfinder"`; `"ncbi"` is also supported).
 #' @importFrom AMR as.ab
 #' @importFrom dplyr mutate filter relocate any_of everything rename
 #' @importFrom tidyr separate_longer_delim
@@ -39,6 +39,8 @@
 #' @examples
 #' \dontrun{
 #' geno_table <- import_abricate("path/to/abricate_resfinder.tsv")
+#'
+#' geno_table2 <- import_abricate("path/to/abricate_ncbi.tsv", db = "ncbi")
 #' }
 import_abricate <- function(input_table,
                             sample_col = "FILE",
@@ -61,25 +63,49 @@ import_abricate <- function(input_table,
     )
 
   # Expand Drugs (Handle RESISTANCE column)
+  ## TO CHECK: this is coded for resfinder results, where classes are separated by ';'
+  ## if using db=ncbi, does this column include multiple subclasses separated by "/" as done in AMRfp?
   in_table <- in_table %>%
     tidyr::separate_longer_delim(!!sym(ab_col), delim = ";") %>%
     dplyr::mutate(!!sym(ab_col) := trimws(!!sym(ab_col))) %>%
     dplyr::filter(!!sym(ab_col) != "")
 
-  # ResFinder drug names can be parsed directly with AMR package
-  # to support output run with other dbs we will need to update this to run through some options
-  in_table <- in_table %>%
-    mutate(drug_agent = AMR::as.ab(!!sym(ab_col))) %>%
-    mutate(drug_class = AMR::ab_group(drug_agent))
+  if ("DATABASE" %in% colnames(in_table)) {
+    db_value <- unique(in_table$DATABASE)
+    if (db_value != db) {
+      message(paste0("Warning, 'db' parameter ", db, " does not match DATABASE field in input file: ", paste0(db_value, collapse = ", ")))
+    }
+  }
 
-  # Harmonise outliers to harmonise classes with how we parse NCBI AMRfinderplus subclass for consistency
-  in_table <- in_table %>%
-    mutate(drug_class = case_when(
-      drug_agent %in% c("Sulfamethoxazole", "Sulfathiazole") ~ "Sulfonamides",
-      drug_class %in% c("Penicillins", "Aminopenicillins", "Ureidopenicillins", "Monobactams") ~ "Beta-lactams",
-      drug_class == "Fluoroquinolones" ~ "Quinolones",
-      TRUE ~ drug_class
-    ))
+
+  # Parse RESISTANCE column values to standard antibiotic and class names used in AMR pkg
+  if (db == "ncbi") {
+    # first, identify any subclasses we _know_ aren't in the AMR package, using the internal data
+    # join introduces these as new drug_class column
+    in_table <- in_table %>%
+      left_join(amrfp_drugs_table, by = setNames("AMRFP_Subclass", ab_col)) %>%
+      rename(drug_class_internal = drug_class)
+
+    # then for the columns which are NA, we want to use the Subclass col and convert to ab using AMR pkg
+    in_table <- in_table %>%
+      mutate(subclass_to_parse = if_else(!is.na(drug_class_internal), NA, !!sym(ab_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
+      mutate(drug_agent = AMR::as.ab(subclass_to_parse)) %>%
+      mutate(drug_class_from_agent = AMR::ab_group(subclass_to_parse)) %>%
+      mutate(drug_class = coalesce(drug_class_internal, drug_class_from_agent))
+  } else { # parse drugs directly with AMR package; this works for resfinder
+    in_table <- in_table %>%
+      mutate(drug_agent = AMR::as.ab(!!sym(ab_col))) %>%
+      mutate(drug_class = AMR::ab_group(drug_agent))
+
+    # Harmonise outliers match how we parse NCBI subclass
+    in_table <- in_table %>%
+      mutate(drug_class = case_when(
+        drug_agent %in% c("Sulfamethoxazole", "Sulfathiazole") ~ "Sulfonamides",
+        drug_class %in% c("Penicillins", "Aminopenicillins", "Ureidopenicillins", "Monobactams") ~ "Beta-lactams",
+        drug_class == "Fluoroquinolones" ~ "Quinolones",
+        TRUE ~ drug_class
+      ))
+  }
 
   # Move standard AMRgen genotype table cols to the start for visibility
   in_table <- in_table %>%

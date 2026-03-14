@@ -24,7 +24,7 @@ import_abricate(
 
 \item{ab_col}{A character string specifying the column that identifies which drug/s each detected gene is associated with (default \code{"RESISTANCE"}).}
 
-\item{db}{A character string specifying which AMR gene database Abricate was run with (currently only \code{"resfinder"} is supported).}
+\item{db}{A character string specifying which AMR gene database Abricate was run with (default \code{"resfinder"}; \code{"ncbi"} is also supported).}
 }
 \value{
 A tibble containing the processed AMR elements, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package.
@@ -45,5 +45,7 @@ The function performs the following steps:
 \examples{
 \dontrun{
 geno_table <- import_abricate("path/to/abricate_resfinder.tsv")
+
+geno_table2 <- import_abricate("path/to/abricate_ncbi.tsv", db = "ncbi")
 }
 }

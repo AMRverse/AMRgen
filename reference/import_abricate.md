@@ -48,7 +48,7 @@ import_abricate(
 - db:
 
   A character string specifying which AMR gene database Abricate was run
-  with (currently only `"resfinder"` is supported).
+  with (default `"resfinder"`; `"ncbi"` is also supported).
 
 ## Value
 
@@ -82,5 +82,7 @@ The function performs the following steps:
 ``` r
 if (FALSE) { # \dontrun{
 geno_table <- import_abricate("path/to/abricate_resfinder.tsv")
+
+geno_table2 <- import_abricate("path/to/abricate_ncbi.tsv", db = "ncbi")
 } # }
 ```

@@ -240,7 +240,8 @@ utils::globalVariables(c(
   "kleborate_classes",
   "strain",
   ".row_id",
-  "sir_interp"
+  "sir_interp",
+  "index"
 ))
 
 

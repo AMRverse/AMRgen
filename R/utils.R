@@ -234,13 +234,17 @@ utils::globalVariables(c(
   ".data",
   "subclass_to_parse",
   "amrfp_drugs_table",
+  "sirscan_codes",
   "drug_class_internal",
   "drug_class_from_agent",
   "Kleborate_Class",
   "kleborate_classes",
   "strain",
   ".row_id",
-  "sir_interp"
+  "sir_interp",
+  "disk_raw",
+  "collection_date",
+  "specimen_type"
 ))
 
 

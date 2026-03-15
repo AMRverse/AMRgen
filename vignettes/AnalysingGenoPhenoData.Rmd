@@ -75,7 +75,7 @@ If your genotype data is not in AMRFinderPlus format, you can wrangle other inpu
 
 The essential columns for a genotype table to work with downstream `AMRgen` functions are:
 
-* `Name`: character string giving the sample name, used to link to sample names in the phenotype file (this column can have a different name, in which case you'll need to make sure it is the first column in the dataframe OR pass its name to the functions using `geno_sample_col`)
+* `id`: character string giving the sample name, used to link to sample names in the phenotype file (this column can have a different name, in which case you'll need to make sure it is the first column in the dataframe OR pass its name to the functions using `geno_sample_col`)
 
 * `marker`: character string giving the name of the genetic marker detected
 
@@ -92,7 +92,7 @@ ecoli_geno_summary <- summarise_geno(ecoli_geno)
 ecoli_geno_summary$uniques
 
 # Unique counts of samples, markers, genes, drugs, and classes - per variation type
-ecoli_geno_summary$pertype
+ecoli_geno_summary$per_type
 ```
 
 The `summarise_geno()` function also returns a list of drugs and classes represented in the table, and the associated number of unique markers, unique samples, and total hits for each drug/class. Ordering by sample count, we see the most common class is efflux... there are only 3 efflux-associated markers but there are 11,828 hits to these across 5,258 samples (i.e. all samples have at least one). Next most common are markers associated with beta-lactams... there are 22 different markers with 6,379 hits across 4,989 of our 5,258 samples.
@@ -136,7 +136,7 @@ ecoli_geno_summary$markers %>%
 ## 2. Phenotype table
 
 ### 2a. Importing phenotype datato AMRgen's standard table format
-The `import_ast()` function imports AST data from NCBI or other standard formats
+The `import_pheno()` function imports AST data from NCBI or other standard formats
 ``` {r import_ncbi_ast}
 # Example E. coli AST data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
@@ -146,16 +146,16 @@ head(ecoli_ast)
 
 
 # You can make your own from different file formats, and interpret against breakpoints, using:
-#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
-#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
+#    import_pheno("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
+#    import_pheno("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
 ```
 
-Data can be imported from various standard formats using the `import_ast` function, and re-interpreted using latest breakpoints and/or ECOFF. Use `?import_ast` to see the available formats and other options.
+Data can be imported from various standard formats using the `import_pheno` function, and re-interpreted using latest breakpoints and/or ECOFF. Use `?import_pheno` to see the available formats and other options.
 
 If your assay data is not in a standard format, you can wrangle other input data files into the necessary format, manually and/or with the help of the `format_ast` function.
 
 ``` {r import_ast_help, eval=F}
-?import_ast
+?import_pheno
 
 ?format_ast
 ```

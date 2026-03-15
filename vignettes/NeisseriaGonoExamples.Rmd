@@ -44,7 +44,6 @@ Load the necessary libraries before running this vignette:
 
 ```{r setup, warning=FALSE, message=FALSE}
 library(AMRgen)
-library(AMR)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -140,10 +139,10 @@ Importantly, out of the 5,361 strains under study and with phenotype data, genet
 
 ```{r eurogasp_neg}
 negative_eurogasp <- eurogasp_pheno_raw %>%
-  anti_join(eurogasp_geno, by = c("id" = "Name")) %>%
+  anti_join(eurogasp_geno, by = "id") %>%
   pull(id)
 
-eurogasp_geno <- eurogasp_geno %>% bind_rows(tibble(Name = negative_eurogasp))
+eurogasp_geno <- eurogasp_geno %>% bind_rows(tibble(id = negative_eurogasp))
 ```
 
 
@@ -721,10 +720,10 @@ ngono_cro_ast <- format_ast(
 
 # Include empty rows for samples with phenotype but no genotype data
 negative_cro <- ngono_cro_pheno_raw %>%
-  anti_join(ngono_cro_geno, by = c("id" = "Name")) %>%
+  anti_join(ngono_cro_geno) %>%
   pull(id)
 
-ngono_cro_geno <- ngono_cro_geno %>% bind_rows(tibble(Name = negative_cro))
+ngono_cro_geno <- ngono_cro_geno %>% bind_rows(tibble(id = negative_cro))
 ```
 
 Build the binary matrix and generate upset plots:
@@ -818,10 +817,10 @@ ngono_tet_geno <- import_amrfp(
 )
 
 negative_samples <- ngono_tet_ast %>%
-  anti_join(ngono_tet_geno, by = c("id" = "Name")) %>%
+  anti_join(ngono_tet_geno) %>%
   pull(id)
 
-ngono_tet_geno <- ngono_tet_geno %>% bind_rows(tibble(Name = negative_samples))
+ngono_tet_geno <- ngono_tet_geno %>% bind_rows(tibble(id = negative_samples))
 ```
 
 Build the binary matrix and generate upset plots:

@@ -27,14 +27,21 @@
 #' @importFrom dplyr mutate filter relocate any_of everything rename
 #' @importFrom tidyr separate_longer_delim
 #' @importFrom rlang := sym .data
-#' @return A tibble containing the processed AMR elements, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package.
+#' @return A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package:
+#' - `id`: The sample identifier (`character`).
+#' - `marker`: The name of the genotype marker, as it appears in the `GENE` column of the input file (`character`).
+#' - `gene`: The name of the gene product, as it appears in the `PRODUCT` column of the input file (`character`).
+#' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, parsed from the `RESISTANCE` column of the input file which depends on the database that ABRicate was run with (`character`).
+#' - `drug_agent`: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg, parsed from the `RESISTANCE` column of the input file (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
+#' - `variation type`: Type of variation, i.e. `Gene presence detected`, as ABRicate only detects presence/absence of genes in the query database.
+#' ... Other fields specific to the input file
 #' @details
 #' The function performs the following steps:
 #' - Reads the Abricate output table via the internal `process_input` function.
 #' - Standardises the sample column name 'id'.
 #' - Assigns standardised column names for genes, markers, and sets variation type to "Gene presence detected".
 #' - Splits multiple resistance annotations (separated by semicolons) into separate rows.
-#' - Converts drug agent names to the `"ab"` class from the AMR package and maps these to classes compatible with the output of [import_amrfp()] and [import_kleborate()].
+#' - Converts drug agent names and classes to terms recognised by the AMR package.
 #' @export
 #' @examples
 #' \dontrun{
@@ -111,12 +118,12 @@ import_abricate <- function(input_table,
   in_table <- in_table %>%
     dplyr::relocate(dplyr::any_of(c(
       "id",
+      "marker",
       "gene",
       "mutation",
-      "variation type",
-      "marker",
       "drug_agent",
-      "drug_class"
+      "drug_class",
+      "variation type"
     )), .before = dplyr::everything())
 
   return(in_table)

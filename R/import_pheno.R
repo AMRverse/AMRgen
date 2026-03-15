@@ -567,14 +567,14 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 
   # parse phenotype SIR column
   if ("Resistance phenotype" %in% colnames(ast)) {
-    ast <- ast %>% 
-      mutate(pheno_provided = as.sir(`Resistance phenotype`)) 
+    ast <- ast %>%
+      mutate(pheno_provided = as.sir(`Resistance phenotype`))
     if ("intermediate" %in% ast$`Resistance phenotype`) {
       message('Manually setting `pheno_provided` to "I" where `Resistance phenotype` was "intermediate"')
-      ast <- ast %>% 
+      ast <- ast %>%
         mutate(pheno_provided = if_else(`Resistance phenotype` == "intermediate",
-                                      "I",
-                                      `Resistance phenotype`
+          "I",
+          `Resistance phenotype`
         ))
     }
   } else {
@@ -2158,7 +2158,7 @@ import_phoenix_ast <- function(input,
 #' Import and process antimicrobial phenotype data from common sources
 #'
 #' This function imports an antibiotic susceptibility testing datasets in formats exported by EBI, NCBI, WHOnet and several automated AST instruments (Vitek, Microscan, Sensititre, Phoenix). It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF).
-#' @param input A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the [EBI AMR web browser](https://www.ebi.ac.uk/amr/data/?view=experiments), [EBI FTP site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or [NCBI browser](https://www.ncbi.nlm.nih.gov/pathogens/ast), or using the functions [download_ebi()] or [download_ncbi_ast()]; or the files may be exported from supported AST instruments.
+#' @param input A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the [EBI AMR web browser](https://www.ebi.ac.uk/amr/data/?view=experiments), [EBI FTP site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or [NCBI browser](https://www.ncbi.nlm.nih.gov/pathogens/ast), or using the functions [download_ebi()], [download_ncbi_ast()], or [query_ncbi_bq_geno()]; or the files may be exported from supported AST instruments.
 #' @param format A string indicating the format of the data: `"ebi"` (default), `"ebi_web"`, `"ebi_ftp"`, `"ncbi"`, `"ncbi-biosample"`, `"vitek"`, `"microscan"`, `"phoenix"`, `"sensititre"`, or `"whonet"`. This determines which importer function the data is passed on to for processing (see below).
 #' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
 #' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
@@ -2175,7 +2175,7 @@ import_phoenix_ast <- function(input,
 #' - `"phoenix"` : [import_phoenix_ast()]
 #' - `"whonet"` : [import_whonet_ast()]
 #' @return A data frame with the processed AST data, including additional columns:
-#' - `id`: The biosample identifier (`character`).
+#' - `id`: The sample identifier (`character`).
 #' - `spp_pheno`: The species phenotype, formatted using the [AMR::as.mo()] function (class `mo`).
 #' - `drug_agent`: The antibiotic used in the test, formatted using the [AMR::as.ab()] function (class `ab`).
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the [AMR::as.mic()] function (class `mic`).
@@ -2194,23 +2194,26 @@ import_phoenix_ast <- function(input,
 #' # import NCBI data retrieved from Google Cloud, without re-interpreting resistance
 #' head(staph_ast_ncbi_cloud_raw)
 #' pheno <- import_pheno(staph_ast_ncbi_cloud_raw, format = "ncbi")
-#' 
+#'
 #' # import NCBI data where biosample column has been renamed to 'id'
 #' head(staph_ast_ncbi_raw)
-#' import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col="id")
+#' import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col = "id")
 #'
 #' # import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
 #' head(ecoli_ast_raw)
-#' pheno <- import_ast(ecoli_ast_raw, format = "ncbi", 
-#'    interpret_eucast = TRUE, interpret_ecoff = TRUE)
+#' pheno <- import_ast(ecoli_ast_raw,
+#'   format = "ncbi",
+#'   interpret_eucast = TRUE, interpret_ecoff = TRUE
+#' )
 #'
-#' # Download Klebsiella quasipneumoniae phenotype data from NCBI BioSample
+#' # download Klebsiella quasipneumoniae phenotype data from NCBI BioSample
 #' kquasi_raw_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
 #' head(kquasi_raw_ncbi)
 #' # import the data and interpret against EUCAST breakpoints
-#' pheno <- import_pheno(kquasi_raw_ncbi, 
+#' pheno <- import_pheno(kquasi_raw_ncbi,
 #'   format = "ncbi_biosample",
-#'   interpret_eucast = T)
+#'   interpret_eucast = T
+#' )
 #'
 #' # download Klebsiella quasipneumoniae phenotype data from EBI
 #' kquasi_raw_ebi <- download_ebi(species = "Klebsiella quasipneumoniae")
@@ -2220,7 +2223,7 @@ import_phoenix_ast <- function(input,
 #'   format = "ebi_ftp",
 #'   interpret_ecoff = TRUE
 #' )
-#' 
+#'
 #' # import Vitek data from file, with default parameters
 #' pheno <- import_pheno("vitek_export.tsv",
 #'   format = "vitek"
@@ -2255,17 +2258,17 @@ import_pheno <- function(input,
 }
 
 # registry of pheno data import functions, to be dispatched via import_pheno()
-.importers <- list(
-  "ebi" = import_ebi_ast,
-  "ebi_web" = import_ebi_ast,
-  "ebi_ftp" = import_ebi_ast_ftp,
-  "ncbi" = import_ncbi_ast,
-  "ncbi_biosample" = import_ncbi_biosample,
-  "vitek" = import_vitek_ast,
-  "microscan" = import_microscan_ast,
-  "sensititre" = import_sensititre_ast,
-  "phoenix" = import_phoenix_ast,
-  "whonet" = import_whonet_ast
+.pheno_importers <- list(
+  ebi = import_ebi_ast,
+  ebi_web = "import_ebi_ast",
+  ebi_ftp = "import_ebi_ast_ftp",
+  ncbi = "import_ncbi_ast",
+  ncbi_biosample = "import_ncbi_biosample",
+  vitek = "import_vitek_ast",
+  microscan = "import_microscan_ast",
+  sensititre = "import_sensititre_ast",
+  phoenix = "import_phoenix_ast",
+  whonet = "import_whonet_ast"
 )
 
 # function to identify the right phenotype importer function to dispatch
@@ -2273,18 +2276,18 @@ import_pheno <- function(input,
 get_pheno_importer <- function(format) {
   format <- tolower(format)
 
-  fun <- .importers[[format]]
+  fun_name <- .pheno_importers[[format]]
 
-  if (is.null(fun)) {
+  if (is.null(fun_name)) {
     stop(
       "Unknown format: ", format,
       "\nAvailable formats: ",
-      paste(names(.importers), collapse = ", "),
+      paste(names(.pheno_importers), collapse = ", "),
       call. = FALSE
     )
   }
 
-  fun
+  get(fun_name, envir = asNamespace(utils::packageName()))
 }
 
 # forward relevant arguments to the function selected for dispatch

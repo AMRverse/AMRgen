@@ -14,7 +14,7 @@ import_pheno(
 )
 }
 \arguments{
-\item{input}{A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the \href{https://www.ebi.ac.uk/amr/data/?view=experiments}{EBI AMR web browser}, \href{ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}{EBI FTP site}, or \href{https://www.ncbi.nlm.nih.gov/pathogens/ast}{NCBI browser}, or using the functions \code{\link[=download_ebi]{download_ebi()}} or \code{\link[=download_ncbi_ast]{download_ncbi_ast()}}; or the files may be exported from supported AST instruments.}
+\item{input}{A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the \href{https://www.ebi.ac.uk/amr/data/?view=experiments}{EBI AMR web browser}, \href{ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}{EBI FTP site}, or \href{https://www.ncbi.nlm.nih.gov/pathogens/ast}{NCBI browser}, or using the functions \code{\link[=download_ebi]{download_ebi()}}, \code{\link[=download_ncbi_ast]{download_ncbi_ast()}}, or \code{\link[=query_ncbi_bq_geno]{query_ncbi_bq_geno()}}; or the files may be exported from supported AST instruments.}
 
 \item{format}{A string indicating the format of the data: \code{"ebi"} (default), \code{"ebi_web"}, \code{"ebi_ftp"}, \code{"ncbi"}, \code{"ncbi-biosample"}, \code{"vitek"}, \code{"microscan"}, \code{"phoenix"}, \code{"sensititre"}, or \code{"whonet"}. This determines which importer function the data is passed on to for processing (see below).}
 
@@ -41,7 +41,7 @@ import_pheno(
 \value{
 A data frame with the processed AST data, including additional columns:
 \itemize{
-\item \code{id}: The biosample identifier (\code{character}).
+\item \code{id}: The sample identifier (\code{character}).
 \item \code{spp_pheno}: The species phenotype, formatted using the \code{\link[AMR:as.mo]{AMR::as.mo()}} function (class \code{mo}).
 \item \code{drug_agent}: The antibiotic used in the test, formatted using the \code{\link[AMR:as.ab]{AMR::as.ab()}} function (class \code{ab}).
 \item \code{mic}: The minimum inhibitory concentration (MIC) value, formatted using the \code{\link[AMR:as.mic]{AMR::as.mic()}} function (class \code{mic}).
@@ -61,30 +61,38 @@ This function imports an antibiotic susceptibility testing datasets in formats e
 }
 \examples{
 \dontrun{
-# import NCBI data without re-interpreting resistance
+# import NCBI data retrieved from Google Cloud, without re-interpreting resistance
+head(staph_ast_ncbi_cloud_raw)
 pheno <- import_pheno(staph_ast_ncbi_cloud_raw, format = "ncbi")
 
-# import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
-head(pheno)
+# import NCBI data where biosample column has been renamed to 'id'
+head(staph_ast_ncbi_raw)
+import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col = "id")
 
-# download EBI phenotype data for Klebsiella quasipneumoniae
-kquasi_raw_ebi <- download_ebi(
-  species = "Klebsiella quasipneumoniae"
+# import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
+head(ecoli_ast_raw)
+pheno <- import_ast(ecoli_ast_raw,
+  format = "ncbi",
+  interpret_eucast = TRUE, interpret_ecoff = TRUE
 )
+
+# download Klebsiella quasipneumoniae phenotype data from NCBI BioSample
+kquasi_raw_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
+head(kquasi_raw_ncbi)
+# import the data and interpret against EUCAST breakpoints
+pheno <- import_pheno(kquasi_raw_ncbi,
+  format = "ncbi_biosample",
+  interpret_eucast = T
+)
+
+# download Klebsiella quasipneumoniae phenotype data from EBI
+kquasi_raw_ebi <- download_ebi(species = "Klebsiella quasipneumoniae")
+head(kquasi_raw_ebi)
 # import the data and interpret against ecoff
 pheno <- import_pheno(kquasi_raw_ebi,
   format = "ebi_ftp",
   interpret_ecoff = TRUE
 )
-# Download NCBI phenotype data for Klebsiella quasipneumoniae
-kquasi_raw_ncbi <- download_ncbi_ast(
-  "Klebsiella quasipneumoniae"
-)
-# import the data and interpret against EUCAST breakpoints
-ast <- import_pheno(kquasi_raw_ncbi, 
-  format = "ncbi_biosample",
-  interpret_eucast = T)
 
 # import Vitek data from file, with default parameters
 pheno <- import_pheno("vitek_export.tsv",

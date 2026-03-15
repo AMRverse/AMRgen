@@ -18,10 +18,20 @@ import_kleborate(
 
 \item{kleborate_class_table}{A tibble containing a reference table mapping Kleborate drug class column names (\code{Kleborate_Class}) to standardised drug classes (\code{drug_class}). Defaults to \code{kleborate_classes}, which is provided internally.}
 
-\item{hgvs}{Logical indicating whether to expect mutations in HGVS format (used in Kleborate releases since v3.1.3). Default \code{TRUE}, which expects mutations formatted as e.g. "GyrA:p.S83F". Set to \code{FALSE} if your results were generated using older versions where mutations were formatted as e.g. "GyrA_83F".}
+\item{hgvs}{Logical indicating whether to expect mutations in \href{https://hgvs-nomenclature.org/stable/}{HGVS nomenclature} syntax (used in Kleborate releases since v3.1.3). Default \code{TRUE}, which expects mutations formatted as e.g. "GyrA:p.S83F". Set to \code{FALSE} if your results were generated using older versions where mutations were formatted as e.g. "GyrA_83F".}
 }
 \value{
-A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible.
+A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package:
+\itemize{
+\item \code{id}: The sample identifier (\code{character}).
+\item \code{marker}: The name of the genotype marker as it appears in the input (e.g. \code{GyrA:p.S83F} for recent versions of Kleborate, or \verb{GyrA-83F} for earlier versions not using \href{https://hgvs-nomenclature.org/stable/}{HGVS nomenclature}) (\code{character}).
+\item \code{gene}: The gene identifier (\code{character}).
+\item \code{mutation}: The mutation detected within the gene, converted to \href{https://hgvs-nomenclature.org/stable/}{HGVS nomenclature} syntax (e.g. \code{Ser83Phe}) (\code{character}).
+\item \code{drug_class}: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, drawn from the Kleborate column in which the marker was reported (\code{character}).
+\item \code{drug_agent}: Values are recorded as \code{NA} as Kleborate doesn't report markers assigned to individual drug level.
+\item \verb{variation type}: Type of variation, e.g. \verb{Gene presence detected}, \verb{Protein variant detected}, \verb{Nucleotide variant detected}, \verb{Inactivating mutation detected}.
+... Other fields specific to the input file
+}
 }
 \description{
 This function imports and processes genotyping results from Kleborate (https://github.com/klebgenomics/Kleborate), extracting antimicrobial resistance determinants and mapping them to standardised drug classes.
@@ -31,7 +41,7 @@ The function performs the following steps:
 \itemize{
 \item Reads the Kleborate output table.
 \item Transforms Kleborate output into long form (i.e., one AMR determinant per row).
-\item Maps Kleborate drug classes to standardised drug class names.
+\item Maps Kleborate drug classes to standardised drug class names recognised by the AMR pkg.
 This processing ensures compatibility with downstream AMRgen analysis workflows.
 }
 }

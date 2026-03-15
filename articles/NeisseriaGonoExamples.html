@@ -285,26 +285,11 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  mics <span class="op">=</span> <span class="va">azm_data</span>,</span>
 <span>  ab <span class="op">=</span> <span class="st">"Azithromycin"</span>,</span>
 <span>  mo <span class="op">=</span> <span class="st">"Neisseria gonorrhoeae"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># automated plot comparing to reference distribution</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">azm_comparison</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Convert the output table into long format</span></span>
-<span><span class="va">azm_comp_melt</span> <span class="op">&lt;-</span> <span class="va">azm_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
-<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
-<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
-<span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Plot the distributions with ggplot2</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">azm_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">nb</span>, fill <span class="op">=</span> <span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Minimum inhibitory concentration (MIC)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of isolates"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Azithromycin MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># automated plot comparing to reference distribution</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">azm_comparison</span><span class="op">)</span></span></code></pre></div>
+<p><img src="NeisseriaGonoExamples_files/figure-html/azm_eucast_autoplot-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level5">
 <h5 id="ciprofloxacin">
@@ -346,26 +331,11 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  mics <span class="op">=</span> <span class="va">cip_data</span>,</span>
 <span>  ab <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
 <span>  mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># plot the data with the reference distribution</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cip_comparison</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Convert the output table into long format</span></span>
-<span><span class="va">cip_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cip_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
-<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
-<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
-<span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Plot the distributions with ggplot2</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cip_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">nb</span>, fill <span class="op">=</span> <span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Minimum inhibitory concentration (MIC)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of isolates"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ciprofloxacin MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># plot the data with the reference distribution</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cip_comparison</span><span class="op">)</span></span></code></pre></div>
+<p><img src="NeisseriaGonoExamples_files/figure-html/cip_eucast_autoplot-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level5">
 <h5 id="ceftriaxone">
@@ -383,8 +353,7 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.125 and R &gt; 0.125</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pheno_cro-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Extract MIC data from the pheno table</span></span>
+<code class="sourceCode R"><span><span class="co"># Extract MIC data from the pheno table</span></span>
 <span><span class="va">cro_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CRO"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span></code></pre></div>
@@ -394,24 +363,10 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  mics <span class="op">=</span> <span class="va">cro_data</span>,</span>
 <span>  ab <span class="op">=</span> <span class="st">"Ceftriaxone"</span>,</span>
 <span>  mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cro_comparison</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Convert the output table into long format</span></span>
-<span><span class="va">cro_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cro_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
-<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
-<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
-<span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cro_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">nb</span>, fill <span class="op">=</span> <span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Minimum inhibitory concentration (MIC)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of isolates"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Ceftriaxone MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cro_comparison</span><span class="op">)</span></span></code></pre></div>
+<p><img src="NeisseriaGonoExamples_files/figure-html/cro_eucast_autoplot-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level5">
 <h5 id="cefixime">
@@ -429,8 +384,7 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.125 and R &gt; 0.125</span></span></code></pre></div>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pheno_cfm-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Extract MIC data from the pheno table</span></span>
+<code class="sourceCode R"><span><span class="co"># Extract MIC data from the pheno table</span></span>
 <span><span class="va">cfm_data</span> <span class="op">&lt;-</span> <span class="va">eurogasp_double</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_agent</span> <span class="op">==</span> <span class="st">"CFM"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span></span></code></pre></div>
@@ -440,24 +394,10 @@ distribution using <code><a href="../reference/get_eucast_amr_distribution.html"
 <span>  mics <span class="op">=</span> <span class="va">cfm_data</span>,</span>
 <span>  ab <span class="op">=</span> <span class="st">"Cefixime"</span>,</span>
 <span>  mo <span class="op">=</span> <span class="st">"N. gonorrhoeae"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cfm_comparison</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Convert the output table into long format and plot using ggplot2</span></span>
-<span><span class="va">cfm_comp_melt</span> <span class="op">&lt;-</span> <span class="va">cfm_comparison</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
-<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">user</span>, <span class="va">eucast</span><span class="op">)</span>,</span>
-<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
-<span>    values_to <span class="op">=</span> <span class="st">"nb"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cfm_comp_melt</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="va">nb</span>, fill <span class="op">=</span> <span class="va">variable</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Minimum inhibitory concentration (MIC)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of isolates"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cefixime MIC distribution vs EUCAST reference data"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cfm_comparison</span><span class="op">)</span></span></code></pre></div>
+<p><img src="NeisseriaGonoExamples_files/figure-html/cfm_eucast_autoplot-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 </div>
 <div class="section level4">

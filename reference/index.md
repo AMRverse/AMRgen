@@ -219,6 +219,22 @@ Example datasets for demonstration and reproducible analysis.
 - [`eurogasp_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/eurogasp_pheno_raw.md)
   : N. gonorrhoeae Euro-GASP Phenotype Data Use Case 1
 
+- [`azm_comparison`](https://AMRverse.github.io/AMRgen/reference/azm_comparison.md)
+  : N. gonorrhoeae Euro-GASP azithromycin data vs EUCAST reference
+  distribution
+
+- [`cip_comparison`](https://AMRverse.github.io/AMRgen/reference/cip_comparison.md)
+  : N. gonorrhoeae Euro-GASP ciprofloxacin data vs EUCAST reference
+  distribution
+
+- [`cro_comparison`](https://AMRverse.github.io/AMRgen/reference/cro_comparison.md)
+  : N. gonorrhoeae Euro-GASP ceftriaxone data vs EUCAST reference
+  distribution
+
+- [`cfm_comparison`](https://AMRverse.github.io/AMRgen/reference/cfm_comparison.md)
+  : N. gonorrhoeae Euro-GASP cefixime data vs EUCAST reference
+  distribution
+
 - [`ngono_tet_pheno_raw`](https://AMRverse.github.io/AMRgen/reference/ngono_tet_pheno_raw.md)
   : N. gonorrhoeae Tetracycline Resistance Phenotype Data Use Case 3
 

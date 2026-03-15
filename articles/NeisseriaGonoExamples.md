@@ -236,28 +236,14 @@ azm_comparison <- compare_mic_with_eucast(
   ab = "Azithromycin",
   mo = "Neisseria gonorrhoeae"
 )
+```
 
+``` r
 # automated plot comparing to reference distribution
 autoplot(azm_comparison)
 ```
 
-``` r
-# Convert the output table into long format
-azm_comp_melt <- azm_comparison %>%
-  pivot_longer(
-    cols = c(user, eucast),
-    names_to = "variable",
-    values_to = "nb"
-  )
-
-# Plot the distributions with ggplot2
-ggplot(azm_comp_melt, aes(x = value, y = nb, fill = variable)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  xlab("Minimum inhibitory concentration (MIC)") +
-  ylab("Number of isolates") +
-  ggtitle("Azithromycin MIC distribution vs EUCAST reference data") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
+![](NeisseriaGonoExamples_files/figure-html/azm_eucast_autoplot-1.png)
 
 ##### **Ciprofloxacin**
 
@@ -306,28 +292,14 @@ cip_comparison <- compare_mic_with_eucast(
   ab = "Ciprofloxacin",
   mo = "N. gonorrhoeae"
 )
+```
 
+``` r
 # plot the data with the reference distribution
 autoplot(cip_comparison)
 ```
 
-``` r
-# Convert the output table into long format
-cip_comp_melt <- cip_comparison %>%
-  pivot_longer(
-    cols = c(user, eucast),
-    names_to = "variable",
-    values_to = "nb"
-  )
-
-# Plot the distributions with ggplot2
-ggplot(cip_comp_melt, aes(x = value, y = nb, fill = variable)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  xlab("Minimum inhibitory concentration (MIC)") +
-  ylab("Number of isolates") +
-  ggtitle("Ciprofloxacin MIC distribution vs EUCAST reference data") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
+![](NeisseriaGonoExamples_files/figure-html/cip_eucast_autoplot-1.png)
 
 ##### **Ceftriaxone**
 
@@ -346,7 +318,6 @@ assay_by_var(
 ![](NeisseriaGonoExamples_files/figure-html/pheno_cro-1.png)
 
 ``` r
-
 # Extract MIC data from the pheno table
 cro_data <- eurogasp_double %>%
   filter(drug_agent == "CRO") %>%
@@ -360,26 +331,13 @@ cro_comparison <- compare_mic_with_eucast(
   ab = "Ceftriaxone",
   mo = "N. gonorrhoeae"
 )
-
-autoplot(cro_comparison)
 ```
 
 ``` r
-# Convert the output table into long format
-cro_comp_melt <- cro_comparison %>%
-  pivot_longer(
-    cols = c(user, eucast),
-    names_to = "variable",
-    values_to = "nb"
-  )
-
-ggplot(cro_comp_melt, aes(x = value, y = nb, fill = variable)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  xlab("Minimum inhibitory concentration (MIC)") +
-  ylab("Number of isolates") +
-  ggtitle("Ceftriaxone MIC distribution vs EUCAST reference data") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+autoplot(cro_comparison)
 ```
+
+![](NeisseriaGonoExamples_files/figure-html/cro_eucast_autoplot-1.png)
 
 ##### **Cefixime**
 
@@ -398,7 +356,6 @@ assay_by_var(
 ![](NeisseriaGonoExamples_files/figure-html/pheno_cfm-1.png)
 
 ``` r
-
 # Extract MIC data from the pheno table
 cfm_data <- eurogasp_double %>%
   filter(drug_agent == "CFM") %>%
@@ -412,26 +369,13 @@ cfm_comparison <- compare_mic_with_eucast(
   ab = "Cefixime",
   mo = "N. gonorrhoeae"
 )
-
-autoplot(cfm_comparison)
 ```
 
 ``` r
-# Convert the output table into long format and plot using ggplot2
-cfm_comp_melt <- cfm_comparison %>%
-  pivot_longer(
-    cols = c(user, eucast),
-    names_to = "variable",
-    values_to = "nb"
-  )
-
-ggplot(cfm_comp_melt, aes(x = value, y = nb, fill = variable)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  xlab("Minimum inhibitory concentration (MIC)") +
-  ylab("Number of isolates") +
-  ggtitle("Cefixime MIC distribution vs EUCAST reference data") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+autoplot(cfm_comparison)
 ```
+
+![](NeisseriaGonoExamples_files/figure-html/cfm_eucast_autoplot-1.png)
 
 #### **Analysing azithromycin genotype-phenotype data**
 

@@ -35,7 +35,7 @@ import_phoenix_ast(
 - sample_col:
 
   Name or 1-based column index of the sample ID column. If `NULL`
-  (default), auto-detected from common names (`"Sample"`, `"ID"`,
+  (default), auto-detected from common names `"Sample"`, `"ID"`,
   `"Isolate"`). For single-isolate files with no sample column, the
   filename is used as the sample ID.
 
@@ -47,9 +47,9 @@ import_phoenix_ast(
 
 - mic_col:
 
-  Name or 1-based column index of the MIC column. If `NULL` (default),
-  auto-detected from names such as `"MIC"`, `"MIC or Concentration"`,
-  etc.
+  Name or 1-based column index of the MIC column. If
+  NULL`(default), auto-detected from names such as`"MIC"`, `"MIC or
+  Concentration"\`, etc.
 
 - sir_col:
 
@@ -93,16 +93,25 @@ import_phoenix_ast(
 
 - interpret_eucast:
 
-  Interpret MIC values against EUCAST human breakpoints (default
-  `FALSE`).
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the susceptibility phenotype (SIR) for each observation
+  based on the MIC values, against EUCAST human breakpoints. These will
+  be reported in a new column `pheno_eucast`, of class `sir`.
 
 - interpret_clsi:
 
-  Interpret MIC values against CLSI human breakpoints (default `FALSE`).
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the susceptibility phenotype (SIR) for each observation
+  based on the MIC values, against CLSI human breakpoints. These will be
+  reported in a new column `pheno_clsi`, of class `sir`.
 
 - interpret_ecoff:
 
-  Interpret MIC values against ECOFF values (default `FALSE`).
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the wildtype vs nonwildtype status for each observation
+  based on the MIC values, against epidemiological cut-off (ECOFF)
+  values. These will be reported in a new column `ecoff`, of class `sir`
+  and coded as `NWT` (nonwildtype) or `WT` (wildtype).
 
 ## Value
 

@@ -20,39 +20,41 @@ interpret_ast(
 
 - ast:
 
-  A tibble containing the AST measures in standard AMRgen format, as
-  output by `import_ast`. It must contain assay measurements in columns
-  'mic' (class mic) and/or 'disk'. Interpretation requires an organism
-  (column 'spp_pheno' of class 'mo', or a single value passed via the
-  'species' parameter) and an antibiotic (column 'drug_agent' of class
-  'ab', or a single value passed via the 'ab' parameter).
+  A tibble containing the phenotype measures in standard AMRgen format,
+  as output by
+  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
+  It must contain assay measurements in columns `mic` (class `mic`)
+  and/or `disk` (class `disk`). Interpretation requires an organism
+  (column `spp_pheno` of class `mo`, or a single value passed via the
+  `species` parameter) and an antibiotic (column `drug_agent` of class
+  `ab`, or a single value passed via the `ab` parameter).
 
 - interpret_ecoff:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the wildtype vs nonwildtype status for each row based on the
   MIC or disk diffusion values, against epidemiological cut-off (ECOFF)
-  values. These will be reported in a new column `ecoff`, of class 'sir'
-  and coded as 'R' (nonwildtype) or 'S' (wildtype).
+  values. These will be reported in a new column `ecoff`, of class `sir`
+  and coded as `NWT` (nonwildtype) or \`WT (wildtype).
 
 - interpret_eucast:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the susceptibility phenotype (SIR) for each row based on the
   MIC or disk diffusion values, against EUCAST human breakpoints. These
-  will be reported in a new column `pheno_eucast`, of class 'sir'.
+  will be reported in a new column `pheno_eucast`, of class `sir`.
 
 - interpret_clsi:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the susceptibility phenotype (SIR) for each row based on the
   MIC or disk diffusion values, against CLSI human breakpoints. These
-  will be reported in a new column `pheno_clsi`, of class 'sir'.
+  will be reported in a new column `pheno_clsi`, of class `sir`.
 
 - species:
 
   (optional) Name of the species to use for phenotype interpretation. By
-  default, the spp_pheno field in the input file will be assumed to
+  default, the `spp_pheno` field in the input file will be assumed to
   specify the species for each sample, but if this is missing or you
   want to override it in the interpretation step, you may provide a
   single species name via this parameter.
@@ -60,9 +62,9 @@ interpret_ast(
 - ab:
 
   (optional) Name of the antibiotic to use for phenotype interpretation.
-  By default, the drug_agent field in the input file will be assumed to
-  specify the antibiotic for each sample, but if this is missing or you
-  want to override it in the interpretation step, you may provide a
+  By default, the `drug_agent` field in the input file will be assumed
+  to specify the antibiotic for each sample, but if this is missing or
+  you want to override it in the interpretation step, you may provide a
   single antibiotic name via this parameter.
 
 ## Value
@@ -77,16 +79,18 @@ A copy of the input table, with additional columns:
   breakpoint standards (as S/I/R), based on the MIC or disk diffusion
   data.
 
-- `ecoff`: The phenotype newly interpreted against the ECOFF (as S/R),
-  based on the MIC or disk diffusion data.
+- `ecoff`: The phenotype newly interpreted against the ECOFF (as
+  WT/NWT), based on the MIC or disk diffusion data.
 
-- `spp_pheno`: The species phenotype, formatted using the `as.mo`
-  function (either taken from the input table, or the single value
-  specified by 'species' parameter).
+- `spp_pheno`: The species phenotype, formatted using the
+  [`AMR::as.mo()`](https://amr-for-r.org/reference/as.mo.html) function
+  (either taken from field `spp_pheno` in the input table, or the single
+  value specified by `species` parameter).
 
 - `drug_agent`: The antibiotic used in the test, formatted using the
-  `as.ab` function (either taken from the input table, or the single
-  value specified by 'ab' parameter)..
+  [`AMR::as.ab()`](https://amr-for-r.org/reference/as.ab.html) function
+  (either taken from field `drug_agent` in the input table, or the
+  single value specified by `ab` parameter).
 
 ## Examples
 

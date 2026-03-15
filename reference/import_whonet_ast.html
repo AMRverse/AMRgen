@@ -62,31 +62,31 @@ and converts it to the standardised long-format used by AMRgen.</p>
 
 
 <dt id="arg-sample-col">sample_col<a class="anchor" aria-label="anchor" href="#arg-sample-col"></a></dt>
-<dd><p>Column name for sample identifiers. Default: "Identification number"</p></dd>
+<dd><p>Column name for sample identifiers. Default: <code>"Identification number"</code></p></dd>
 
 
 <dt id="arg-source">source<a class="anchor" aria-label="anchor" href="#arg-source"></a></dt>
-<dd><p>Optional source value to record for all data points</p></dd>
+<dd><p>Optional string value to record in the <code>source</code> column for all data points (e.g., dataset name or study identifier)</p></dd>
 
 
 <dt id="arg-species">species<a class="anchor" aria-label="anchor" href="#arg-species"></a></dt>
-<dd><p>Optional species override for phenotype interpretation</p></dd>
+<dd><p>Optional string indicating a single species to use for phenotype interpretation (otherwise this is inferred per-sample from the input)</p></dd>
 
 
 <dt id="arg-ab">ab<a class="anchor" aria-label="anchor" href="#arg-ab"></a></dt>
-<dd><p>Optional antibiotic override for phenotype interpretation</p></dd>
+<dd><p>Optional string indicating a single antibiotic to use for phenotype interpretation (otherwise this is inferred per-sample from the input)</p></dd>
 
 
 <dt id="arg-interpret-eucast">interpret_eucast<a class="anchor" aria-label="anchor" href="#arg-interpret-eucast"></a></dt>
-<dd><p>Interpret against EUCAST breakpoints</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column <code>pheno_eucast</code>, of class <code>sir</code>.</p></dd>
 
 
 <dt id="arg-interpret-clsi">interpret_clsi<a class="anchor" aria-label="anchor" href="#arg-interpret-clsi"></a></dt>
-<dd><p>Interpret against CLSI breakpoints</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column <code>pheno_clsi</code>, of class <code>sir</code>.</p></dd>
 
 
 <dt id="arg-interpret-ecoff">interpret_ecoff<a class="anchor" aria-label="anchor" href="#arg-interpret-ecoff"></a></dt>
-<dd><p>Interpret against ECOFF values</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will re-interpret the wildtype vs nonwildtype status for each observation based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column <code>ecoff</code>, of class <code>sir</code> and coded as <code>NWT</code> (nonwildtype) or <code>WT</code> (wildtype).</p></dd>
 
 
 <dt id="arg-include-patient-info">include_patient_info<a class="anchor" aria-label="anchor" href="#arg-include-patient-info"></a></dt>
@@ -126,6 +126,7 @@ and converts it to the standardised long-format used by AMRgen.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   `Organism type` &lt;chr&gt;, Serotype &lt;chr&gt;, `Beta-lactamase` &lt;lgl&gt;, ESBL &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Carbapenemase &lt;lgl&gt;, `MRSA screening test` &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   `Inducible clindamycin resistance` &lt;lgl&gt;, Comment &lt;chr&gt;, …</span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># WHONET file with lowercase columns and _SIR suffix (e.g. amc_nd20, amc_nd20_SIR)</span></span></span>
 <span class="r-in"><span><span class="co"># import_whonet_ast("path/to/whonet_export.csv", sample_col = "patient_id")</span></span></span>

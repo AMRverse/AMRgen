@@ -31,36 +31,51 @@ import_microscan_ast(
 
 - sample_col:
 
-  Column name for sample identifiers. Default: NULL (auto-detected from
-  language-specific column names)
+  String indicating the name of the column containing sample
+  identifiers. Default: `"Lab ID"`
 
 - source:
 
-  Optional source value to record for all data points
+  Optional string value to record in the `source` column for all data
+  points (e.g., dataset name or study identifier)
 
 - species:
 
-  Optional species override for phenotype interpretation
+  Optional string indicating a single species to use for phenotype
+  interpretation (otherwise this is inferred per-sample from the input)
 
 - ab:
 
-  Optional antibiotic override for phenotype interpretation
+  Optional string indicating a single antibiotic to use for phenotype
+  interpretation (otherwise this is inferred per-sample from the input)
 
 - instrument_guideline:
 
-  Optional guideline used by the instrument for SIR interpretation
+  Optional string indicating the guideline used by the instrument for
+  SIR interpretation (e.g., "EUCAST 2025", "CLSI 2025"), used to record
+  the `guideline` in the output file. Default: `NULL`
 
 - interpret_eucast:
 
-  Interpret against EUCAST breakpoints
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the susceptibility phenotype (SIR) for each observation
+  based on the MIC values, against EUCAST human breakpoints. These will
+  be reported in a new column `pheno_eucast`, of class `sir`.
 
 - interpret_clsi:
 
-  Interpret against CLSI breakpoints
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the susceptibility phenotype (SIR) for each observation
+  based on the MIC values, against CLSI human breakpoints. These will be
+  reported in a new column `pheno_clsi`, of class `sir`.
 
 - interpret_ecoff:
 
-  Interpret against ECOFF values
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the wildtype vs nonwildtype status for each observation
+  based on the MIC values, against epidemiological cut-off (ECOFF)
+  values. These will be reported in a new column `ecoff`, of class `sir`
+  and coded as `NWT` (nonwildtype) or `WT` (wildtype).
 
 ## Value
 

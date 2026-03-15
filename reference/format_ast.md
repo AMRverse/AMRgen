@@ -8,8 +8,7 @@ that the input file is a tab-delimited text file (e.g., TSV) or CSV
 species names, MIC or disk data, S/I/R calls) into suitable classes
 using the AMR package. It optionally can use the AMR package to
 interpret susceptibility phenotype (SIR) based on EUCAST or CLSI
-guidelines (human breakpoints and/or ECOFF). If expected columns are not
-found warnings will be given, and interpretation may not be possible.
+guidelines (human breakpoints and/or ECOFF).
 
 ## Usage
 
@@ -52,133 +51,136 @@ format_ast(
 
 - sample_col:
 
-  (optional, default 'id') Name of the input data column that provides
-  the sample name. If the 'rename' parameter is set to TRUE, this column
-  will be renamed as 'id'.
+  (optional, default `"id"`) String indicating the name of the input
+  data column that provides the sample name. If the `rename_cols`
+  parameter is set to `TRUE`, this column will be renamed as `id`.
 
 - species:
 
-  (optional) Name of the single species to which all samples belong. Use
-  this if you want to interpret assay measurements but the input file
-  does not contain a column indicating the species for each sample
-  (called 'species' or a name specified by the `species_col` parameter).
+  (optional, default `NULL`) String indicating the name of the single
+  species to which all samples belong. Use this if you want to interpret
+  assay measurements but the input file does not contain a column
+  indicating the species for each sample (called `species` or a name
+  specified by the `species_col` parameter).
 
 - species_col:
 
-  (optional, default 'species') Name of the input data column that
-  provides a species name. If provided, this column will be converted to
-  micro-organism class 'mo' via
+  (optional, default `"species"`) String indicating the name of the
+  input data column that provides a species name. If provided, this
+  column will be converted to micro-organism class `mo` via
   [`AMR::as.mo()`](https://amr-for-r.org/reference/as.mo.html). If the
-  'rename' parameter is set to TRUE, this column will also be renamed as
-  'spp_pheno'. If interpretation is switched on, this column will be
-  used to identify the appropriate breakpoints for interpretation of
-  each row in the data table.
+  `rename_cols` parameter is set to `TRUE`, this column will also be
+  renamed as `spp_pheno`. If interpretation is switched on, this column
+  will be used to identify the appropriate breakpoints for
+  interpretation of each row in the data table.
 
 - ab:
 
-  (optional) Name of a single antibiotic to use for phenotype
-  interpretation. Use this if you want to interpret assay measurements
-  but the input file does not contain a column indicating the drug for
-  each sample (called 'drug_agent' or a name specified by the `ab_col`
-  parameter).
+  (optional, default `NULL`) String indicating the name of a single
+  antibiotic to use for phenotype interpretation. Use this if you want
+  to interpret assay measurements but the input file does not contain a
+  column indicating the drug for each sample (called `drug_agent` or a
+  name specified by the `ab_col` parameter).
 
 - ab_col:
 
-  (optional, default 'drug_agent') Name of the input data column that
-  provides a drug name. If provided, this column will be converted to
-  antibiotic class 'ab' via
+  (optional, default `"drug_agent"`) String indicating the name of the
+  input data column that provides a drug name. If provided, this column
+  will be converted to antibiotic class `ab` via
   [`AMR::as.ab()`](https://amr-for-r.org/reference/as.ab.html). If the
-  'rename' parameter is set to TRUE, this column will also be renamed as
-  'drug_agent'. If interpretation is switched on, this column will be
-  used to identify the appropriate breakpoints for interpretation of
-  each row in the data table.
+  `rename_cols` parameter is set to `TRUE`, this column will also be
+  renamed as `drug_agent`. If interpretation is switched on, this column
+  will be used to identify the appropriate breakpoints for
+  interpretation of each row in the data table.
 
 - mic_col:
 
-  (optional, default 'mic') Name of the input data column that provides
-  MIC measurements. If provided, this column will be converted to MIC
-  class 'mic' via
+  (optional, default `"mic"`) String indicating the name of the input
+  data column that provides MIC measurements. If provided, this column
+  will be converted to MIC class `mic` via
   [`AMR::as.mic()`](https://amr-for-r.org/reference/as.mic.html). If the
-  'rename' parameter is set to TRUE, this column will also be renamed as
-  'mic'. If interpretation is switched on, the MIC values will be
-  interpreted against clinical breakpoints.
+  `rename_cols` parameter is set to `TRUE`, this column will also be
+  renamed as `mic`. If interpretation is switched on, the MIC values
+  will be interpreted against clinical breakpoints.
 
 - disk_col:
 
-  (optional, default 'disk') Name of the input data column that provides
-  disk diffusion zone measurements. If provided, this column will be
-  converted to disk diffusion class 'disk' via
-  [`AMR::as.disk()`](https://amr-for-r.org/reference/as.disk.html). If
-  the 'rename' parameter is set to TRUE, this column will also be
-  renamed as 'disk'. If interpretation is switched on, the zone values
-  will be interpreted against clinical breakpoints.
+  (optional, default `"disk"`) String indicating the name of the input
+  data column that provides disk diffusion zone measurements. If
+  provided, this column will be converted to disk diffusion class `disk`
+  via [`AMR::as.disk()`](https://amr-for-r.org/reference/as.disk.html).
+  If the `rename_cols` parameter is set to `TRUE`, this column will also
+  be renamed as `disk`. If interpretation is switched on, the zone
+  values will be interpreted against clinical breakpoints.
 
 - pheno_cols:
 
   (optional, default
-  `c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")`) Name of
-  the input data column/s that provides disk diffusion zone measurements
-  (as a character vector, or single string for a single column). If
-  provided, these columns will be converted to SIR class 'sir' via
+  `c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")`) String,
+  or vector of strings, indicating the name/s of the input data column/s
+  that provide interpreted phenotypes (with column values encoded as
+  `S/I/R` or `WT/NWT`). If provided, these columns will be converted to
+  class `sir` via
   [`AMR::as.sir()`](https://amr-for-r.org/reference/as.sir.html).
 
 - method_col:
 
-  (optional, default 'method') Name of the input data column that
-  indicates the testing method used (e.g. broth dilution, disk
-  diffusion). If the 'rename' parameter is set to TRUE, this column will
-  also be renamed as 'method'.
+  (optional, default `"method"`) String indicating the name of the input
+  data column that indicates the testing method used (e.g.
+  `"broth dilution"`, `"disk diffusion"`). If the `rename_cols`
+  parameter is set to `TRUE`, this column will also be renamed as
+  `method`.
 
 - platform_col:
 
-  (optional, default 'platform') Name of the input data column that
-  indicates the testing platform used (e.g. Vitek, Sensititre). If the
-  'rename' parameter is set to TRUE, this column will also be renamed as
-  'platform'.
+  (optional, default `"platform"`) String indicating the name of the
+  input data column that indicates the testing platform used (e.g.
+  `"Vitek"`, `"Sensititre"`). If the `rename_cols` parameter is set to
+  `TRUE`, this column will also be renamed as `platform`.
 
 - source_col:
 
-  (optional, default 'source') Name of the input data column that
-  indicates the source of the dataset (e.g. BioProject, PMID). If the
-  'rename' parameter is set to TRUE, this column will also be renamed as
-  'source'.
+  (optional, default `"source"`) String indicating the name of the input
+  data column that indicates the source of the dataset (e.g.
+  `"BioProject"`, `"PMID"`). If the `rename_cols` parameter is set to
+  `TRUE`, this column will also be renamed as `source`.
 
 - guideline_col:
 
-  (optional, default 'guideline') Name of the input data column that
-  indicates the guideline used for testing (e.g. EUCAST, CLSI). If the
-  'rename' parameter is set to TRUE, this column will also be renamed as
-  'guideline'.
+  (optional, default `"guideline"`) String indicating the name of the
+  input data column that indicates the guideline used for testing (e.g.
+  `"EUCAST"`, `"CLSI"`). If the `rename_cols` parameter is set to
+  `TRUE`, this column will also be renamed as `guideline`.
 
 - interpret_eucast:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the susceptibility phenotype (SIR) for each row based on the
   MIC or disk diffusion values, against EUCAST human breakpoints. These
-  will be reported in a new column `pheno_eucast`, of class 'sir'.
+  will be reported in a new column `pheno_eucast`, of class `sir`.
 
 - interpret_clsi:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the susceptibility phenotype (SIR) for each row based on the
   MIC or disk diffusion values, against CLSI human breakpoints. These
   will be reported in a new column `pheno_clsi`, of class 'sir'.
 
 - interpret_ecoff:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the wildtype vs nonwildtype status for each row based on the
   MIC or disk diffusion values, against epidemiological cut-off (ECOFF)
-  values. These will be reported in a new column `ecoff`, of class 'sir'
-  and coded as 'R' (nonwildtype) or 'S' (wildtype).
+  values. These will be reported in a new column `ecoff`, of class `sir`
+  and coded as `NWT` (nonwildtype) or `WT` (wildtype).
 
 - rename_cols:
 
-  A logical value (default is TRUE). If `TRUE`, the function will rename
-  the provided columns (specified by `ab_col`, `mic_col`, `disk_col`,
-  `species_col`, `id_col`) to the default names expected by AMRgen
-  functions ('drug_agent', 'mic', 'disk', 'spp_pheno', 'id'), to match
-  those output by the other
+  A logical value (default is `TRUE`). If `TRUE`, the function will
+  rename the provided columns (specified by `sample_col`, `ab_col`,
+  `mic_col`, `disk_col`, `species_col`) to the default names expected by
+  AMRgen functions (`id`, `drug_agent`, `mic`, `disk`, `spp_pheno`), to
+  match those output by the other
   [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
   functions.
 

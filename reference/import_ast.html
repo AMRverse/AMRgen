@@ -54,52 +54,52 @@
 
 
 <dl><dt id="arg-input">input<a class="anchor" aria-label="anchor" href="#arg-input"></a></dt>
-<dd><p>A string representing a dataframe, or a path to an input file, containing the AST data a supported format. These files may be downloaded from public sources such as the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa), or using the functions <a href="download_ebi.html">download_ebi</a> or <a href="download_ncbi_ast.html">download_ncbi_ast</a>; or the files may be exported from supported AST instruments.</p></dd>
+<dd><p>A string representing a dataframe, or a path to an input file, containing the AST data a supported format. These files may be downloaded from public sources such as the EBI AMR web browser (<a href="https://www.ebi.ac.uk/amr/data/?view=experiments" class="external-link">https://www.ebi.ac.uk/amr/data/?view=experiments</a>), EBI FTP site (<a href="ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/">ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/</a>), or NCBI browser (e.g. <a href="https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa" class="external-link">https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa</a>), or using the functions <code><a href="download_ebi.html">download_ebi()</a></code> or <code><a href="download_ncbi_ast.html">download_ncbi_ast()</a></code>; or the files may be exported from supported AST instruments.</p></dd>
 
 
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
-<dd><p>A string indicating the format of the data: "ebi" (default), "ebi_web", "ebi_ftp", "ncbi", "vitek", "microscan", "sensititre", or "whonet". This determines whether the data is passed on to the <code><a href="import_ebi_ast.html">import_ebi_ast()</a></code> (ebi/ebi_web), <code><a href="import_ebi_ast_ftp.html">import_ebi_ast_ftp()</a></code> (ebi_ftp), <code><a href="import_ncbi_ast.html">import_ncbi_ast()</a></code> (ncbi), <code><a href="import_vitek_ast.html">import_vitek_ast()</a></code> (vitek), <code><a href="import_microscan_ast.html">import_microscan_ast()</a></code> (microscan), <code><a href="import_sensititre_ast.html">import_sensititre_ast()</a></code> (sensititre), or <code><a href="import_whonet_ast.html">import_whonet_ast()</a></code> (whonet) function to process.</p></dd>
+<dd><p>A string indicating the format of the data: <code>"ebi"</code> (default), <code>"ebi_web"</code>, <code>"ebi_ftp"</code>, <code>"ncbi"</code>, <code>"vitek"</code>, <code>"microscan"</code>, <code>"sensititre"</code>, or <code>"whonet"</code>. This determines whether the data is passed on to the <code><a href="import_ebi_ast.html">import_ebi_ast()</a></code> (ebi/ebi_web), <code><a href="import_ebi_ast_ftp.html">import_ebi_ast_ftp()</a></code> (ebi_ftp), <code><a href="import_ncbi_ast.html">import_ncbi_ast()</a></code> (ncbi), <code><a href="import_vitek_ast.html">import_vitek_ast()</a></code> (vitek), <code><a href="import_microscan_ast.html">import_microscan_ast()</a></code> (microscan), <code><a href="import_sensititre_ast.html">import_sensititre_ast()</a></code> (sensititre), or <code><a href="import_whonet_ast.html">import_whonet_ast()</a></code> (whonet) function to process.</p></dd>
 
 
 <dt id="arg-interpret-eucast">interpret_eucast<a class="anchor" aria-label="anchor" href="#arg-interpret-eucast"></a></dt>
-<dd><p>A logical value (default is FALSE). If <code>TRUE</code>, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column <code>pheno_eucast</code>, of class 'sir'.</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column <code>pheno_eucast</code>, of class 'sir'.</p></dd>
 
 
 <dt id="arg-interpret-clsi">interpret_clsi<a class="anchor" aria-label="anchor" href="#arg-interpret-clsi"></a></dt>
-<dd><p>A logical value (default is FALSE). If <code>TRUE</code>, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column <code>pheno_clsi</code>, of class 'sir'.</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column <code>pheno_clsi</code>, of class 'sir'.</p></dd>
 
 
 <dt id="arg-interpret-ecoff">interpret_ecoff<a class="anchor" aria-label="anchor" href="#arg-interpret-ecoff"></a></dt>
-<dd><p>A logical value (default is FALSE). If <code>TRUE</code>, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column <code>ecoff</code>, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column <code>ecoff</code>, of class 'sir' and coded as <code>NWT</code> (nonwildtype) or <code>WT</code> (wildtype).</p></dd>
 
 
 <dt id="arg-species">species<a class="anchor" aria-label="anchor" href="#arg-species"></a></dt>
-<dd><p>(optional) Name of the species to use for phenotype interpretation. By default, the organism field in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.</p></dd>
+<dd><p>(optional) Name of the species to use for phenotype interpretation. By default, the field <code>organism</code> in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.</p></dd>
 
 
 <dt id="arg-ab">ab<a class="anchor" aria-label="anchor" href="#arg-ab"></a></dt>
-<dd><p>(optional) Name of the antibiotic to use for phenotype interpretation. By default, the antibiotic field in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.</p></dd>
+<dd><p>(optional) Name of the antibiotic to use for phenotype interpretation. By default, the field <code>antibiotic</code> in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.</p></dd>
 
 
 <dt id="arg-source">source<a class="anchor" aria-label="anchor" href="#arg-source"></a></dt>
-<dd><p>(optional) A single value to record as the source of these data points, e.g. "EBI_browser". By default, the publications field (for EBI data) or BioProject field (for NCBI data) will be used to indicate the source for each row in the input file, but if this is missing or you want to override it with a single value for all samples, you may provide a source name via this parameter.</p></dd>
+<dd><p>(optional) A string to record as the source of these data points, e.g. <code>"EBI_browser"</code>. By default, the publications field (for EBI data) or BioProject field (for NCBI data) will be used to indicate the source for each row in the input file. For other input files, or to override this with a single value for all samples, you may provide a source name via this parameter.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data frame with the processed AST data, including additional columns:</p><ul><li><p><code>id</code>: The biosample identifier.</p></li>
-<li><p><code>spp_pheno</code>: The species phenotype, formatted using the <code>as.mo</code> function.</p></li>
-<li><p><code>drug_agent</code>: The antibiotic used in the test, formatted using the <code>as.ab</code> function.</p></li>
-<li><p><code>mic</code>: The minimum inhibitory concentration (MIC) value, formatted using the <code>as.mic</code> function.</p></li>
-<li><p><code>disk</code>: The disk diffusion measurement (in mm), formatted using the <code>as.disk</code> function.</p></li>
-<li><p><code>method</code>: The AST method (e.g., "broth dilution", "disk diffusion", "Etest", "agar dilution"). Expected values are based on the NCBI/EBI antibiogram specification.</p></li>
-<li><p><code>platform</code>: The AST platform/instrument (e.g., "Vitek", "Phoenix", "Sensititre").</p></li>
+<li><p><code>spp_pheno</code>: The species phenotype, formatted using the <code><a href="https://amr-for-r.org/reference/as.mo.html" class="external-link">AMR::as.mo()</a></code> function.</p></li>
+<li><p><code>drug_agent</code>: The antibiotic used in the test, formatted using the <code><a href="https://amr-for-r.org/reference/as.ab.html" class="external-link">AMR::as.ab()</a></code> function.</p></li>
+<li><p><code>mic</code>: The minimum inhibitory concentration (MIC) value, formatted using the <code><a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">AMR::as.mic()</a></code> function.</p></li>
+<li><p><code>disk</code>: The disk diffusion measurement (in mm), formatted using the <code><a href="https://amr-for-r.org/reference/as.disk.html" class="external-link">AMR::as.disk()</a></code> function.</p></li>
+<li><p><code>method</code>: The AST method (e.g., <code>"broth dilution"</code>, <code>"disk diffusion"</code>, <code>"Etest"</code>, <code>"agar dilution"</code>). Expected values are based on the NCBI/EBI antibiogram specification.</p></li>
+<li><p><code>platform</code>: The AST platform/instrument (e.g., <code>"Vitek"</code>, <code>"Phoenix"</code>, <code>"Sensititre"</code>).</p></li>
 <li><p><code>guideline</code>: The AST standard recorded in the input file as being used for the AST assay.</p></li>
-<li><p><code>pheno_eucast</code>: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.</p></li>
-<li><p><code>pheno_clsi</code>: The phenotype newly interpreted against CLSI human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.</p></li>
-<li><p><code>ecoff</code>: The phenotype newly interpreted against the ECOFF (as S/R), based on the MIC or disk diffusion data.</p></li>
+<li><p><code>pheno_eucast</code>: The phenotype newly interpreted against EUCAST human breakpoint standards (as <code>S/I/R</code>), based on the MIC or disk diffusion data.</p></li>
+<li><p><code>pheno_clsi</code>: The phenotype newly interpreted against CLSI human breakpoint standards (as <code>S/I/R</code>), based on the MIC or disk diffusion data.</p></li>
+<li><p><code>ecoff</code>: The phenotype newly interpreted against the ECOFF (as <code>WT/NWT</code>), based on the MIC or disk diffusion data.</p></li>
 <li><p><code>pheno_provided</code>: The original phenotype interpretation provided in the input file.</p></li>
-<li><p><code>source</code>: The source of each data point (from the publications or bioproject field in the input file, or replaced with a single value passed in as the 'source' parameter).</p></li>
+<li><p><code>source</code>: The source of each data point (from the publications or bioproject field in the input file, or replaced with a single value passed in as the <code>source</code> parameter).</p></li>
 </ul></div>
 
     <div class="section level2">

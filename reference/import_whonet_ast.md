@@ -28,31 +28,47 @@ import_whonet_ast(
 
 - sample_col:
 
-  Column name for sample identifiers. Default: "Identification number"
+  Column name for sample identifiers. Default: `"Identification number"`
 
 - source:
 
-  Optional source value to record for all data points
+  Optional string value to record in the `source` column for all data
+  points (e.g., dataset name or study identifier)
 
 - species:
 
-  Optional species override for phenotype interpretation
+  Optional string indicating a single species to use for phenotype
+  interpretation (otherwise this is inferred per-sample from the input)
 
 - ab:
 
-  Optional antibiotic override for phenotype interpretation
+  Optional string indicating a single antibiotic to use for phenotype
+  interpretation (otherwise this is inferred per-sample from the input)
 
 - interpret_eucast:
 
-  Interpret against EUCAST breakpoints
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the susceptibility phenotype (SIR) for each observation
+  based on the MIC or disk diffusion values, against EUCAST human
+  breakpoints. These will be reported in a new column `pheno_eucast`, of
+  class `sir`.
 
 - interpret_clsi:
 
-  Interpret against CLSI breakpoints
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the susceptibility phenotype (SIR) for each observation
+  based on the MIC or disk diffusion values, against CLSI human
+  breakpoints. These will be reported in a new column `pheno_clsi`, of
+  class `sir`.
 
 - interpret_ecoff:
 
-  Interpret against ECOFF values
+  A logical value (default is `FALSE`). If `TRUE`, the function will
+  re-interpret the wildtype vs nonwildtype status for each observation
+  based on the MIC or disk diffusion values, against epidemiological
+  cut-off (ECOFF) values. These will be reported in a new column
+  `ecoff`, of class `sir` and coded as `NWT` (nonwildtype) or `WT`
+  (wildtype).
 
 - include_patient_info:
 
@@ -91,6 +107,7 @@ head(result)
 #> #   `Organism type` <chr>, Serotype <chr>, `Beta-lactamase` <lgl>, ESBL <lgl>,
 #> #   Carbapenemase <lgl>, `MRSA screening test` <lgl>,
 #> #   `Inducible clindamycin resistance` <lgl>, Comment <chr>, …
+
 if (FALSE) { # \dontrun{
 # WHONET file with lowercase columns and _SIR suffix (e.g. amc_nd20, amc_nd20_SIR)
 # import_whonet_ast("path/to/whonet_export.csv", sample_col = "patient_id")

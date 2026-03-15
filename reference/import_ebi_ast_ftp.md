@@ -31,25 +31,25 @@ import_ebi_ast_ftp(
 
 - interpret_eucast:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the susceptibility phenotype (SIR) for each row based on the
   MIC or disk diffusion values, against EUCAST human breakpoints. These
-  will be reported in a new column `pheno_eucast`, of class 'sir'.
+  will be reported in a new column `pheno_eucast`, of class `sir`.
 
 - interpret_clsi:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the susceptibility phenotype (SIR) for each row based on the
   MIC or disk diffusion values, against CLSI human breakpoints. These
-  will be reported in a new column `pheno_clsi`, of class 'sir'.
+  will be reported in a new column `pheno_clsi`, of class `sir`..
 
 - interpret_ecoff:
 
-  A logical value (default is FALSE). If `TRUE`, the function will
+  A logical value (default is `FALSE`). If `TRUE`, the function will
   interpret the wildtype vs nonwildtype status for each row based on the
   MIC or disk diffusion values, against epidemiological cut-off (ECOFF)
-  values. These will be reported in a new column `ecoff`, of class 'sir'
-  and coded as 'R' (nonwildtype) or 'S' (wildtype).
+  values. These will be reported in a new column `ecoff`, of class `sir`
+  and coded as `NWT` (nonwildtype) or `WT` (wildtype).
 
 ## Value
 

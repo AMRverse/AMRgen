@@ -68,7 +68,7 @@ export files and converts them to the standardised long-format used by AMRgen.</
 
 <dt id="arg-sample-col">sample_col<a class="anchor" aria-label="anchor" href="#arg-sample-col"></a></dt>
 <dd><p>Name or 1-based column index of the sample ID column. If <code>NULL</code>
-(default), auto-detected from common names (<code>"Sample"</code>, <code>"ID"</code>, <code>"Isolate"</code>).
+(default), auto-detected from common names <code>"Sample"</code>, <code>"ID"</code>, <code>"Isolate"</code>).
 For single-isolate files with no sample column, the filename is used as the sample ID.</p></dd>
 
 
@@ -78,8 +78,7 @@ For single-isolate files with no sample column, the filename is used as the samp
 
 
 <dt id="arg-mic-col">mic_col<a class="anchor" aria-label="anchor" href="#arg-mic-col"></a></dt>
-<dd><p>Name or 1-based column index of the MIC column. If <code>NULL</code> (default),
-auto-detected from names such as <code>"MIC"</code>, <code>"MIC or Concentration"</code>, etc.</p></dd>
+<dd><p>Name or 1-based column index of the MIC column. If NULL<code>(default), auto-detected from names such as</code>"MIC"<code>, </code>"MIC or Concentration"`, etc.</p></dd>
 
 
 <dt id="arg-sir-col">sir_col<a class="anchor" aria-label="anchor" href="#arg-sir-col"></a></dt>
@@ -118,15 +117,15 @@ over raw instrument interpretation when both are present and <code>sir_col</code
 
 
 <dt id="arg-interpret-eucast">interpret_eucast<a class="anchor" aria-label="anchor" href="#arg-interpret-eucast"></a></dt>
-<dd><p>Interpret MIC values against EUCAST human breakpoints (default <code>FALSE</code>).</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC values, against EUCAST human breakpoints. These will be reported in a new column <code>pheno_eucast</code>, of class <code>sir</code>.</p></dd>
 
 
 <dt id="arg-interpret-clsi">interpret_clsi<a class="anchor" aria-label="anchor" href="#arg-interpret-clsi"></a></dt>
-<dd><p>Interpret MIC values against CLSI human breakpoints (default <code>FALSE</code>).</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC values, against CLSI human breakpoints. These will be reported in a new column <code>pheno_clsi</code>, of class <code>sir</code>.</p></dd>
 
 
 <dt id="arg-interpret-ecoff">interpret_ecoff<a class="anchor" aria-label="anchor" href="#arg-interpret-ecoff"></a></dt>
-<dd><p>Interpret MIC values against ECOFF values (default <code>FALSE</code>).</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will re-interpret the wildtype vs nonwildtype status for each observation based on the MIC values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column <code>ecoff</code>, of class <code>sir</code> and coded as <code>NWT</code> (nonwildtype) or <code>WT</code> (wildtype).</p></dd>
 
 </dl></div>
     <div class="section level2">

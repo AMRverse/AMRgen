@@ -52,36 +52,36 @@
 
 
 <dl><dt id="arg-ast">ast<a class="anchor" aria-label="anchor" href="#arg-ast"></a></dt>
-<dd><p>A tibble containing the AST measures in standard AMRgen format, as output by <code>import_ast</code>. It must contain assay measurements in columns 'mic' (class mic) and/or 'disk'. Interpretation requires an organism (column 'spp_pheno' of class 'mo', or a single value passed via the 'species' parameter) and an antibiotic (column 'drug_agent' of class 'ab', or a single value passed via the 'ab' parameter).</p></dd>
+<dd><p>A tibble containing the phenotype measures in standard AMRgen format, as output by <code><a href="import_ast.html">import_ast()</a></code>. It must contain assay measurements in columns <code>mic</code> (class <code>mic</code>) and/or <code>disk</code> (class <code>disk</code>). Interpretation requires an organism (column <code>spp_pheno</code> of class <code>mo</code>, or a single value passed via the <code>species</code> parameter) and an antibiotic (column <code>drug_agent</code> of class <code>ab</code>, or a single value passed via the <code>ab</code> parameter).</p></dd>
 
 
 <dt id="arg-interpret-ecoff">interpret_ecoff<a class="anchor" aria-label="anchor" href="#arg-interpret-ecoff"></a></dt>
-<dd><p>A logical value (default is FALSE). If <code>TRUE</code>, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column <code>ecoff</code>, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column <code>ecoff</code>, of class <code>sir</code> and coded as <code>NWT</code> (nonwildtype) or `WT (wildtype).</p></dd>
 
 
 <dt id="arg-interpret-eucast">interpret_eucast<a class="anchor" aria-label="anchor" href="#arg-interpret-eucast"></a></dt>
-<dd><p>A logical value (default is FALSE). If <code>TRUE</code>, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column <code>pheno_eucast</code>, of class 'sir'.</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column <code>pheno_eucast</code>, of class <code>sir</code>.</p></dd>
 
 
 <dt id="arg-interpret-clsi">interpret_clsi<a class="anchor" aria-label="anchor" href="#arg-interpret-clsi"></a></dt>
-<dd><p>A logical value (default is FALSE). If <code>TRUE</code>, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column <code>pheno_clsi</code>, of class 'sir'.</p></dd>
+<dd><p>A logical value (default is <code>FALSE</code>). If <code>TRUE</code>, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column <code>pheno_clsi</code>, of class <code>sir</code>.</p></dd>
 
 
 <dt id="arg-species">species<a class="anchor" aria-label="anchor" href="#arg-species"></a></dt>
-<dd><p>(optional) Name of the species to use for phenotype interpretation. By default, the spp_pheno field in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.</p></dd>
+<dd><p>(optional) Name of the species to use for phenotype interpretation. By default, the <code>spp_pheno</code> field in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.</p></dd>
 
 
 <dt id="arg-ab">ab<a class="anchor" aria-label="anchor" href="#arg-ab"></a></dt>
-<dd><p>(optional) Name of the antibiotic to use for phenotype interpretation. By default, the drug_agent field in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.</p></dd>
+<dd><p>(optional) Name of the antibiotic to use for phenotype interpretation. By default, the <code>drug_agent</code> field in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A copy of the input table, with additional columns:</p><ul><li><p><code>pheno_eucast</code>: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.</p></li>
 <li><p><code>pheno_clsi</code>: The phenotype newly interpreted against CLSI human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.</p></li>
-<li><p><code>ecoff</code>: The phenotype newly interpreted against the ECOFF (as S/R), based on the MIC or disk diffusion data.</p></li>
-<li><p><code>spp_pheno</code>: The species phenotype, formatted using the <code>as.mo</code> function (either taken from the input table, or the single value specified by 'species' parameter).</p></li>
-<li><p><code>drug_agent</code>: The antibiotic used in the test, formatted using the <code>as.ab</code> function (either taken from the input table, or the single value specified by 'ab' parameter)..</p></li>
+<li><p><code>ecoff</code>: The phenotype newly interpreted against the ECOFF (as WT/NWT), based on the MIC or disk diffusion data.</p></li>
+<li><p><code>spp_pheno</code>: The species phenotype, formatted using the <code><a href="https://amr-for-r.org/reference/as.mo.html" class="external-link">AMR::as.mo()</a></code> function (either taken from field <code>spp_pheno</code> in the input table, or the single value specified by <code>species</code> parameter).</p></li>
+<li><p><code>drug_agent</code>: The antibiotic used in the test, formatted using the <code><a href="https://amr-for-r.org/reference/as.ab.html" class="external-link">AMR::as.ab()</a></code> function (either taken from field <code>drug_agent</code> in the input table, or the single value specified by <code>ab</code> parameter).</p></li>
 </ul></div>
 
     <div class="section level2">

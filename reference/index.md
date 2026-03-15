@@ -36,6 +36,8 @@ from public repositories or internal formats.
 - [`import_ncbi_biosample()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.md)
   : Import and process antimicrobial phenotype data retrieved from NCBI
   BioSamples
+- [`import_pheno()`](https://AMRverse.github.io/AMRgen/reference/import_pheno.md)
+  : Import and process antimicrobial phenotype data from common sources
 - [`import_phoenix_ast()`](https://AMRverse.github.io/AMRgen/reference/import_phoenix_ast.md)
   : Import and process antimicrobial phenotype data exported from BD
   Phoenix instruments

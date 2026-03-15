@@ -69,14 +69,22 @@ pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, int
 head(pheno)
 
 # download EBI phenotype data for Klebsiella quasipneumoniae
-kquasi_raw <- download_ebi(
+kquasi_raw_ebi <- download_ebi(
   species = "Klebsiella quasipneumoniae"
 )
 # import the data and interpret against ecoff
-pheno <- import_pheno(kquasi_raw,
+pheno <- import_pheno(kquasi_raw_ebi,
   format = "ebi_ftp",
   interpret_ecoff = TRUE
 )
+# Download NCBI phenotype data for Klebsiella quasipneumoniae
+kquasi_raw_ncbi <- download_ncbi_ast(
+  "Klebsiella quasipneumoniae"
+)
+# import the data and interpret against EUCAST breakpoints
+ast <- import_pheno(kquasi_raw_ncbi, 
+  format = "ncbi_biosample",
+  interpret_eucast = T)
 
 # import Vitek data from file, with default parameters
 pheno <- import_pheno("vitek_export.tsv",

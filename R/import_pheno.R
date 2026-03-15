@@ -483,7 +483,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
       mutate(method = if_else(!is.na(method) & method == "MIC", "broth dilution", method))
   } else {
     cat("Warning: Expected AST method column 'Laboratory typing method' not found in input\n")
-    # in old format there was no method field, guess from MIC/disk column values
+    # if no method field, guess from MIC/disk column values
     if ("MIC (mg/L)" %in% colnames(ast) & "Disk diffusion (mm)" %in% colnames(ast)) {
       ast <- ast %>% mutate(method = case_when(
         !is.na(`MIC (mg/L)`) ~ "broth dilution",
@@ -491,11 +491,20 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
         TRUE ~ NA
       ))
     }
-    # in old format sometimes etest was indicated in lab typing platform
+    # sometimes etest may be indicated in lab typing platform, or method
     if ("Laboratory typing platform" %in% colnames(ast)) {
       ast <- ast %>% mutate(method = case_when(
         is.na(`Laboratory typing platform`) ~ method,
-        `Laboratory typing platform` == "Etest" ~ "Etest",
+        grepl("etest", tolower(`Laboratory typing platform`)) ~ "Etest",
+        grepl("e-test", tolower(`Laboratory typing platform`)) ~ "Etest",
+        TRUE ~ method
+      ))
+    }
+    if ("Laboratory typing method version or reagent" %in% colnames(ast)) {
+      ast <- ast %>% mutate(method = case_when(
+        is.na(`Laboratory typing method version or reagent`) ~ method,
+        grepl("etest", tolower(`Laboratory typing method version or reagent`)) ~ "Etest",
+        grepl("e-test", tolower(`Laboratory typing method version or reagent`)) ~ "Etest",
         TRUE ~ method
       ))
     }
@@ -558,7 +567,16 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 
   # parse phenotype SIR column
   if ("Resistance phenotype" %in% colnames(ast)) {
-    ast <- ast %>% mutate(pheno_provided = as.sir(`Resistance phenotype`))
+    ast <- ast %>% 
+      mutate(pheno_provided = as.sir(`Resistance phenotype`)) 
+    if ("intermediate" %in% ast$`Resistance phenotype`) {
+      message('Manually setting `pheno_provided` to "I" where `Resistance phenotype` was "intermediate"')
+      ast <- ast %>% 
+        mutate(pheno_provided = if_else(`Resistance phenotype` == "intermediate",
+                                      "I",
+                                      `Resistance phenotype`
+        ))
+    }
   } else {
     cat("Warning: Expected phenotype SIR column 'Resistance phenotype' not found in input\n")
   }
@@ -2173,23 +2191,36 @@ import_phoenix_ast <- function(input,
 #' @export
 #' @examples
 #' \dontrun{
-#' # import NCBI data without re-interpreting resistance
+#' # import NCBI data retrieved from Google Cloud, without re-interpreting resistance
+#' head(staph_ast_ncbi_cloud_raw)
 #' pheno <- import_pheno(staph_ast_ncbi_cloud_raw, format = "ncbi")
+#' 
+#' # import NCBI data where biosample column has been renamed to 'id'
+#' head(staph_ast_ncbi_raw)
+#' import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col="id")
 #'
-#' # import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-#' pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
-#' head(pheno)
+#' # import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
+#' head(ecoli_ast_raw)
+#' pheno <- import_ast(ecoli_ast_raw, format = "ncbi", 
+#'    interpret_eucast = TRUE, interpret_ecoff = TRUE)
 #'
-#' # download EBI phenotype data for Klebsiella quasipneumoniae
-#' kquasi_raw <- download_ebi(
-#'   species = "Klebsiella quasipneumoniae"
-#' )
+#' # Download Klebsiella quasipneumoniae phenotype data from NCBI BioSample
+#' kquasi_raw_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
+#' head(kquasi_raw_ncbi)
+#' # import the data and interpret against EUCAST breakpoints
+#' pheno <- import_pheno(kquasi_raw_ncbi, 
+#'   format = "ncbi_biosample",
+#'   interpret_eucast = T)
+#'
+#' # download Klebsiella quasipneumoniae phenotype data from EBI
+#' kquasi_raw_ebi <- download_ebi(species = "Klebsiella quasipneumoniae")
+#' head(kquasi_raw_ebi)
 #' # import the data and interpret against ecoff
-#' pheno <- import_pheno(kquasi_raw,
+#' pheno <- import_pheno(kquasi_raw_ebi,
 #'   format = "ebi_ftp",
 #'   interpret_ecoff = TRUE
 #' )
-#'
+#' 
 #' # import Vitek data from file, with default parameters
 #' pheno <- import_pheno("vitek_export.tsv",
 #'   format = "vitek"

@@ -41,16 +41,17 @@ summarise_pheno(
 
 - mic_col:
 
-  Character. Name of the column containing MIC data. Default is `"mic"`.
+  Character. Name of the column containing MIC measurements Default is
+  `"mic"`.
 
 - disk_col:
 
-  Character. Name of the column containing drug class identifiers.
-  Default is `"disk"`.
+  Character. Name of the column containing disk diffusion zone
+  measurements. Default is `"disk"`.
 
 - spp_col:
 
-  Character. Name of the column containing species names Default is
+  Character. Name of the column containing species names. Default is
   `"spp_pheno"`.
 
 - pheno_cols:

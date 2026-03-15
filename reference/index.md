@@ -66,6 +66,8 @@ from public repositories or internal formats.
   : Download NCBI antimicrobial susceptibility testing (AST) data
 - [`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
   : Summarise a Genotype Table
+- [`summarise_geno_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno_pheno.md)
+  : Summarise the intersection of a genotype table and a phenotype table
 - [`summarise_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_pheno.md)
   : Summarise a Phenotype Table
 - [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)

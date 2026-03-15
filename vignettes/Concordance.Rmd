@@ -1,8 +1,8 @@
 ---
-title: "Assessing phenotype-genotype concordance"
+title: "Assessing geno-pheno concordance"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Assessing phenotype-genotype concordance}
+  %\VignetteIndexEntry{Assessing geno-pheno concordance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

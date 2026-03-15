@@ -1,4 +1,4 @@
-# Assessing phenotype-genotype concordance
+# Assessing geno-pheno concordance
 
 ## Introduction
 

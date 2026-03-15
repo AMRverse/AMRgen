@@ -2445,8 +2445,8 @@ import_sirscan_ast <- function(
     ast_long <- ast_long %>% mutate(spp_pheno = as.mo(species))
   } else if ("Germe" %in% colnames(ast_long)) {
     ast_long <- ast_long %>%
-      mutate(spp_pheno = as.mo(Germe)) %>%
-      select(-Germe)
+      mutate(spp_pheno = as.mo(.data$Germe)) %>%
+      select(-"Germe")
   }
 
   # Collection date — column whose name starts with "Date" (encoding-robust)

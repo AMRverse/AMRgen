@@ -113,14 +113,22 @@
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># download EBI phenotype data for Klebsiella quasipneumoniae</span></span></span>
-<span class="r-in"><span><span class="va">kquasi_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="download_ebi.html">download_ebi</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">kquasi_raw_ebi</span> <span class="op">&lt;-</span> <span class="fu"><a href="download_ebi.html">download_ebi</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  species <span class="op">=</span> <span class="st">"Klebsiella quasipneumoniae"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># import the data and interpret against ecoff</span></span></span>
-<span class="r-in"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">import_pheno</span><span class="op">(</span><span class="va">kquasi_raw</span>,</span></span>
+<span class="r-in"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">import_pheno</span><span class="op">(</span><span class="va">kquasi_raw_ebi</span>,</span></span>
 <span class="r-in"><span>  format <span class="op">=</span> <span class="st">"ebi_ftp"</span>,</span></span>
 <span class="r-in"><span>  interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Download NCBI phenotype data for Klebsiella quasipneumoniae</span></span></span>
+<span class="r-in"><span><span class="va">kquasi_raw_ncbi</span> <span class="op">&lt;-</span> <span class="fu"><a href="download_ncbi_ast.html">download_ncbi_ast</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"Klebsiella quasipneumoniae"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># import the data and interpret against EUCAST breakpoints</span></span></span>
+<span class="r-in"><span><span class="va">ast</span> <span class="op">&lt;-</span> <span class="fu">import_pheno</span><span class="op">(</span><span class="va">kquasi_raw_ncbi</span>, </span></span>
+<span class="r-in"><span>  format <span class="op">=</span> <span class="st">"ncbi_biosample"</span>,</span></span>
+<span class="r-in"><span>  interpret_eucast <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># import Vitek data from file, with default parameters</span></span></span>
 <span class="r-in"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu">import_pheno</span><span class="op">(</span><span class="st">"vitek_export.tsv"</span>,</span></span>

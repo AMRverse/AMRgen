@@ -19,21 +19,21 @@ import_microscan_ast(
 \arguments{
 \item{input}{A dataframe or path to a CSV/TSV file containing MicroScan AST output data}
 
-\item{sample_col}{Column name for sample identifiers. Default: NULL (auto-detected from language-specific column names)}
+\item{sample_col}{String indicating the name of the column containing sample identifiers. Default: \code{"Lab ID"}}
 
-\item{source}{Optional source value to record for all data points}
+\item{source}{Optional string value to record in the \code{source} column for all data points (e.g., dataset name or study identifier)}
 
-\item{species}{Optional species override for phenotype interpretation}
+\item{species}{Optional string indicating a single species to use for phenotype interpretation (otherwise this is inferred per-sample from the input)}
 
-\item{ab}{Optional antibiotic override for phenotype interpretation}
+\item{ab}{Optional string indicating a single antibiotic to use for phenotype interpretation (otherwise this is inferred per-sample from the input)}
 
-\item{instrument_guideline}{Optional guideline used by the instrument for SIR interpretation}
+\item{instrument_guideline}{Optional string indicating the guideline used by the instrument for SIR interpretation (e.g., "EUCAST 2025", "CLSI 2025"), used to record the \code{guideline} in the output file. Default: \code{NULL}}
 
-\item{interpret_eucast}{Interpret against EUCAST breakpoints}
+\item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}.}
 
-\item{interpret_clsi}{Interpret against CLSI breakpoints}
+\item{interpret_clsi}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class \code{sir}.}
 
-\item{interpret_ecoff}{Interpret against ECOFF values}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the wildtype vs nonwildtype status for each observation based on the MIC values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 }
 \value{
 Standardised AST data frame

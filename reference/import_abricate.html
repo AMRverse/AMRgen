@@ -77,15 +77,21 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble containing the processed AMR elements, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package.</p>
-    </div>
+    <p>A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package:</p><ul><li><p><code>id</code>: The sample identifier (<code>character</code>).</p></li>
+<li><p><code>marker</code>: The name of the genotype marker, as it appears in the <code>GENE</code> column of the input file (<code>character</code>).</p></li>
+<li><p><code>gene</code>: The name of the gene product, as it appears in the <code>PRODUCT</code> column of the input file (<code>character</code>).</p></li>
+<li><p><code>drug_class</code>: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, parsed from the <code>RESISTANCE</code> column of the input file which depends on the database that ABRicate was run with (<code>character</code>).</p></li>
+<li><p><code>drug_agent</code>: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg, parsed from the <code>RESISTANCE</code> column of the input file (<code>ab</code>). Value <code>NA</code> is assigned when the markers are annotated with a class only and not a specific antibiotic.</p></li>
+<li><p><code>variation type</code>: Type of variation, i.e. <code>Gene presence detected</code>, as ABRicate only detects presence/absence of genes in the query database.
+... Other fields specific to the input file</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function performs the following steps:</p><ul><li><p>Reads the Abricate output table via the internal <code>process_input</code> function.</p></li>
 <li><p>Standardises the sample column name 'id'.</p></li>
 <li><p>Assigns standardised column names for genes, markers, and sets variation type to "Gene presence detected".</p></li>
 <li><p>Splits multiple resistance annotations (separated by semicolons) into separate rows.</p></li>
-<li><p>Converts drug agent names to the <code>"ab"</code> class from the AMR package and maps these to classes compatible with the output of <code><a href="import_amrfp.html">import_amrfp()</a></code> and <code><a href="import_kleborate.html">import_kleborate()</a></code>.</p></li>
+<li><p>Converts drug agent names and classes to terms recognised by the AMR package.</p></li>
 </ul></div>
 
     <div class="section level2">

@@ -7,7 +7,7 @@
 ``` r
 summarise_geno(
   geno_table,
-  sample_col = "Name",
+  sample_col = "id",
   marker_col = "marker",
   drug_col = "drug_agent",
   class_col = "drug_class",
@@ -107,7 +107,7 @@ summarise_geno(geno_table)
 #> # A tibble: 6 × 2
 #>   column         n_unique
 #>   <chr>             <int>
-#> 1 Name               5258
+#> 1 id                 5258
 #> 2 marker              244
 #> 3 drug_agent           35
 #> 4 drug_class           26
@@ -116,7 +116,7 @@ summarise_geno(geno_table)
 #> 
 #> $per_type
 #> # A tibble: 5 × 6
-#>   `variation type`                Name marker drug_agent drug_class  gene
+#>   `variation type`                  id marker drug_agent drug_class  gene
 #>   <chr>                          <int>  <int>      <int>      <int> <int>
 #> 1 Gene presence detected          5258    164         22         17   164
 #> 2 Inactivating mutation detected   615     42         15         14    42

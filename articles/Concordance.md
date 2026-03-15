@@ -1,4 +1,4 @@
-# Asessing phenotype-genotype concordance
+# Assessing phenotype-genotype concordance
 
 ## Introduction
 
@@ -160,14 +160,14 @@ geno_eco_2075 <- import_amrfp(geno_eco_2075, "Name")
 # Check the format of the processed genotype table
 head(geno_eco_2075)
 #> # A tibble: 6 × 33
-#>   Name        gene  mutation drug_agent drug_class `variation type` node  marker
-#>   <chr>       <chr> <chr>    <ab>       <chr>      <chr>            <chr> <chr> 
-#> 1 SAMN263043… pmrB  Tyr358A… COL        Polymyxins Protein variant… pmrB  pmrB_…
-#> 2 SAMN263043… blaEC NA       NA         Beta-lact… Gene presence d… blaEC blaEC 
-#> 3 SAMN263043… mdtM  NA       NA         Efflux     Gene presence d… mdtM  mdtM  
-#> 4 SAMN263043… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT  glpT_…
-#> 5 SAMN263043… acrF  NA       NA         Efflux     Gene presence d… acrF  acrF  
-#> 6 SAMN263043… blaEC NA       NA         Beta-lact… Gene presence d… blaEC blaEC 
+#>   id          marker gene  mutation drug_agent drug_class `variation type` node 
+#>   <chr>       <chr>  <chr> <chr>    <ab>       <chr>      <chr>            <chr>
+#> 1 SAMN263043… pmrB_… pmrB  Tyr358A… COL        Polymyxins Protein variant… pmrB 
+#> 2 SAMN263043… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
+#> 3 SAMN263043… mdtM   mdtM  NA       NA         Efflux     Gene presence d… mdtM 
+#> 4 SAMN263043… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT 
+#> 5 SAMN263043… acrF   acrF  NA       NA         Efflux     Gene presence d… acrF 
+#> 6 SAMN263043… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
 #> # ℹ 25 more variables: marker.label <chr>, `Protein identifier` <lgl>,
 #> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
 #> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,

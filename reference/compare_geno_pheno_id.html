@@ -81,7 +81,7 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">geno_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">geno_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ecoli_ast</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id          drug_agent    mic  disk pheno_clsi ecoff guideline method platform</span>
@@ -95,7 +95,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: pheno_provided &lt;sir&gt;, spp_pheno &lt;mo&gt;</span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">compare_geno_pheno_id</span><span class="op">(</span><span class="va">geno_table</span>,</span></span>
 <span class="r-in"><span>  <span class="va">ecoli_ast</span>,</span></span>
-<span class="r-in"><span>  geno_sample_col <span class="op">=</span> <span class="st">"Name"</span>,</span></span>
+<span class="r-in"><span>  geno_sample_col <span class="op">=</span> <span class="st">"id"</span>,</span></span>
 <span class="r-in"><span>  pheno_sample_col <span class="op">=</span> <span class="st">"id"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">pheno_unique</span><span class="op">)</span></span></span>
@@ -1526,18 +1526,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3629] "SAMN03892121"</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">geno_matched</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 36,088 × 37</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Name       gene  mutation drug_agent drug_class `variation type` node  marker</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SAMN03177… blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC blaEC </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SAMN03177… acrF  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… acrF  acrF  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SAMN03177… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT  glpT_…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SAMN03177… floR  <span style="color: #BB0000;">NA</span>       CHL        Phenicols  Gene presence d… floR  floR  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SAMN03177… floR  <span style="color: #BB0000;">NA</span>       FLR        Phenicols  Gene presence d… floR  floR  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SAMN03177… mdtM  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… mdtM  mdtM  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SAMN03177… blaT… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaT… blaTE…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SAMN03177… sul2  <span style="color: #BB0000;">NA</span>       SSS        Sulfonami… Gene presence d… sul2  sul2  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SAMN03177… aph(… <span style="color: #BB0000;">NA</span>       STR1       Aminoglyc… Gene presence d… aph(… aph(3…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SAMN03177… aph(… <span style="color: #BB0000;">NA</span>       STR1       Aminoglyc… Gene presence d… aph(… aph(6…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id         marker gene  mutation drug_agent drug_class `variation type` node </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SAMN03177… blaEC  blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SAMN03177… acrF   acrF  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… acrF </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SAMN03177… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SAMN03177… floR   floR  <span style="color: #BB0000;">NA</span>       CHL        Phenicols  Gene presence d… floR </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SAMN03177… floR   floR  <span style="color: #BB0000;">NA</span>       FLR        Phenicols  Gene presence d… floR </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SAMN03177… mdtM   mdtM  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… mdtM </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SAMN03177… blaTE… blaT… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaT…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SAMN03177… sul2   sul2  <span style="color: #BB0000;">NA</span>       SSS        Sulfonami… Gene presence d… sul2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SAMN03177… aph(3… aph(… <span style="color: #BB0000;">NA</span>       STR1       Aminoglyc… Gene presence d… aph(…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SAMN03177… aph(6… aph(… <span style="color: #BB0000;">NA</span>       STR1       Aminoglyc… Gene presence d… aph(…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 36,078 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 29 more variables: marker.label &lt;chr&gt;, `Protein identifier` &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   `Contig id` &lt;chr&gt;, Start &lt;dbl&gt;, Stop &lt;dbl&gt;, Strand &lt;chr&gt;,</span></span>

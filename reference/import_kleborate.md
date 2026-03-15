@@ -36,7 +36,8 @@ import_kleborate(
 
 - hgvs:
 
-  Logical indicating whether to expect mutations in HGVS format (used in
+  Logical indicating whether to expect mutations in [HGVS
+  nomenclature](https://hgvs-nomenclature.org/stable/) syntax (used in
   Kleborate releases since v3.1.3). Default `TRUE`, which expects
   mutations formatted as e.g. "GyrA:p.S83F". Set to `FALSE` if your
   results were generated using older versions where mutations were
@@ -44,8 +45,34 @@ import_kleborate(
 
 ## Value
 
-A tibble containing the processed AMR determinants and drug classes that
-is AMRgen compatible.
+A data frame with the processed genotype data, with harmonised gene
+names, mapped drug agents, and drug classes which can be used for other
+functions of the ARMgen package:
+
+- `id`: The sample identifier (`character`).
+
+- `marker`: The name of the genotype marker as it appears in the input
+  (e.g. `GyrA:p.S83F` for recent versions of Kleborate, or `GyrA-83F`
+  for earlier versions not using [HGVS
+  nomenclature](https://hgvs-nomenclature.org/stable/)) (`character`).
+
+- `gene`: The gene identifier (`character`).
+
+- `mutation`: The mutation detected within the gene, converted to [HGVS
+  nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g.
+  `Ser83Phe`) (`character`).
+
+- `drug_class`: Name of the antibiotic group associated with the
+  genotype marker, compatible with AMR pkg, drawn from the Kleborate
+  column in which the marker was reported (`character`).
+
+- `drug_agent`: Values are recorded as `NA` as Kleborate doesn't report
+  markers assigned to individual drug level.
+
+- `variation type`: Type of variation, e.g. `Gene presence detected`,
+  `Protein variant detected`, `Nucleotide variant detected`,
+  `Inactivating mutation detected`. ... Other fields specific to the
+  input file
 
 ## Details
 
@@ -56,9 +83,9 @@ The function performs the following steps:
 - Transforms Kleborate output into long form (i.e., one AMR determinant
   per row).
 
-- Maps Kleborate drug classes to standardised drug class names. This
-  processing ensures compatibility with downstream AMRgen analysis
-  workflows.
+- Maps Kleborate drug classes to standardised drug class names
+  recognised by the AMR pkg. This processing ensures compatibility with
+  downstream AMRgen analysis workflows.
 
 ## Examples
 

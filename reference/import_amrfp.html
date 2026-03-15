@@ -97,17 +97,24 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble containing the processed AMR elements, with harmonised gene names, mapped drug agents, and drug classes. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables.</p>
-    </div>
+    <p>A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables:</p><ul><li><p><code>id</code>: The sample identifier (<code>character</code>).</p></li>
+<li><p><code>marker</code>: The name of the genotype marker as it appears in the input (e.g. <code>gyrA_S83F</code>) (<code>character</code>).</p></li>
+<li><p><code>gene</code>: The gene identifier (<code>character</code>).</p></li>
+<li><p><code>mutation</code>: The mutation detected within the gene, converted to <a href="https://hgvs-nomenclature.org/stable/" class="external-link">HGVS nomenclature</a> syntax (e.g. <code>Ser83Phe</code>) (<code>character</code>).</p></li>
+<li><p><code>node</code>: The node in the NCBI reference gene hierarchy corresponding to the gene (<code>character</code>).</p></li>
+<li><p><code>drug_class</code>: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (<code>character</code>).</p></li>
+<li><p><code>drug_agent</code>: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (<code>ab</code>). Value <code>NA</code> is assigned when the markers are annotated with a class only and not a specific antibiotic.</p></li>
+<li><p><code>variation type</code>: Type of variation, e.g. <code>Gene presence detected</code>, <code>Protein variant detected</code>, <code>Nucleotide variant detected</code>, <code>Inactivating mutation detected</code>, <code>Promoter variant detected</code>.
+... Other fields specific to the input file</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function performs the following steps:</p><ul><li><p>Reads the AMRFinderPlus output table.</p></li>
 <li><p>Filters the data to only include AMR elements.</p></li>
 <li><p>Converts gene symbols to a harmonised format.</p></li>
 <li><p>Splits multiple subclass annotations into separate rows.</p></li>
-<li><p>Maps AMRFinderPlus subclasses to standardised drug class names using <code>amrfp_drugs</code>.</p></li>
-<li><p>Converts drug agent names to the <code>"ab"</code> class from the AMR package.
-This processing ensures compatibility with downstream AMR analysis workflows.</p></li>
+<li><p>Maps AMRFinderPlus subclasses to standardised drug class names recognised by the AMR pkg.
+This processing ensures compatibility with downstream AMRgen analysis workflows.</p></li>
 </ul></div>
 
     <div class="section level2">

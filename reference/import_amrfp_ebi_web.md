@@ -25,10 +25,29 @@ import_amrfp_ebi_web(input_table)
 
 ## Value
 
-A tibble containing the processed AMR elements, with harmonised gene
-names, drug agents, and drug classes. The output retains the original
-columns from the AMRFinderPlus table along with the newly mapped
-variables.
+A data frame with the processed genotype data, with harmonised gene
+names, mapped drug agents, and drug classes which can be used for other
+functions of the ARMgen package. The output retains the original columns
+from the AMRFinderPlus table along with the newly mapped variables:
+
+- `id`: The sample identifier (`character`).
+
+- `marker`: The name of the genotype marker as it appears in the input
+  (e.g. `gyrA_S83F`) (`character`).
+
+- `gene`: The gene identifier (`character`).
+
+- `mutation`: The mutation detected within the gene, converted to [HGVS
+  nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g.
+  `Ser83Phe`) (`character`).
+
+- `drug_class`: Name of the antibiotic group associated with the
+  genotype marker, compatible with AMR pkg (`character`).
+
+- `drug_agent`: Name of the specific antibiotic agent associated with
+  the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is
+  assigned when the markers are annotated with a class only and not a
+  specific antibiotic. ... Other fields specific to the input file
 
 ## Details
 

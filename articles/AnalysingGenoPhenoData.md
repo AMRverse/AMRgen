@@ -87,14 +87,14 @@ ecoli_geno <- import_amrfp(
 # Check the format of the processed genotype table
 head(ecoli_geno)
 #> # A tibble: 6 × 37
-#>   Name        gene  mutation drug_agent drug_class `variation type` node  marker
-#>   <chr>       <chr> <chr>    <ab>       <chr>      <chr>            <chr> <chr> 
-#> 1 SAMN031776… blaEC NA       NA         Beta-lact… Gene presence d… blaEC blaEC 
-#> 2 SAMN031776… acrF  NA       NA         Efflux     Gene presence d… acrF  acrF  
-#> 3 SAMN031776… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT  glpT_…
-#> 4 SAMN031776… floR  NA       CHL        Phenicols  Gene presence d… floR  floR  
-#> 5 SAMN031776… floR  NA       FLR        Phenicols  Gene presence d… floR  floR  
-#> 6 SAMN031776… mdtM  NA       NA         Efflux     Gene presence d… mdtM  mdtM  
+#>   id          marker gene  mutation drug_agent drug_class `variation type` node 
+#>   <chr>       <chr>  <chr> <chr>    <ab>       <chr>      <chr>            <chr>
+#> 1 SAMN031776… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
+#> 2 SAMN031776… acrF   acrF  NA       NA         Efflux     Gene presence d… acrF 
+#> 3 SAMN031776… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT 
+#> 4 SAMN031776… floR   floR  NA       CHL        Phenicols  Gene presence d… floR 
+#> 5 SAMN031776… floR   floR  NA       FLR        Phenicols  Gene presence d… floR 
+#> 6 SAMN031776… mdtM   mdtM  NA       NA         Efflux     Gene presence d… mdtM 
 #> # ℹ 29 more variables: marker.label <chr>, `Protein identifier` <lgl>,
 #> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
 #> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,
@@ -119,11 +119,10 @@ using `element_symbol_col`, `element_type_col`, `element_subtype_col`,
 The essential columns for a genotype table to work with downstream
 `AMRgen` functions are:
 
-- `Name`: character string giving the sample name, used to link to
-  sample names in the phenotype file (this column can have a different
-  name, in which case you’ll need to make sure it is the first column in
-  the dataframe OR pass its name to the functions using
-  `geno_sample_col`)
+- `id`: character string giving the sample name, used to link to sample
+  names in the phenotype file (this column can have a different name, in
+  which case you’ll need to make sure it is the first column in the
+  dataframe OR pass its name to the functions using `geno_sample_col`)
 
 - `marker`: character string giving the name of the genetic marker
   detected
@@ -159,7 +158,7 @@ ecoli_geno_summary$uniques
 #> # A tibble: 6 × 2
 #>   column         n_unique
 #>   <chr>             <int>
-#> 1 Name               5258
+#> 1 id                 5258
 #> 2 marker              244
 #> 3 drug_agent           35
 #> 4 drug_class           26
@@ -167,8 +166,15 @@ ecoli_geno_summary$uniques
 #> 6 variation type        5
 
 # Unique counts of samples, markers, genes, drugs, and classes - per variation type
-ecoli_geno_summary$pertype
-#> NULL
+ecoli_geno_summary$per_type
+#> # A tibble: 5 × 6
+#>   `variation type`                  id marker drug_agent drug_class  gene
+#>   <chr>                          <int>  <int>      <int>      <int> <int>
+#> 1 Gene presence detected          5258    164         22         17   164
+#> 2 Inactivating mutation detected   615     42         15         14    42
+#> 3 Nucleotide variant detected       57      2          3          3     1
+#> 4 Promoter variant detected         93      4          1          1     1
+#> 5 Protein variant detected        4920     65         18         16    21
 ```
 
 The
@@ -334,7 +340,7 @@ ecoli_geno_summary$markers %>%
 #### 2a. Importing phenotype datato AMRgen’s standard table format
 
 The
-[`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
+[`import_pheno()`](https://AMRverse.github.io/AMRgen/reference/import_pheno.md)
 function imports AST data from NCBI or other standard formats
 
 ``` r
@@ -371,14 +377,14 @@ head(ecoli_ast)
 
 
 # You can make your own from different file formats, and interpret against breakpoints, using:
-#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
-#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
+#    import_pheno("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
+#    import_pheno("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
 ```
 
 Data can be imported from various standard formats using the
-`import_ast` function, and re-interpreted using latest breakpoints
+`import_pheno` function, and re-interpreted using latest breakpoints
 and/or ECOFF. Use
-[`?import_ast`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
+[`?import_pheno`](https://AMRverse.github.io/AMRgen/reference/import_pheno.md)
 to see the available formats and other options.
 
 If your assay data is not in a standard format, you can wrangle other
@@ -386,7 +392,7 @@ input data files into the necessary format, manually and/or with the
 help of the `format_ast` function.
 
 ``` r
-?import_ast
+?import_pheno
 
 ?format_ast
 ```

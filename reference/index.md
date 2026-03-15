@@ -23,6 +23,8 @@ from public repositories or internal formats.
 - [`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
   : Import and process antimicrobial phenotype data files retrieved from
   the EBI AMR portal FTP site
+- [`import_geno()`](https://AMRverse.github.io/AMRgen/reference/import_geno.md)
+  : Import and process antimicrobial genotype data from common sources
 - [`import_gtdb()`](https://AMRverse.github.io/AMRgen/reference/import_gtdb.md)
   : Import GTDB Output
 - [`import_kleborate()`](https://AMRverse.github.io/AMRgen/reference/import_kleborate.md)

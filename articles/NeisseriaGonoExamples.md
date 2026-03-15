@@ -30,7 +30,6 @@ Load the necessary libraries before running this vignette:
 
 ``` r
 library(AMRgen)
-library(AMR)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -185,16 +184,15 @@ properly accounted for in downstream analyses:
 
 ``` r
 negative_eurogasp <- eurogasp_pheno_raw %>%
-  anti_join(eurogasp_geno, by = c("id" = "Name")) %>%
+  anti_join(eurogasp_geno, by = "id") %>%
   pull(id)
 
-eurogasp_geno <- eurogasp_geno %>% bind_rows(tibble(Name = negative_eurogasp))
+eurogasp_geno <- eurogasp_geno %>% bind_rows(tibble(id = negative_eurogasp))
 ```
 
 #### **Exploring phenotype distributions and comparing with EUCAST reference data**
 
-Round MIC values to the nearest doubling dilution using
-[`as.mic()`](https://amr-for-r.org/reference/as.mic.html) with
+Round MIC values to the nearest doubling dilution using `as.mic()` with
 `round_to_next_log2 = TRUE`:
 
 ``` r
@@ -1071,10 +1069,11 @@ ngono_cro_ast <- format_ast(
 
 # Include empty rows for samples with phenotype but no genotype data
 negative_cro <- ngono_cro_pheno_raw %>%
-  anti_join(ngono_cro_geno, by = c("id" = "Name")) %>%
+  anti_join(ngono_cro_geno) %>%
   pull(id)
+#> Joining with `by = join_by(id)`
 
-ngono_cro_geno <- ngono_cro_geno %>% bind_rows(tibble(Name = negative_cro))
+ngono_cro_geno <- ngono_cro_geno %>% bind_rows(tibble(id = negative_cro))
 ```
 
 Build the binary matrix and generate upset plots:
@@ -1220,10 +1219,11 @@ ngono_tet_geno <- import_amrfp(
 )
 
 negative_samples <- ngono_tet_ast %>%
-  anti_join(ngono_tet_geno, by = c("id" = "Name")) %>%
+  anti_join(ngono_tet_geno) %>%
   pull(id)
+#> Joining with `by = join_by(id, drug_agent)`
 
-ngono_tet_geno <- ngono_tet_geno %>% bind_rows(tibble(Name = negative_samples))
+ngono_tet_geno <- ngono_tet_geno %>% bind_rows(tibble(id = negative_samples))
 ```
 
 Build the binary matrix and generate upset plots:

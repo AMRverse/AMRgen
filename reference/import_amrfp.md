@@ -74,10 +74,37 @@ import_amrfp(
 
 ## Value
 
-A tibble containing the processed AMR elements, with harmonised gene
-names, mapped drug agents, and drug classes. The output retains the
-original columns from the AMRFinderPlus table along with the newly
-mapped variables.
+A data frame with the processed genotype data, with harmonised gene
+names, mapped drug agents, and drug classes which can be used for other
+functions of the ARMgen package. The output retains the original columns
+from the AMRFinderPlus table along with the newly mapped variables:
+
+- `id`: The sample identifier (`character`).
+
+- `marker`: The name of the genotype marker as it appears in the input
+  (e.g. `gyrA_S83F`) (`character`).
+
+- `gene`: The gene identifier (`character`).
+
+- `mutation`: The mutation detected within the gene, converted to [HGVS
+  nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g.
+  `Ser83Phe`) (`character`).
+
+- `node`: The node in the NCBI reference gene hierarchy corresponding to
+  the gene (`character`).
+
+- `drug_class`: Name of the antibiotic group associated with the
+  genotype marker, compatible with AMR pkg (`character`).
+
+- `drug_agent`: Name of the specific antibiotic agent associated with
+  the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is
+  assigned when the markers are annotated with a class only and not a
+  specific antibiotic.
+
+- `variation type`: Type of variation, e.g. `Gene presence detected`,
+  `Protein variant detected`, `Nucleotide variant detected`,
+  `Inactivating mutation detected`, `Promoter variant detected`. ...
+  Other fields specific to the input file
 
 ## Details
 
@@ -91,12 +118,9 @@ The function performs the following steps:
 
 - Splits multiple subclass annotations into separate rows.
 
-- Maps AMRFinderPlus subclasses to standardised drug class names using
-  `amrfp_drugs`.
-
-- Converts drug agent names to the `"ab"` class from the AMR package.
-  This processing ensures compatibility with downstream AMR analysis
-  workflows.
+- Maps AMRFinderPlus subclasses to standardised drug class names
+  recognised by the AMR pkg. This processing ensures compatibility with
+  downstream AMRgen analysis workflows.
 
 ## Examples
 

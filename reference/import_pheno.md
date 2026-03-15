@@ -30,9 +30,10 @@ import_pheno(
   site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or
   [NCBI browser](https://www.ncbi.nlm.nih.gov/pathogens/ast), or using
   the functions
-  [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
+  [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md),
+  [`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md),
   or
-  [`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md);
+  [`query_ncbi_bq_geno()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.md);
   or the files may be exported from supported AST instruments.
 
 - format:
@@ -103,7 +104,7 @@ import_pheno(
 
 A data frame with the processed AST data, including additional columns:
 
-- `id`: The biosample identifier (`character`).
+- `id`: The sample identifier (`character`).
 
 - `spp_pheno`: The species phenotype, formatted using the
   [`AMR::as.mo()`](https://amr-for-r.org/reference/as.mo.html) function
@@ -156,30 +157,38 @@ A data frame with the processed AST data, including additional columns:
 
 ``` r
 if (FALSE) { # \dontrun{
-# import NCBI data without re-interpreting resistance
+# import NCBI data retrieved from Google Cloud, without re-interpreting resistance
+head(staph_ast_ncbi_cloud_raw)
 pheno <- import_pheno(staph_ast_ncbi_cloud_raw, format = "ncbi")
 
-# import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
-head(pheno)
+# import NCBI data where biosample column has been renamed to 'id'
+head(staph_ast_ncbi_raw)
+import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col = "id")
 
-# download EBI phenotype data for Klebsiella quasipneumoniae
-kquasi_raw_ebi <- download_ebi(
-  species = "Klebsiella quasipneumoniae"
+# import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
+head(ecoli_ast_raw)
+pheno <- import_ast(ecoli_ast_raw,
+  format = "ncbi",
+  interpret_eucast = TRUE, interpret_ecoff = TRUE
 )
+
+# download Klebsiella quasipneumoniae phenotype data from NCBI BioSample
+kquasi_raw_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
+head(kquasi_raw_ncbi)
+# import the data and interpret against EUCAST breakpoints
+pheno <- import_pheno(kquasi_raw_ncbi,
+  format = "ncbi_biosample",
+  interpret_eucast = T
+)
+
+# download Klebsiella quasipneumoniae phenotype data from EBI
+kquasi_raw_ebi <- download_ebi(species = "Klebsiella quasipneumoniae")
+head(kquasi_raw_ebi)
 # import the data and interpret against ecoff
 pheno <- import_pheno(kquasi_raw_ebi,
   format = "ebi_ftp",
   interpret_ecoff = TRUE
 )
-# Download NCBI phenotype data for Klebsiella quasipneumoniae
-kquasi_raw_ncbi <- download_ncbi_ast(
-  "Klebsiella quasipneumoniae"
-)
-# import the data and interpret against EUCAST breakpoints
-ast <- import_pheno(kquasi_raw_ncbi, 
-  format = "ncbi_biosample",
-  interpret_eucast = T)
 
 # import Vitek data from file, with default parameters
 pheno <- import_pheno("vitek_export.tsv",

@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Asessing phenotype-genotype concordance • AMRgen</title>
+<title>Assessing phenotype-genotype concordance • AMRgen</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Nunito-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Asessing phenotype-genotype concordance">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Assessing phenotype-genotype concordance">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -49,7 +49,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Asessing phenotype-genotype concordance</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Assessing phenotype-genotype concordance</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/AMRverse/AMRgen/blob/main/vignettes/Concordance.Rmd" class="external-link"><code>vignettes/Concordance.Rmd</code></a></small>
@@ -206,14 +206,14 @@ table).</p></li>
 <span><span class="co"># Check the format of the processed genotype table</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">geno_eco_2075</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 33</span></span></span>
-<span><span class="co">#&gt;   Name        gene  mutation drug_agent drug_class `variation type` node  marker</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN263043… pmrB  Tyr358A… COL        Polymyxins Protein variant… pmrB  pmrB_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN263043… blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC blaEC </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN263043… mdtM  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… mdtM  mdtM  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN263043… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT  glpT_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN263043… acrF  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… acrF  acrF  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN263043… blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC blaEC </span></span>
+<span><span class="co">#&gt;   id          marker gene  mutation drug_agent drug_class `variation type` node </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN263043… pmrB_… pmrB  Tyr358A… COL        Polymyxins Protein variant… pmrB </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN263043… blaEC  blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN263043… mdtM   mdtM  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… mdtM </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN263043… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN263043… acrF   acrF  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… acrF </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN263043… blaEC  blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 25 more variables: marker.label &lt;chr&gt;, `Protein identifier` &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Contig id` &lt;chr&gt;, Start &lt;dbl&gt;, Stop &lt;dbl&gt;, Strand &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Gene symbol` &lt;chr&gt;, `Sequence name` &lt;chr&gt;, Scope &lt;chr&gt;,</span></span></span>

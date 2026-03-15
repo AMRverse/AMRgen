@@ -141,14 +141,14 @@ package.</p>
 <span><span class="co"># Check the format of the processed genotype table</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ecoli_geno</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 37</span></span></span>
-<span><span class="co">#&gt;   Name        gene  mutation drug_agent drug_class `variation type` node  marker</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN031776… blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC blaEC </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN031776… acrF  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… acrF  acrF  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN031776… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT  glpT_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN031776… floR  <span style="color: #BB0000;">NA</span>       CHL        Phenicols  Gene presence d… floR  floR  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN031776… floR  <span style="color: #BB0000;">NA</span>       FLR        Phenicols  Gene presence d… floR  floR  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN031776… mdtM  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… mdtM  mdtM  </span></span>
+<span><span class="co">#&gt;   id          marker gene  mutation drug_agent drug_class `variation type` node </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN031776… blaEC  blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN031776… acrF   acrF  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… acrF </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN031776… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN031776… floR   floR  <span style="color: #BB0000;">NA</span>       CHL        Phenicols  Gene presence d… floR </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN031776… floR   floR  <span style="color: #BB0000;">NA</span>       FLR        Phenicols  Gene presence d… floR </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN031776… mdtM   mdtM  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… mdtM </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 29 more variables: marker.label &lt;chr&gt;, `Protein identifier` &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Contig id` &lt;chr&gt;, Start &lt;dbl&gt;, Stop &lt;dbl&gt;, Strand &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Gene symbol` &lt;chr&gt;, `Sequence name` &lt;chr&gt;, Scope &lt;chr&gt;,</span></span></span>
@@ -171,8 +171,8 @@ using <code>element_symbol_col</code>, <code>element_type_col</code>,
 <p>The essential columns for a genotype table to work with downstream
 <code>AMRgen</code> functions are:</p>
 <ul>
-<li><p><code>Name</code>: character string giving the sample name, used
-to link to sample names in the phenotype file (this column can have a
+<li><p><code>id</code>: character string giving the sample name, used to
+link to sample names in the phenotype file (this column can have a
 different name, in which case you’ll need to make sure it is the first
 column in the dataframe OR pass its name to the functions using
 <code>geno_sample_col</code>)</p></li>
@@ -209,7 +209,7 @@ e.g. <code>tibble(Name=missing_samples) %&gt;% bind_rows(genotype_table)</code>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
 <span><span class="co">#&gt;   column         n_unique</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Name               <span style="text-decoration: underline;">5</span>258</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> id                 <span style="text-decoration: underline;">5</span>258</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> marker              244</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug_agent           35</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> drug_class           26</span></span>
@@ -217,8 +217,15 @@ e.g. <code>tibble(Name=missing_samples) %&gt;% bind_rows(genotype_table)</code>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> variation type        5</span></span>
 <span></span>
 <span><span class="co"># Unique counts of samples, markers, genes, drugs, and classes - per variation type</span></span>
-<span><span class="va">ecoli_geno_summary</span><span class="op">$</span><span class="va">pertype</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<span><span class="va">ecoli_geno_summary</span><span class="op">$</span><span class="va">per_type</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
+<span><span class="co">#&gt;   `variation type`                  id marker drug_agent drug_class  gene</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Gene presence detected          <span style="text-decoration: underline;">5</span>258    164         22         17   164</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Inactivating mutation detected   615     42         15         14    42</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Nucleotide variant detected       57      2          3          3     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Promoter variant detected         93      4          1          1     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Protein variant detected        <span style="text-decoration: underline;">4</span>920     65         18         16    21</span></span></code></pre></div>
 <p>The <code><a href="../reference/summarise_geno.html">summarise_geno()</a></code> function also returns a list of
 drugs and classes represented in the table, and the associated number of
 unique markers, unique samples, and total hits for each drug/class.
@@ -369,8 +376,8 @@ aac(6’)-Ib-cr5.</p>
 <div class="section level4">
 <h4 id="a--importing-phenotype-datato-amrgens-standard-table-format">2a. Importing phenotype datato AMRgen’s standard table format<a class="anchor" aria-label="anchor" href="#a--importing-phenotype-datato-amrgens-standard-table-format"></a>
 </h4>
-<p>The <code><a href="../reference/import_ast.html">import_ast()</a></code> function imports AST data from NCBI or
-other standard formats</p>
+<p>The <code><a href="../reference/import_pheno.html">import_pheno()</a></code> function imports AST data from NCBI
+or other standard formats</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example E. coli AST data from NCBI</span></span>
 <span><span class="co"># This one has already been imported and phenotypes interpreted from assay data</span></span>
@@ -405,17 +412,17 @@ other standard formats</p>
 <span></span>
 <span></span>
 <span><span class="co"># You can make your own from different file formats, and interpret against breakpoints, using:</span></span>
-<span><span class="co">#    import_ast("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)</span></span>
-<span><span class="co">#    import_ast("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)</span></span></code></pre></div>
+<span><span class="co">#    import_pheno("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)</span></span>
+<span><span class="co">#    import_pheno("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)</span></span></code></pre></div>
 <p>Data can be imported from various standard formats using the
-<code>import_ast</code> function, and re-interpreted using latest
-breakpoints and/or ECOFF. Use <code><a href="../reference/import_ast.html">?import_ast</a></code> to see the
+<code>import_pheno</code> function, and re-interpreted using latest
+breakpoints and/or ECOFF. Use <code><a href="../reference/import_pheno.html">?import_pheno</a></code> to see the
 available formats and other options.</p>
 <p>If your assay data is not in a standard format, you can wrangle other
 input data files into the necessary format, manually and/or with the
 help of the <code>format_ast</code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">?</span><span class="va">import_ast</span></span>
+<code class="sourceCode R"><span><span class="op">?</span><span class="va">import_pheno</span></span>
 <span></span>
 <span><span class="op">?</span><span class="va">format_ast</span></span></code></pre></div>
 <p>The phenotype table is long form, with one row for each assay

@@ -62,18 +62,25 @@
 
 
 <dt id="arg-hgvs">hgvs<a class="anchor" aria-label="anchor" href="#arg-hgvs"></a></dt>
-<dd><p>Logical indicating whether to expect mutations in HGVS format (used in Kleborate releases since v3.1.3). Default <code>TRUE</code>, which expects mutations formatted as e.g. "GyrA:p.S83F". Set to <code>FALSE</code> if your results were generated using older versions where mutations were formatted as e.g. "GyrA_83F".</p></dd>
+<dd><p>Logical indicating whether to expect mutations in <a href="https://hgvs-nomenclature.org/stable/" class="external-link">HGVS nomenclature</a> syntax (used in Kleborate releases since v3.1.3). Default <code>TRUE</code>, which expects mutations formatted as e.g. "GyrA:p.S83F". Set to <code>FALSE</code> if your results were generated using older versions where mutations were formatted as e.g. "GyrA_83F".</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible.</p>
-    </div>
+    <p>A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package:</p><ul><li><p><code>id</code>: The sample identifier (<code>character</code>).</p></li>
+<li><p><code>marker</code>: The name of the genotype marker as it appears in the input (e.g. <code>GyrA:p.S83F</code> for recent versions of Kleborate, or <code>GyrA-83F</code> for earlier versions not using <a href="https://hgvs-nomenclature.org/stable/" class="external-link">HGVS nomenclature</a>) (<code>character</code>).</p></li>
+<li><p><code>gene</code>: The gene identifier (<code>character</code>).</p></li>
+<li><p><code>mutation</code>: The mutation detected within the gene, converted to <a href="https://hgvs-nomenclature.org/stable/" class="external-link">HGVS nomenclature</a> syntax (e.g. <code>Ser83Phe</code>) (<code>character</code>).</p></li>
+<li><p><code>drug_class</code>: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, drawn from the Kleborate column in which the marker was reported (<code>character</code>).</p></li>
+<li><p><code>drug_agent</code>: Values are recorded as <code>NA</code> as Kleborate doesn't report markers assigned to individual drug level.</p></li>
+<li><p><code>variation type</code>: Type of variation, e.g. <code>Gene presence detected</code>, <code>Protein variant detected</code>, <code>Nucleotide variant detected</code>, <code>Inactivating mutation detected</code>.
+... Other fields specific to the input file</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function performs the following steps:</p><ul><li><p>Reads the Kleborate output table.</p></li>
 <li><p>Transforms Kleborate output into long form (i.e., one AMR determinant per row).</p></li>
-<li><p>Maps Kleborate drug classes to standardised drug class names.
+<li><p>Maps Kleborate drug classes to standardised drug class names recognised by the AMR pkg.
 This processing ensures compatibility with downstream AMRgen analysis workflows.</p></li>
 </ul></div>
 

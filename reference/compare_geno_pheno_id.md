@@ -67,7 +67,7 @@ A list containing:
 ## Examples
 
 ``` r
-geno_table <- import_amrfp(ecoli_geno_raw, "Name")
+geno_table <- import_amrfp(ecoli_geno_raw)
 head(ecoli_ast)
 #> # A tibble: 6 × 11
 #>   id          drug_agent    mic  disk pheno_clsi ecoff guideline method platform
@@ -81,7 +81,7 @@ head(ecoli_ast)
 #> # ℹ 2 more variables: pheno_provided <sir>, spp_pheno <mo>
 result <- compare_geno_pheno_id(geno_table,
   ecoli_ast,
-  geno_sample_col = "Name",
+  geno_sample_col = "id",
   pheno_sample_col = "id"
 )
 print(result$pheno_unique)
@@ -1512,18 +1512,18 @@ print(result$overlap_ids)
 #> [3629] "SAMN03892121"
 print(result$geno_matched)
 #> # A tibble: 36,088 × 37
-#>    Name       gene  mutation drug_agent drug_class `variation type` node  marker
-#>    <chr>      <chr> <chr>    <ab>       <chr>      <chr>            <chr> <chr> 
-#>  1 SAMN03177… blaEC NA       NA         Beta-lact… Gene presence d… blaEC blaEC 
-#>  2 SAMN03177… acrF  NA       NA         Efflux     Gene presence d… acrF  acrF  
-#>  3 SAMN03177… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT  glpT_…
-#>  4 SAMN03177… floR  NA       CHL        Phenicols  Gene presence d… floR  floR  
-#>  5 SAMN03177… floR  NA       FLR        Phenicols  Gene presence d… floR  floR  
-#>  6 SAMN03177… mdtM  NA       NA         Efflux     Gene presence d… mdtM  mdtM  
-#>  7 SAMN03177… blaT… NA       NA         Beta-lact… Gene presence d… blaT… blaTE…
-#>  8 SAMN03177… sul2  NA       SSS        Sulfonami… Gene presence d… sul2  sul2  
-#>  9 SAMN03177… aph(… NA       STR1       Aminoglyc… Gene presence d… aph(… aph(3…
-#> 10 SAMN03177… aph(… NA       STR1       Aminoglyc… Gene presence d… aph(… aph(6…
+#>    id         marker gene  mutation drug_agent drug_class `variation type` node 
+#>    <chr>      <chr>  <chr> <chr>    <ab>       <chr>      <chr>            <chr>
+#>  1 SAMN03177… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
+#>  2 SAMN03177… acrF   acrF  NA       NA         Efflux     Gene presence d… acrF 
+#>  3 SAMN03177… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT 
+#>  4 SAMN03177… floR   floR  NA       CHL        Phenicols  Gene presence d… floR 
+#>  5 SAMN03177… floR   floR  NA       FLR        Phenicols  Gene presence d… floR 
+#>  6 SAMN03177… mdtM   mdtM  NA       NA         Efflux     Gene presence d… mdtM 
+#>  7 SAMN03177… blaTE… blaT… NA       NA         Beta-lact… Gene presence d… blaT…
+#>  8 SAMN03177… sul2   sul2  NA       SSS        Sulfonami… Gene presence d… sul2 
+#>  9 SAMN03177… aph(3… aph(… NA       STR1       Aminoglyc… Gene presence d… aph(…
+#> 10 SAMN03177… aph(6… aph(… NA       STR1       Aminoglyc… Gene presence d… aph(…
 #> # ℹ 36,078 more rows
 #> # ℹ 29 more variables: marker.label <chr>, `Protein identifier` <lgl>,
 #> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,

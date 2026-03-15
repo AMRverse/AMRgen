@@ -20,7 +20,7 @@ import_amrfp(
 \arguments{
 \item{input_table}{A character string specifying a dataframe or path to the AMRFinderPlus results table (TSV format).}
 
-\item{sample_col}{A character string specifying the column that identifies samples in the dataset (default \code{Name}).}
+\item{sample_col}{A character string specifying the column that identifies samples in the dataset (default "\code{Name}").}
 
 \item{element_symbol_col}{Optional character string specifying the column containing gene or element symbols if non-standard column names are used.}
 
@@ -39,7 +39,18 @@ import_amrfp(
 \item{amrfp_drugs}{A tibble containing a reference table mapping AMRFinderPlus subclasses (\code{AMRFP_Subclass}) to standardised drug classes (\code{drug_class}). Defaults to \code{amrfp_drugs_table}, which is provided internally.}
 }
 \value{
-A tibble containing the processed AMR elements, with harmonised gene names, mapped drug agents, and drug classes. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables.
+A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables:
+\itemize{
+\item \code{id}: The sample identifier (\code{character}).
+\item \code{marker}: The name of the genotype marker as it appears in the input (e.g. \code{gyrA_S83F}) (\code{character}).
+\item \code{gene}: The gene identifier (\code{character}).
+\item \code{mutation}: The mutation detected within the gene, converted to \href{https://hgvs-nomenclature.org/stable/}{HGVS nomenclature} syntax (e.g. \code{Ser83Phe}) (\code{character}).
+\item \code{node}: The node in the NCBI reference gene hierarchy corresponding to the gene (\code{character}).
+\item \code{drug_class}: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (\code{character}).
+\item \code{drug_agent}: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
+\item \verb{variation type}: Type of variation, e.g. \verb{Gene presence detected}, \verb{Protein variant detected}, \verb{Nucleotide variant detected}, \verb{Inactivating mutation detected}, \verb{Promoter variant detected}.
+... Other fields specific to the input file
+}
 }
 \description{
 This function imports and processes AMRFinderPlus results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised antibiotic names and drug classes. The function also converts gene symbols to a harmonised format and ensures compatibility with the AMR package.
@@ -51,9 +62,8 @@ The function performs the following steps:
 \item Filters the data to only include AMR elements.
 \item Converts gene symbols to a harmonised format.
 \item Splits multiple subclass annotations into separate rows.
-\item Maps AMRFinderPlus subclasses to standardised drug class names using \code{amrfp_drugs}.
-\item Converts drug agent names to the \code{"ab"} class from the AMR package.
-This processing ensures compatibility with downstream AMR analysis workflows.
+\item Maps AMRFinderPlus subclasses to standardised drug class names recognised by the AMR pkg.
+This processing ensures compatibility with downstream AMRgen analysis workflows.
 }
 }
 \examples{

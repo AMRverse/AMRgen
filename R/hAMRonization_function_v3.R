@@ -56,7 +56,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' harmonize_data(
+#' hamronize_data(
 #'   user_software_name = "amrfinderplus",
 #'   user_software_version = "3.12.8",
 #'   user_input_filename = "ATB_Achromobacter_AFP.tsv",

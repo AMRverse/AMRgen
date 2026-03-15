@@ -31,7 +31,7 @@
 #'
 #' @export
 summarise_geno <- function(geno_table,
-                           sample_col = "Name",
+                           sample_col = "id",
                            marker_col = "marker",
                            drug_col = "drug_agent",
                            class_col = "drug_class",
@@ -59,7 +59,7 @@ summarise_geno <- function(geno_table,
         summarise(across(setdiff(names(.), variation_col), n_distinct))
     }
   }
-  
+
   # drugs
   drugs <- NULL
   if (drug_col %in% colnames(geno_table)) {

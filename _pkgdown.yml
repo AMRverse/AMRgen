@@ -138,6 +138,10 @@ reference:
       - ngono_tet_geno_raw
       - ngono_cro_pheno_raw
       - eurogasp_pheno_raw
+      - azm_comparison
+      - cip_comparison
+      - cro_comparison
+      - cfm_comparison
       - ngono_tet_pheno_raw
       - salm_raw
       - kleborate_raw

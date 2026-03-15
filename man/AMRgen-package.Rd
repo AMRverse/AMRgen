@@ -26,16 +26,16 @@ Authors:
   \item Kathryn E. Holt \email{drkatholt@gmail.com} (\href{https://orcid.org/0000-0003-3949-2471}{ORCID})
   \item Jane Hawkey (\href{https://orcid.org/0000-0001-9661-5293}{ORCID})
   \item Natacha Couto (\href{https://orcid.org/0000-0002-9152-5464}{ORCID})
+  \item Ebenezer Foster-Nyarko (\href{https://orcid.org/0000-0001-6620-9403}{ORCID})
+  \item Gwen M. Knight (\href{https://orcid.org/0000-0002-7263-9896}{ORCID})
   \item Zoe A. Dyson \email{zoe.dyson@lshtm.ac.uk} (\href{https://orcid.org/0000-0002-8887-3492}{ORCID})
-  \item Dominique L. Chaput (\href{https://orcid.org/0000-0002-9736-2619}{ORCID})
-  \item Silvia Argímon (\href{https://orcid.org/0000-0002-2884-3857}{ORCID})
-  \item Ebenezer Foster-Nyarko
-  \item Gwen M. Knight
-  \item Dorottya Nagy
-  \item Richard Goodman (\href{https://orcid.org/0009-0008-0578-789X}{ORCID})
+  \item Kara K. Tsang (\href{https://orcid.org/0000-0001-7742-8855}{ORCID})
   \item Arjun B. Prasad (\href{https://orcid.org/0000-0002-1343-8664}{ORCID})
   \item Leonor Sánchez-Busó (\href{https://orcid.org/0000-0002-4162-0228}{ORCID})
-  \item Kara K. Tsang (\href{https://orcid.org/0000-0001-7742-8855}{ORCID})
+  \item Silvia Argimón (\href{https://orcid.org/0000-0002-2884-3857}{ORCID})
+  \item Dorottya Nagy
+  \item Dominique L. Chaput (\href{https://orcid.org/0000-0002-9736-2619}{ORCID})
+  \item Richard Goodman (\href{https://orcid.org/0009-0008-0578-789X}{ORCID})
 }
 
 }

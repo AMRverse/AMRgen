@@ -6,7 +6,7 @@
 \usage{
 summarise_geno(
   geno_table,
-  sample_col = "Name",
+  sample_col = "id",
   marker_col = "marker",
   drug_col = "drug_agent",
   class_col = "drug_class",

@@ -12,7 +12,16 @@ import_amrfp_ebi(input_table, web = FALSE)
 \item{web}{Logical indicating whether the data is from the web portal (default \code{FALSE}). If \code{FALSE} input is assumed to be from FTP or \link{download_ebi}.}
 }
 \value{
-A tibble containing the processed AMR elements, with harmonised gene names, drug agents, and drug classes. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables.
+A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables:
+\itemize{
+\item \code{id}: The sample identifier (\code{character}).
+\item \code{marker}: The name of the genotype marker as it appears in the input (e.g. \code{gyrA_S83F}) (\code{character}).
+\item \code{gene}: The gene identifier (\code{character}).
+\item \code{mutation}: The mutation detected within the gene, converted to \href{https://hgvs-nomenclature.org/stable/}{HGVS nomenclature} syntax (e.g. \code{Ser83Phe}) (\code{character}).
+\item \code{drug_class}: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (\code{character}).
+\item \code{drug_agent}: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
+... Other fields specific to the input file
+}
 }
 \description{
 This function imports EBI-processed AMRFinderPlus genotyping results. The expected input is genotype data downloaded from the \href{https://www.ebi.ac.uk/amr/data/?view=predictions}{EBI AMR Portal web browser}, or the \href{https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}{EBI AMR Portal FTP site} either directly or via the function \code{\link[=download_ebi]{download_ebi()}}.

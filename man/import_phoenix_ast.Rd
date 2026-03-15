@@ -25,14 +25,13 @@ import_phoenix_ast(
 \item{input}{Path to a Phoenix export file (XLS, XLSX, TXT, or TSV), or a data frame.}
 
 \item{sample_col}{Name or 1-based column index of the sample ID column. If \code{NULL}
-(default), auto-detected from common names (\code{"Sample"}, \code{"ID"}, \code{"Isolate"}).
+(default), auto-detected from common names \code{"Sample"}, \code{"ID"}, \code{"Isolate"}).
 For single-isolate files with no sample column, the filename is used as the sample ID.}
 
 \item{drug_col}{Name or 1-based column index of the drug/antimicrobial column. If \code{NULL}
 (default), auto-detected from names such as \code{"Antimicrobial"}, \code{"Drug"}, etc.}
 
-\item{mic_col}{Name or 1-based column index of the MIC column. If \code{NULL} (default),
-auto-detected from names such as \code{"MIC"}, \code{"MIC or Concentration"}, etc.}
+\item{mic_col}{Name or 1-based column index of the MIC column. If NULL\verb{(default), auto-detected from names such as}"MIC"\verb{, }"MIC or Concentration"`, etc.}
 
 \item{sir_col}{Name or 1-based column index of the S/I/R interpretation column. If \code{NULL}
 (default), auto-detected based on \code{use_expertized}: prefers \code{"Final (SIR)"},
@@ -55,11 +54,11 @@ over raw instrument interpretation when both are present and \code{sir_col} is n
 \item{instrument_guideline}{Optional guideline string recorded in the \code{guideline} column
 (e.g. \code{"CLSI 2018"}, \code{"EUCAST 2024"}).}
 
-\item{interpret_eucast}{Interpret MIC values against EUCAST human breakpoints (default \code{FALSE}).}
+\item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}.}
 
-\item{interpret_clsi}{Interpret MIC values against CLSI human breakpoints (default \code{FALSE}).}
+\item{interpret_clsi}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class \code{sir}.}
 
-\item{interpret_ecoff}{Interpret MIC values against ECOFF values (default \code{FALSE}).}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the wildtype vs nonwildtype status for each observation based on the MIC values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 }
 \value{
 Standardised long-format AST data frame

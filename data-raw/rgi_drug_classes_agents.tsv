@@ -1,5 +1,27 @@
 RGI_DrugClassAgent	drug_class	drug_agent
 disinfecting agents and antiseptics	Other	NA
 fluoroquinolone antibiotic	Fluoroquinolones	NA
-G418	NA	geneticin
+G418	Aminoglycosides	geneticin
 antibiotic efflux	Efflux	NA
+madumycin II	Streptogramins	madumycin II
+vernamycin C	Streptogramins	vernamycin C
+patricin A	Streptogramins	patricin A
+patricin B	Streptogramins	patricin B
+benzalkonium chloride	Other	benzalkonium chloride
+6'-N-ethylnetilmicin	Aminoglycosides	6'-N-ethylnetilmicin
+5-episisomicin	Aminoglycosides	5-episisomicin
+edeine A	Peptides	edeine A
+edeine B	Peptides	edeine B
+edeine D	Peptides	edeine D
+edeine F	Peptides	edeine F
+palmitic acid	Other	palmitic acid
+oleic acid	Other	oleic acid
+linoleic acid	Other	linoleic acid
+enacyloxin IIa	Elfamycins	enacyloxin IIa
+moenomycin A1	Moenomycins	moenomycin A1
+para-aminosalicylic acid	Aminosalicylic acids	para-aminosalicylic acid
+coumermycin A1	Aminocoumarins	coumermycin A1
+A201A	Nucleosides	A201A
+GE2270A	Elfamycins	GE2270A
+2'-N-ethylnetilmicin	Aminoglycosides	2'-N-ethylnetilmicin
+virginiamycin M1	Streptogramins	virginiamycin M1

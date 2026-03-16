@@ -126,22 +126,27 @@ import_rgi <- function(input_table,
     # Standardizing antibiotic names & drug class first, if no antibiotic, then standardize drug class
 
     if (antibiotic_col %in% colnames(geno_table_label) | class_col %in% colnames(geno_table_label)) {
-
+      
       # rows where Antibiotic exists
       df_antibiotic <- geno_table_label %>%
         filter(!is.na(!!sym(antibiotic_col)) & !!sym(antibiotic_col) != "") %>%
         separate_longer_delim(!!sym(antibiotic_col), delim = "; ") %>%
-        left_join((rgi_drugs %>% select(RGI_DrugClassAgent, drug_agent)),by = setNames("RGI_DrugClassAgent", antibiotic_col)) %>% 
-        rename(drug_agent_internal = drug_agent) %>%
+        left_join(rgi_drugs, by = setNames("RGI_DrugClassAgent", antibiotic_col)) %>%
+        rename(drug_agent_internal_1 = drug_agent) %>%
+        rename(drug_class_internal_1 = drug_class) %>%
         mutate(
-          drug_agent = coalesce(drug_agent_internal, !!sym(antibiotic_col))) %>%
+          drug_agent_to_parse = if_else(!is.na(drug_agent_internal_1), NA, !!sym(antibiotic_col))
+        ) %>%
         mutate(
-           drug_agent = AMR::as.ab(drug_agent),
-           drug_class = AMR::ab_group(drug_agent)
-         )
-
-      # rows where Antibiotic is NA and drug class is NA - check if "antibiotic efflux" is in Resistance Mechanism column and assign to drug_class
-      # if drug class is not NA, then standardize drug class names using AMR pkg
+          drug_agent = AMR::as.ab(drug_agent_to_parse),
+          drug_class_agent1 = AMR::ab_group(drug_agent_to_parse)
+        ) %>%
+        mutate(
+          drug_agent = coalesce(drug_agent_internal_1, as.character(drug_agent)),
+          drug_class = coalesce(drug_class_internal_1, as.character(drug_class_agent1))
+        )
+      
+      # rows where Antibiotic is NA
       df_drugclass <- geno_table_label %>%
         filter(is.na(!!sym(antibiotic_col)) | !!sym(antibiotic_col) == "") %>%
         mutate(
@@ -151,31 +156,35 @@ import_rgi <- function(input_table,
             "antibiotic efflux",
             !!sym(class_col)
           )
-        )%>%
-       filter(!is.na(!!sym(class_col)) & !!sym(class_col) != "") %>%   # keep only rows where class_col now exists
-       separate_longer_delim((!!sym(class_col)), delim = "; ")
-      
-      df_drugclass <- df_drugclass %>%
-        left_join(
-          rgi_drugs %>% select(RGI_DrugClassAgent, drug_class),
-          by = setNames("RGI_DrugClassAgent", class_col)
         ) %>%
-        rename(drug_class_internal = drug_class) %>%
+        filter(!is.na(!!sym(class_col)) & !!sym(class_col) != "") %>%
+        separate_longer_delim(!!sym(class_col), delim = "; ") %>%
         mutate(
-          drug_class_agent = AMR::ab_group(!!sym(class_col))
-        ) %>%
-        mutate(
-          drug_class = coalesce(drug_class_internal, drug_class_agent)
+          !!sym(class_col) := stringr::str_remove(!!sym(class_col), " antibiotic$")
         )
-      
-      # recombine
-      geno_table_label_ab <- bind_rows(df_antibiotic, df_drugclass) %>%
-        select(-drug_agent_internal, -drug_class_internal, -drug_class_agent) %>%
-        dplyr::relocate(any_of(c("ORF_ID", "marker", "mutation", "drug_agent", "drug_class", "variation type", "marker.label")), .before = dplyr::everything())
-
+    
+    df_drugclass <- df_drugclass %>%
+      left_join(
+        rgi_drugs %>% select(RGI_DrugClassAgent, drug_class),
+        by = setNames("RGI_DrugClassAgent", class_col)
+      ) %>%
+      rename(drug_class_internal_2 = drug_class) %>%
+      mutate(drug_class_to_parse = if_else(!is.na(drug_class_internal_2), NA, !!sym(class_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions s
+      mutate(
+        drug_class_agent2 = AMR::ab_group(drug_class_to_parse)
+      ) %>%
+      mutate(
+        drug_class = coalesce(drug_class_internal_2, as.character(drug_class_agent2))
+      )
+    
+    # recombine
+    geno_table_label_ab <- bind_rows(df_antibiotic, df_drugclass) %>%
+      #select(-drug_agent_internal) %>%
+      dplyr::relocate(any_of(c("ORF_ID", "marker", "mutation", "drug_agent", "drug_class", "variation type", "marker.label")), .before = dplyr::everything())
+    
     } else{
       stop(paste("Input file lacks the expected column: Antibiotic OR `Drug Class` OR `Resistance Mechanism`\n"))
-    }
+      }
 
     return(geno_table_label_ab)
 }

@@ -2446,29 +2446,14 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
 #' @param ecoff_col (optional, default `"phenotype"`) String indicating the name of the input data column that indicates the WT/NWT prediction.
 #' @param method (optional, default `"genotyping"`) String indicating the value to record in a new `method` field added to the output table.
 #' @param platform (optional, default `"AMRfinderplus + AMRrules"`) String indicating the value to record in a new `platform` field added to the output table.
-#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom AMR as.ab as.mo as.sir
 #' @importFrom dplyr any_of mutate relocate
-#' @importFrom rlang is_string :=
 #' @return A data frame with the processed AST data, including additional columns:
 #' @export
 #' @examples
 #' \dontrun{
 #' # import and process AST data from EBI, write formatted data to file for later use
-#' pheno <- import_ebi_ast("EBI_AMR_data.csv.gz")
-#' write_tsv(pheno,
-#'   file = "EBI_AMR_data_processed.tsv.gz",
-#'   interpret_eucast = TRUE, interpret_ecoff = TRUE
-#' )
-#'
-#' # read stored data and format the columns to the correct classes
-#' pheno <- format_ast("EBI_AMR_data_processed.tsv.gz")
-#'
-#' # read in unprocessed E. coli AST data from non-standard format and interpret
-#' pheno <- format_ast("AMR_data.tsv",
-#'   sample_col = "STRAIN", species = "E. coli",
-#'   ab_col = "Antibiotic", mic_col = "MIC (mg/L)",
-#'   interpret_eucast = TRUE, interpret_ecoff = TRUE
-#' )
+#' predictions <- import_amrrules_predictions("Ecoli_genome_summary.tsv")
 #' }
 import_amrrules_predictions <- function(input,
                                         sample_col = "sample",

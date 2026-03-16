@@ -106,6 +106,7 @@ reference:
       - getBreakpoints
       - checkBreakpoints
       - concordance
+      - concordance_from_tables
       - print.amr_concordance
 
   - title: "Visualisation & Reporting"

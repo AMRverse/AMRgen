@@ -2433,3 +2433,108 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
 
   return(ast)
 }
+
+
+#' Import phenotype predictions from AMRrules output
+#'
+#' This imports antimicrobial phenotype predictions (S/I/R and WT/NWT) generated from genotype data using [AMRrules](https://www.amrrules.org).
+#' @param input A string representing a dataframe, or a path to an input file, containing the AMRrules output "genome_summary" file, which should be a long-form TSV file with one row per sample and drug.
+#' @param sample_col (optional, default `"sample"`) String indicating the name of the input data column that provides the sample name.
+#' @param species_col (optional, default `"organism"`) String indicating the name of the input data column that provides a species name. If provided, this column will be converted to micro-organism class `mo` via [AMR::as.mo()]. If the `rename_cols` parameter is set to `TRUE`, this column will also be renamed as `spp_pheno`. If interpretation is switched on, this column will be used to identify the appropriate  breakpoints for interpretation of each row in the data table.
+#' @param ab_col (optional, default `"drug"`) String indicating the name of the input data column that provides a drug name.
+#' @param sir_col (optional, default `"clinical category"`) String indicating the name of the input data column that indicates the S/I/R prediction.
+#' @param ecoff_col (optional, default `"phenotype"`) String indicating the name of the input data column that indicates the WT/NWT prediction.
+#' @param method (optional, default `"genotyping"`) String indicating the value to record in a new `method` field added to the output table.
+#' @param platform (optional, default `"AMRfinderplus + AMRrules"`) String indicating the value to record in a new `platform` field added to the output table.
+#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
+#' @importFrom dplyr any_of mutate relocate
+#' @importFrom rlang is_string :=
+#' @return A data frame with the processed AST data, including additional columns:
+#' @export
+#' @examples
+#' \dontrun{
+#' # import and process AST data from EBI, write formatted data to file for later use
+#' pheno <- import_ebi_ast("EBI_AMR_data.csv.gz")
+#' write_tsv(pheno,
+#'   file = "EBI_AMR_data_processed.tsv.gz",
+#'   interpret_eucast = TRUE, interpret_ecoff = TRUE
+#' )
+#'
+#' # read stored data and format the columns to the correct classes
+#' pheno <- format_ast("EBI_AMR_data_processed.tsv.gz")
+#'
+#' # read in unprocessed E. coli AST data from non-standard format and interpret
+#' pheno <- format_ast("AMR_data.tsv",
+#'   sample_col = "STRAIN", species = "E. coli",
+#'   ab_col = "Antibiotic", mic_col = "MIC (mg/L)",
+#'   interpret_eucast = TRUE, interpret_ecoff = TRUE
+#' )
+#' }
+import_amrrules_predictions <- function(input,
+                                        sample_col = "sample",
+                                        species_col = "organism", # convert with as.mo
+                                        ab_col = "drug", # convert with as.ab
+                                        sir_col = "clinical category", # convert with as.sir
+                                        ecoff_col = "phenotype", # convert with as.sir
+                                        method = "genotyping",
+                                        platform = "AMRfinderplus + AMRrules") {
+  intable <- process_input(input)
+
+  if (!is.null(sample_col)) {
+    if (sample_col %in% colnames(intable)) {
+      intable <- intable %>%
+        rename(id = !!sym(sample_col))
+    }
+  }
+
+  if (!is.null(species_col)) {
+    if (species_col %in% colnames(intable)) {
+      intable <- intable %>%
+        mutate(!!sym(species_col) := gsub("s__", "", !!sym(species_col))) %>%
+        mutate(spp_pheno = as.mo(!!sym(species_col)))
+    }
+  }
+  if (!is.null(ab_col)) {
+    if (ab_col %in% colnames(intable)) {
+      intable <- intable %>%
+        mutate(drug_agent = as.ab(!!sym(ab_col)))
+    }
+  }
+  if (!is.null(method)) {
+    intable <- intable %>% mutate(method = method)
+  }
+  if (!is.null(platform)) {
+    intable <- intable %>% mutate(platform = platform)
+  }
+
+  if (!is.null(sir_col)) {
+    if (sir_col %in% colnames(intable)) {
+      intable <- intable %>%
+        mutate(!!sym(sir_col) := if_else(is.na(!!sym(sir_col)), "S", !!sym(sir_col))) %>%
+        mutate(!!sym(sir_col) := as.sir(!!sym(sir_col)))
+      cat(paste("Parsing column", sir_col, "as class 'sir'\n"))
+    } else {
+      cat(paste("Could not find SIR prediction column", sir_col, "in input table\n"))
+    }
+  }
+  if (!is.null(ecoff_col)) {
+    if (ecoff_col %in% colnames(intable)) {
+      intable <- intable %>%
+        mutate(!!sym(ecoff_col) := case_when(
+          !!sym(ecoff_col) == "nonwildtype" ~ "NWT",
+          !!sym(ecoff_col) == "wildtype" ~ "WT",
+          !!sym(ecoff_col) == "-" ~ "WT",
+          TRUE ~ NA
+        )) %>%
+        mutate(!!sym(ecoff_col) := as.sir(!!sym(ecoff_col)))
+      cat(paste("Parsing column", ecoff_col, "as class 'sir'\n"))
+    } else {
+      cat(paste("Could not find WT/NWT phenotype prediction column", ecoff_col, "in input table\n"))
+    }
+  }
+
+  intable <- intable %>%
+    relocate(any_of(c("id", "drug_agent", sir_col, ecoff_col, "mo")))
+
+  return(intable)
+}

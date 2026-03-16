@@ -624,162 +624,197 @@ concordance_from_tables <- function(pheno_table,
                                     drug_col = "drug_agent",
                                     measure_col = "mic") {
   # join observed & predicted pheno tables
+  if (!(sample_col %in% colnames(pheno_table) & sample_col %in% colnames(pheno_pred_table))) {
+    stop(paste(sample_col, "must be present in both input tables"))
+  }
+  if (!(drug_col %in% colnames(pheno_table) & drug_col %in% colnames(pheno_pred_table))) {
+    stop(paste(drug_col, "must be present in both input tables"))
+  }
   obs_pred <- pheno_table %>%
     left_join(pheno_pred_table, by = c(sample_col, drug_col))
 
-  # encode binary outcomes from each
-  obs_pred <- obs_pred %>%
-    mutate(!!sym(pred_SIR) := if_else(is.na(!!sym(pred_SIR)), "S", !!sym(pred_SIR))) %>%
-    mutate(!!sym(pred_ecoff) := if_else(is.na(!!sym(pred_ecoff)), "NWT", !!sym(pred_ecoff))) %>%
-    mutate(R = case_when(
-      !!sym(true_SIR_col) == "R" ~ 1,
-      !!sym(true_SIR_col) == "I" ~ 0,
-      !!sym(true_SIR_col) == "S" ~ 0,
-      TRUE ~ NA
-    )) %>%
-    mutate(NWT = case_when(
-      !!sym(true_ecoff_col) == "NWT" ~ 1,
-      !!sym(true_ecoff_col) == "WT" ~ 0,
-      TRUE ~ NA
-    )) %>%
-    mutate(predR = case_when(
-      !!sym(pred_SIR) == "R" ~ 1,
-      !!sym(pred_SIR) == "S" ~ 0,
-      is.na(!!sym(pred_SIR)) ~ 0,
-      TRUE ~ NA
-    )) %>%
-    mutate(predNWT = case_when(
-      !!sym(pred_ecoff) == "nonwildtype" ~ 1,
-      !!sym(pred_ecoff) == "wildtype" ~ 0,
-      is.na(!!sym(pred_ecoff)) ~ 0,
-      TRUE ~ NA
-    ))
-
-  drugs_R <- obs_pred %>%
-    filter(!is.na(R) & !is.na(predR)) %>%
-    count(!!sym(drug_col), R, predR)
-
-  drugs_NWT <- obs_pred %>%
-    filter(!is.na(NWT) & !is.na(predNWT)) %>%
-    count(!!sym(drug_col), NWT, predNWT)
-
-  plot_R <- list()
-  plot_NWT <- list()
-  dist_plot_R <- list()
-  dist_plot_NWT <- list()
+  # set up values to return
   concordance_metrics <- tibble()
-
-  drug_list <- unique(c(drugs_R[[drug_col]], drugs_NWT[[drug_col]]))
-
-  for (this_drug in as.character(drug_list)) {
-    drug_data <- obs_pred %>%
-      filter(!!sym(drug_col) == this_drug)
-
-    # plot distribution of observed S/I/R values for genomes called as S (incl NA) or R
-    bar_plot_R <- NULL
-    bar_plot_R <- drug_data %>%
-      filter(!is.na(!!sym(true_SIR_col)) & !is.na(!!sym(true_SIR_col))) %>%
-      count(!!sym(true_SIR_col), !!sym(pred_SIR)) %>%
-      ggplot(aes(y = !!sym(pred_SIR), x = n, fill = !!sym(true_SIR_col))) +
-      geom_col() +
-      theme_bw() +
-      labs(y = "Predicted", fill = "Observed", x = "Count")
-
-    crosstabs_plot_R <- NULL
-    crosstabs_plot_R <- drug_data %>%
-      count(!!sym(true_SIR_col), !!sym(pred_SIR)) %>%
-      group_by(!!sym(pred_SIR)) %>%
-      mutate(row_pct = n / sum(n)) %>%
-      ggplot(aes(x = !!sym(true_SIR_col), y = !!sym(pred_SIR), fill = n)) +
-      geom_tile() +
-      geom_text(aes(label = sprintf("%d\n%.1f%%", n, 100 * row_pct))) +
-      scale_fill_gradient(low = "white", high = "skyblue") +
-      labs(y = "Predicted", fill = "Counts", x = "Observed") +
-      theme_bw()
-
-    plot_R[[this_drug]] <- crosstabs_plot_R / bar_plot_R +
-      patchwork::plot_layout(guides = "collect") +
-      patchwork::plot_annotation(
-        title = ab_name(as.ab(this_drug)),
-        subtitle = "observed vs predicted clinical phenotype"
-      )
-
-    if (measure_col %in% colnames(obs_pred)) {
-      dist_plot_R[[this_drug]] <- obs_pred %>%
-        assay_by_var(
-          antibiotic = this_drug, colour_by = pred_SIR, measure = measure_col,
-          plot_title = paste(
-            ab_name(as.ab(this_drug)), measure_col,
-            "distribution vs predicted clinical phenotype"
-          )
+  drugs_R <- NULL
+  plot_R <- list()
+  dist_plot_R <- list()
+  drugs_NWT <- NULL
+  plot_NWT <- list()
+  dist_plot_NWT <- list()
+  
+  # encode binary outcomes for R
+  if (!is.null(pred_SIR) && pred_SIR %in% colnames(obs_pred)) {
+    if (!is.null(true_SIR_col) && true_SIR_col %in% colnames(obs_pred)) {
+    # we have observed and pred for R, proceed
+    obs_pred <- obs_pred %>%
+      mutate(!!sym(pred_SIR) := if_else(is.na(!!sym(pred_SIR)), "S", !!sym(pred_SIR))) %>%
+      mutate(predR = case_when(
+        !!sym(pred_SIR) == "R" ~ 1,
+        !!sym(pred_SIR) == "S" ~ 0,
+        is.na(!!sym(pred_SIR)) ~ 0,
+        TRUE ~ NA
+      )) %>%
+      mutate(R = case_when(
+        !!sym(true_SIR_col) == "R" ~ 1,
+        !!sym(true_SIR_col) == "I" ~ 0,
+        !!sym(true_SIR_col) == "S" ~ 0,
+        TRUE ~ NA
+      ))
+    drugs_R <- obs_pred %>%
+      filter(!is.na(R) & !is.na(predR)) %>%
+      count(!!sym(drug_col), R, predR)
+    drug_list <- unique(drugs_R[[drug_col]])
+    for (this_drug in as.character(drug_list)) {
+      drug_data <- obs_pred %>%
+        filter(!!sym(drug_col) == this_drug)
+      # plot distribution of observed S/I/R values for genomes called as S (incl NA) or R
+      bar_plot_R <- NULL
+      bar_plot_R <- drug_data %>%
+        filter(!is.na(!!sym(true_SIR_col)) & !is.na(!!sym(true_SIR_col))) %>%
+        count(!!sym(true_SIR_col), !!sym(pred_SIR)) %>%
+        ggplot(aes(y = !!sym(pred_SIR), x = n, fill = !!sym(true_SIR_col))) +
+        geom_col() +
+        theme_bw() +
+        labs(y = "Predicted", fill = "Observed", x = "Count")
+      crosstabs_plot_R <- NULL
+      crosstabs_plot_R <- drug_data %>%
+        count(!!sym(true_SIR_col), !!sym(pred_SIR)) %>%
+        group_by(!!sym(pred_SIR)) %>%
+        mutate(row_pct = n / sum(n)) %>%
+        ggplot(aes(x = !!sym(true_SIR_col), y = !!sym(pred_SIR), fill = n)) +
+        geom_tile() +
+        geom_text(aes(label = sprintf("%d\n%.1f%%", n, 100 * row_pct))) +
+        scale_fill_gradient(low = "white", high = "skyblue") +
+        labs(y = "Predicted", fill = "Counts", x = "Observed") +
+        theme_bw()
+      plot_R[[this_drug]] <- crosstabs_plot_R / bar_plot_R +
+        patchwork::plot_layout(guides = "collect") +
+        patchwork::plot_annotation(
+          title = ab_name(as.ab(this_drug)),
+          subtitle = "observed vs predicted clinical phenotype"
         )
-    }
-
-    # plot distribution of observed S/I/R values for genomes called as S (incl NA) or R
-    bar_plot_NWT <- NULL
-    bar_plot_NWT <- drug_data %>%
-      filter(!is.na(!!sym(true_ecoff_col)) & !is.na(!!sym(pred_ecoff))) %>%
-      count(!!sym(true_ecoff_col), !!sym(pred_ecoff)) %>%
-      ggplot(aes(y = !!sym(pred_ecoff), x = n, fill = !!sym(true_ecoff_col))) +
-      geom_col() +
-      labs(y = "Predicted", fill = "Observed", x = "Count")
-
-    crosstabs_plot_NWT <- NULL
-    crosstabs_plot_NWT <- drug_data %>%
-      count(!!sym(true_ecoff_col), !!sym(pred_ecoff)) %>%
-      group_by(!!sym(pred_ecoff)) %>%
-      mutate(row_pct = n / sum(n)) %>%
-      ggplot(aes(x = !!sym(true_ecoff_col), y = !!sym(pred_ecoff), fill = n)) +
-      geom_tile() +
-      geom_text(aes(label = sprintf("%d\n%.1f%%", n, 100 * row_pct))) +
-      scale_fill_gradient(low = "white", high = "skyblue") +
-      labs(y = "Predicted", fill = "Counts", x = "Observed") +
-      theme_bw()
-
-    plot_NWT[[this_drug]] <- crosstabs_plot_NWT / bar_plot_NWT +
-      patchwork::plot_layout(guides = "collect") +
-      patchwork::plot_annotation(
-        title = ab_name(as.ab(this_drug)),
-        subtitle = "observed vs predicted WT/NWT phenotype"
-      )
-
-    if (measure_col %in% colnames(obs_pred)) {
-      dist_plot_NWT[[this_drug]] <- obs_pred %>%
-        assay_by_var(
-          antibiotic = this_drug, colour_by = pred_ecoff, measure = measure_col,
-          plot_title = paste(
-            ab_name(as.ab(this_drug)),
-            measure_col, "distribution vs predicted WT/NWT phenotype"
+      if (measure_col %in% colnames(obs_pred)) {
+        dist_plot_R[[this_drug]] <- obs_pred %>%
+          assay_by_var(
+            antibiotic = this_drug, colour_by = pred_SIR, measure = measure_col,
+            plot_title = paste(
+              ab_name(as.ab(this_drug)), measure_col,
+              "distribution vs predicted clinical phenotype"
+            )
           )
-        )
-    }
-
-    conR <- NULL
-    if (nrow(drugs_R) > 0) {
-      conR <- safe_execute(concordance(drug_data %>% filter(!is.na(R) & !is.na(predR)),
-        truth = "R", prediction_col = "predR"
-      )$metrics)
-      if (!is.null(conR)) {
-        concordance_metrics <- bind_rows(concordance_metrics, conR %>% mutate(drug_agent = this_drug)) %>%
-          relocate(drug_agent)
+      }
+      # concordance metrics
+      conR <- NULL
+      if (nrow(drugs_R) > 0) {
+        conR <- safe_execute(concordance(drug_data %>% filter(!is.na(R) & !is.na(predR)),
+                                         truth = "R", prediction_col = "predR"
+        )$metrics)
+        if (!is.null(conR)) {
+          concordance_metrics <- bind_rows(concordance_metrics, conR %>% mutate(drug_agent = this_drug)) %>%
+            relocate(drug_agent)
+        }
+      }
+    } # finished with this drug
+    } else {
+      if (!is.null(true_SIR_col)) {
+        message(paste("true_SIR_col", true_SIR_col, "not found"))
       }
     }
-
-    conNWT <- NULL
-    if (nrow(drugs_NWT) > 0) {
-      conNWT <- safe_execute(concordance(drug_data %>% filter(!is.na(NWT) & !is.na(predNWT)),
-        truth = "NWT", prediction_col = "predNWT"
-      )$metrics)
-      if (!is.null(conNWT)) {
-        concordance_metrics <- bind_rows(concordance_metrics, conNWT %>% mutate(drug_agent = this_drug)) %>%
-          relocate(drug_agent)
+    } else {
+      if (!is.null(pred_SIR)){
+        message(paste("pred_SIR", pred_SIR, "not found"))
       }
     }
+  
+  # encode binary outcomes for NWT
+  if (!is.null(pred_ecoff) && pred_ecoff %in% colnames(obs_pred)) {
+    if (!is.null(true_ecoff_col) && true_ecoff_col %in% colnames(obs_pred)) {
+      # we have observed and pred for NWT, proceed
+      obs_pred <- obs_pred %>%
+        mutate(!!sym(pred_ecoff) := if_else(is.na(!!sym(pred_ecoff)), "NWT", !!sym(pred_ecoff))) %>%
+        mutate(NWT = case_when(
+          !!sym(true_ecoff_col) == "NWT" ~ 1,
+          !!sym(true_ecoff_col) == "WT" ~ 0,
+          TRUE ~ NA
+        )) %>%
+        mutate(predNWT = case_when(
+          !!sym(pred_ecoff) == "nonwildtype" ~ 1,
+          !!sym(pred_ecoff) == "wildtype" ~ 0,
+          is.na(!!sym(pred_ecoff)) ~ 0,
+          TRUE ~ NA
+        ))
+      drugs_NWT <- obs_pred %>%
+        filter(!is.na(NWT) & !is.na(predNWT)) %>%
+        count(!!sym(drug_col), NWT, predNWT)
+      drug_list <- unique(drugs_NWT[[drug_col]])
+      for (this_drug in as.character(drug_list)) {
+        drug_data <- obs_pred %>%
+          filter(!!sym(drug_col) == this_drug)
+        # plot distribution of observed WT/NWT values for genomes called as WT (incl NA) or NWT
+        bar_plot_NWT <- NULL
+        bar_plot_NWT <- drug_data %>%
+          filter(!is.na(!!sym(true_ecoff_col)) & !is.na(!!sym(pred_ecoff))) %>%
+          count(!!sym(true_ecoff_col), !!sym(pred_ecoff)) %>%
+          ggplot(aes(y = !!sym(pred_ecoff), x = n, fill = !!sym(true_ecoff_col))) +
+          geom_col() +
+          labs(y = "Predicted", fill = "Observed", x = "Count")
+        crosstabs_plot_NWT <- NULL
+        crosstabs_plot_NWT <- drug_data %>%
+          count(!!sym(true_ecoff_col), !!sym(pred_ecoff)) %>%
+          group_by(!!sym(pred_ecoff)) %>%
+          mutate(row_pct = n / sum(n)) %>%
+          ggplot(aes(x = !!sym(true_ecoff_col), y = !!sym(pred_ecoff), fill = n)) +
+          geom_tile() +
+          geom_text(aes(label = sprintf("%d\n%.1f%%", n, 100 * row_pct))) +
+          scale_fill_gradient(low = "white", high = "skyblue") +
+          labs(y = "Predicted", fill = "Counts", x = "Observed") +
+          theme_bw()
+        plot_NWT[[this_drug]] <- crosstabs_plot_NWT / bar_plot_NWT +
+          patchwork::plot_layout(guides = "collect") +
+          patchwork::plot_annotation(
+            title = ab_name(as.ab(this_drug)),
+            subtitle = "observed vs predicted WT/NWT phenotype"
+          )
+        if (measure_col %in% colnames(obs_pred)) {
+          dist_plot_NWT[[this_drug]] <- obs_pred %>%
+            assay_by_var(
+              antibiotic = this_drug, colour_by = pred_ecoff, measure = measure_col,
+              plot_title = paste(
+                ab_name(as.ab(this_drug)),
+                measure_col, "distribution vs predicted WT/NWT phenotype"
+              )
+            )
+        }
+        # concordance metrics
+        conNWT <- NULL
+        if (nrow(drugs_NWT) > 0) {
+          conNWT <- safe_execute(concordance(drug_data %>% filter(!is.na(NWT) & !is.na(predNWT)),
+                                             truth = "NWT", prediction_col = "predNWT"
+          )$metrics)
+          if (!is.null(conNWT)) {
+            concordance_metrics <- bind_rows(concordance_metrics, conNWT %>% mutate(drug_agent = this_drug)) %>%
+              relocate(drug_agent)
+          }
+        }
+    } # finished with this drug 
+    } else {
+      if (!is.null(true_ecoff_col)) {
+        message(paste("true_ecoff_col", true_ecoff_col, "not found"))
+      }
+    }
+  } else {
+      if (!is.null(pred_ecoff)){
+        message(paste("pred_ecoff", pred_ecoff, "not found"))
+      }
+  }
+  
+  if (nrow(concordance_metrics)>0) {
+    metrics <- concordance_metrics %>% pivot_wider(names_from=metric, values_from=estimate)
   }
 
   return(list(
     obs_pred = obs_pred,
-    metrics = concordance_metrics,
+    metrics = metrics,
     drugs_R = drugs_R,
     drugs_NWT = drugs_NWT,
     plot_R = plot_R,

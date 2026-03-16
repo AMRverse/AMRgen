@@ -241,7 +241,10 @@ utils::globalVariables(c(
   "strain",
   ".row_id",
   "sir_interp",
-  "index"
+  "index",
+  "predNWT",
+  "predR",
+  "row_pct"
 ))
 
 

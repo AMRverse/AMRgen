@@ -18,7 +18,8 @@
 #'
 #' This function imports and processes genotyping results from the Resistance Gene Identifier (RGI, https://github.com/arpcard/rgi), extracting antimicrobial resistance determinants and mapping them to standardised drug classes/antibiotics.
 #' @param input_table A character string specifying a dataframe or path to the RGI results table (TSV format).
-#' @param sample_col A character string specifying the column that identifies samples in the dataset (default `ORF_ID`).
+#' @param orf_id_col A character string specifying the column that identifies open reading frame ID (ORF_ID) in the dataset (default `ORF_ID`). This column includes the sample ID in addition to contig / genomic location information about where the resistance determinant was identified and is a default output of RGI.  
+#' @param sample_id_sep A character string specifying the separater by which the sample ID is separated from open reading frame ID (ORF_ID) details. For example: in the `ORF_ID` column, "SAMEA3498968.fasta.txt:1_96 # 109511 # 110635....", the sample ID separater is `.fasta.txt:` where SAMEA3498968 is the Sample ID and the remaining text `1_96 # 109511 # 110635...` is the open reading frame information. Default is `.fasta.txt:`.  
 #' @param model_col A character string specifying the column that identifies model type identified by RGI (default `Model_type`).
 #' @param antibiotic_col Character string specifying the antibiotic column (default `Antibiotic`).
 #' @param class_col Character string specifying the drug class column (default `Drug Class`).
@@ -38,15 +39,22 @@
 #' This processing ensures compatibility with downstream AMRgen analysis workflows.
 #' @export
 #' @examples
-#' # example RGI data from EUSCAPE project
+#' # example RGI data (including Perfect, Strict, and Loose hits)
 #' rgi_raw
 #'
-#' # import first few rows of this data frame and parse it as AMRfp data
-#' rgi_geno <- import_rgi(rgi_raw %>% head(n = 10), "strain")
+#' # import and parse it as AMRfp data using sample_id_sep=`_genomic.fna.txt:` and include Loose hits
+#' import_rgi(rgi_raw, sample_id_sep="_genomic.fna.txt:", exclude_loose = FALSE)
+#' 
+#' # example RGI data from EuSCAPE project (including only Perfect and Strict hits)
+#' rgi_EuSCAPE_raw
+#' 
+#' # import and parse it as AMRfp data using defaults sample_id_sep=`.fasta.txt:` and exclude Loose hits (e.g., exclude_loose = `TRUE`)
+#' import_rgi(rgi_EuSCAPE_raw)
 
 
 import_rgi <- function(input_table,
-                         sample_col = "ORF_ID",
+                         orf_id_col = "ORF_ID",
+                         sample_id_sep = ".fasta.txt:",
                          model_col = "Model_type",
                          antibiotic_col = "Antibiotic",
                          class_col = "Drug Class",
@@ -55,7 +63,9 @@ import_rgi <- function(input_table,
                          rgi_drugs = rgi_drugs_table) {
   in_table <- process_input(input_table)
 
-  in_table <- left_join(in_table, rgi_short_name, by=c("Model_ID"="Model ID"))
+  in_table <- left_join(in_table, rgi_short_name, by=c("Model_ID"="Model ID")) %>%
+    mutate(id = sub(paste0(sample_id_sep, ".*"), "", .data[[orf_id_col]]))
+  
   in_table[(in_table == "n/a")|(in_table == "")] <- NA
   
   if(exclude_loose) { # exclude Loose hits
@@ -122,7 +132,7 @@ import_rgi <- function(input_table,
       )
     
     # Identify any drug classes / antibiotics we _know_ aren't in the AMR package, using the internal data
-    # Join introduces these as new drug_class_internal or drug_agent_internal column
+    # Join introduces these as new drug_internal or drug_class_internal column
     # Standardizing antibiotic names & drug class first, if no antibiotic, then standardize drug class
 
     if (antibiotic_col %in% colnames(geno_table_label) | class_col %in% colnames(geno_table_label)) {
@@ -132,18 +142,18 @@ import_rgi <- function(input_table,
         filter(!is.na(!!sym(antibiotic_col)) & !!sym(antibiotic_col) != "") %>%
         separate_longer_delim(!!sym(antibiotic_col), delim = "; ") %>%
         left_join(rgi_drugs, by = setNames("RGI_DrugClassAgent", antibiotic_col)) %>%
-        rename(drug_agent_internal_1 = drug_agent) %>%
-        rename(drug_class_internal_1 = drug_class) %>%
+        rename(drug_internal = drug_agent) %>%
+        rename(drug_class_internal = drug_class) %>%
         mutate(
-          drug_agent_to_parse = if_else(!is.na(drug_agent_internal_1), NA, !!sym(antibiotic_col))
+          drug_to_parse = if_else(!is.na(drug_internal), NA, !!sym(antibiotic_col))
         ) %>%
         mutate(
-          drug_agent = AMR::as.ab(drug_agent_to_parse),
-          drug_class_agent1 = AMR::ab_group(drug_agent_to_parse)
+          drug_agent = AMR::as.ab(drug_to_parse),
+          drug_class_agent = AMR::ab_group(drug_to_parse)
         ) %>%
         mutate(
-          drug_agent = coalesce(drug_agent_internal_1, as.character(drug_agent)),
-          drug_class = coalesce(drug_class_internal_1, as.character(drug_class_agent1))
+          drug_agent = coalesce(drug_internal, as.character(drug_agent)),
+          drug_class = coalesce(drug_class_internal, as.character(drug_class_agent))
         )
       
       # rows where Antibiotic is NA
@@ -159,28 +169,15 @@ import_rgi <- function(input_table,
         ) %>%
         filter(!is.na(!!sym(class_col)) & !!sym(class_col) != "") %>%
         separate_longer_delim(!!sym(class_col), delim = "; ") %>%
-        mutate(
-          !!sym(class_col) := stringr::str_remove(!!sym(class_col), " antibiotic$")
+        left_join(
+          rgi_drugs %>% select(RGI_DrugClassAgent, drug_class),
+          by = setNames("RGI_DrugClassAgent", class_col)
         )
-    
-    df_drugclass <- df_drugclass %>%
-      left_join(
-        rgi_drugs %>% select(RGI_DrugClassAgent, drug_class),
-        by = setNames("RGI_DrugClassAgent", class_col)
-      ) %>%
-      rename(drug_class_internal_2 = drug_class) %>%
-      mutate(drug_class_to_parse = if_else(!is.na(drug_class_internal_2), NA, !!sym(class_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions s
-      mutate(
-        drug_class_agent2 = AMR::ab_group(drug_class_to_parse)
-      ) %>%
-      mutate(
-        drug_class = coalesce(drug_class_internal_2, as.character(drug_class_agent2))
-      )
-    
+
     # recombine
     geno_table_label_ab <- bind_rows(df_antibiotic, df_drugclass) %>%
-      #select(-drug_agent_internal) %>%
-      dplyr::relocate(any_of(c("ORF_ID", "marker", "mutation", "drug_agent", "drug_class", "variation type", "marker.label")), .before = dplyr::everything())
+      select(-drug_internal, -drug_class_internal, -drug_to_parse, -drug_class_agent) %>%
+      dplyr::relocate(any_of(c("id", "marker", "mutation", "drug_agent", "drug_class", "variation type", "marker.label")), .before = dplyr::everything())
     
     } else{
       stop(paste("Input file lacks the expected column: Antibiotic OR `Drug Class` OR `Resistance Mechanism`\n"))

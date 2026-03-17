@@ -13,5 +13,3 @@ usethis::use_data(rgi_drugs_table, internal = FALSE, overwrite = TRUE)
 # Load example RGI v6.0.6 results file using EuSCAPE (Klebsiella pneumoniae) data
 rgi_EuSCAPE_raw <- read_tsv("data-raw/rgi_v606_EuSCAPE.txt.gz")
 usethis::use_data(rgi_EuSCAPE_raw, internal = FALSE, overwrite = TRUE)
-
-

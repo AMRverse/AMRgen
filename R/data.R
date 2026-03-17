@@ -550,7 +550,6 @@
 "kleborate_classes"
 
 
-
 #' S. aureus Clindamycin Resistance Genotype Data
 #'
 #' Processed and filtered output from AMRFinderPlus run on *Staphylococcus aureus* genome
@@ -632,7 +631,7 @@
 #' Raw RGI v6.0.6 results file (run with `--include_loose`) for 12 genomes of multiple species, one AMR determinant per row.
 #' Includes multiple species to cover all four model types currently detected by RGI (protein homolog model, protein variant model, protein overexpression model, and rRNA gene variant model)
 #' Includes Perfect, Strict, and Loose hits to test `exclude_loose` parameter
-#' 
+#'
 #' @format `rgi_raw` A data frame with 21,203 rows and 28 columns:
 #' - `ORF_ID`: Sample identifier
 #' - ...: RGI results columns
@@ -653,7 +652,7 @@
 #' Table mapping CARD/RGI Model ID and CARD Short Name
 #'
 #' Table mapping all CARD/RGI Model ID and CARD Short Name to convert long names into shortened AMR determinant names
-#' 
+#'
 #' @format `rgi_short_name_table` A data frame with 6445 rows and 2 columns:
 #' - `Model ID`: RGI/CARD model ID column
 #' - `CARD Short Name`: Shortened AMR determinant names
@@ -663,10 +662,10 @@
 
 #' Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data from EuSCAPE project
 #'
-#' Raw RGI v6.0.6 results file for Klebsiella pneumoniae from EuSCAPE project, one AMR determinant per row. 
+#' Raw RGI v6.0.6 results file for Klebsiella pneumoniae from EuSCAPE project, one AMR determinant per row.
 #' Includes only Perfect and Strict hits
 #' Columns `Predicted_DNA`, `Predicted_Protein`, and `CARD_Protein_Sequence` were removed to reduce file size.
-#' 
+#'
 #' @format `rgi_EuSCAPE_raw` A data frame with 59,403 rows and 25 columns:
 #' - `ORF_ID`: Sample identifier
 #' - ...: RGI results columns

@@ -847,8 +847,6 @@ import_ebi_ast_ftp <- function(input,
 }
 
 
-
-
 #' Import and process antimicrobial phenotype data exported from Vitek instruments
 #'
 #' This function imports antimicrobial susceptibility testing (AST) data from Vitek instrument output files (wide CSV format)

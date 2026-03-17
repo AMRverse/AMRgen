@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_ncbi_ast}
 \alias{import_ncbi_ast}
-\title{Import and Process AST Data from an NCBI File}
+\title{Import and process antimicrobial susceptibility phenotype data from the NCBI AST browser}
 \usage{
 import_ncbi_ast(
   input,
@@ -16,41 +16,42 @@ import_ncbi_ast(
 )
 }
 \arguments{
-\item{input}{A string representing a dataframe, or a path to an input file, containing the AST data in NCBI antibiogram format. These files can be downloaded from NCBI AST browser, e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas\%20aeruginosa}
+\item{input}{A string representing a dataframe, or a path to an input file, containing the AST data in NCBI antibiogram format. These files can be downloaded from NCBI AST browser, e.g. \url{https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas\%20aeruginosa}}
 
-\item{sample_col}{A string indicating the name of the column with sample identifiers. If \code{NULL}, assume this is 'BioSample'.}
+\item{sample_col}{A string indicating the name of the column with sample identifiers. If \code{NULL}, assume this is \code{"BioSample"}.}
 
-\item{source}{(optional) A single value to record as the source of these data points, e.g. "NCBI_browser". By default, the field 'BioProject' will be used to indicate the source for each row in the input file, but if this is missing or you want to override it with a single value for all samples, you may provide a source name via this parameter.}
+\item{source}{(optional) A single string to record as the source of these data points, e.g. "NCBI_browser". By default, the field \code{BioProject} will be used to indicate the source for each row in the input file, but if this is missing or you want to override it with a single value for all samples, you may provide a source name via this parameter.}
 
-\item{species}{(optional) Name of the species to use for phenotype interpretation. By default, the field 'Scientific name' will be assumed to specify the species for each row in the input file, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.}
+\item{species}{(optional) Name of the species to use for phenotype interpretation. By default, the field \verb{Scientific name} will be assumed to specify the species for each row in the input file, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.}
 
-\item{ab}{(optional) Name of the antibiotic to use for phenotype interpretation. By default, the field 'Antibiotic' will be assumed to specify the antibiotic for each row in the input file, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.}
+\item{ab}{(optional) Name of the antibiotic to use for phenotype interpretation. By default, the field \code{Antibiotic} will be assumed to specify the antibiotic for each row in the input file, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.}
 
-\item{interpret_eucast}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class 'sir'.}
+\item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}.}
 
-\item{interpret_clsi}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class 'sir'.}
+\item{interpret_clsi}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class \code{sir}.}
 
-\item{interpret_ecoff}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 }
 \value{
 A data frame with the processed AST data, including additional columns:
 \itemize{
 \item \code{id}: The biological sample identifier (renamed from \code{BioSample} or specified column).
-\item \code{spp_pheno}: The species phenotype, formatted using the \code{as.mo} function.
-\item \code{drug_agent}: The antibiotic used in the test, formatted using the \code{as.ab} function.
-\item \code{mic}: The minimum inhibitory concentration (MIC) value, formatted using the \code{as.mic} function.
-\item \code{disk}: The disk diffusion measurement (in mm), formatted using the \code{as.disk} function.
-\item \code{method}: The AST platform recorded in the input file as the source of the measurement.
+\item \code{spp_pheno}: The species phenotype, formatted using the \code{\link[AMR:as.mo]{AMR::as.mo()}} function.
+\item \code{drug_agent}: The antibiotic used in the test, formatted using the \code{\link[AMR:as.ab]{AMR::as.ab()}} function.
+\item \code{mic}: The minimum inhibitory concentration (MIC) value, formatted using the \code{\link[AMR:as.mic]{AMR::as.mic()}} function.
+\item \code{disk}: The disk diffusion measurement (in mm), formatted using the \code{\link[AMR:as.disk]{AMR::as.disk()}} function.
+\item \code{method}: The AST method (e.g., \code{"broth dilution"}, \code{"disk diffusion"}, \code{"Etest"}, \code{"agar dilution"}). Expected values are based on the NCBI/EBI antibiogram specification. Note that NCBI allows \code{"MIC"} as a synonym for \code{"broth dilution"} but this function will convert \code{"MIC"} to \code{"broth dilution"} on import.
+\item \code{platform}: The AST platform/instrument (e.g., \code{"Vitek"}, \code{"Phoenix"}, \code{"Sensititre"}).
 \item \code{guideline}: The AST standard recorded in the input file as being used for the AST assay.
 \item \code{pheno_eucast}: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
 \item \code{pheno_clsi}: The phenotype newly interpreted against CLSI human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
-\item \code{ecoff}: The phenotype newly interpreted against the ECOFF (as S/R), based on the MIC or disk diffusion data.
+\item \code{ecoff}: The phenotype newly interpreted against the ECOFF (as WT/NWT), based on the MIC or disk diffusion data.
 \item \code{pheno_provided}: The original phenotype interpretation provided in the input file.
-\item \code{source}: The source of each data point (renamed from \code{BioProject} in the input file, or replaced with a single value passed in as the 'source' parameter).
+\item \code{source}: The source of each data point (renamed from \code{BioProject} in the input file, or replaced with a single value passed in as the \code{source} parameter).
 }
 }
 \description{
-This function imports an antibiotic susceptibility testing (AST) dataset, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
+This function imports an antibiotic susceptibility testing (AST) dataset, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF).
 }
 \examples{
 # small example E. coli AST data from NCBI

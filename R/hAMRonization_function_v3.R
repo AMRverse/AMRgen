@@ -53,17 +53,17 @@
 #'
 #' @return A data frame containing 'harmonized' AMR genotype data
 #' @keywords internal
-#'
+#' @export
 #' @examples
 #' \dontrun{
-#' harmonize_data(
+#' hamronize_data(
 #'   user_software_name = "amrfinderplus",
 #'   user_software_version = "3.12.8",
 #'   user_input_filename = "ATB_Achromobacter_AFP.tsv",
 #'   user_database_version = "2024-01-31.1"
 #' )
 #' }
-harmonize_data <- function(user_software_name,
+hamronize_data <- function(user_software_name,
                            user_software_version,
                            user_database_version,
                            user_input_filename) {

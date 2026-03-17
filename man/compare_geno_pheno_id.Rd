@@ -37,11 +37,11 @@ A list containing:
 This function compares genotype (\code{geno_data}) and phenotype (\code{pheno_data}) datasets based on their sample IDs. It identifies sample IDs that are unique to either dataset, as well as those that overlap. Optionally, it renames the sample ID columns in both datasets for consistency.
 }
 \examples{
-geno_table <- import_amrfp(ecoli_geno_raw, "Name")
+geno_table <- import_amrfp(ecoli_geno_raw)
 head(ecoli_ast)
 result <- compare_geno_pheno_id(geno_table,
   ecoli_ast,
-  geno_sample_col = "Name",
+  geno_sample_col = "id",
   pheno_sample_col = "id"
 )
 print(result$pheno_unique)

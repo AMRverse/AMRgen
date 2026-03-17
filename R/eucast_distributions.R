@@ -19,10 +19,12 @@
 #' Run this function to get an updated list of antimicrobial distributions currently supported by EUCAST. This retrieves live info from <https://mic.eucast.org>.
 #' @param ... Arguments passed on to the function, currently unused.
 #' @importFrom AMR ab_name as.ab
-#' @importFrom rvest html_attrs html_children html_element html_text2 read_html
+#' @importFrom rvest html_attr html_children html_element read_html html_text
 #' @export
 #' @examples
+#' \dontrun{
 #' eucast_supported_ab_distributions()
+#' }
 eucast_supported_ab_distributions <- function(...) {
   if (is.null(AMRgen_env$eucast_ab_select_list)) {
     if (interactive()) message("Retrieving list of antimicrobials from ", font_url("https://mic.eucast.org", "mic.eucast.org"), "...", appendLF = FALSE)
@@ -31,15 +33,15 @@ eucast_supported_ab_distributions <- function(...) {
     select_list <- page %>%
       html_element("#search_antibiotic") %>%
       html_children()
-    select_values <- select_list %>%
-      html_attrs() %>%
-      unlist()
-    select_names <- select_list %>% html_text2()
-    select_names <- select_names[!grepl("...", names(select_values), fixed = TRUE)]
-    select_names_AMR <- as.character(as.ab(select_names, flag_multiple_results = FALSE, info = FALSE, fast_mode = TRUE))
-    select_values <- select_values[!is.na(select_names_AMR)]
-    select_names_AMR <- select_names_AMR[!is.na(select_names_AMR)]
-    names(select_names_AMR) <- select_values
+    # convert to table with index for each antibiotic
+    ab_lookup <- tibble(
+      index = as.integer(html_attr(select_list, "value")),
+      ab_name = html_text(select_list, trim = TRUE)
+    ) %>%
+      filter(index != -1) %>%
+      mutate(ab_abbrev = as.ab(ab_name))
+    select_names_AMR <- ab_lookup$index
+    names(select_names_AMR) <- as.character(ab_lookup$ab_abbrev)
     AMRgen_env$eucast_ab_select_list <- select_names_AMR
     if (interactive()) message("OK")
   }
@@ -47,9 +49,7 @@ eucast_supported_ab_distributions <- function(...) {
   if (isTRUE(list(...)$invisible)) {
     return(invisible())
   }
-  out <- ab_name(AMRgen_env$eucast_ab_select_list)
-  names(out) <- AMRgen_env$eucast_ab_select_list
-  sort(out)
+  return(ab_lookup)
 }
 
 #' Get and Compare Antimicrobial Wild Type Distributions from EUCAST
@@ -78,6 +78,7 @@ eucast_supported_ab_distributions <- function(...) {
 #' @rdname get_eucast_amr_distribution
 #' @export
 #' @examples
+#' \dontrun{
 #' get_eucast_mic_distribution("cipro")
 #'
 #' # not returning as frequency table
@@ -102,6 +103,7 @@ eucast_supported_ab_distributions <- function(...) {
 #' comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "K. pneumoniae")
 #' comparison
 #' ggplot2::autoplot(comparison)
+#' }
 get_eucast_amr_distribution <- function(ab, mo = NULL, method = "MIC", as_freq_table = TRUE) {
   # retrieve available antimicrobials online
   eucast_supported_ab_distributions(invisible = TRUE)
@@ -125,8 +127,10 @@ get_eucast_amr_distribution <- function(ab, mo = NULL, method = "MIC", as_freq_t
     }
   }
   ab <- ab_coerced
-  ab_index <- names(AMRgen_env$eucast_ab_select_list)[AMRgen_env$eucast_ab_select_list == ab]
+  ab_index <- AMRgen_env$eucast_ab_select_list[ab]
+
   url <- paste0("https://mic.eucast.org/search/?search[method]=", method, "&search[antibiotic]=", ab_index, "&search[limit]=999")
+
   if (interactive()) message("From: ", font_url(url))
   tbl <- read_html(url) %>%
     html_element("#search-results-table") %>%
@@ -269,6 +273,7 @@ autoplot.compare_eucast <- function(object, ...) {
     pivot_longer(-value, names_to = "Source", values_to = "count")
 
   ggplot(long, aes(x = value, y = count, fill = Source)) +
-    geom_col(position = "dodge") +
-    labs(x = "Measurement Value", y = "Density")
+    geom_col(width = 0.9, position = position_dodge(width = 0.9)) +
+    labs(x = "Measurement Value", y = "Density") +
+    theme(axis.text.x = element_text(angle = 60, hjust = 1))
 }

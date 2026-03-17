@@ -13,5 +13,7 @@ eucast_supported_ab_distributions(...)
 Run this function to get an updated list of antimicrobial distributions currently supported by EUCAST. This retrieves live info from \url{https://mic.eucast.org}.
 }
 \examples{
+\dontrun{
 eucast_supported_ab_distributions()
+}
 }

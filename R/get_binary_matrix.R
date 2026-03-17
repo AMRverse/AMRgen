@@ -16,18 +16,18 @@
 
 #' Get Binary Matrix of Genotype and Phenotype Data
 #'
-#' This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (R/I vs S) status for a given antibiotic, and presence or absence of genetic markers related to one or more specified drug classes. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified antibiotic and drug class criteria before creating a binary matrix. Suitable input files can be generated using `import_ncbi_ast` to import phenotype data from NCBI, and `parse_amrfp` to import genotype data from AMRFinderPlus.
-#' @param geno_table A data frame containing genotype data, including at least one column labeled `drug_class` for drug class information and one column for sample identifiers (specified via `geno_sample_col`, otherwise it is assumed the first column contains identifiers).
-#' @param pheno_table A data frame containing phenotype data, which must include a column `drug_agent` (with the antibiotic information), a column with the resistance interpretation (S/I/R, specified via `sir_col`), and optionally a column with the ECOFF interpretation (WT/NWT, specified via `ecoff_col`).
-#' @param antibiotic A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the `drug_agent` column of `pheno_table`.
-#' @param drug_class_list A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list.
+#' This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given antibiotic, and presence or absence of genetic markers related to one or more specified drug classes. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified antibiotic and drug class criteria before creating a binary matrix. Suitable input files can be generated using [import_ast()] to import phenotype data, and [import_amrfp()] to import genotype data from AMRFinderPlus.
+#' @param geno_table A data frame containing genotype data, in long form with one row per sample and genetic marker. Expected format is that output by [import_amrfp()] and must include a column labeled `drug_class` (indicating the antibiotic class associated with each marker), in addition to a column indicating the marker (column name specified via `marker_col`) and a column for sample identifiers (specified via `geno_sample_col`, otherwise it is assumed the first column contains identifiers).
+#' @param pheno_table A data frame containing phenotype data, in long form with one row per sample, drug and assay result. Expected format is that output by [import_ast()] and must include a column `drug_agent` (indicating the drug agent, interpretable as AMR pkg class `ab`), in addition to a column for sample identifiers (specified via `pheno_sample_col`, otherwise it is assumed the first column contains identifiers), a column with the resistance interpretation (S/I/R, specified via `sir_col`), and optionally a column with the ECOFF interpretation (WT/NWT or S/R, specified via `ecoff_col`).
+#' @param antibiotic A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the `drug_agent` column of `pheno_table` or be coercible to a match using [as.ab].
+#' @param drug_class_list A character vector (optional) of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers.
-#' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be interpretable as "R" (resistant), "I" (intermediate), or "S" (susceptible).
-#' @param ecoff_col A character string specifying the column name in `pheno_table` that contains the ECOFF interpretation of phenotype. The values should be interpretable as "WT" (wildtype) or "NWT" (nonwildtype).
+#' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
+#' @param ecoff_col A character string specifying the column name in `pheno_table` that contains the ECOFF interpretation of phenotype. The values should be interpretable as `"WT"` (wildtype) and `"NWT"` (nonwildtype), or `"S"` / `"I"` / `"R"`. Default `"ecoff`.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Defaults to `"marker"`.
 #' @param keep_SIR A logical indicating whether to retain the full S/I/R phenotype column in the output. Defaults to `TRUE`.
-#' @param keep_assay_values A logical indicating whether to include columns with the raw phenotype assay data. Assumes there are columns labelled "mic" and "disk"; these will be added to the output table if present. Defaults to `FALSE`.
+#' @param keep_assay_values A logical indicating whether to include columns with the raw phenotype assay data. Assumes there are columns labelled `"mic"` and `"disk"`; these will be added to the output table if present. Defaults to `FALSE`.
 #' @param keep_assay_values_from A character vector specifying which assay values (e.g., `"mic"`, `"disk"`) to retain if `keep_assay_values` is `TRUE`. Defaults to `c("mic", "disk")`.
 #' @param most_resistant A logical indicating whether, when multiple phenotype entries are present for the same sample and drug, the most resistant should be kept (otherwise the least resistant is kept). Default is `TRUE`.
 #' @importFrom AMR as.ab as.disk as.mic as.sir is.ab
@@ -46,47 +46,54 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' geno_table <- parse_amrfp("testdata/Ecoli_AMRfinderplus_n50.tsv", "Name")
-#' pheno_table <- import_ncbi_ast("testdata/Ecoli_AST_NCBI_n50.tsv")
-#' get_binary_matrix(
-#'   geno_table,
-#'   pheno_table,
+#' # Import example E. coli AMRFinderPlus data from AllTheBacteria
+#' ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
+#' geno_pheno_cip <- get_binary_matrix(
+#'   ecoli_geno,
+#'   ecoli_ast,
 #'   antibiotic = "Ciprofloxacin",
 #'   drug_class_list = c("Quinolones"),
-#'   sir_col = "Resistance phenotype"
+#'   sir_col = "pheno_clsi"
 #' )
-#' get_binary_matrix(
-#'   geno_table,
-#'   pheno_table,
+#' geno_pheno_cip <- get_binary_matrix(
+#'   ecoli_geno,
+#'   ecoli_ast,
 #'   antibiotic = "Ciprofloxacin",
 #'   drug_class_list = c("Quinolones"),
 #'   sir_col = "Resistance phenotype",
 #'   keep_assay_values = TRUE
 #' )
-#' get_binary_matrix(
-#'   geno_table,
-#'   pheno_table,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
-#'   sir_col = "Resistance phenotype",
-#'   keep_assay_values = TRUE,
-#'   keep_assay_values_from = "mic"
-#' )
-#' get_binary_matrix(
-#'   geno_table,
-#'   pheno_table,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
-#'   sir_col = "Resistance phenotype",
-#'   keep_assay_values = TRUE,
-#'   keep_assay_values_from = "MIC (mg/L)"
-#' )
 #' }
-get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_list, keep_SIR = TRUE,
-                              keep_assay_values = FALSE, keep_assay_values_from = c("mic", "disk"),
-                              geno_sample_col = NULL, pheno_sample_col = NULL,
-                              sir_col = "pheno_clsi", ecoff_col = "ecoff", marker_col = "marker",
+get_binary_matrix <- function(geno_table,
+                              pheno_table,
+                              antibiotic,
+                              drug_class_list = NULL,
+                              keep_SIR = TRUE,
+                              keep_assay_values = FALSE,
+                              keep_assay_values_from = c("mic", "disk"),
+                              geno_sample_col = NULL,
+                              pheno_sample_col = NULL,
+                              sir_col = "pheno_clsi",
+                              ecoff_col = "ecoff",
+                              marker_col = "marker",
                               most_resistant = TRUE) {
+  # check there is a SIR column specified
+  if (is.null(sir_col)) {
+    # make a sensible guess
+    sir_col <- pheno_table %>%
+      select(starts_with("pheno")) %>%
+      colnames() %>%
+      first()
+    if (!is.na(sir_col)) {
+      cat(paste("WARNING: `sir_col` not provided, using first column with prefix 'pheno':", sir_col, "\n"))
+    } else {
+      stop("`sir_col` not provided. Please specify a column with S/I/R phenotype values.")
+    }
+  }
+  if (!(sir_col %in% colnames(pheno_table))) {
+    stop(paste0("Column: '", sir_col, "' not found in input phenotype data. Please specify a valid column with S/I/R values."))
+  }
+
   # check we have a drug_agent column with class ab
   if (!("drug_agent" %in% colnames(pheno_table))) {
     stop(paste("input", deparse(substitute(pheno_table)), "must have a column labelled `drug_agent`"))
@@ -107,8 +114,21 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
   if (!("drug_class" %in% colnames(geno_table))) {
     stop(paste("input", deparse(substitute(geno_table)), "must have a column labelled `drug_class`"))
   }
-  if (sum(drug_class_list %in% geno_table$drug_class) == 0) {
-    stop(paste("No markers matching drug class", paste(drug_class_list, collapse = ","), "were identified in input geno_table"))
+
+  # generate drug_class_list from antibiotic, if not provided
+  if (is.null(drug_class_list)) {
+    cat(paste0(" Checking for drug classes for antibiotic: ", ab_name(antibiotic), "\n"))
+    drug_class_candidates <- AMR::ab_group(antibiotic, all_groups = TRUE)
+    if ("Carbapenems" %in% drug_class_candidates) { # ensure when testing carbapenems we include cephalosporin markers
+      drug_class_candidates <- c(drug_class_candidates, "Cephalosporins (3rd gen.)", "Cephalosporins", "Beta-lactams")
+    }
+    cat(paste0("  Associated classes: ", paste(drug_class_candidates, collapse = ", "), "\n"))
+    drug_class_list <- drug_class_candidates[drug_class_candidates %in% geno_table$drug_class]
+    if (length(drug_class_list) == 0) {
+      stop(paste("  None of these classes were found in the drug_class column of genotype table. Please specify which markers to include via 'drug_class_list'."))
+    } else {
+      cat(paste0("  Found markers mapped to: ", paste(drug_class_list, collapse = ", "), "\n"))
+    }
   }
 
   # subset pheno & geno dataframes to those samples with overlap
@@ -147,7 +167,6 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
   }
 
   # get interpreted phenotype as binary (based on colname provided by 'sir_col')
-  # to do: check we have interpretation data for this pheno, and optionally interpret from mic/disk
   pheno_binary <- pheno_matched %>%
     select(id, any_of(c(sir_col, ecoff_col))) %>%
     mutate(R = case_when(
@@ -169,13 +188,15 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
       cat(paste(" Defining NWT in binary matrix using ecoff column provided:", ecoff_col, "\n"))
       pheno_binary <- pheno_binary %>%
         mutate(NWT = case_when(
+          as.sir(get(ecoff_col)) == "NWT" ~ 1,
+          as.sir(get(ecoff_col)) == "WT" ~ 0,
           as.sir(get(ecoff_col)) == "R" ~ 1,
           as.sir(get(ecoff_col)) == "I" ~ 1,
           as.sir(get(ecoff_col)) == "S" ~ 0,
           TRUE ~ NA
         ))
     } else {
-      cat(" Defining NWT in binary matrix as I/R vs 0, as no ECOFF column defined\n")
+      cat(" Defining NWT in binary matrix as I/R vs S, as no ECOFF column defined\n")
     }
   }
 
@@ -244,4 +265,54 @@ get_binary_matrix <- function(geno_table, pheno_table, antibiotic, drug_class_li
   }
 
   return(geno_binary)
+}
+
+
+#' Add marker combinations to a binary geno-pheno matrix
+#'
+#' Given a geno-pheno binary marker matrix, output by `get_binary_matrix`,
+#' this function identifies marker combination, and adds combination ids,
+#' and the count of markers detected per sample, as new columns.
+#'
+#' @param binary_matrix A geno-pheno binary matrix, output by `get_binary_matrix`
+#' @param assay (optional) Name of an assay column to filter on, so that the matrix returned only includes samples with assay data of this type available
+#'
+#'
+#' @examples
+#' \dontrun{
+#' combo_matrix <- get_combo_matrix(binary_matrix)
+#' }
+#'
+#' @export
+get_combo_matrix <- function(binary_matrix, assay = NULL) {
+  # marker names
+  markers <- binary_matrix %>%
+    dplyr::select(-any_of(c("id", "pheno", "ecoff", "R", "I", "NWT", "mic", "disk"))) %>%
+    colnames()
+
+  # check we have the expected assay column, with data
+  if (!is.null(assay)) {
+    if (!(assay %in% colnames(binary_matrix))) {
+      stop(paste("input", deparse(substitute(binary_matrix)), "has no column labelled ", assay))
+    }
+    data_rows <- binary_matrix %>%
+      filter(!is.na(get(assay))) %>%
+      nrow()
+    if (data_rows == 0) {
+      stop(paste("input", deparse(substitute(binary_matrix)), "has no non-NA values in column ", assay))
+    }
+  }
+
+  # Add in a combination column and filter to samples with the required assay data (MIC or disk) only
+  if (!is.null(assay)) {
+    binary_matrix <- binary_matrix %>% filter(!is.na(get(assay)))
+  }
+
+  # input matrix with combinations added
+  binary_matrix_combo <- binary_matrix %>%
+    mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R", "NWT", "mic", "disk"))), na.rm = T)) %>%
+    unite("combination_id", markers[1]:markers[length(markers)], remove = FALSE) %>% # add in combinations
+    relocate(marker_count, .after = "combination_id")
+
+  return(binary_matrix_combo)
 }

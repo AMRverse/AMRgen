@@ -5,7 +5,7 @@
 \alias{ecoli_ast_raw}
 \title{E. coli NCBI AST Example Data}
 \format{
-\subsection{\code{ecoli_ast_raw} A data frame with 10 rows and 21 columns representing unprocessed data from the NCBI AST browser.}{
+A data frame with 10 rows and 21 columns representing unprocessed data from the NCBI AST browser.
 
 Columns include:
 \itemize{
@@ -18,7 +18,6 @@ Columns include:
 \item \verb{Disk diffusion (mm)}: Disk diffusion zone.
 \item \verb{Resistance phenotype}: Resistance call (SIR) as submitted.
 \item ...: Additional metadata columns from the NCBI AST export.
-}
 }
 }
 \source{

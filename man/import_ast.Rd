@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_ast}
 \alias{import_ast}
-\title{Import and Process AST Data from an EBI or NCBI antibiogram File}
+\title{Import and process antimicrobial phenotype data from common sources}
 \usage{
 import_ast(
   input,
@@ -16,51 +16,52 @@ import_ast(
 )
 }
 \arguments{
-\item{input}{A string representing a dataframe, or a path to an input file, containing the AST data in EBI or NCBI antibiogram format. These files can be downloaded from the EBI AMR web browser (https://www.ebi.ac.uk/amr/data/?view=experiments), EBI FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or NCBI browser (e.g. https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas\%20aeruginosa), or from EBI using the function \code{download_ebi()}.}
+\item{input}{A string representing a dataframe, or a path to an input file, containing the AST data a supported format. These files may be downloaded from public sources such as the EBI AMR web browser (\url{https://www.ebi.ac.uk/amr/data/?view=experiments}), EBI FTP site (\url{ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}), or NCBI browser (e.g. \url{https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas\%20aeruginosa}), or using the functions \code{\link[=download_ebi]{download_ebi()}} or \code{\link[=download_ncbi_ast]{download_ncbi_ast()}}; or the files may be exported from supported AST instruments.}
 
-\item{format}{A string indicating the format of the data, either "ebi" (default), ebi_web", "ebi_ftp", or "ncbi". This determines whether the data is passed on to the \code{import_ebi_ast()} (ebi/ebi_web), \code{import_ebi_ast_ftp()} (ebi_ftp), or \code{import_ncbi_ast()} function to process.}
+\item{format}{A string indicating the format of the data: \code{"ebi"} (default), \code{"ebi_web"}, \code{"ebi_ftp"}, \code{"ncbi"}, \code{"vitek"}, \code{"microscan"}, \code{"sensititre"}, or \code{"whonet"}. This determines whether the data is passed on to the \code{\link[=import_ebi_ast]{import_ebi_ast()}} (ebi/ebi_web), \code{\link[=import_ebi_ast_ftp]{import_ebi_ast_ftp()}} (ebi_ftp), \code{\link[=import_ncbi_ast]{import_ncbi_ast()}} (ncbi), \code{\link[=import_vitek_ast]{import_vitek_ast()}} (vitek), \code{\link[=import_microscan_ast]{import_microscan_ast()}} (microscan), \code{\link[=import_sensititre_ast]{import_sensititre_ast()}} (sensititre), or \code{\link[=import_whonet_ast]{import_whonet_ast()}} (whonet) function to process.}
 
-\item{interpret_eucast}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class 'sir'.}
+\item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class 'sir'.}
 
-\item{interpret_clsi}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class 'sir'.}
+\item{interpret_clsi}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class 'sir'.}
 
-\item{interpret_ecoff}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class 'sir' and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 
-\item{species}{(optional) Name of the species to use for phenotype interpretation. By default, the organism field in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.}
+\item{species}{(optional) Name of the species to use for phenotype interpretation. By default, the field \code{organism} in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.}
 
-\item{ab}{(optional) Name of the antibiotic to use for phenotype interpretation. By default, the antibiotic field in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.}
+\item{ab}{(optional) Name of the antibiotic to use for phenotype interpretation. By default, the field \code{antibiotic} in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.}
 
-\item{source}{(optional) A single value to record as the source of these data points, e.g. "EBI_browser". By default, the publications field (for EBI data) or BioProject field (for NCBI data) will be used to indicate the source for each row in the input file, but if this is missing or you want to override it with a single value for all samples, you may provide a source name via this parameter.}
+\item{source}{(optional) A string to record as the source of these data points, e.g. \code{"EBI_browser"}. By default, the publications field (for EBI data) or BioProject field (for NCBI data) will be used to indicate the source for each row in the input file. For other input files, or to override this with a single value for all samples, you may provide a source name via this parameter.}
 }
 \value{
 A data frame with the processed AST data, including additional columns:
 \itemize{
 \item \code{id}: The biosample identifier.
-\item \code{spp_pheno}: The species phenotype, formatted using the \code{as.mo} function.
-\item \code{drug_agent}: The antibiotic used in the test, formatted using the \code{as.ab} function.
-\item \code{mic}: The minimum inhibitory concentration (MIC) value, formatted using the \code{as.mic} function.
-\item \code{disk}: The disk diffusion measurement (in mm), formatted using the \code{as.disk} function.
-\item \code{method}: The AST platform recorded in the input file as the source of the measurement.
+\item \code{spp_pheno}: The species phenotype, formatted using the \code{\link[AMR:as.mo]{AMR::as.mo()}} function.
+\item \code{drug_agent}: The antibiotic used in the test, formatted using the \code{\link[AMR:as.ab]{AMR::as.ab()}} function.
+\item \code{mic}: The minimum inhibitory concentration (MIC) value, formatted using the \code{\link[AMR:as.mic]{AMR::as.mic()}} function.
+\item \code{disk}: The disk diffusion measurement (in mm), formatted using the \code{\link[AMR:as.disk]{AMR::as.disk()}} function.
+\item \code{method}: The AST method (e.g., \code{"broth dilution"}, \code{"disk diffusion"}, \code{"Etest"}, \code{"agar dilution"}). Expected values are based on the NCBI/EBI antibiogram specification.
+\item \code{platform}: The AST platform/instrument (e.g., \code{"Vitek"}, \code{"Phoenix"}, \code{"Sensititre"}).
 \item \code{guideline}: The AST standard recorded in the input file as being used for the AST assay.
-\item \code{pheno_eucast}: The phenotype newly interpreted against EUCAST human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
-\item \code{pheno_clsi}: The phenotype newly interpreted against CLSI human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
-\item \code{ecoff}: The phenotype newly interpreted against the ECOFF (as S/R), based on the MIC or disk diffusion data.
+\item \code{pheno_eucast}: The phenotype newly interpreted against EUCAST human breakpoint standards (as \code{S/I/R}), based on the MIC or disk diffusion data.
+\item \code{pheno_clsi}: The phenotype newly interpreted against CLSI human breakpoint standards (as \code{S/I/R}), based on the MIC or disk diffusion data.
+\item \code{ecoff}: The phenotype newly interpreted against the ECOFF (as \code{WT/NWT}), based on the MIC or disk diffusion data.
 \item \code{pheno_provided}: The original phenotype interpretation provided in the input file.
-\item \code{source}: The source of each data point (from the publications or bioproject field in the input file, or replaced with a single value passed in as the 'source' parameter).
+\item \code{source}: The source of each data point (from the publications or bioproject field in the input file, or replaced with a single value passed in as the \code{source} parameter).
 }
 }
 \description{
-This function imports an antibiotic susceptibility testing (AST) dataset in either EBI or NCBI antibiogram format, processes the data, and optionally interprets the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
+This function imports an antibiotic susceptibility testing (AST) datasets in formats exported by EBI, NCBI, WHOnet and several automated AST instruments (Vitek, Microscan, Sensititre). It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
 }
 \examples{
 # small example E. coli AST data from NCBI
 ecoli_ast_raw
 
 # import without re-interpreting resistance
-pheno <- import_ast(ecoli_ast_raw, format="ncbi")
+pheno <- import_ast(ecoli_ast_raw, format = "ncbi")
 head(pheno)
 
 # import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-pheno <- import_ast(ecoli_ast_raw, format="ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
+pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
 head(pheno)
 }

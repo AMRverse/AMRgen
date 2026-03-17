@@ -26,4 +26,5 @@
 ^CRAN-SUBMISSION$
 ^data-raw$
 ^logo\.png$
+^\.claude$
 ^docs$

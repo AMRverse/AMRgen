@@ -54,16 +54,16 @@ plot_estimates <- function(tbl, sig = 0.05,
   if (!is.null(sig)) {
     legend_title <- paste0("p<", sig)
     legend_position <- "right"
-    tbl <- tbl %>% mutate(sig_binary = if_else(pval < sig, TRUE, FALSE))
+    tbl <- tbl %>% dplyr::mutate(sig_binary = if_else(pval < sig, TRUE, FALSE))
   } else {
     legend_title <- ""
     legend_position <- "none"
-    tbl <- tbl %>% mutate(sig_binary = TRUE)
+    tbl <- tbl %>% dplyr::mutate(sig_binary = TRUE)
   }
 
   plot <- tbl %>%
     filter(marker != "(Intercept)") %>%
-    mutate(marker = gsub("`", "", marker)) %>%
+    dplyr::mutate(marker = gsub("`", "", marker)) %>%
     ggplot(aes(y = marker, col = sig_binary)) +
     geom_vline(xintercept = 0) +
     geom_linerange(aes(xmin = ci.lower, xmax = ci.upper)) +
@@ -125,7 +125,6 @@ compare_estimates <- function(tbl1, tbl2,
                               single_plot = TRUE,
                               pd = position_dodge(width = 0.8),
                               marker_order = NULL) {
-  
   if (!single_plot | is.null(tbl2)) { # need a solo plot for table 1
     plot1 <- plot_estimates(tbl1,
       sig = sig,
@@ -161,12 +160,12 @@ compare_estimates <- function(tbl1, tbl2,
   if (!single_plot & !is.null(tbl1) & !is.null(tbl2)) {
     plot <- plot1 + plot2
   } else if (single_plot) { # combine into one plot
-    tbl1 <- tbl1 %>% mutate(group = title1)
+    tbl1 <- tbl1 %>% dplyr::mutate(group = title1)
 
     plot <- tbl2 %>%
-      mutate(group = title2) %>%
+      dplyr::mutate(group = title2) %>%
       bind_rows(tbl1) %>%
-      mutate(sig_binary = if_else(pval < sig, TRUE, FALSE)) %>%
+      dplyr::mutate(sig_binary = if_else(pval < sig, TRUE, FALSE)) %>%
       filter(marker != "(Intercept)") %>%
       ggplot(aes(y = marker)) +
       geom_vline(xintercept = 0) +
@@ -215,7 +214,6 @@ autoplot.model_summary <- function(object,
     axis_label_size = axis_label_size
   )
 }
-
 
 
 #' Extract Details from a logistf Model
@@ -345,7 +343,7 @@ merge_logreg_soloppv <- function(model, solo_stats, title = NULL, plot = TRUE) {
 #' @export
 plot_combined_stats <- function(combined_stats, sig = 0.05, title = NULL) {
   combined_stats %>%
-    mutate(sig_binary = if_else(pval < sig, TRUE, FALSE)) %>%
+    dplyr::mutate(sig_binary = if_else(pval < sig, TRUE, FALSE)) %>%
     ggplot(aes(y = est, x = ppv, col = as.factor(sig_binary))) +
     geom_point() +
     geom_linerange(aes(xmin = ci.lower.ppv, xmax = ci.upper.ppv)) +
@@ -373,7 +371,7 @@ plot_combined_stats <- function(combined_stats, sig = 0.05, title = NULL) {
 #' @export
 plot_solo_logReg <- function(combined_stats, sig = 0.05, title = NULL) {
   combined_stats %>%
-    mutate(sig_binary = if_else(pval < sig, TRUE, FALSE)) %>%
+    dplyr::mutate(sig_binary = if_else(pval < sig, TRUE, FALSE)) %>%
     ggplot(aes(y = est, x = ppv, col = as.factor(sig_binary))) +
     geom_point() +
     geom_linerange(aes(xmin = ci.lower.ppv, xmax = ci.upper.ppv)) +

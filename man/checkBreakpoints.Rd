@@ -45,7 +45,9 @@ The function first attempts to retrieve breakpoints using the \code{getBreakpoin
 }
 }
 \examples{
-checkBreakpoints(species="Escherichia coli", guide="EUCAST 2024", 
-                      antibiotic="Ciprofloxacin", assay="MIC")
+checkBreakpoints(
+  species = "Escherichia coli", guide = "EUCAST 2024",
+  antibiotic = "Ciprofloxacin", assay = "MIC"
+)
 
 }

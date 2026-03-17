@@ -14,6 +14,11 @@ knitr::opts_chunk$set(
   fig.width = 10,
   out.width = "100%"
 )
+
+# If the package is not installed, load the development version
+if (!requireNamespace("AMRgen", quietly = TRUE)) {
+  devtools::load_all()
+}
 ```
 
 # Introduction
@@ -22,7 +27,7 @@ knitr::opts_chunk$set(
 
 * Import AMR genotype data (e.g. from AMRFinderPlus, hAMRonization)
 
-* Import AST phenotype data (e.g. from NCBI)
+* Import AST phenotype data (e.g. public data from NCBI or EBI, or your own data in formats like Vitek or WHOnet)
 
 * Conduct genotype-phenotype analyses to explore the impact of genotypic markers on phenotype, including via logistic regression, solo marker analysis, and upset plots
 
@@ -34,30 +39,43 @@ Start by loading the package:
 
 ```{r setup}
 library(AMRgen)
+library(dplyr)
 ```
 
 ## 1. Genotype table
-The `import_amrfp()` function lets you load genotype data from AMRFinderPlus outputs, and process it to generate an object with the key columns needed to work with the `AMRgen` package.
+
+### 1a. Importing genotype data to AMRgen's standard table format
+The `import_amrfp()` function lets you load genotype data from AMRFinderPlus output files, and process it to generate an object with the key columns needed to work with the `AMRgen` package.
 
 ``` {r import_amrfp}
-# Example AMRFinderPlus genotyping output
+# Example AMRFinderPlus genotyping output (from Allthebacteria project)
 ecoli_geno_raw
 
 # Load AMRFinderPlus output
-#    (replace 'ecoli_geno_raw' with the filepath for any AMRFinderPlus output)
-ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
+ecoli_geno <- import_amrfp(
+  input_table = ecoli_geno_raw, # (replace 'ecoli_geno_raw' with the filepath for any AMRFinderPlus output)
+  sample_col = "Name",
+  # you can optionally specify the below key column names if they differ in your dataframe to standard AMRFinderPlus outputs
+  element_symbol_col = "Gene symbol", # or "Element symbol"
+  element_type_col = "Element type", # or "Type"
+  element_subtype_col = "Element subtype",
+  method_col = "Method",
+  node_col = "Hierarchy node",
+  subclass_col = "Subclass",
+  class_col = "Class"
+)
 
 # Check the format of the processed genotype table
 head(ecoli_geno)
 ```
 
-The genotype table has one row for each genetic marker detected in an input genome, i.e. one per strain/marker combination.
+The genotype table has one row for each genetic marker detected in an input genome, i.e. one per strain/marker combination. This means your output table may end up with more columns than your input table, as markers conferring resistance to multiple drug classes will be expanded into several rows.
 
-If your genotype data is not in AMRFinderPlus format, you can wrangle other input data files into the necessary format.
+If your genotype data is not in AMRFinderPlus format, you can wrangle other input data files into the necessary format. If only your column names differ to standard AMRFinderPlus inputs, you can specify these using `element_symbol_col`, `element_type_col`, `element_subtype_col`, `method_col`, `node_col`, `subclass_col` and `class_col`.
 
-The essential columns for a genotype table to work with `AMRgen` functions are:
+The essential columns for a genotype table to work with downstream `AMRgen` functions are:
 
-* `Name`: character string giving the sample name, used to link to sample names in the phenotype file (this column can have a different name, in which case you'll need to make sure it is the first column in the dataframe OR pass its name to the functions using `geno_sample_col`)
+* `id`: character string giving the sample name, used to link to sample names in the phenotype file (this column can have a different name, in which case you'll need to make sure it is the first column in the dataframe OR pass its name to the functions using `geno_sample_col`)
 
 * `marker`: character string giving the name of the genetic marker detected
 
@@ -65,22 +83,84 @@ The essential columns for a genotype table to work with `AMRgen` functions are:
 
 NOTE: You should consider whether you have genomes with no AMR markers detected by genotyping, and how to make sure these are include in your analyses. E.g. AMRFinderPlus will output one row per genome/marker combination, but if you have a genome with no markers detected, there will be no row at all for that genome in the concatenated output file. If your species has core genes included in AMRFinderPlus this probably won't be a problem as you would expect some calls for every genome (e.g. AMRFinderPlus will report blaSHV, oqxA, oqxB, fosA in all Klebsiella pneumoniae genomes, so all input genomes will appear in the concatenated output file). An easy solution is to run a check to make sure that all genome names in your input dataset are represented in the genotype table, and if any are missing add empty rows for these using e.g. `tibble(Name=missing_samples) %>% bind_rows(genotype_table)`.
 
-## 2. Phenotype table
-The `import_ncbi_ast()` function imports AST data from NCBI format files.
+### 1b. Summarising a genotype table
+You can summarise the content of a genotype table using the inbuilt `summarise_geno()` function.
+``` {r summarise_geno}
+ecoli_geno_summary <- summarise_geno(ecoli_geno)
 
+# Number of unique samples, markers, genes, drugs, classes, and variation types
+ecoli_geno_summary$uniques
+
+# Unique counts of samples, markers, genes, drugs, and classes - per variation type
+ecoli_geno_summary$per_type
+```
+
+The `summarise_geno()` function also returns a list of drugs and classes represented in the table, and the associated number of unique markers, unique samples, and total hits for each drug/class. Ordering by sample count, we see the most common class is efflux... there are only 3 efflux-associated markers but there are 11,828 hits to these across 5,258 samples (i.e. all samples have at least one). Next most common are markers associated with beta-lactams... there are 22 different markers with 6,379 hits across 4,989 of our 5,258 samples.
+
+``` {r summarise_geno_drugs}
+ecoli_geno_summary$drugs
+
+# Order by sample count per drug/class
+ecoli_geno_summary$drugs %>% arrange(-samples)
+```
+
+Ordering by marker count, we see the classes with the most different markers associated are quinolones (45 unique markers detected across 1,822 unique samples), third generation cephalosporins (32 unique markers detected across 1,065 unique samples) and beta-lactams (22 unique markers detected across 4,989 unique samples).
+``` {r summarise_geno_drugs_bymarkercount}
+ecoli_geno_summary$drugs %>% arrange(-markers)
+```
+
+The `summarise_geno()` function also returns a list of markers represented in the table, annotated with the associated drugs/classes and variation types. The column 'n' indicates the count of hits detected per marker. Ordering by this column, we see the most common markers are acrF, blaEC and glpT_E448K.
+``` {r summarise_geno_markers}
+ecoli_geno_summary$markers %>% arrange(-n)
+```
+
+Filtering specifically for markers associated with quinolones, we can find out more about the 45 markers for this class that were found in the dataset.
+Summarising by variation type, we see there are 12 markers indicating detection of an acquired gene, 2 indicating inactivating mutaions, and 31 indicating protein mutations. Sorting by marker frequency, we can see the full list of 45 unique markers and that the most common is a protein variant in gyrA, gyrA_S83L. Filtering to "Gene presence detected" we can that the most common acquired gene was aac(6')-Ib-cr5.
+``` {r summarise_geno_markers_quinolones}
+# Count the different types of variants found
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones") %>%
+  count(`variation type`)
+
+# Sort by marker frequency to see the most common markers
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones") %>%
+  arrange(-n)
+
+# Filter to acquired genes and sort by frequency, to see the most common acquired genes
+ecoli_geno_summary$markers %>%
+  filter(drug_class == "Quinolones" & `variation type` == "Gene presence detected") %>%
+  arrange(-n)
+```
+
+## 2. Phenotype table
+
+### 2a. Importing phenotype datato AMRgen's standard table format
+The `import_pheno()` function imports AST data from NCBI or other standard formats
 ``` {r import_ncbi_ast}
 # Example E. coli AST data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
-# You can make your own from NCBI of EBI antibiogram format data using e.g.:
-#    import_ast("filepath/AST.tsv", format="ncbi", interpret_clsi=T)
-#    import_ast("filepath/AST.tsv", format="ebi", interpret_eucast=T)
 ecoli_ast
 
 head(ecoli_ast)
+
+
+# You can make your own from different file formats, and interpret against breakpoints, using:
+#    import_pheno("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
+#    import_pheno("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
 ```
 
-The phenotype table has one row for each assay measurement, i.e. one per strain/drug combination.
-If your assay data is not in NCBI AST format, you can wrangle other input data files into the necessary format.
+Data can be imported from various standard formats using the `import_pheno` function, and re-interpreted using latest breakpoints and/or ECOFF. Use `?import_pheno` to see the available formats and other options.
+
+If your assay data is not in a standard format, you can wrangle other input data files into the necessary format, manually and/or with the help of the `format_ast` function.
+
+``` {r import_ast_help, eval=F}
+?import_pheno
+
+?format_ast
+```
+
+The phenotype table is long form, with one row for each assay measurement, i.e. one per strain/drug combination.
 
 The essential columns for a phenotype table to work with `AMRgen` functions are:
 
@@ -98,6 +178,39 @@ If you want to do analyses with raw assay data (e.g. upset plots) you will need 
 
 * `disk`: disk diffusion zone diameter in the form of an AMR package `disk` class (can be created from a column with assay values as string, using `AMR::as.disk(disk_string)`)
 
+The import functions also standardise names for the following common fields:
+
+* `method`: The laboratory testing method (e.g., "MIC", "disk diffusion", "Etest", "agar dilution")
+
+* `platform`: The laboratory testing platform/instrument if relevant (e.g., "Vitek", "Phoenix", "Sensititre").
+
+* `guideline`: The testing standard recorded in the input file as being used to make the provided phenotype interpretations (e.g. "CLSI", "EUCAST")
+
+* `source`: An identifier for the dataset from which each data point was sourced (e.g. study or hospital name, pubmed ID, bioproject accession).
+
+### 2b. Summarising a phenotype table
+You can summarise the content of a phenotype table using the inbuilt `summarise_pheno()` function.
+``` {r summarise_peno}
+ecoli_pheno_summary <- summarise_pheno(ecoli_ast, pheno_cols = c("pheno_clsi", "pheno_provided", "ecoff"))
+
+# Number of samples, drugs, species, and methods included in phenotype table
+ecoli_pheno_summary$uniques
+```
+
+The `summarise_pheno()` function returns a list of drugs and species represented in the table, and the associated number of samples with MIC measures, disk measures, both, or neither (S/I/R calls only).
+``` {r summarise_pheno_drugs}
+# Number of samples with measurements from MIC vs disk vs both or neither, per bug-drug combination
+ecoli_pheno_summary$drugs
+
+# Number of samples with measurements from different methods, platforms, and guidelines
+ecoli_pheno_summary$details
+```
+
+The `summarise_pheno()` can also summarise, for each categorical phenotype column, the number in each category (S/I/R for interpretation against breakpoints, or NWT/WT for interpretation against ECOFF). This is helpful to explore whether your data set has sufficient numbers of R vs S, or NWT vs NWT, to be informative for downstream analyses of genotypes.
+``` {r summarise_pheno_categories}
+ecoli_pheno_summary$pheno_counts_list
+```
+
 ## 3. Plot phenotype data distribution
 
 It is always a good idea to check the distribution of raw AST data that we have to work with. The function `assay_by_var()` can be used to plot the distribution of MIC or disk measurements, coloured by a variable.
@@ -105,28 +218,60 @@ It is always a good idea to check the distribution of raw AST data that we have 
 # Example E. coli AST data from NCBI
 
 # Plot MIC distribution, coloured by CLSI S/I/R call
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi")
-
+assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi")
 ```
 
 It's a good idea to make sure that the `SIR` field in the input data file has been interpreted correctly against the breakpoints. The AMRgen function `checkBreakpoints()` can be used to help look up breakpoints in the `AMR` package. Or, if you provide the function `assay_by_var()` with a species and guideline, it can look up the breakpoints and ECOFF and annotate these directly on the plot.
 
 ``` {r plot_mic_breakpoints}
 # Look up breakpoints recorded in the AMR package
-checkBreakpoints(species="E. coli", guide="CLSI 2025", antibiotic="Ciprofloxacin", assay="MIC")
+checkBreakpoints(species = "E. coli", guide = "CLSI 2025", antibiotic = "Ciprofloxacin", assay = "MIC")
 
 # Specify species and guideline, to annotate with CLSI breakpoints
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025")
-
+assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025")
 ```
 
-When aggregating AST data from different methods and sources, it is a good idea to check the distributions broken down by method or source. This can be done easily by passing the `assay_by_var()` function a variable name to facet by, which means a separate distribution will be plotted for each value of that variable (e.g. each type of 'method' in our AST test data).
+When aggregating AST data from different methods and sources, it is a good idea to check the distributions broken down by method or source. This can be done easily by passing the `assay_by_var()` function a variable name to facet by, which means a separate distribution will be plotted for each value of that variable (e.g. each type of 'method' in our AST test data). Note that this public data from NCBI includes non-standard values in the platform (Sensititre / Sensititer) in the platform
 ``` {r plot_mic_breakpoints_method, fig.height=8}
 # specify facet_var="method" to generate facet plots by assay method
-assay_by_var(pheno_table=ecoli_ast, antibiotic="Ciprofloxacin", measure="mic", colour_by = "pheno_clsi", species="E. coli", guideline="CLSI 2025", facet_var ="method")
+mic_by_platform <- assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
+
+mic_by_platform
 ```
 
-## 4. Combine genotype and phenotype data for a given drug
+## 4. Download reference assay distributions and compare to your data
+
+It can also be helpful to check how your MIC or disk zone distribution compares to the reference distributions, to get a sense of whether your assays were calibrated correctly or if there may be some issues with a given dataset. AMRgen has functions to download the latest reference distributions from EUCAST (mic.eucast.org), and plot them on their own or with your data overlaid.
+``` {r get_eucast_distribution, eval=F}
+# get MIC distribution for ciprofloxacin, for all organisms
+cip_mic_data <- get_eucast_mic_distribution("cipro")
+
+# specify microorganism to only get results for that pathogen
+ecoli_cip_mic_data <- get_eucast_mic_distribution("cipro", "E. coli")
+
+# get disk diffusion data instead
+ecoli_cip_disk_data <- get_eucast_disk_distribution("cipro", "E. coli")
+```
+
+``` {r get_eucast_data_dummy}
+# Ciprofloxacin MIC reference distribution for E. coli
+ecoli_cip_mic_data
+```
+
+``` {r compare_mic_with_eucast, eval=F}
+# Compare reference distribution to example E. coli data
+ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
+
+ecoli_cip_vs_ref <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
+```
+
+``` {r compare_mic_with_eucast_dummy}
+ecoli_cip_vs_ref
+
+ggplot2::autoplot(ecoli_cip_vs_ref)
+```
+
+## 5. Combine genotype and phenotype data for a given drug
 
 The genotype and phenotype tables can include data related to many different drugs, but we need to analyse things one drug at a time. The function `get_binary_matrix()` can be used to extract phenotype data for a specified drug, and genotype data for markers associated with a specified drug class. It returns a single dataframe with one row per strain, for the subset of strains that appear in both the genotype and phenotype input tables. Each row indicates, for one strain, both the phenotypes (with SIR column, any assay columns if desired, and boolean 1/0 coding of R and NWT status) and the genotypes (one column per marker, with boolean 1/0 coding of marker presence/absence).
 
@@ -151,7 +296,34 @@ head(cip_bin)
 colnames(cip_bin)
 ```
 
-## 5. Model a binary drug phenotype using genetic marker presence/absence data
+This binary matrix can be used as the starting a lot of downstream analyses.
+
+For example, we can use it as input to `assay_by_var` to plot the assay distribution coloured by presence of a particular genetic marker
+``` {r assay_by_genotype}
+assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", antibiotic = "Ciprofloxacin")
+
+# count the number of gyrA mutations per genome
+gyrA_mut <- cip_bin %>%
+  dplyr::mutate(gyrA_mut = rowSums(across(contains("gyrA_") & where(is.numeric)), na.rm = T)) %>%
+  select(mic, gyrA_mut)
+
+# plot the MIC distribution, coloured by count of gyrA mutations
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin")
+
+mic_by_gyrA_count
+
+# count the number of genetic determinants per genome
+marker_count <- cip_bin %>%
+  mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R", "NWT"))), na.rm = T)) %>%
+  select(mic, marker_count)
+
+# plot the MIC distribution, coloured by count of associated genetic markers
+mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1))
+
+mic_by_marker_count
+```
+
+## 6. Model a binary drug phenotype using genetic marker presence/absence data
 
 Logistic regression models can be informative to get an overview of the association between a drug resistance phenotype, and each marker thought to be associated with the relevant drug class.
 
@@ -159,11 +331,11 @@ The `amr_logistic()` function uses the `get_binary_matrix` function to generate 
 
 Note that the 'NWT' variable in the latter model can be taken either from a precomputed ECOFF-based call of WT=wildtype/NWT=nonwildtype (encoded in the input column `ecoff_col`), or computed from the S/I/R phenotype as NWT=R/I and WT=S.
 
-The `amr_logistic()` function can fit the model using either the standard logistic regression approach implemented in the `glm()` function, or Firth's bias-reduced penalized-likelihood logistic regression implemented in the `logistf` package. The default is to use Firth's regression, as standard logistic regression can fail if there are too observations in some subgroups, which happens quite often with this kind of data. To use `glm()` instead, set `glm=TRUE`.
+The `amr_logistic()` function can fit the model using either the standard logistic regression approach implemented in the `glm()` function, or Firth's bias-reduced penalized-likelihood logistic regression implemented in the `logistf` package. The default is to use Firth's regression, as standard logistic regression can fail if there are too few observations in some subgroups, which happens quite often with this kind of data. To use `glm()` instead, set `glm=TRUE`.
 
 The function also filters out markers with too few observations in the combined genotype/phenotype dataset. The default minimum is 10 but this can be changed using the `maf` parameter (maf stands for 'minor allele frequency'). If you are having trouble fitting models, it may be because too many markers and combinations have very few observations, and you might try increasing the `maf` value to ensure that rare markers are excluded prior to model fitting.
 
-Using this modelling approach, a negative assocation with a single marker and phenotype call of R and NWT is a strong indication that marker does not contribute to resistance. Note however that a positive association between a marker and R or NWT does not necessarily imply the marker is independently contributing to the resistance phenotype, as there may be non-independence between markersthat is not adequately adjusted for by the model.
+Using this modelling approach, a negative association with a single marker and phenotype call of R and NWT is a strong indication that marker does not contribute to resistance. Note however that a positive association between a marker and R or NWT does not necessarily imply the marker is independently contributing to the resistance phenotype, as there may be non-independence between markers that is not adequately adjusted for by the model.
 
 The function returns 4 objects:
 
@@ -206,16 +378,15 @@ models$modelR
 
 models$modelNWT
 
-# Note the matrix output is the same as cip_bin, but without the MIC data as this is not required
-#    for logistic regression.
-models$bin_mat
+# Note the matrix output is the same as cip_bin.
+models$binary_matrix
 ```
 
-## 6. Assess solo positive predictive value of genetic markers
+## 7. Assess solo positive predictive value of genetic markers
 
 The strongest evidence of the effect of an individual genetic marker on a drug phenotype is its positive predictive value (PPV) for resistance amongst strains that carry this marker 'solo' with no other markers known to be associated with resistance to the drug class. This is referred to as 'solo PPV'. 
 
-The function `solo_ppv_analysis()` takes as input our genotype and phenotype tables, and calculates solo PPV for resistance to a specific drug (included in our phenotype table) formarkers associated with the specified drug class (included in our genotype table). It uses the `get_binary_matrix()` function to first calculate the binary matrix, then filters out all samples that have more than one marker.
+The function `solo_ppv_analysis()` takes as input our genotype and phenotype tables, and calculates solo PPV for resistance to a specific drug (included in our phenotype table) for markers associated with the specified drug class (included in our genotype table). It uses the `get_binary_matrix()` function to first calculate the binary matrix, then filters out all samples that have more than one marker.
 
 It then calculates for each remaining marker, amongst the genomes in which that marker is found solo, the number of genomes, the number and proportion that are R or NWT, and the 95% confidence intervals for these proportions. The values are returned as a table, and also plotted so we can easily visualise the distribution of S/I/R calls and the solo PPV for R and NWT, for each solo marker.
 
@@ -248,7 +419,7 @@ soloPPV_cipro$solo_binary
 soloPPV_cipro$amr_binary
 ```
 
-## 7. Compare markers with assay data
+## 8. Compare markers with assay data
 
 So far we have considered only the impact of individual markers, and their association with categorical S/I/R or WT/NWT calls.
 
@@ -272,41 +443,4 @@ cipro_mic_upset <- amr_upset(
 
 # Output table
 cipro_mic_upset$summary
-```
-
-## 8. Download reference MIC distributions and compare to your data
-
-``` {r get_eucast_distribution}
-# get MIC distribution for ciprofloxacin, for all organisms
-get_eucast_mic_distribution("cipro")
-
-# specify microorganism to only get results for that pathogen
-ecoli_cip_mic_data <- get_eucast_mic_distribution("cipro", "E. coli")
-
-# get disk diffusion data instead
-ecoli_cip_disk_data <- get_eucast_disk_distribution("cipro", "E. coli")
-
-# plot the MIC data
-mics <- rep(ecoli_cip_mic_data$mic, ecoli_cip_mic_data$count)
-ggplot2::autoplot(
-  mics,
-  ab = "cipro",
-  mo = "E. coli",
-  title = "E. coli cipro reference distribution"
-)
-```
-
-``` {r compare_mic_with_eucast}
-# Compare reference distribution to random test data
-my_mic_values <- AMR::random_mic(500)
-comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "E. coli")
-comparison
-ggplot2::autoplot(comparison)
-
-
-# Compare reference distribution to example E. coli data
-ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
-comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
-comparison
-ggplot2::autoplot(comparison)
 ```

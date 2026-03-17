@@ -51,6 +51,7 @@ For the current list, run \code{\link[=eucast_supported_ab_distributions]{eucast
 }
 }
 \examples{
+\dontrun{
 get_eucast_mic_distribution("cipro")
 
 # not returning as frequency table
@@ -75,4 +76,5 @@ my_mic_values <- AMR::random_mic(500)
 comparison <- compare_mic_with_eucast(my_mic_values, ab = "cipro", mo = "K. pneumoniae")
 comparison
 ggplot2::autoplot(comparison)
+}
 }

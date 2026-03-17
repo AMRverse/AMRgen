@@ -48,7 +48,7 @@ navbar:
       href: "reference/index.html"
     - text: "Vignettes"
       icon: "fa-book"
-      href: "articles/AnalysingGenoPhenoData.html"
+      href: "articles"
   right:
     - text: "Source Code"
       icon: "fab fa-github"
@@ -58,6 +58,11 @@ articles:
   - title: "Vignettes"
     contents:
       - AnalysingGenoPhenoData
+      - DownloadGenoPhenoData
+      - NeisseriaGonoExamples
+      - SalmonellaExamples
+      - StaphAureusClindamycin
+      - Concordance
 
 # Reference section grouping
 reference:
@@ -68,11 +73,16 @@ reference:
       - starts_with("import")
       - starts_with("export")
       - starts_with("convert")
+      - starts_with("download")
+      - starts_with("summarise")
+      - starts_with("format")
       - get_binary_matrix
+      - get_combo_matrix
+      - combo_stats
       - as.gene
       - gtdb.mo
-      - format_ast
-      - download_ebi
+      - starts_with("query_ncbi")
+      - hamronize_data
 
   - title: "Resistance Interpretation"
     desc: >
@@ -87,19 +97,23 @@ reference:
     desc: >
       Statistical models for resistance prediction and inference, including logistic regression and Firth regression.
     contents:
+      - amr_upset
       - solo_ppv_analysis
+      - ppv
       - amr_logistic
       - glm_details
       - logistf_details
       - getBreakpoints
       - checkBreakpoints
+      - concordance
+      - concordance_from_tables
+      - print.amr_concordance
 
   - title: "Visualisation & Reporting"
     desc: >
       Tools to visualise results, including MIC distributions, model outputs, and genotype-phenotype relationships.
     contents:
       - matches("plot")
-      - amr_upset
       - assay_by_var
 
   - title: "Data"
@@ -109,7 +123,34 @@ reference:
       - ecoli_ast
       - ecoli_ast_raw
       - ecoli_geno_raw
-
+      - ecoli_cip_vs_ref
+      - ecoli_cip_mic_data
+      - staph_ast_ncbi
+      - staph_ast_ncbi_raw
+      - staph_ast_ncbi_cloud_raw
+      - staph_geno_ncbi_cloud_raw
+      - staph_ast_ebi
+      - staph_geno_ebi
+      - amrfp_drugs_table
+      - pheno_eco_2075
+      - geno_eco_2075
+      - eurogasp_geno_raw
+      - ngono_cro_geno_raw
+      - ngono_tet_geno_raw
+      - ngono_cro_pheno_raw
+      - eurogasp_pheno_raw
+      - azm_comparison
+      - cip_comparison
+      - cro_comparison
+      - cfm_comparison
+      - ngono_tet_pheno_raw
+      - salm_raw
+      - kleborate_raw
+      - kleborate_raw_v313
+      - kleborate_classes
+      - ast_CLI_public
+      - afp_CLI_public
+      - ST_data_CLI
 
 # Footer configuration
 footer:
@@ -118,4 +159,4 @@ footer:
     right: [logo]
   components:
     devtext: 'Free and Open Source (GPL-3), brought by AMRverse/AMRgen Development Team'
-    logo: 'Our goal is to develop interpretive standards for AMR genotypes, akin to the interpretive standards developed by EUCAST and CLSI for antimicrobial susceptibility phenotyping.'
+    logo: 'AMRverse is an ecosystem for AMR data science. We aim to make common tasks easier and faster, via interoperable tools and resources.'

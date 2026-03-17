@@ -4,10 +4,20 @@ Version: 0.0.1.9000
 Date: 2025-09-01
 Authors@R: c(
     person(family = "Berends", c("Matthijs", "S."), comment = c(ORCID = "0000-0001-7620-1800"), email = "m.s.berends@umcg.nl", role = c("aut", "cre")),
-    person(family = "Couto",   c("Natacha"),        comment = c(ORCID = "0000-0002-9152-5464"), role = "aut"),
-    person(family = "Dyson", c("Zoe", "A."),        comment = c(ORCID = "0000-0002-8887-3492"), email = "zoe.dyson@lshtm.ac.uk", role = "aut"),
+    person(family = "Holt",    c("Kathryn", "E."),  comment = c(ORCID = "0000-0003-3949-2471"), email = "drkatholt@gmail.com", role = "aut"),
     person(family = "Hawkey",  c("Jane"),           comment = c(ORCID = "0000-0001-9661-5293"), role = "aut"),
-    person(family = "Holt",    c("Kat"),            comment = c(ORCID = "0000-0003-3949-2471"), role = "aut"))
+    person(family = "Couto",   c("Natacha"),        comment = c(ORCID = "0000-0002-9152-5464"), role = "aut"),
+    person(family = "Foster-Nyarko", c("Ebenezer"), comment = c(ORCID = "0000-0001-6620-9403"), role = "aut"),
+    person(family = "Knight", c("Gwen", "M."),      comment = c(ORCID = "0000-0002-7263-9896"), role = "aut"),
+    person(family = "Dyson", c("Zoe", "A."),        comment = c(ORCID = "0000-0002-8887-3492"), email = "zoe.dyson@lshtm.ac.uk", role = "aut"),
+    person(family = "Tsang",  c("Kara", "K."),      comment = c(ORCID = "0000-0001-7742-8855"), role = "aut"),
+    person(family = "Prasad",  c("Arjun", "B."),    comment = c(ORCID = "0000-0002-1343-8664"), role = "aut"),
+    person(family = "Sánchez-Busó",  c("Leonor"),   comment = c(ORCID = "0000-0002-4162-0228"), role = "aut"),
+    person(family = "Argimón",  c("Silvia"),        comment = c(ORCID = "0000-0002-2884-3857"), role = "aut"),
+    person(family = "Nagy", c("Dorottya"), role = "aut"),
+    person(family = "Chaput", c("Dominique", "L."), comment = c(ORCID = "0000-0002-9736-2619"), role = "aut"),
+    person(family = "Goodman",  c("Richard"),       comment = c(ORCID = "0009-0008-0578-789X"), role = "aut")
+    )
 Description: 
     The AMRgen package provides tools for interpreting antimicrobial resistance (AMR) genes, 
     integrating genomic data with phenotypic antimicrobial susceptibility testing (AST) data, 
@@ -16,35 +26,48 @@ Description:
     visualise multidrug resistance patterns using UpSet plots, and generate NCBI-compliant 
     antibiograms. Designed for AMR research and surveillance, AMRgen aims to support data-driven 
     decision-making in combating AMR on a global scale.
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.1.0)
 Imports:
     AMR (>= 3.0.1),
     arrow,
+    bigrquery,
     cli (>= 3.6.0),
     dplyr (>= 1.1.0),
     forcats (>= 1.0.0),
     ggplot2 (>= 3.1.0),
+    jsonlite,
     logistf (>= 1.26.0),
+    methods,
     patchwork (>= 1.3.0),
+    purrr,
     RCurl,
     readr (>= 2.1.0),
+    readxl (>= 1.4.0),
+    rentrez,
     rlang (>= 1.0.0),
     rvest (>= 1.0.0),
     stringr (>= 1.5.1),
     tibble (>= 3.1.0),
-    tidyr (>= 1.1.0)
+    tidyr (>= 1.1.0),
+    XML,
+    yardstick (>= 1.2.0)
 Suggests:
+    devtools,
+    gggenes,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    styler,
+    testthat (>= 3.0.0),
+    viridisLite
 Remotes:
     msberends/AMR
 License: GPL-3 | file LICENSE
-URL: https://AMRverse.github.io/AMRgen/, https://github.com/AMRverse/AMRgen
+URL: https://amrgen.org, https://AMRverse.github.io/AMRgen/, https://github.com/AMRverse/AMRgen
 BugReports: https://github.com/AMRverse/AMRgen/issues
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 LazyData: true
+LazyDataCompression: xz
 VignetteBuilder: knitr

@@ -2,20 +2,28 @@
 % Please edit documentation in R/amr_upset.R
 \name{amr_upset}
 \alias{amr_upset}
-\title{Generate a Series of Plots for AMR Gene and Combination Analysis}
+\title{Generate Upset Plot}
 \usage{
 amr_upset(
-  binary_matrix,
+  binary_matrix = NULL,
+  assay = "mic",
   min_set_size = 2,
-  order = "",
+  order = "value",
+  geno_table,
+  pheno_table,
+  antibiotic = NULL,
+  drug_class_list = NULL,
+  geno_sample_col = NULL,
+  pheno_sample_col = NULL,
+  sir_col = NULL,
+  ecoff_col = "ecoff",
+  marker_col = "marker",
   plot_set_size = FALSE,
   plot_category = TRUE,
   print_category_counts = FALSE,
   print_set_size = FALSE,
   boxplot_col = "grey",
-  assay = "mic",
-  SIR_col = c(S = "#3CAEA3", SDD = "#8FD6C4", I = "#F6D55C", R = "#ED553B"),
-  antibiotic = NULL,
+  SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
   species = NULL,
   bp_site = NULL,
   guideline = "EUCAST 2025",
@@ -25,42 +33,59 @@ amr_upset(
 )
 }
 \arguments{
-\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{get_binary_matrix} function. Expected columns are an identifier (column 1, any name), \code{pheno} (class sir, with S/I/R categories to colour points), \code{mic} (class mic, with MIC values to plot), and other columns representing gene presence/absence (binary coded, i.e., 1 = present, 0 = absent).}
-
-\item{min_set_size}{An integer specifying the minimum size for a gene set to be included in the analysis and plots. Default is 2. Only genes with at least this number of occurrences are included in the plots.}
-
-\item{order}{A character string indicating the order of the combinations on the x-axis. Options are:
-\itemize{
-\item "" (default): decreasing frequency of combinations
-\item "genes": order by the number of genes in each combination
-\item "value": order by the median assay value (MIC or disk zone) for each combination.
-}}
-
-\item{plot_set_size}{Logical indicating whether to include a bar plot showing the set size (i.e., number of times each combination of markers is observed). Default is FALSE.}
-
-\item{plot_category}{Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the \code{pheno} column in the input file). Default is TRUE.}
-
-\item{print_category_counts}{Logical indicating whether, if \code{plot_category} is TRUE, to print the number of strains in each resistance category for each marker combination in the plot. Default is FALSE.}
-
-\item{print_set_size}{Logical indicating whether, if \code{plot_set_size} is TRUE, to print the number of strains with each marker combination on the plot. Default is FALSE.}
-
-\item{boxplot_col}{Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is "grey".}
+\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{antibiotic}, \code{drug_class_list} and optionally \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
 
 \item{assay}{A character string indicating whether to plot MIC or disk diffusion data. Must be one of:
 \itemize{
-\item "mic": plot MIC data stored in column \code{mic}
-\item "disk": plot disk diffusion data stored in column \code{disk}
+\item \code{"mic"}: plot MIC data stored in column \code{mic}
+\item \code{"disk"}: plot disk diffusion data stored in column \code{disk}
 }}
 
-\item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., "R", "I", "S"), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package \code{scale_colour_sir()}.}
+\item{min_set_size}{An integer specifying the minimum size for a gene set to be included in the analysis and plots. Default is 2. Only marker combinations with at least this number of occurrences are included in the plots.}
 
-\item{antibiotic}{(optional) Name of antibiotic, so we can retrieve breakpoints to the assay value distribution plot.}
+\item{order}{A character string indicating the order of the combinations on the x-axis. Options are:
+\itemize{
+\item \code{""}: decreasing frequency of combinations
+\item \code{"genes"}: order by the number of genes in each combination
+\item \code{"value" (default)}: order by the median assay value (MIC or disk zone) for each combination
+\item \code{"ppv"}: order by the PPV estimated for each combination
+}}
 
-\item{species}{(optional) Name of species, so we can retrieve breakpoints to add to the assay value distribution plot.}
+\item{geno_table}{(Required if \code{binary_matrix} not provided) A data frame containing genotype data, formatted with \code{\link[=import_amrfp]{import_amrfp()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{bp_site}{(optional) Breakpoint site to retrieve (only relevant if also supplying \code{species} and \code{antibiotic} to retrieve breakpoints to plot, and not supplying breakpoints via \code{bp_S}, \code{bp_R}, \code{ecoff_bp}).}
+\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_ast]{import_ast()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{guideline}{(optional) Guideline to use when looking up breakpoints (default 'EUCAST 2025')}
+\item{antibiotic}{Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.}
+
+\item{drug_class_list}{(Only relevant if \code{binary_matrix} not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).}
+
+\item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
+
+\item{pheno_sample_col}{A character string (optional) specifying the column name in \code{pheno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
+
+\item{sir_col}{A character string specifying the column name in \code{pheno_table} that contains the resistance interpretation (SIR) data. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if \code{binary_matrix} not provided.}
+
+\item{ecoff_col}{A character string specifying the column name in \code{pheno_table} that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. Default \code{ecoff}. Set to \code{NULL} if not available.  Only used if \code{binary_matrix} not provided.}
+
+\item{marker_col}{A character string specifying the column name in \code{geno_table} containing the marker identifiers. Default \code{"marker"}. Only used if \code{binary_matrix} not provided.}
+
+\item{plot_set_size}{Logical indicating whether to include a bar plot showing the set size (i.e., number of times each combination of markers is observed). Default is \code{FALSE}.}
+
+\item{plot_category}{Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the \code{pheno} column in the input file). Default is \code{TRUE}.}
+
+\item{print_category_counts}{Logical indicating whether, if \code{plot_category=TRUE}, to print the number of strains in each resistance category for each marker combination in the plot. Default is \code{FALSE}.}
+
+\item{print_set_size}{Logical indicating whether, if \code{plot_set_size=TRUE}, to print the number of strains with each marker combination on the plot. Default is \code{FALSE}.}
+
+\item{boxplot_col}{Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is \code{"grey"}.}
+
+\item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
+
+\item{species}{Optional. Species name used for breakpoint lookup.}
+
+\item{bp_site}{Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.}
+
+\item{guideline}{Guideline used for breakpoint lookup. Default is \code{"EUCAST 2025"}.}
 
 \item{bp_S}{(optional) S breakpoint to add to plot (numerical).}
 
@@ -72,14 +97,18 @@ amr_upset(
 A list containing the following elements:
 \itemize{
 \item \code{plot}: A grid of plots displaying: (i) grid showing the marker combinations observed, MIC distribution per marker combination, frequency per marker and (optionally) phenotype classification and/or number of samples for each marker combination.
+\item \code{binary_matrix}: A copy of the genotype-phenotype binary matrix (either provided as input or generated by the function)
 \item \code{summary}: A data frame summarizing each marker combination observed, including median MIC (and interquartile range), number of resistant isolates, and positive predictive value for resistance.
 }
 }
 \description{
-This function generates a set of visualizations to analyze AMR gene combinations, MIC values, and gene prevalence from a given binary matrix. It creates several plots, including MIC distributions, a bar plot for the percentage of strains per combination, a dot plot for gene combinations in strains, and a plot for gene prevalence. It also outputs a table summarizing the MIC distribution (median, lower, upper) and number resistant, for each marker combination.
+This function generates an upset plot showing summaries of phenotype results (assay distributions, phenotype category percentages, and/or predictive value for phenotype) for each combination of markers observed in the data.
 }
 \examples{
+\dontrun{
 ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
+
+# Generate binary matrix
 binary_matrix <- get_binary_matrix(
   geno_table = ecoli_geno,
   pheno_table = ecoli_ast,
@@ -90,5 +119,16 @@ binary_matrix <- get_binary_matrix(
   keep_assay_values_from = "mic"
 )
 
-amr_upset(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
+# Run upset plot analysis using this binary_matrix
+cip_mic_upset <- amr_upset(binary_matrix, assay = "mic")
+
+# Alternatively, generate binary matrix and run ppv() in one step
+cip_mic_upset <- amr_upset(
+  assay = "mic",
+  geno_table = ecoli_geno,
+  pheno_table = ecoli_ast,
+  antibiotic = "Ciprofloxacin",
+  sir_col = "pheno_clsi"
+)
+}
 }

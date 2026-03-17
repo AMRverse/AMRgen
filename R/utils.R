@@ -22,11 +22,21 @@ utils::globalVariables(c(
   "2.5 %",
   "97.5 %",
   "ab",
+  "ab_code",
+  "antibiotic",
+  "antibiotic_name",
+  "ab_col",
+  "ab_name",
+  "AMR_associated_publications",
   "AMR::clinical_breakpoints",
   "Antibiotic",
   "antibiotics",
+  "ast_standard",
   "binary_comb",
+  "biosample_id",
   "BioProject",
+  "BioSample_ID",
+  "Collection Date",
   "breakpoint_R",
   "breakpoint_S",
   "category",
@@ -43,7 +53,11 @@ utils::globalVariables(c(
   "Disk diffusion (mm)",
   "disk",
   "disk_dose",
+  "disk_potency",
   "drug_agent",
+  "drug_agent_code",
+  "drug_agent_name",
+  "drug_name_raw",
   "drug_class",
   "ecoff",
   "ecoff_disk",
@@ -51,6 +65,7 @@ utils::globalVariables(c(
   "ecoff_MIC",
   "Element type",
   "Element subtype",
+  "Element symbol",
   "est",
   "Estimate",
   "eucast",
@@ -63,19 +78,32 @@ utils::globalVariables(c(
   "group",
   "guideline",
   "Hierarchy node",
+  "interp_raw",
+  "is_screening",
   "id",
+  "import_amrfp_ebi",
+  "Lab ID",
+  "laboratory_typing_method",
+  "laboratory_typing_platform",
+  "Laboratory typing method",
   "Laboratory typing platform",
   "marker",
   "marker.label",
   "marker_count",
   "marker_list",
+  "measurement",
   "Measuremen",
+  "measurement_sign",
+  "measurement_units",
   "Measurement sign",
   "median",
   "Method",
   "method",
+  "method_code",
   "MIC (mg/L)",
   "mic",
+  "mic_raw",
+  "Microorganism",
   "microorganism",
   "microorganism_code",
   "mics",
@@ -84,11 +112,16 @@ utils::globalVariables(c(
   "na.omit",
   "Name",
   "name",
+  "Organism",
+  "Organism Name",
   "node",
   "NWT",
   "p",
   "perc",
   "pheno",
+  "pheno_provided",
+  "pheno_screening",
+  "pheno_trm",
   "pheno_clsi_disk",
   "pheno_clsi_mic",
   "pheno_disk",
@@ -97,6 +130,8 @@ utils::globalVariables(c(
   "pheno_mic",
   "pheno_MIC",
   "phenotype-AMR_associated_publications",
+  "phenotype-laboratory_typing_method",
+  "platform",
   "phenotype-antibiotic_name",
   "phenotype-ast_standard",
   "phenotype-gen_measurement",
@@ -111,19 +146,35 @@ utils::globalVariables(c(
   "py_run_string",
   "R",
   "r_to_py",
+  "resistance_phenotype",
+  "row_idx",
   "Resistance phenotype",
+  "sample_name",
   "Scientifi",
   "Scientific name",
   "se",
   "setNames",
   "sig_binary",
+  "Sample",
+  "sir",
+  "sir_exp",
+  "sir_inst",
+  "sir_raw",
+  "sir_exp",
+  "sir_inst",
+  "sir_value",
+  "Specimen date",
   "solo",
   "Source",
   "spp_pheno",
+  "subclass",
   "Subclass",
   "subtype",
   "symbol",
   "Testin",
+  "test_method",
+  "Testing Date",
+  "testing_standard",
   "Testing standard",
   "type",
   "type",
@@ -132,7 +183,68 @@ utils::globalVariables(c(
   "value",
   "variation type",
   "x",
-  "site"
+  "site",
+  "element_symbol_col",
+  "element_type_col",
+  "element_subtype_col",
+  "gene_symbol_col",
+  "subclass_col",
+  "class_col",
+  "amrfp_drugs",
+  "I.n",
+  "I.ppv",
+  "I.se",
+  "NWT.n",
+  "NWT.ppv",
+  "NWT.se",
+  "R.n",
+  "R.ppv",
+  "R.se",
+  "ci_lower",
+  "ci_upper",
+  "colours_ppv",
+  "count_label",
+  "pd",
+  "Type",
+  "organism",
+  "Measurement",
+  "geno_prediction",
+  "truth_value",
+  ".metric",
+  ".estimator",
+  ".estimate",
+  "R_pred",
+  "NWT_pred",
+  "outcome",
+  "metric",
+  "estimate",
+  "I.denom",
+  "NWT.denom",
+  "R.denom",
+  "amr_method",
+  "bioproject_acc",
+  "biosample_acc",
+  "disk_diffusion",
+  "element_symbol",
+  "hierarchy_node",
+  "phenotype",
+  "reagent",
+  "scientific_name",
+  "standard",
+  ".data",
+  "subclass_to_parse",
+  "amrfp_drugs_table",
+  "drug_class_internal",
+  "drug_class_from_agent",
+  "Kleborate_Class",
+  "kleborate_classes",
+  "strain",
+  ".row_id",
+  "sir_interp",
+  "index",
+  "predNWT",
+  "predR",
+  "row_pct"
 ))
 
 
@@ -144,7 +256,7 @@ ignore_unused_imports <- function() {
 #' @importFrom readr read_tsv
 process_input <- function(input) {
   if (is.character(input) && file.exists(input)) {
-    tsv_ext <- paste(rep(c("tsv", "txt"), 5), c(rep("", 2), rep(".gz", 2), rep(".bz2", 2), rep(".xz", 2), rep(".zip", 2)), sep="", collapse = "|")
+    tsv_ext <- paste(rep(c("tsv", "txt"), 5), c(rep("", 2), rep(".gz", 2), rep(".bz2", 2), rep(".xz", 2), rep(".zip", 2)), sep = "", collapse = "|")
     csv_ext <- paste(rep("csv", 5), c("", ".gz", ".bz2", ".xz", ".zip"), sep = "", collapse = "|")
     if (grepl(tsv_ext, input)) {
       data <- readr::read_tsv(input)
@@ -159,7 +271,7 @@ process_input <- function(input) {
     stop("Input must be either a valid file path or a dataframe.")
   }
   # strip any leading hash (e.g. NCBI AST)
-  data <- data %>%  dplyr::rename_with(~stringr::str_remove(.x, "#"))
+  data <- data %>% dplyr::rename_with(~ stringr::str_remove(.x, "#"))
   # Return the dataframe
   return(data)
 }
@@ -189,10 +301,43 @@ font_italic <- function(..., collapse = " ") {
 
 # Helper functions
 safe_execute <- function(expr) {
-  tryCatch({
-    expr
-  }, error = function(e) {
-    message("Error in executing command: ", e$message)
-    return(NULL)
-  })
+  tryCatch(
+    {
+      expr
+    },
+    error = function(e) {
+      message("Error in executing command: ", e$message)
+      return(NULL)
+    }
+  )
+}
+
+# TODO REMOVE THIS CODE FOR CRAN SUBMISSION
+send_to_github <- function() {
+  cli::cli_alert_info("Styling code using {.fn styler::style_pkg}...")
+  st <- utils::capture.output(styler::style_pkg(style = styler::tidyverse_style))
+
+  cli::cli_alert_info("Documenting code using {.fn devtools::document}...")
+  doc <- devtools::document(quiet = TRUE)
+
+  cli::cli_alert_info("Checking code using {.fn devtools::check}...")
+  ch <- devtools::check(quiet = TRUE)
+
+  if (length(ch$errors) > 0 || length(ch$warnings) > 0) {
+    print(ch)
+    cli::cli_alert_danger("Errors, warnings, and notes must be fixed before pushing to GitHub. You're almost there!")
+    return(invisible())
+  }
+
+  cli::cli_alert_success("All tests passed!")
+  commit_msg <- readline("Your commit message: ")
+  q <- utils::askYesNo("Ready to push to GitHub?", prompts = c("Yes", "No", "Cancel"))
+  if (isTRUE(q)) {
+    system2("git", args = "add .")
+    system2("git", args = paste("commit -m '", commit_msg, "'"))
+    system2("git", args = "push")
+    cli::cli_alert_success("Pushed to GitHub.")
+  } else {
+    cli::cli_alert_danger("Cancelled.")
+  }
 }

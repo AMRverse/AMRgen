@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_pheno.R
 \name{import_ebi_ast_ftp}
 \alias{import_ebi_ast_ftp}
-\title{Import and Process AST Data files retrieved from the EBI AMR portal FTP site}
+\title{Import and process antimicrobial phenotype data files retrieved from the EBI AMR portal FTP site}
 \usage{
 import_ebi_ast_ftp(
   input,
@@ -14,23 +14,23 @@ import_ebi_ast_ftp(
 \arguments{
 \item{input}{A string representing the input dataframe, or a path to an input file, to be processed.}
 
-\item{interpret_eucast}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class 'sir'.}
+\item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}.}
 
-\item{interpret_clsi}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class 'sir'.}
+\item{interpret_clsi}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class \code{sir}..}
 
-\item{interpret_ecoff}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 }
 \value{
 A data frame with the processed AST data, including additional columns:
 }
 \description{
-This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from the EBI AMR Portal FTP site (ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either directly or via the function \code{download_ebi()}.
-Note that files downloaded from the EBI AMR Portal web browser (https://www.ebi.ac.uk/amr/data/?view=experiments) are formatted differently and can be imported with the function \code{import_ebi_ast()}
+This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from the \href{ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}{EBI AMR Portal FTP site} either directly or via the function \code{\link[=download_ebi]{download_ebi()}}.
+Note that files downloaded from the \href{https://www.ebi.ac.uk/amr/data/?view=experiments}{EBI AMR Portal web browser} are formatted differently and can be imported with the function \code{\link[=import_ebi_ast]{import_ebi_ast()}}.
 }
 \examples{
 \dontrun{
 # download Salmonella phenotype data from EBI
-pheno_salmonella <- download_ebi(genus="Salmonella")
+pheno_salmonella <- download_ebi(genus = "Salmonella")
 
 # reformat to simplify use with AMRgen functions
 pheno_salmonella <- import_ebi_ast_ftp(pheno_salmonella)

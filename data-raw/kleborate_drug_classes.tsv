@@ -1,0 +1,22 @@
+Kleborate_Class	drug_class
+AGly_acquired	Aminoglycosides
+Col_acquired	Polymyxins
+Fcyn_acquired	Phosphonics
+Flq_acquired	Quinolones
+Gly_acquired	Glycopeptides
+MLS_acquired	Macrolides
+Phe_acquired	Phenicols
+Rif_acquired	Rifamycins
+Sul_acquired	Sulfonamides
+Tet_acquired	Tetracyclines
+Tgc_acquired	Tigecycline
+Tmt_acquired	Trimethoprims
+Bla_acquired	Beta-lactams
+Bla_inhR_acquired	Beta-lactams
+Bla_ESBL_acquired	Cephalosporins (3rd gen.)
+Bla_ESBL_inhR_acquired	Cephalosporins (3rd gen.)
+Bla_Carb_acquired	Carbapenems
+Bla_chr	Beta-lactams
+Omp_mutations	Carbapenems
+Col_mutations	Polymyxins
+Flq_mutations	Quinolones

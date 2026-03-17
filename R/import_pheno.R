@@ -236,7 +236,7 @@ format_ast <- function(input,
 #' @param ast A tibble containing the phenotype measures in standard AMRgen format, as output by [import_ast()]. It must contain assay measurements in columns `mic` (class `mic`) and/or `disk` (class `disk`). Interpretation requires an organism (column `spp_pheno` of class `mo`, or a single value passed via the `species` parameter) and an antibiotic (column `drug_agent` of class `ab`, or a single value passed via the `ab` parameter).
 #' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class `sir`.
 #' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class `sir`.
-#' @param interpret_ecoff A logical value (default is `FALSE`). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class `sir` and coded as `NWT` (nonwildtype) or `WT (wildtype).
+#' @param interpret_ecoff A logical value (default is `FALSE`). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class `sir` and coded as `NWT` (nonwildtype) or `WT` (wildtype).
 #' @param species (optional) Name of the species to use for phenotype interpretation. By default, the `spp_pheno` field in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.
 #' @param ab (optional) Name of the antibiotic to use for phenotype interpretation. By default, the `drug_agent` field in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.
 #' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
@@ -2159,7 +2159,7 @@ import_phoenix_ast <- function(input,
 #'
 #' This function imports an antibiotic susceptibility testing datasets in formats exported by EBI, NCBI, WHOnet and several automated AST instruments (Vitek, Microscan, Sensititre, Phoenix). It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF).
 #' @param input A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the [EBI AMR web browser](https://www.ebi.ac.uk/amr/data/?view=experiments), [EBI FTP site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or [NCBI browser](https://www.ncbi.nlm.nih.gov/pathogens/ast), or using the functions [download_ebi()], [download_ncbi_ast()], or [query_ncbi_bq_geno()]; or the files may be exported from supported AST instruments.
-#' @param format A string indicating the format of the data: `"ebi"` (default), `"ebi_web"`, `"ebi_ftp"`, `"ncbi"`, `"ncbi-biosample"`, `"vitek"`, `"microscan"`, `"phoenix"`, `"sensititre"`, or `"whonet"`. This determines which importer function the data is passed on to for processing (see below).
+#' @param format A string indicating the format of the data: `"ebi"` (default), `"ebi_web"`, `"ebi_ftp"`, `"ncbi"`, `"ncbi_biosample"`, `"vitek"`, `"microscan"`, `"phoenix"`, `"sensititre"`, or `"whonet"`. This determines which importer function the data is passed on to for processing (see below).
 #' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
 #' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
 #' @param interpret_ecoff A logical value (default is `FALSE`). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class 'sir' and coded as `NWT` (nonwildtype) or `WT` (wildtype).
@@ -2201,7 +2201,7 @@ import_phoenix_ast <- function(input,
 #'
 #' # import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
 #' head(ecoli_ast_raw)
-#' pheno <- import_ast(ecoli_ast_raw,
+#' pheno <- import_pheno(ecoli_ast_raw,
 #'   format = "ncbi",
 #'   interpret_eucast = TRUE, interpret_ecoff = TRUE
 #' )
@@ -2259,7 +2259,7 @@ import_pheno <- function(input,
 
 # registry of pheno data import functions, to be dispatched via import_pheno()
 .pheno_importers <- list(
-  ebi = import_ebi_ast,
+  ebi = "import_ebi_ast",
   ebi_web = "import_ebi_ast",
   ebi_ftp = "import_ebi_ast_ftp",
   ncbi = "import_ncbi_ast",

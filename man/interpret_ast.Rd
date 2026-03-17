@@ -16,7 +16,7 @@ interpret_ast(
 \arguments{
 \item{ast}{A tibble containing the phenotype measures in standard AMRgen format, as output by \code{\link[=import_ast]{import_ast()}}. It must contain assay measurements in columns \code{mic} (class \code{mic}) and/or \code{disk} (class \code{disk}). Interpretation requires an organism (column \code{spp_pheno} of class \code{mo}, or a single value passed via the \code{species} parameter) and an antibiotic (column \code{drug_agent} of class \code{ab}, or a single value passed via the \code{ab} parameter).}
 
-\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or `WT (wildtype).}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 
 \item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}.}
 

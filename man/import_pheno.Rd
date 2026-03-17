@@ -16,7 +16,7 @@ import_pheno(
 \arguments{
 \item{input}{A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the \href{https://www.ebi.ac.uk/amr/data/?view=experiments}{EBI AMR web browser}, \href{ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}{EBI FTP site}, or \href{https://www.ncbi.nlm.nih.gov/pathogens/ast}{NCBI browser}, or using the functions \code{\link[=download_ebi]{download_ebi()}}, \code{\link[=download_ncbi_ast]{download_ncbi_ast()}}, or \code{\link[=query_ncbi_bq_geno]{query_ncbi_bq_geno()}}; or the files may be exported from supported AST instruments.}
 
-\item{format}{A string indicating the format of the data: \code{"ebi"} (default), \code{"ebi_web"}, \code{"ebi_ftp"}, \code{"ncbi"}, \code{"ncbi-biosample"}, \code{"vitek"}, \code{"microscan"}, \code{"phoenix"}, \code{"sensititre"}, or \code{"whonet"}. This determines which importer function the data is passed on to for processing (see below).}
+\item{format}{A string indicating the format of the data: \code{"ebi"} (default), \code{"ebi_web"}, \code{"ebi_ftp"}, \code{"ncbi"}, \code{"ncbi_biosample"}, \code{"vitek"}, \code{"microscan"}, \code{"phoenix"}, \code{"sensititre"}, or \code{"whonet"}. This determines which importer function the data is passed on to for processing (see below).}
 
 \item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class 'sir'.}
 
@@ -71,7 +71,7 @@ import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col = "id")
 
 # import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
 head(ecoli_ast_raw)
-pheno <- import_ast(ecoli_ast_raw,
+pheno <- import_pheno(ecoli_ast_raw,
   format = "ncbi",
   interpret_eucast = TRUE, interpret_ecoff = TRUE
 )

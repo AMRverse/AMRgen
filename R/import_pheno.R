@@ -619,14 +619,15 @@ import_ncbi_biosample <- function(input,
   ast <- process_input(input)
 
   # Note: NCBI antibiogram spec lists "MIC" as a synonym for "broth dilution"
+  # MIC and disk values are in separate columns in NCBI BioSample/cloud data
   ast <- ast %>%
-    mutate(mic = if_else(`Laboratory typing method` == "MIC",
-      paste0(`Measurement sign`, Measurement),
-      NA
+    mutate(mic = if_else(!is.na(`MIC (mg/L)`),
+      paste0(`Measurement sign`, `MIC (mg/L)`),
+      NA_character_
     )) %>%
-    mutate(disk = if_else(`Laboratory typing method` == "disk diffusion",
-      paste0(`Measurement sign`, Measurement),
-      NA
+    mutate(disk = if_else(!is.na(`Disk diffusion (mm)`),
+      paste0(`Measurement sign`, `Disk diffusion (mm)`),
+      NA_character_
     )) %>%
     mutate(`Laboratory typing method` = if_else(
       !is.na(`Laboratory typing method`) & `Laboratory typing method` == "MIC",
@@ -638,8 +639,8 @@ import_ncbi_biosample <- function(input,
       `Resistance phenotype`
     )) %>%
     format_ast(
-      sample_col = "id",
-      species_col = "organism",
+      sample_col = "BioSample",
+      species_col = "Scientific name",
       ab_col = "Antibiotic",
       pheno_cols = "pheno_provided",
       method_col = "Laboratory typing method",

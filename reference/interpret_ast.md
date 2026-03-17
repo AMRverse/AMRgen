@@ -35,7 +35,7 @@ interpret_ast(
   interpret the wildtype vs nonwildtype status for each row based on the
   MIC or disk diffusion values, against epidemiological cut-off (ECOFF)
   values. These will be reported in a new column `ecoff`, of class `sir`
-  and coded as `NWT` (nonwildtype) or \`WT (wildtype).
+  and coded as `NWT` (nonwildtype) or `WT` (wildtype).
 
 - interpret_eucast:
 

@@ -39,7 +39,7 @@ import_pheno(
 - format:
 
   A string indicating the format of the data: `"ebi"` (default),
-  `"ebi_web"`, `"ebi_ftp"`, `"ncbi"`, `"ncbi-biosample"`, `"vitek"`,
+  `"ebi_web"`, `"ebi_ftp"`, `"ncbi"`, `"ncbi_biosample"`, `"vitek"`,
   `"microscan"`, `"phoenix"`, `"sensititre"`, or `"whonet"`. This
   determines which importer function the data is passed on to for
   processing (see below).
@@ -167,7 +167,7 @@ import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col = "id")
 
 # import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
 head(ecoli_ast_raw)
-pheno <- import_ast(ecoli_ast_raw,
+pheno <- import_pheno(ecoli_ast_raw,
   format = "ncbi",
   interpret_eucast = TRUE, interpret_ecoff = TRUE
 )

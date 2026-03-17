@@ -625,3 +625,173 @@
 #' - `yqiL allele`: Allele identifier for the `yqiL` locus in the PubMLST scheme.
 #' @source <https://github.com/AllTheBacteria/AllTheBacteria>
 "ST_data_CLI"
+
+
+#' DASSIM phenotype metadata
+#'
+#' Additional metadata relating to the DASSIM isolates found in Supplementary Data 1 of the following paper:
+#' Molecular mechanisms of re-emerging chloramphenicol susceptibility in extended-spectrum beta-lactamase-producing 
+#' Enterobacterales. Nat Commun 15, 9019 (2024). Fabrice E Graf et al. 
+#' 
+#' @format `DASSIM_pheno` A data frame with 840 rows and 15 columns:
+#' - `Strain_ID`:  Strain_ID.
+#' - `ST`:  Sequence Type.
+#' - `Species`:  Species.
+#' - `CHL susceptibility`:  susceptibility to chloramphenicol 
+#' - `CatA1`:  CatA1 presence/absence
+#' - `CatA2`:  CatA2 presence/absence
+#' - `CatB4`:  CatB4 presence/absence
+#' - `CatB3`:  CatB3 presence/absence
+#' - `FloR`:  FloR presence/absence
+#' - `CmlA1`:  CmlA1 presence/absence
+#' - `CmlA5`:  CmlA5 presence/absence
+#' - `study`:  study presence/absence
+#' - `ENA accession`:  ENA accession.
+#' - `lane`:  lane.
+#' - `seq`:  seq.
+#' @source <https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-024-53391-2/MediaObjects/41467_2024_53391_MOESM4_ESM.xls>
+"DASSIM_pheno"
+
+
+#' blantyreESBL AST data 
+#'
+#' The antimicrobial susceptibility testing (AST) data from the blantyreESBL Github from Dr. Joseph Lewis.
+#' Antimicrobial sensitivity testing (AST) was carried out on a subset of isolates using the disc-diffusion method 
+#' using British Society for Antimicrobial Chemotherapy (BSAC) guidelines (https://bsac.org.uk/). 
+#' AST was carried out for meropenem, amikacin, chloramphenicol, ciprofloxacin, co-trimoxazole and gentamicin.
+#' However this dataset only contains the raw phenotype data (S/R).
+#'
+#' @format `btESBL_AST` A data frame with 609 rows and 9 columns:
+#' - `...1`:  Row count.
+#' - `supplier_name`:  Strain ID.
+#' - `organism`:  organism.
+#' - `amikacin`:  amikacin antimicrobial susceptibility phenotype (S/R)
+#' - `chloramphenicol`:  chloramphenicol antimicrobial susceptibility phenotype (S/R)
+#' - `ciprofloxacin`:  ciprofloxacin antimicrobial susceptibility phenotype (S/R)
+#' - `cotrimoxazole`:  cotrimoxazole antimicrobial susceptibility phenotype (S/R)
+#' - `gentamicin`:  gentamicin antimicrobial susceptibility phenotype (S/R)
+#' - `meropenem`:  meropenem antimicrobial susceptibility phenotype (S/R)
+#' @source <https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_AST.rda>
+"btESBL_AST"
+
+
+#' DASSIM genotype data (AMRfinderplus)
+#'
+#' The DASSIM dataset screened for Antimicrobial resistance genes (ARGs) using AMRfinderplus v4.0.23 
+#'
+#' @format `DASSIM_geno` A data frame with 12414 rows and 31 columns:
+#' - `Name`:  Name.
+#' - `gene`:  gene.
+#' - `mutation`:  mutation.
+#' - `node`:  node.
+#' - `marker`:  marker.
+#' - `marker.label`:  marker.label.
+#' - `drug_agent`:  drug_agent.
+#' - `drug_class`:  drug_class.
+#' - `Protein id`:  Protein id.
+#' - `Contig id`:  Contig id.
+#' - `Start`:  Start.
+#' - `Stop`:  Stop.
+#' - `Strand`:  Strand.
+#' - `Gene symbol`:  Gene symbol.
+#' - `Element name`:  Element name.
+#' - `Scope`:  Scope.
+#' - `Type`:  Type.
+#' - `Subtype`:  Subtype.
+#' - `Class`:  Class.
+#' - `Subclass`:  Subclass.
+#' - `Method`:  Method.
+#' - `Target length`:  Target length.
+#' - `Reference sequence length`:  Reference sequence length.
+#' - `% Coverage of reference`:  % Coverage of reference.
+#' - `% Identity to reference`:  % Identity to reference.
+#' - `Alignment length`:  Alignment length.
+#' - `Closest reference accession`:  Closest reference accession.
+#' - `Closest reference name`:  Closest reference name.
+#' - `HMM accession`:  HMM accession.
+#' - `HMM description`:  HMM description.
+#' - `variation type`:  variation type.
+#' @source <https://www.ebi.ac.uk/ena/browser/view/PRJEB26677>
+#' @source <https://www.ebi.ac.uk/ena/browser/view/PRJEB36486>
+"DASSIM_geno"
+
+
+#' NCBI AST for Escherichia coli tested against chloramphenicol 
+#'
+#' NCBI Antibiotic Susceptibility Test (AST) Browser data for Escherichia coli tested against chloramphenicol.
+#'
+#' @format `NCBI_AST_CHL` A data frame with 6859 rows and 17 columns:
+#' - `BioSample`:  BioSample.
+#' - `Organism group`:  Organism group.
+#' - `Scientific name`:  Scientific name.
+#' - `Isolation type`:  Isolation type.
+#' - `Location`:  Location.
+#' - `Isolation source`:  Isolation source.
+#' - `Isolate`:  Isolate.
+#' - `Antibiotic`:  Antibiotic.
+#' - `Resistance phenotype`:  Resistance phenotype.
+#' - `Measurement sign`:  Measurement sign.
+#' - `MIC (mg/L)`:  MIC (mg/L).
+#' - `Disk diffusion (mm)`:  Disk diffusion (mm).
+#' - `Laboratory typing platform`:  Laboratory typing platform.
+#' - `Vendor`:  Vendor.
+#' - `Laboratory typing method version or reagent`:  Laboratory typing method version or reagent.
+#' - `Testing standard`:  Testing standard.
+#' - `Create date`:  Create date.
+#' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast#chloramphenicol%20AND%20Escherichia>
+"NCBI_AST_CHL"
+
+#' MicroBIGG-E for E.coli containing catB3
+#'
+#' NCBI Pathogen Detection Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E) 
+#' for Escherichia coli containing catB3
+#'
+#' @format `MICROBIGGE_CATB3` A data frame with 35054 rows and 18 columns:
+#' - `#Scientific name`:  #Scientific name.
+#' - `Protein`:  Protein.
+#' - `BioSample`:  BioSample.
+#' - `Isolate`:  Isolate.
+#' - `Contig`:  Contig.
+#' - `Start`:  Start.
+#' - `Stop`:  Stop.
+#' - `Strand`:  Strand.
+#' - `Element symbol`:  Element symbol.
+#' - `Element name`:  Element name.
+#' - `Type`:  Type.
+#' - `Scope`:  Scope.
+#' - `Subtype`:  Subtype.
+#' - `Class`:  Class.
+#' - `Subclass`:  Subclass.
+#' - `Method`:  Method.
+#' - `% Coverage of reference`:  % Coverage of reference.
+#' - `% Identity to reference`:  % Identity to reference.
+#' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#catB3%20AND%20Escherichia>
+"MICROBIGGE_CATB3"
+
+
+#' MicroBIGG-E for E.coli containing all chloramphenicol resistance genes 
+#'
+#' NCBI Pathogen Detection Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E) 
+#' for Escherichia coli containing all chloramphenicol resistance genes 
+#'
+#' @format `MICROBIGGE_CHLR` A data frame with 95732 rows and 18 columns:
+#' - `#Scientific name`:  #Scientific name.
+#' - `Protein`:  Protein.
+#' - `BioSample`:  BioSample.
+#' - `Isolate`:  Isolate.
+#' - `Contig`:  Contig.
+#' - `Start`:  Start.
+#' - `Stop`:  Stop.
+#' - `Strand`:  Strand.
+#' - `Element symbol`:  Element symbol.
+#' - `Element name`:  Element name.
+#' - `Type`:  Type.
+#' - `Scope`:  Scope.
+#' - `Subtype`:  Subtype.
+#' - `Class`:  Class.
+#' - `Subclass`:  Subclass.
+#' - `Method`:  Method.
+#' - `% Coverage of reference`:  % Coverage of reference.
+#' - `% Identity to reference`:  % Identity to reference.
+#' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#chloramphenicol%20AND%20Escherichia>
+"MICROBIGGE_CHLR"

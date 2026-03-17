@@ -19,9 +19,9 @@ import_rgi(
 \arguments{
 \item{input_table}{A character string specifying a dataframe or path to the RGI results table (TSV format).}
 
-\item{orf_id_col}{A character string specifying the column that identifies open reading frame ID (ORF_ID) in the dataset (default \code{ORF_ID}). This column includes the sample ID in addition to contig / genomic location information about where the resistance determinant was identified and is a default output of RGI.}
+\item{orf_id_col}{A character string specifying the column that identifies open reading frame ID (ORF_ID) in the dataset (default \code{ORF_ID}). This column includes the sample ID and the contig / genomic location and is a default output of RGI.}
 
-\item{sample_id_sep}{A character string specifying the separater by which the sample ID is separated from open reading frame ID (ORF_ID) details. For example: in the \code{ORF_ID} column, "SAMEA3498968.fasta.txt:1_96 # 109511 # 110635....", the sample ID separater is \verb{.fasta.txt:} where SAMEA3498968 is the Sample ID and the remaining text \verb{1_96 # 109511 # 110635...} is the open reading frame information. Default is \verb{.fasta.txt:}.}
+\item{sample_id_sep}{A character string specifying the separator by which the sample ID is separated from the remaining text in \code{ORF_ID} (Default: \verb{.fasta.txt:}) . For example: in the \code{ORF_ID} column, "SAMEA3498968.fasta.txt:1_96 # 109511 # 110635....", the sample ID separator is \verb{.fasta.txt:}.}
 
 \item{model_col}{A character string specifying the column that identifies model type identified by RGI (default \code{Model_type}).}
 
@@ -54,12 +54,12 @@ This processing ensures compatibility with downstream AMRgen analysis workflows.
 # example RGI data (including Perfect, Strict, and Loose hits)
 rgi_raw
 
-# import and parse it as AMRfp data using sample_id_sep=`_genomic.fna.txt:` and include Loose hits
+# import using sample_id_sep=`_genomic.fna.txt:` and include Loose hits
 import_rgi(rgi_raw, sample_id_sep = "_genomic.fna.txt:", exclude_loose = FALSE)
 
 # example RGI data from EuSCAPE project (including only Perfect and Strict hits)
 rgi_EuSCAPE_raw
 
-# import and parse it as AMRfp data using defaults sample_id_sep=`.fasta.txt:` and exclude Loose hits (e.g., exclude_loose = `TRUE`)
+# import using defaults (sample_id_sep=`.fasta.txt:`, exclude_loose = `TRUE`)
 import_rgi(rgi_EuSCAPE_raw)
 }

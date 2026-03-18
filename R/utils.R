@@ -244,7 +244,18 @@ utils::globalVariables(c(
   "index",
   "predNWT",
   "predR",
-  "row_pct"
+  "row_pct",
+  "rgi_short_name_table",
+  "rgi_drugs_table",
+  "Cut_Off",
+  "CARD Short Name",
+  "Best_Hit_ARO",
+  "SNPs_in_Best_Hit_ARO",
+  "drug_internal",
+  "drug_to_parse",
+  "drug_class_agent",
+  "Resistance Mechanism",
+  "RGI_DrugClassAgent"
 ))
 
 

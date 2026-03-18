@@ -245,6 +245,21 @@ utils::globalVariables(c(
   "disk_raw",
   "collection_date",
   "specimen_type"
+  "index",
+  "predNWT",
+  "predR",
+  "row_pct",
+  "rgi_short_name_table",
+  "rgi_drugs_table",
+  "Cut_Off",
+  "CARD Short Name",
+  "Best_Hit_ARO",
+  "SNPs_in_Best_Hit_ARO",
+  "drug_internal",
+  "drug_to_parse",
+  "drug_class_agent",
+  "Resistance Mechanism",
+  "RGI_DrugClassAgent"
 ))
 
 
@@ -253,13 +268,16 @@ ignore_unused_imports <- function() {
   rlang::sym
 }
 
-#' @importFrom readr read_tsv
+#' @importFrom readr read_tsv read_delim
 process_input <- function(input) {
   if (is.character(input) && file.exists(input)) {
-    tsv_ext <- paste(rep(c("tsv", "txt"), 5), c(rep("", 2), rep(".gz", 2), rep(".bz2", 2), rep(".xz", 2), rep(".zip", 2)), sep = "", collapse = "|")
+    tsv_ext <- paste(rep("tsv", 5), c("", ".gz", ".bz2", ".xz", ".zip"), sep = "", collapse = "|")
+    txt_ext <- paste(rep("txt", 5), c("", ".gz", ".bz2", ".xz", ".zip"), sep = "", collapse = "|")
     csv_ext <- paste(rep("csv", 5), c("", ".gz", ".bz2", ".xz", ".zip"), sep = "", collapse = "|")
     if (grepl(tsv_ext, input)) {
       data <- readr::read_tsv(input)
+    } else if (grepl(txt_ext, input)) {
+      data <- readr::read_delim(input, delim = NULL)
     } else if (grepl(csv_ext, input)) {
       data <- readr::read_csv(input)
     }

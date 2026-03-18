@@ -6,7 +6,7 @@
 \usage{
 import_whonet_ast(
   input,
-  sample_col = "Identification number",
+  sample_col = NULL,
   source = NULL,
   species = NULL,
   ab = NULL,
@@ -19,19 +19,21 @@ import_whonet_ast(
 \arguments{
 \item{input}{A dataframe or path to a CSV file containing WHONET AST output data}
 
-\item{sample_col}{Column name for sample identifiers. Default: "Identification number"}
+\item{sample_col}{Column name for sample identifiers. If \code{NULL} (default), the function
+auto-detects from known WHONET column names: \code{"Identification number"}, \code{"Identification"},
+\code{"laboratory"}, \code{"patient_id"}. Supply a column name explicitly to override.}
 
-\item{source}{Optional source value to record for all data points}
+\item{source}{Optional string value to record in the \code{source} column for all data points (e.g., dataset name or study identifier)}
 
-\item{species}{Optional species override for phenotype interpretation}
+\item{species}{Optional string indicating a single species to use for phenotype interpretation (otherwise this is inferred per-sample from the input)}
 
-\item{ab}{Optional antibiotic override for phenotype interpretation}
+\item{ab}{Optional string indicating a single antibiotic to use for phenotype interpretation (otherwise this is inferred per-sample from the input)}
 
-\item{interpret_eucast}{Interpret against EUCAST breakpoints}
+\item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}.}
 
-\item{interpret_clsi}{Interpret against CLSI breakpoints}
+\item{interpret_clsi}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class \code{sir}.}
 
-\item{interpret_ecoff}{Interpret against ECOFF values}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the wildtype vs nonwildtype status for each observation based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 
 \item{include_patient_info}{Include patient demographic columns in output}
 }
@@ -46,6 +48,7 @@ and converts it to the standardised long-format used by AMRgen.
 # Built-in AMR package WHONET example dataset (standard uppercase format)
 result <- import_whonet_ast(AMR::WHONET)
 head(result)
+
 \dontrun{
 # WHONET file with lowercase columns and _SIR suffix (e.g. amc_nd20, amc_nd20_SIR)
 # import_whonet_ast("path/to/whonet_export.csv", sample_col = "patient_id")

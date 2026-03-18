@@ -14,17 +14,17 @@ import_ncbi_biosample(
 \arguments{
 \item{input}{A string representing the input dataframe, or a path to an input file, to be processed.}
 
-\item{interpret_eucast}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class 'sir'.}
+\item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}.}
 
-\item{interpret_clsi}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class 'sir'.}
+\item{interpret_clsi}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class \code{sir}.}
 
-\item{interpret_ecoff}{A logical value (default is FALSE). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class 'sir' and coded as 'R' (nonwildtype) or 'S' (wildtype).}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 }
 \value{
 A data frame with the processed AST data, including additional columns:
 }
 \description{
-This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function \code{download_ncbi_ast()}.
+This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function \code{\link[=download_ncbi_ast]{download_ncbi_ast()}}.
 Note that files downloaded from the NCBI AST web browser \url{https://www.ncbi.nlm.nih.gov/pathogens/ast} are formatted differently and can be imported with the function \code{\link[=import_ncbi_ast]{import_ncbi_ast()}}.
 }
 \examples{

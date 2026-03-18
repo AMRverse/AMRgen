@@ -19,23 +19,23 @@ import_sensititre_ast(
 \arguments{
 \item{input}{Path to a Sensititre output text file (tab- or comma-separated)}
 
-\item{source}{Optional source value to record for all data points}
+\item{source}{Optional string value to record in the \code{source} column for all data points (e.g., dataset name or study identifier)}
 
-\item{species}{Optional species override for phenotype interpretation}
+\item{species}{Optional string indicating a single species to use for phenotype interpretation (otherwise this is inferred per-sample from the input)}
 
-\item{ab}{Optional antibiotic override for phenotype interpretation}
+\item{ab}{Optional string indicating a single antibiotic to use for phenotype interpretation (otherwise this is inferred per-sample from the input)}
 
-\item{instrument_guideline}{Optional guideline used by the instrument for SIR interpretation}
+\item{instrument_guideline}{Optional string indicating the guideline used by the instrument for SIR interpretation (e.g., "EUCAST 2025", "CLSI 2025"), used to record the \code{guideline} in the output file. Default: \code{NULL}}
 
 \item{id_col}{Integer. Column index (1-based) of the sample identifier. Default is 7, which corresponds
 to the sample accession column in standard Sensititre exports. Adjust if your file uses a different
 column for the sample ID (e.g. set to 2 for the plate/batch identifier column).}
 
-\item{interpret_eucast}{Interpret against EUCAST breakpoints}
+\item{interpret_eucast}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}.}
 
-\item{interpret_clsi}{Interpret against CLSI breakpoints}
+\item{interpret_clsi}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the susceptibility phenotype (SIR) for each observation based on the MIC values, against CLSI human breakpoints. These will be reported in a new column \code{pheno_clsi}, of class \code{sir}.}
 
-\item{interpret_ecoff}{Interpret against ECOFF values}
+\item{interpret_ecoff}{A logical value (default is \code{FALSE}). If \code{TRUE}, the function will re-interpret the wildtype vs nonwildtype status for each observation based on the MIC values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column \code{ecoff}, of class \code{sir} and coded as \code{NWT} (nonwildtype) or \code{WT} (wildtype).}
 }
 \value{
 Standardised AST data frame

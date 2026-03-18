@@ -31,11 +31,11 @@
 #' - `pheno_matched`: A data frame of the phenotype data filtered to only include the samples with matching IDs.
 #' @export
 #' @examples
-#' geno_table <- import_amrfp(ecoli_geno_raw, "Name")
+#' geno_table <- import_amrfp(ecoli_geno_raw)
 #' head(ecoli_ast)
 #' result <- compare_geno_pheno_id(geno_table,
 #'   ecoli_ast,
-#'   geno_sample_col = "Name",
+#'   geno_sample_col = "id",
 #'   pheno_sample_col = "id"
 #' )
 #' print(result$pheno_unique)

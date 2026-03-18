@@ -460,6 +460,84 @@
 #' See Sánchez-Serrano *et al.* (2026) <https://doi.org/10.1016/j.cmi.2025.12.026>.
 "ngono_tet_geno_raw"
 
+
+#' N. gonorrhoeae Euro-GASP azithromycin data vs EUCAST reference distribution
+#'
+#' Minimum inhibitory concentration (MIC) distributions for azithromycin in
+#' *Neisseria gonorrhoeae* isolates. EUCAST reference distribution (retrieved
+#' March 2026 using [compare_mic_with_eucast()]) compared with data from three
+#' European Gonococcal Antimicrobial
+#' Surveillance Programme (Euro-GASP) genomic surveys (2013, 2018, 2020), see
+#' Harris *et al.* (2018) <https://doi.org/10.1016/S1473-3099(18)30225-1>,
+#' Sánchez-Busó *et al.* (2022) <https://doi.org/10.1016/S2666-5247(22)00044-1>, and
+#' Golparian *et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>.
+#'
+#' @format `azm_comparison` A data frame with 20 rows and 3 columns:
+#' - `value`: MIC value
+#' - `user`: Number of samples with each MIC value, from Euro-GASP data (total n=5,055 isolates)
+#' - `eucast`: Number of samples with each MIC value, from EUCAST reference data (total n=59,442 isolates)
+#'
+#' @source https://mic.eucast.org/
+"azm_comparison"
+
+#' N. gonorrhoeae Euro-GASP ciprofloxacin data vs EUCAST reference distribution
+#'
+#' Minimum inhibitory concentration (MIC) distributions for ciprofloxacin in
+#' *Neisseria gonorrhoeae* isolates. EUCAST reference distribution (retrieved
+#' March 2026 using [compare_mic_with_eucast()]) compared with data from three
+#' European Gonococcal Antimicrobial
+#' Surveillance Programme (Euro-GASP) genomic surveys (2013, 2018, 2020), see
+#' Harris *et al.* (2018) <https://doi.org/10.1016/S1473-3099(18)30225-1>,
+#' Sánchez-Busó *et al.* (2022) <https://doi.org/10.1016/S2666-5247(22)00044-1>, and
+#' Golparian *et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>.
+#'
+#' @format `cip_comparison` A data frame with 20 rows and 3 columns:
+#' - `value`: MIC value
+#' - `user`: Number of samples with each MIC value, from Euro-GASP data (total n=5,025 isolates)
+#' - `eucast`: Number of samples with each MIC value, from EUCAST reference data (total n=50,243 isolates)
+#'
+#' @source https://mic.eucast.org/
+"cip_comparison"
+
+#' N. gonorrhoeae Euro-GASP ceftriaxone data vs EUCAST reference distribution
+#'
+#' Minimum inhibitory concentration (MIC) distributions for ceftriaxone in
+#' *Neisseria gonorrhoeae* isolates. EUCAST reference distribution (retrieved
+#' March 2026 using [compare_mic_with_eucast()]) compared with data from three
+#' European Gonococcal Antimicrobial
+#' Surveillance Programme (Euro-GASP) genomic surveys (2013, 2018, 2020), see
+#' Harris *et al.* (2018) <https://doi.org/10.1016/S1473-3099(18)30225-1>,
+#' Sánchez-Busó *et al.* (2022) <https://doi.org/10.1016/S2666-5247(22)00044-1>, and
+#' Golparian *et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>.
+#'
+#' @format `cro_comparison` A data frame with 14 rows and 3 columns:
+#' - `value`: MIC value
+#' - `user`: Number of samples with each MIC value, from Euro-GASP data (total n=5,358 isolates)
+#' - `eucast`: Number of samples with each MIC value, from EUCAST reference data (total n=47,903 isolates)
+#'
+#' @source https://mic.eucast.org/
+"cro_comparison"
+
+#' N. gonorrhoeae Euro-GASP cefixime data vs EUCAST reference distribution
+#'
+#' Minimum inhibitory concentration (MIC) distributions for cefixime in
+#' *Neisseria gonorrhoeae* isolates. EUCAST reference distribution (retrieved
+#' March 2026 using [compare_mic_with_eucast()]) compared with data from three
+#' European Gonococcal Antimicrobial
+#' Surveillance Programme (Euro-GASP) genomic surveys (2013, 2018, 2020), see
+#' Harris *et al.* (2018) <https://doi.org/10.1016/S1473-3099(18)30225-1>,
+#' Sánchez-Busó *et al.* (2022) <https://doi.org/10.1016/S2666-5247(22)00044-1>, and
+#' Golparian *et al.* (2024) <https://doi.org/10.1016/S2666-5247(23)00370-1>.
+#'
+#' @format `cfm_comparison` A data frame with 15 rows and 3 columns:
+#' - `value`: MIC value
+#' - `user`: Number of samples with each MIC value, from Euro-GASP data (total n=5,361 isolates)
+#' - `eucast`: Number of samples with each MIC value, from EUCAST reference data (total n=35,582 isolates)
+#'
+#' @source https://mic.eucast.org/
+"cfm_comparison"
+
+
 #' Example Salmonella Genotype-Phenotype Data
 #'
 #' Raw genotype-phenotype data for *Salmonella enterica* genomes, one row per sample.
@@ -475,7 +553,7 @@
 #'
 #' Raw Kleborate results file for *Klebsiella pneumoniae* genomes, one row per sample.
 #'
-#' @format `kleborate_raw` A data frame with 1,689 rows and 122 columns:
+#' @format `kleborate_raw` A data frame with 1,490 rows and 122 columns:
 #' - `strain`: Sample identifier
 #' - ...: Kleborate results columns
 #' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).
@@ -501,7 +579,6 @@
 #' - `Kleborate_Class`: Column name in Kleborate output files
 #' - `drug_class`: Valid drug class name recognised by AMR pkg
 "kleborate_classes"
-
 
 
 #' S. aureus Clindamycin Resistance Genotype Data
@@ -578,3 +655,51 @@
 #' - `yqiL allele`: Allele identifier for the `yqiL` locus in the PubMLST scheme.
 #' @source <https://github.com/AllTheBacteria/AllTheBacteria>
 "ST_data_CLI"
+
+
+#' Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data
+#'
+#' Raw RGI v6.0.6 results file (run with `--include_loose`) for 12 genomes of multiple species, one AMR determinant per row.
+#' Includes multiple species to cover all four model types currently detected by RGI (protein homolog model, protein variant model, protein overexpression model, and rRNA gene variant model)
+#' Includes Perfect, Strict, and Loose hits to test `exclude_loose` parameter
+#'
+#' @format `rgi_raw` A data frame with 21,203 rows and 28 columns:
+#' - `ORF_ID`: Sample identifier
+#' - ...: RGI results columns
+#' @source Four colistin-resistant isolates from Bioproject PRJNA966919 <https://www.ncbi.nlm.nih.gov/datasets/genome/?bioproject=PRJNA966919>.
+#' @source One genome with rRNA gene variant models detected (GCF_000249055.1).
+"rgi_raw"
+
+#' Table mapping CARD/RGI drug class and antibiotic columns
+#'
+#' Table mapping CARD/RGI drug class / antibiotic columns to class / antibiotic names recognised by AMR pkg
+#'
+#' @format `rgi_drugs_table` A data frame with 3 rows and 70 columns:
+#' - `RGI_DrugClassAgent`: RGI/CARD drug class / antibiotic that is not recognized by AMR pkg
+#' - `drug_class`: Valid drug class name recognised by AMR pkg
+#' - `drug_agent`: Valid antibiotic name recognised by AMR pkg
+"rgi_drugs_table"
+
+#' Table mapping CARD/RGI Model ID and CARD Short Name
+#'
+#' Table mapping all CARD/RGI Model ID and CARD Short Name to convert long names into shortened AMR determinant names
+#'
+#' @format `rgi_short_name_table` A data frame with 6445 rows and 2 columns:
+#' - `Model ID`: RGI/CARD model ID column
+#' - `CARD Short Name`: Shortened AMR determinant names
+#' @source Two columns extracted from: <https://card.mcmaster.ca/latest/data> in aro_index.tsv
+"rgi_short_name_table"
+
+
+#' Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data from EuSCAPE project
+#'
+#' Raw RGI v6.0.6 results file for Klebsiella pneumoniae from EuSCAPE project, one AMR determinant per row.
+#' Includes only Perfect and Strict hits
+#' Columns `Predicted_DNA`, `Predicted_Protein`, and `CARD_Protein_Sequence` were removed to reduce file size.
+#'
+#' @format `rgi_EuSCAPE_raw` A data frame with 59,403 rows and 25 columns:
+#' - `ORF_ID`: Sample identifier
+#' - ...: RGI results columns
+#' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).
+#' See David *et al.* (2019) <https://doi.org/10.1038/s41564-019-0492-8>.
+"rgi_EuSCAPE_raw"

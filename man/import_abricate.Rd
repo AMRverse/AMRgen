@@ -24,10 +24,19 @@ import_abricate(
 
 \item{ab_col}{A character string specifying the column that identifies which drug/s each detected gene is associated with (default \code{"RESISTANCE"}).}
 
-\item{db}{A character string specifying which AMR gene database Abricate was run with (currently only \code{"resfinder"} is supported).}
+\item{db}{A character string specifying which AMR gene database Abricate was run with (default \code{"resfinder"}; \code{"ncbi"} is also supported).}
 }
 \value{
-A tibble containing the processed AMR elements, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package.
+A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package:
+\itemize{
+\item \code{id}: The sample identifier (\code{character}).
+\item \code{marker}: The name of the genotype marker, as it appears in the \code{GENE} column of the input file (\code{character}).
+\item \code{gene}: The name of the gene product, as it appears in the \code{PRODUCT} column of the input file (\code{character}).
+\item \code{drug_class}: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, parsed from the \code{RESISTANCE} column of the input file which depends on the database that ABRicate was run with (\code{character}).
+\item \code{drug_agent}: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg, parsed from the \code{RESISTANCE} column of the input file (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
+\item \verb{variation type}: Type of variation, i.e. \verb{Gene presence detected}, as ABRicate only detects presence/absence of genes in the query database.
+... Other fields specific to the input file
+}
 }
 \description{
 This function imports and processes Abricate results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised antibiotic names and drug classes. Currently supports results generated using the ResFinder database.
@@ -39,11 +48,13 @@ The function performs the following steps:
 \item Standardises the sample column name 'id'.
 \item Assigns standardised column names for genes, markers, and sets variation type to "Gene presence detected".
 \item Splits multiple resistance annotations (separated by semicolons) into separate rows.
-\item Converts drug agent names to the \code{"ab"} class from the AMR package and maps these to classes compatible with the output of \code{\link[=import_amrfp]{import_amrfp()}} and \code{\link[=import_kleborate]{import_kleborate()}}.
+\item Converts drug agent names and classes to terms recognised by the AMR package.
 }
 }
 \examples{
 \dontrun{
 geno_table <- import_abricate("path/to/abricate_resfinder.tsv")
+
+geno_table2 <- import_abricate("path/to/abricate_ncbi.tsv", db = "ncbi")
 }
 }

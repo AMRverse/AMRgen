@@ -106,6 +106,7 @@ reference:
       - getBreakpoints
       - checkBreakpoints
       - concordance
+      - concordance_from_tables
       - print.amr_concordance
 
   - title: "Visualisation & Reporting"
@@ -138,6 +139,10 @@ reference:
       - ngono_tet_geno_raw
       - ngono_cro_pheno_raw
       - eurogasp_pheno_raw
+      - azm_comparison
+      - cip_comparison
+      - cro_comparison
+      - cfm_comparison
       - ngono_tet_pheno_raw
       - salm_raw
       - kleborate_raw
@@ -146,6 +151,10 @@ reference:
       - ast_CLI_public
       - afp_CLI_public
       - ST_data_CLI
+      - rgi_raw
+      - rgi_short_name_table
+      - rgi_drugs_table
+      - rgi_EuSCAPE_raw
 
 # Footer configuration
 footer:

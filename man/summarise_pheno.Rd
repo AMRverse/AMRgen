@@ -23,11 +23,11 @@ summarise_pheno(
 
 \item{drug_col}{Character. Name of the column containing drug agent identifiers. Default is \code{"drug_agent"}. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using \link[AMR:as.ab]{AMR::as.ab}. If this is desired behaviour but the class is not 'ab', set \code{force_ab=TRUE}.}
 
-\item{mic_col}{Character. Name of the column containing MIC data. Default is \code{"mic"}.}
+\item{mic_col}{Character. Name of the column containing MIC measurements Default is \code{"mic"}.}
 
-\item{disk_col}{Character. Name of the column containing drug class identifiers. Default is \code{"disk"}.}
+\item{disk_col}{Character. Name of the column containing disk diffusion zone measurements. Default is \code{"disk"}.}
 
-\item{spp_col}{Character. Name of the column containing species names Default is \code{"spp_pheno"}.}
+\item{spp_col}{Character. Name of the column containing species names. Default is \code{"spp_pheno"}.}
 
 \item{pheno_cols}{Vector. Vector giving names of columns containing categorical phenotype calls (S/I/R or NWT/WT). Default is any columns beginning with \code{"pheno"} or \code{"ecoff"}.}
 

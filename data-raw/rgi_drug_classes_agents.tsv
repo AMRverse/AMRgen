@@ -1,0 +1,71 @@
+RGI_DrugClassAgent	drug_class	drug_agent
+disinfecting agents and antiseptics	Other	NA
+fluoroquinolone antibiotic	Fluoroquinolones	NA
+monobactam	Monobactams	NA
+carbapenem	Carbapenems	NA
+cephalosporin	Cephalosporins	NA
+lincosamide antibiotic	Lincosamides	NA
+aminoglycoside antibiotic	Aminoglycosides	NA
+macrolide antibiotic	Macrolides	NA
+penicillin beta-lactam	"Penicillins,Beta-lactams"	NA
+antibiotic efflux	Efflux	NA
+G418	Aminoglycosides	geneticin
+madumycin II	Streptogramins	madumycin II
+vernamycin C	Streptogramins	vernamycin C
+patricin A	Streptogramins	patricin A
+patricin B	Streptogramins	patricin B
+benzalkonium chloride	Other	benzalkonium chloride
+6'-N-ethylnetilmicin	Aminoglycosides	6'-N-ethylnetilmicin
+5-episisomicin	Aminoglycosides	5-episisomicin
+edeine A	Peptides	edeine A
+edeine B	Peptides	edeine B
+edeine D	Peptides	edeine D
+edeine F	Peptides	edeine F
+palmitic acid	Other	palmitic acid
+oleic acid	Other	oleic acid
+linoleic acid	Other	linoleic acid
+enacyloxin IIa	Other	enacyloxin IIa
+moenomycin A1	Other	moenomycin A1
+para-aminosalicylic acid	Other	para-aminosalicylic acid
+coumermycin A1	Aminocoumarins	coumermycin A1
+A201A	Other	A201A
+GE2270A	Other	GE2270A
+2'-N-ethylnetilmicin	Aminoglycosides	2'-N-ethylnetilmicin
+bleomycinic acid	Glycopeptides	bleomycinic acid
+kirromycin	Other	kirromycin
+pulvomycin	Other	pulvomycin
+valnemulin	Other	valnemulin
+factumycin	Other	factumycin
+griseoviridin	Streptogramins	griseoviridin
+chalcomycin	Macrolides	chalcomycin
+methymycin	Macrolides	methymycin
+acriflavine	Other	acriflavine
+puromycin	Other	puromycin
+azidamfenicol	Phenicols	azidamfenicol
+evernimicin	Other	evernimicin
+carbomycin	Macrolides	carbomycin
+defensin	Peptides	defensin
+microcin J25	Peptides	microcin J25
+iboxamycin	Lincosamides	iboxamycin
+mycinamicin	Macrolides	mycinamicin
+tunicamycin	Other	tunicamycin
+narbomycin	Macrolides	narbomycin
+pikromycin	Macrolides	pikromycin
+bicyclomycin	Other	bicyclomycin
+pleuromutilin	Other	pleuromutilin
+gatifloxacin	Fluoroquinolones	gatifloxacin
+fusidic acid	Other	fusidic acid
+celesticetin	Lincosamides	celesticetin
+sulfadoxine	Sulfonamides	sulfadoxine
+sulfacetamide	Sulfonamides	sulfacetamide
+mafenide	Sulfonamides	mafenide
+sulfasalazine	Sulfonamides	sulfasalazine
+sulfamethizole	Sulfonamides	sulfamethizole
+streptothricin	Other	streptothricin
+lividomycin	Aminoglycosides	lividomycin
+chlorhexidine	Other	chlorhexidine
+niddamycin	Macrolides	niddamycin
+ostreogrycin B3	Other	ostreogrycin B3
+triclosan	Other	triclosan
+pristinamycin IA	Streptogramins	pristinamycin IA
+virginiamycin M1	Streptogramins	virginiamycin M1

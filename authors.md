@@ -27,7 +27,7 @@
 
 - **Silvia Argimón**. Author. [](https://orcid.org/0000-0002-2884-3857)
 
-- **Dorottya Nagy**. Author.
+- **Dorottya Nagy**. Author. [](https://orcid.org/0000-0003-3779-8418)
 
 - **Dominique L. Chaput**. Author.
   [](https://orcid.org/0000-0002-9736-2619)

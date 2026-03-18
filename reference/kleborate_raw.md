@@ -11,7 +11,7 @@ kleborate_raw
 
 ## Format
 
-`kleborate_raw` A data frame with 1,689 rows and 122 columns:
+`kleborate_raw` A data frame with 1,490 rows and 122 columns:
 
 - `strain`: Sample identifier
 

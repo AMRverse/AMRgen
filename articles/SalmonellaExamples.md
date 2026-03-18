@@ -384,7 +384,7 @@ gyrA_mut <- cip_bin_meta %>%
   select(mic, gyrA_mut, Source, Serovar)
 
 # plot the MIC distribution, coloured by count of gyrA mutations
-mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(5)[c(4,3,2)]) + facet_wrap(~Serovar)
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
 #> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
 #> Ensure your input table is already filtered to the antibiotic.
 

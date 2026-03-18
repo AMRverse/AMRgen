@@ -92,20 +92,20 @@ The function performs the following steps:
 ``` r
 # example Kleborate data from EUSCAPE project
 kleborate_raw
-#> # A tibble: 1,689 × 122
+#> # A tibble: 1,490 × 122
 #>    strain    species species_match contig_count    N50 largest_contig total_size
 #>    <chr>     <chr>   <chr>                <dbl>  <dbl>          <dbl>      <dbl>
-#>  1 SAMEA349… Klebsi… strong                 107 270158         668396    5550237
-#>  2 SAMEA349… Klebsi… strong                  72 367024        1153387    5328304
-#>  3 SAMEA349… Klebsi… strong                 154 290037         723108    5865430
-#>  4 SAMEA349… Klebsi… strong                 113 270158         668396    5551355
-#>  5 SAMEA349… Klebsi… strong                 100 273060        1309748    5509346
-#>  6 SAMEA349… Klebsi… strong                 181 203669         523738    5706273
-#>  7 SAMEA349… Klebsi… strong                 193 203666         523738    5602637
-#>  8 SAMEA349… Klebsi… strong                  53 383004         704598    5207015
-#>  9 SAMEA349… Klebsi… strong                 151 206496         619259    5474980
-#> 10 SAMEA349… Klebsi… strong                  84 371555         984007    5600579
-#> # ℹ 1,679 more rows
+#>  1 SAMEA349… Klebsi… strong                 141 230759         470757    5578320
+#>  2 SAMEA349… Klebsi… strong                  88 370309         938079    5384685
+#>  3 SAMEA349… Klebsi… strong                  90 238750         529125    5446454
+#>  4 SAMEA349… Klebsi… strong                 144 207582         663698    5574298
+#>  5 SAMEA349… Klebsi… strong                 142 263498         678692    5486238
+#>  6 SAMEA349… Klebsi… strong                  79 285199         991412    5529803
+#>  7 SAMEA349… Klebsi… strong                 280 178980         585359    5817055
+#>  8 SAMEA349… Klebsi… strong                 108 209418         517450    5379124
+#>  9 SAMEA349… Klebsi… strong                 134 371444         984005    5558705
+#> 10 SAMEA349… Klebsi… strong                 142 197944         636773    5497421
+#> # ℹ 1,480 more rows
 #> # ℹ 115 more variables: GC_content <dbl>, ambiguous_bases <chr>,
 #> #   QC_warnings <chr>, ST <chr>, gapA <dbl>, infB <dbl>, mdh <dbl>, pgi <dbl>,
 #> #   phoE <dbl>, rpoB <dbl>, tonB <dbl>, YbST <chr>, Yersiniabactin <chr>,

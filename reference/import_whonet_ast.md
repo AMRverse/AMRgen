@@ -9,7 +9,7 @@ the standardised long-format used by AMRgen.
 ``` r
 import_whonet_ast(
   input,
-  sample_col = "Identification number",
+  sample_col = NULL,
   source = NULL,
   species = NULL,
   ab = NULL,
@@ -28,7 +28,10 @@ import_whonet_ast(
 
 - sample_col:
 
-  Column name for sample identifiers. Default: `"Identification number"`
+  Column name for sample identifiers. If `NULL` (default), the function
+  auto-detects from known WHONET column names:
+  `"Identification number"`, `"Identification"`, `"laboratory"`,
+  `"patient_id"`. Supply a column name explicitly to override.
 
 - source:
 

@@ -38,24 +38,21 @@ A recent study ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2))
 
 Here we use a matched phenotype/genotype dataset used in the ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) study and publicly available datasets from NCBI to investigate these genotype-phenotype mismatches with the AMRgen package. 
 
-The AMRgen package is a comprehensive R package designed to integrate antimicrobial resistance genotype and phenotype data. It allows for genotype/phenotype mismatches to be found more easily. 
-
-
 # 2. Analysis of DASSIM Dataset 
 
 One of the datasets used to highlight genotype-phenotype mismatches in the [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) paper was the DASSIM dataset ([Lewis et al. 2022](https://doi.org/10.1038/s41564-022-01216-7)).
 
 The DASSIM study was an observational study of patients with sepsis admitted to Queen Elizabeth Central Hospital, Blantyre, Malawi. The aim was to understand the drivers of acquisition and long term carriage of ESBL-E in sepsis survivors. The DASSIM dataset contains faecal samples from community patients, inpatients and sepsis patients.
 
-All genomic data was short read sequenced at the Wellcome Sanger Institute. 
+All genomic data was short-read sequenced on Illumina platforms at the Wellcome Sanger Institute. 
 
 Antimicrobial sensitivity testing (AST) was carried out on a subset of isolates using the disc-diffusion method using British Society for Antimicrobial Chemotherapy (BSAC) guidelines (https://bsac.org.uk/). AST was carried out for meropenem, amikacin, chloramphenicol, ciprofloxacin, co-trimoxazole and gentamicin.
 
-However this dataset only contains the raw phenotype data (S/I/R) which is what we work with in this example. 
+However this dataset only contains the interpreted phenotype data (S/I/R) which is what we work with in this example. 
 
 ## 2.1 Downloading DASSIM Genotype data 
 
-We will download genotype data from the following papers:
+We downloaded genome data from the following papers:
 
 > [Colonization dynamics of extended-spectrum beta-lactamase-producing Enterobacterales in the gut of Malawian adults](https://doi.org/10.1038/s41564-022-01216-7)
 Nat. Microbiol. 7, 1593–1604 (2022).
@@ -73,13 +70,19 @@ The genomes are deposited in the European Nucleotide Archive (ENA) under the pro
 
 The fastq files were downloaded, processed with cutadapt, filtered to >Q20 with FASTQC, and assembled with SPAdes v3.11.1 as described in [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2). 
 
-Antimicrobial resistance genes (ARGs) were called with AMRfinderplus v4.0.23 to produce the table `all_773_DASSIM_BSI_Malawi_amrfinder_v4.0.23_geno.tsv`.
+Antimicrobial resistance genes (ARGs) were called with AMRFinderPlus v4.0.23 to produce the data frame [DASSIM_geno] which is included in the AMRgen package as a data object `DASSIM_geno`:
+```{r DASSIM_geno}
+head(DASSIM_geno)
+```
 
 ## 2.2 Downloading DASSIM Phenotype data 
 
-We can download the AST data from the [blantyreESBL Github](https://joelewis101.github.io/blantyreESBL/) from Dr. Joe Lewis [here](https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_AST.rda).
+We downloaded the AST data from the [blantyreESBL Github](https://joelewis101.github.io/blantyreESBL/) from Dr. Joe Lewis at <https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_AST.rda>.
 
-This provides `DASSIM_btESBL_AST.csv`
+This is included in the AMRgen package as a data object: `btESBL_AST`.
+```{r btESBL_AST}
+head(btESBL_AST)
+```
 
 Additional metadata relating to the isolates can be found in [Supplementary Data 1](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-024-53391-2/MediaObjects/41467_2024_53391_MOESM4_ESM.xls) of the following paper:
 
@@ -87,16 +90,17 @@ Additional metadata relating to the isolates can be found in [Supplementary Data
 Nat Commun 15, 9019 (2024).
 Fabrice E Graf, Richard N Goodman, Sarah Gallichan, Sally Forrest, Esther Picton-Barlow, Alice J Fraser, Minh-Duy Phan, Madalitso Mphasa, Alasdair T M Hubbard, Patrick Musicha, Mark A Schembri, Adam P Roberts, Thomas Edwards, Joseph M Lewis, Nicholas A Feasey.
 
-This provides `DASSIM_BSI_metadata.tsv`
+This data is included in the AMRgen package as data object: `DASSIM_phenoDASSIM_pheno`:
+```{r DASSIM_pheno}
+head(DASSIM_pheno)
+```
 
 ## 2.3 Setting up R 
 
 First we set up R and load our libraries. 
 
 ```{r, echo = T, error=FALSE, warning=FALSE, message=FALSE, results = 'hide'}
-library(AMR)
 library(AMRgen)
-library(logistf)
 library(readr)
 library(tidyr)
 library(dplyr)
@@ -104,7 +108,7 @@ library(ggplot2)
 library(stringr)
 library(readxl)
 library(patchwork)
-library(gggenes)
+#library(gggenes)
 ```
 
 
@@ -118,16 +122,6 @@ Next we will import and check the data from the DASSIM dataset
 The phenotype data is read in manually here as it is not in standard format. 
 
 See [section 3.3](#readingNCBIAST) for how to read in AST data from the NCBI standard format using the `import_ast()` function.
-
-```{r, eval=FALSE}
-
-# Read in DASSIM metdata 
-DASSIM_pheno = read_tsv("DASSIM_BSI_metadata.tsv")
-
-# Read in the AST data from blantyre ESBL
-btESBL_AST = read_csv("DASSIM_btESBL_AST.csv")
-
-```
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE}
 
@@ -159,7 +153,7 @@ DASSIM_pheno_2 = DASSIM_pheno_2 %>%
       TRUE ~ NA_character_ # Any other unrecognized values become NA
     )
   ) %>% 
-  # Convert to the official AMR 'sir' class
+  # Convert to the AMR 'sir' class
   mutate(pheno = AMR::as.sir(pheno))
 
 DASSIM_pheno_2 = DASSIM_pheno_2 %>% mutate(drug_agent = Antibiotic)
@@ -190,7 +184,7 @@ DASSIM_geno = import_amrfp("DASSIM_BSI_Malawi_amrfinder_v4.0.23_geno.tsv")
 
 # Rename to match genotype and phenotype data
 DASSIM_pheno_rename = DASSIM_pheno_2 %>% select("id", "seq")
-DASSIM_geno_2 = right_join(DASSIM_pheno_rename, DASSIM_geno, join_by("seq" == "Name"))
+DASSIM_geno_2 = right_join(DASSIM_pheno_rename, DASSIM_geno, join_by("seq" == "id"))
 ```
 
 ## 2.7 PPV Analysis of DASSIM dataset
@@ -626,7 +620,7 @@ This plot shows how *catA1* and *cmlA1* both have mostly 100% coverage of the ge
 
 Next we can use the gggenes package to plot the unique *catB3* gene lengths as arrows to visualise the differences.
 
-```{r, error=FALSE, warning=FALSE, message=FALSE}
+```{r, error=FALSE, warning=FALSE, message=FALSE, eval=F}
 
 #  Read the dataset
 AST_CATB3_geno_3
@@ -697,13 +691,5 @@ catB3_genes_plot
 This shows the variation in truncated *catB3* genes, with 14 unique truncated variants which are all ≤ 70% coverage and ≤ 481 bp, however, if we consider truncations with ≤ 7 bp
 difference, these split into 5 groups: 476-481 bp, 437-444bp, 420bp, 388bp and 344 bp. Since IS*26* was shown to cause truncations, these variations likely highlight the various
 insertion sites of IS*26* within the *catB3* gene. 
-
-We can consider this together with the MIC distributions to see how this truncation is affecting phenotypic resistance.
-
-```{r, fig.width=15, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-
-MIC_dist_by_cov + catB3_genes_plot
-
-```
 
 Experimental evolution from ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) suggested that these silencing events are highly stable under antibiotic pressure, reinforcing the potential for CHL to be reintroduced as a targeted reserve agent for ESBL-E infections in low-resource settings.

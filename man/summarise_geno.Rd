@@ -18,7 +18,7 @@ summarise_geno(
 \arguments{
 \item{geno_table}{A tibble or data frame containing genotype data, in the format output by \link{import_amrfp}.}
 
-\item{sample_col}{Character. Name of the column containing sample identifiers. Default is \code{"Name"}.}
+\item{sample_col}{Character. Name of the column containing sample identifiers. Default is \code{"id"}.}
 
 \item{marker_col}{Character. Name of the column containing marker identifiers. Default is \code{"marker"}.}
 
@@ -50,7 +50,6 @@ The \code{force_ab} parameter allows the addition of full antibiotic names using
 }
 \examples{
 
-geno_table <- import_amrfp(ecoli_geno_raw)
-summarise_geno(geno_table)
+summarise_geno(summarise_geno(staph_geno_ebi))
 
 }

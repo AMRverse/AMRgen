@@ -33,7 +33,7 @@ Authors:
   \item Arjun B. Prasad (\href{https://orcid.org/0000-0002-1343-8664}{ORCID})
   \item Leonor Sánchez-Busó (\href{https://orcid.org/0000-0002-4162-0228}{ORCID})
   \item Silvia Argimón (\href{https://orcid.org/0000-0002-2884-3857}{ORCID})
-  \item Dorottya Nagy
+  \item Dorottya Nagy \email{dorottya.nagy@ndm.ox.ac.uk} (\href{https://orcid.org/0000-0003-3779-8418}{ORCID})
   \item Dominique L. Chaput (\href{https://orcid.org/0000-0002-9736-2619}{ORCID})
   \item Richard Goodman (\href{https://orcid.org/0009-0008-0578-789X}{ORCID})
 }

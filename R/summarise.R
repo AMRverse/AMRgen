@@ -26,8 +26,7 @@
 #' @importFrom tidyr pivot_longer
 #' @examples
 #'
-#' geno_table <- import_amrfp(ecoli_geno_raw)
-#' summarise_geno(geno_table)
+#' summarise_geno(summarise_geno(staph_geno_ebi))
 #'
 #' @export
 summarise_geno <- function(geno_table,
@@ -214,10 +213,10 @@ summarise_pheno <- function(pheno_table,
 
   pheno_table <- pheno_table %>%
     mutate(INTERNAL_measures = case_when(
-      is.na(.data[[mic_col]]) & is.na(.data[[disk_col]]) ~ "none",
-      is.na(.data[[mic_col]]) & !is.na(.data[[disk_col]]) ~ "disk",
-      !is.na(.data[[mic_col]]) & is.na(.data[[disk_col]]) ~ "mic",
-      !is.na(.data[[mic_col]]) & !is.na(.data[[disk_col]]) ~ "both"
+      is.na(!!sym(mic_col) & is.na(!!sym(disk_col))) ~ "none",
+      is.na(!!sym(mic_col)) & !is.na(!!sym(disk_col)) ~ "disk",
+      !is.na(!!sym(mic_col)) & is.na(!!sym(disk_col)) ~ "mic",
+      !is.na(!!sym(mic_col)) & !is.na(!!sym(disk_col)) ~ "both"
     ))
 
   drugs <- pheno_table %>%
@@ -370,7 +369,7 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
 
   # drugs with phenotypes available for samples that also appear in geno table
   pheno_drugs <- pheno_table %>%
-    filter(.data[[pheno_sample_col]] %in% overlapping_ids) %>%
+    filter(!!sym(pheno_sample_col) %in% overlapping_ids) %>%
     count(!!sym(drug_col)) %>%
     rowwise() %>% # add class, used to match to genotype
     mutate(drug_class = paste0(unlist(ab_group(!!sym(drug_col), all_groups = T)), collapse = ", ")) %>%
@@ -382,9 +381,9 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
   pheno_info <- tibble()
   pheno_counts <- list()
   for (ab in unique(pheno_drugs[[drug_col]])) {
-    pheno_ab <- pheno_table %>% filter(.data[[drug_col]] == ab)
+    pheno_ab <- pheno_table %>% filter(!!sym(drug_col) == ab)
     pheno_ids <- pheno_ab %>%
-      pull(.data[[pheno_sample_col]]) %>%
+      pull(!!sym(pheno_sample_col)) %>%
       unique()
     pheno_ab_summary <- summarise_pheno(
       pheno_table = pheno_ab,
@@ -401,8 +400,8 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
 
     # get geno data relevant to this drug, for samples with phenotypes
     geno_ab <- geno_table %>%
-      filter(.data[[geno_sample_col]] %in% pheno_ids) %>%
-      filter(.data[[drug_col]] == ab | .data[[class_col]] %in% ab_group(ab, all_groups = T))
+      filter(!!sym(geno_sample_col) %in% pheno_ids) %>%
+      filter(!!sym(drug_col) == ab | !!sym(class_col) %in% ab_group(ab, all_groups = T))
 
     # summarise markers and hits, store in master list
     geno_ab_summary <- summarise_geno(geno_ab,

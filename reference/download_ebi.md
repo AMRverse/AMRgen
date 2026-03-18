@@ -6,7 +6,7 @@ AMR-associated genotypes, but the results are processed and not all
 fields returned by AMRfinderplus are included. Optionally, the function
 can also reformat the phenotype data for easy use with AMRgen functions
 (using
-[import_ebi_ast_ftp](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md))
+[`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md))
 and re-interpret assay measures using the latest breakpoints/ECOFF.
 
 ## Usage

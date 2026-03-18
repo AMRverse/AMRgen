@@ -52,7 +52,8 @@ Authors:
 
 - Silvia Argimón ([ORCID](https://orcid.org/0000-0002-2884-3857))
 
-- Dorottya Nagy
+- Dorottya Nagy <dorottya.nagy@ndm.ox.ac.uk>
+  ([ORCID](https://orcid.org/0000-0003-3779-8418))
 
 - Dominique L. Chaput ([ORCID](https://orcid.org/0000-0002-9736-2619))
 

@@ -1,7 +1,7 @@
 # Import and Process Resistance Gene Identifier (RGI) Results
 
 This function imports and processes genotyping results from the
-Resistance Gene Identifier (RGI, https://github.com/arpcard/rgi),
+Resistance Gene Identifier (RGI, <https://github.com/arpcard/rgi>),
 extracting antimicrobial resistance determinants and mapping them to
 standardised drug classes/antibiotics.
 
@@ -67,7 +67,7 @@ import_rgi(
 
   A tibble containing a reference table mapping model IDs (from
   CARD/RGI) to shortened model names as provided by CARD
-  (https://card.mcmaster.ca/download in aro_index.tsv). Defaults to
+  (<https://card.mcmaster.ca/download> in aro_index.tsv). Defaults to
   `rgi_short_name_table`, which is provided internally.
 
 - rgi_drugs:

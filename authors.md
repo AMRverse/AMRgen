@@ -32,7 +32,8 @@
 - **Dominique L. Chaput**. Author.
   [](https://orcid.org/0000-0002-9736-2619)
 
-- **Richard Goodman**. Author. [](https://orcid.org/0009-0008-0578-789X)
+- **Richard N. Goodman**. Author.
+  [](https://orcid.org/0009-0008-0578-789X)
 
 ## Citation
 
@@ -41,13 +42,13 @@ Source:
 
 Berends MS, Holt KE, Hawkey J, Couto N, Foster-Nyarko E, Knight GM,
 Dyson ZA, Tsang KK, Prasad AB, Sánchez-Busó L, Argimón S, Nagy D, Chaput
-DL, Goodman R (2026). *AMRgen: Genotype-Phenotype Integration for
+DL, Goodman RN (2026). *AMRgen: Genotype-Phenotype Integration for
 Antimicrobial Resistance Research*. R package version 0.0.1.9000,
 <https://amrgen.org>.
 
     @Manual{,
       title = {AMRgen: Genotype-Phenotype Integration for Antimicrobial Resistance Research},
-      author = {Matthijs S. Berends and Kathryn E. Holt and Jane Hawkey and Natacha Couto and Ebenezer Foster-Nyarko and Gwen M. Knight and Zoe A. Dyson and Kara K. Tsang and Arjun B. Prasad and Leonor Sánchez-Busó and Silvia Argimón and Dorottya Nagy and Dominique L. Chaput and Richard Goodman},
+      author = {Matthijs S. Berends and Kathryn E. Holt and Jane Hawkey and Natacha Couto and Ebenezer Foster-Nyarko and Gwen M. Knight and Zoe A. Dyson and Kara K. Tsang and Arjun B. Prasad and Leonor Sánchez-Busó and Silvia Argimón and Dorottya Nagy and Dominique L. Chaput and Richard N. Goodman},
       year = {2026},
       note = {R package version 0.0.1.9000},
       url = {https://amrgen.org},

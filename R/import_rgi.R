@@ -16,7 +16,7 @@
 
 #' Import and Process Resistance Gene Identifier (RGI) Results
 #'
-#' This function imports and processes genotyping results from the Resistance Gene Identifier (RGI, https://github.com/arpcard/rgi), extracting antimicrobial resistance determinants and mapping them to standardised drug classes/antibiotics.
+#' This function imports and processes genotyping results from the Resistance Gene Identifier (RGI, <https://github.com/arpcard/rgi>), extracting antimicrobial resistance determinants and mapping them to standardised drug classes/antibiotics.
 #' @param input_table A character string specifying a dataframe or path to the RGI results table (TSV format).
 #' @param orf_id_col A character string specifying the column that identifies open reading frame ID (ORF_ID) in the dataset (default `ORF_ID`). This column includes the sample ID and the contig / genomic location and is a default output of RGI.
 #' @param sample_id_sep A character string specifying the separator by which the sample ID is separated from the remaining text in `ORF_ID` (Default: `.fasta.txt:`) . For example: in the `ORF_ID` column, "SAMEA3498968.fasta.txt:1_96 # 109511 # 110635....", the sample ID separator is `.fasta.txt:`.
@@ -24,7 +24,7 @@
 #' @param antibiotic_col Character string specifying the antibiotic column (default `Antibiotic`).
 #' @param class_col Character string specifying the drug class column (default `Drug Class`).
 #' @param exclude_loose Logical indicating whether to exclude Loose hits (AMR markers that fall below a curated bitscore cutoff as defined by CARD/RGI). Default `TRUE`, which excludes Loose hits.
-#' @param rgi_short_name A tibble containing a reference table mapping model IDs (from CARD/RGI) to shortened model names as provided by CARD (https://card.mcmaster.ca/download in aro_index.tsv). Defaults to `rgi_short_name_table`, which is provided internally.
+#' @param rgi_short_name A tibble containing a reference table mapping model IDs (from CARD/RGI) to shortened model names as provided by CARD (<https://card.mcmaster.ca/download> in aro_index.tsv). Defaults to `rgi_short_name_table`, which is provided internally.
 #' @param rgi_drugs A tibble containing a reference table mapping CARD drug class / drug agents to standardised drug classes/names. Defaults to `rgi_drugs_table`, which is provided internally.
 #' @importFrom AMR as.ab ab_group
 #' @importFrom dplyr filter left_join mutate select bind_rows

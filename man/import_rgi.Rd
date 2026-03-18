@@ -31,7 +31,7 @@ import_rgi(
 
 \item{exclude_loose}{Logical indicating whether to exclude Loose hits (AMR markers that fall below a curated bitscore cutoff as defined by CARD/RGI). Default \code{TRUE}, which excludes Loose hits.}
 
-\item{rgi_short_name}{A tibble containing a reference table mapping model IDs (from CARD/RGI) to shortened model names as provided by CARD (https://card.mcmaster.ca/download in aro_index.tsv). Defaults to \code{rgi_short_name_table}, which is provided internally.}
+\item{rgi_short_name}{A tibble containing a reference table mapping model IDs (from CARD/RGI) to shortened model names as provided by CARD (\url{https://card.mcmaster.ca/download} in aro_index.tsv). Defaults to \code{rgi_short_name_table}, which is provided internally.}
 
 \item{rgi_drugs}{A tibble containing a reference table mapping CARD drug class / drug agents to standardised drug classes/names. Defaults to \code{rgi_drugs_table}, which is provided internally.}
 }
@@ -39,7 +39,7 @@ import_rgi(
 A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible. The output retains the original columns from the RGI output along with the newly mapped variables.
 }
 \description{
-This function imports and processes genotyping results from the Resistance Gene Identifier (RGI, https://github.com/arpcard/rgi), extracting antimicrobial resistance determinants and mapping them to standardised drug classes/antibiotics.
+This function imports and processes genotyping results from the Resistance Gene Identifier (RGI, \url{https://github.com/arpcard/rgi}), extracting antimicrobial resistance determinants and mapping them to standardised drug classes/antibiotics.
 }
 \details{
 The function performs the following steps:

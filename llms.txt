@@ -253,6 +253,8 @@ from public repositories or internal formats.
 - [`import_phoenix_ast()`](https://AMRverse.github.io/AMRgen/reference/import_phoenix_ast.md)
   : Import and process antimicrobial phenotype data exported from BD
   Phoenix instruments
+- [`import_rgi()`](https://AMRverse.github.io/AMRgen/reference/import_rgi.md)
+  : Import and Process Resistance Gene Identifier (RGI) Results
 - [`import_sensititre_ast()`](https://AMRverse.github.io/AMRgen/reference/import_sensititre_ast.md)
   : Import and process antimicrobial phenotype data exported from
   Sensititre instruments
@@ -477,6 +479,19 @@ Example datasets for demonstration and reproducible analysis.
   :
 
   ST data for *Staphylococcus aureus* genomes for clindamycin vignette
+
+- [`rgi_raw`](https://AMRverse.github.io/AMRgen/reference/rgi_raw.md) :
+  Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data
+
+- [`rgi_short_name_table`](https://AMRverse.github.io/AMRgen/reference/rgi_short_name_table.md)
+  : Table mapping CARD/RGI Model ID and CARD Short Name
+
+- [`rgi_drugs_table`](https://AMRverse.github.io/AMRgen/reference/rgi_drugs_table.md)
+  : Table mapping CARD/RGI drug class and antibiotic columns
+
+- [`rgi_EuSCAPE_raw`](https://AMRverse.github.io/AMRgen/reference/rgi_EuSCAPE_raw.md)
+  : Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data from
+  EuSCAPE project
 
 # Articles
 

@@ -70,6 +70,7 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_pheno.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_phoenix_ast.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/import_rgi.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_sensititre_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_vitek_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.html</loc></url>
@@ -93,6 +94,10 @@
 <url><loc>https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/reexports.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/rgi_EuSCAPE_raw.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/rgi_drugs_table.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/rgi_raw.html</loc></url>
+<url><loc>https://AMRverse.github.io/AMRgen/reference/rgi_short_name_table.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/salm_raw.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.html</loc></url>
 <url><loc>https://AMRverse.github.io/AMRgen/reference/staph_ast_ebi.html</loc></url>

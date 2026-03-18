@@ -1,7 +1,7 @@
 Package: AMRgen
 Title: Genotype-Phenotype Integration for Antimicrobial Resistance Research
 Version: 0.0.1.9000
-Date: 2025-09-01
+Date: 2026-03-18
 Authors@R: c(
     person(family = "Berends", c("Matthijs", "S."), comment = c(ORCID = "0000-0001-7620-1800"), email = "m.s.berends@umcg.nl", role = c("aut", "cre")),
     person(family = "Holt",    c("Kathryn", "E."),  comment = c(ORCID = "0000-0003-3949-2471"), email = "drkatholt@gmail.com", role = "aut"),
@@ -61,7 +61,7 @@ Suggests:
 Remotes:
     msberends/AMR
 License: GPL-3 | file LICENSE
-URL: https://amrgen.org, https://AMRverse.github.io/AMRgen/, https://github.com/AMRverse/AMRgen
+URL: https://amrgen.org, https://github.com/AMRverse/AMRgen
 BugReports: https://github.com/AMRverse/AMRgen/issues
 Config/testthat/edition: 3
 Encoding: UTF-8

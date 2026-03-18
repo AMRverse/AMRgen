@@ -171,7 +171,7 @@ staph_ami_mic_plot <- assay_by_var(
 
 staph_ami_mic_plot
 ```
-For more guidance on how to visulaise phenotypic data and combine it with genotypic data, have a look at the other `AMRgen` [vignettes](https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
+For more guidance on how to visulaise phenotypic data and combine it with genotypic data, have a look at the other `AMRgen` [vignettes](https://amrgen.org/articles/AnalysingGenoPhenoData.html).
 
 
 ## Option 2: Download data from EBI
@@ -260,4 +260,4 @@ This produces a binary matrix with 1 row per BioSample, for all BioSamples that 
 
 Columns indicate the input phenotype columns for doxycycline (renamed to standard fields `pheno`, `ecoff`, `mic`), and binary indicators (1=present, 0=absent) for doxycycline phenotypes (`R`, `NWT`) and each genotype marker associated with tetracyclines (in this case `tet(38)`, `tet(K)`, `tet(M)`,`tet(L)`).
 
-For more examples on how to do join geno-pheno analyses and visualisations, so the other AMRgen [Vignettes](https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
+For more examples on how to do join geno-pheno analyses and visualisations, so the other AMRgen [Vignettes](https://amrgen.org/articles/AnalysingGenoPhenoData.html).

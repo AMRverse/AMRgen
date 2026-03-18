@@ -615,15 +615,15 @@ import_rgi <- function(input_table,
   return(geno_table_label_ab)
 }
 
-#' Import and Process Abricate Results
+#' Import and Process ABRicate Results
 #'
-#' This function imports and processes Abricate results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised antibiotic names and drug classes. Currently supports results generated using the ResFinder database.
-#' @param input_table A character string specifying a dataframe or path to the Abricate results table.
+#' This function imports and processes ABRicate results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised antibiotic names and drug classes. Currently supports results generated using the ResFinder database.
+#' @param input_table A character string specifying a dataframe or path to the ABRicate results table.
 #' @param sample_col A character string specifying the column that identifies samples in the dataset (default `"FILE"`).
 #' @param gene_col A character string specifying the column that identifies gene symbols in the dataset (default `"GENE"`).
 #' @param product_col A character string specifying the column that identifies product names in the dataset (default `"PRODUCT"`).
 #' @param ab_col A character string specifying the column that identifies which drug/s each detected gene is associated with (default `"RESISTANCE"`).
-#' @param db A character string specifying which AMR gene database Abricate was run with (default `"resfinder"`; `"ncbi"` is also supported).
+#' @param db A character string specifying which AMR gene database ABRicate was run with (default `"resfinder"`; `"ncbi"` is also supported).
 #' @importFrom AMR as.ab
 #' @importFrom dplyr mutate filter relocate any_of everything rename
 #' @importFrom tidyr separate_longer_delim
@@ -638,7 +638,7 @@ import_rgi <- function(input_table,
 #' ... Other fields specific to the input file
 #' @details
 #' The function performs the following steps:
-#' - Reads the Abricate output table via the internal `process_input` function.
+#' - Reads the ABRicate output table via the internal `process_input` function.
 #' - Standardises the sample column name 'id'.
 #' - Assigns standardised column names for genes, markers, and sets variation type to "Gene presence detected".
 #' - Splits multiple resistance annotations (separated by semicolons) into separate rows.

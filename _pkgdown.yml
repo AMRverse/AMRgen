@@ -152,6 +152,7 @@ reference:
       - rgi_short_name_table
       - rgi_drugs_table
       - rgi_EuSCAPE_raw
+      - sirscan_codes
 
 # Footer configuration
 footer:

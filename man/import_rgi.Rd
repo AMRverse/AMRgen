@@ -55,7 +55,7 @@ This processing ensures compatibility with downstream AMRgen analysis workflows.
 rgi_raw
 
 # import using sample_id_sep=`_genomic.fna.txt:` and include Loose hits
-import_rgi(rgi_raw, sample_id_sep = "_genomic.fna.txt:", exclude_loose = FALSE)
+rgi <- import_rgi(rgi_raw, sample_id_sep = "_genomic.fna.txt:", exclude_loose = FALSE)
 
 # example RGI data from EuSCAPE project (including only Perfect and Strict hits)
 rgi_EuSCAPE_raw

@@ -3,7 +3,7 @@
 #' `summarise_geno()` computes summary information for a genotype table.
 #'
 #' @param geno_table A tibble or data frame containing genotype data, in the format output by [import_amrfp].
-#' @param sample_col Character. Name of the column containing sample identifiers. Default is `"Name"`.
+#' @param sample_col Character. Name of the column containing sample identifiers. Default is `"id"`.
 #' @param marker_col Character. Name of the column containing marker identifiers. Default is `"marker"`.
 #' @param drug_col Character. Name of the column containing drug agent identifiers. Default is `"drug_agent"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
 #' @param class_col Character. Name of the column containing drug class identifiers. Default is `"drug_class"`.
@@ -26,8 +26,7 @@
 #' @importFrom tidyr pivot_longer
 #' @examples
 #'
-#' geno_table <- import_amrfp(ecoli_geno_raw)
-#' summarise_geno(geno_table)
+#' summarise_geno(summarise_geno(staph_geno_ebi))
 #'
 #' @export
 summarise_geno <- function(geno_table,
@@ -102,7 +101,7 @@ summarise_geno <- function(geno_table,
       }
     }
     # add full drug name
-    if (inherits(drugs[[1]], "ab") | force_ab) {
+    if (!is.null(drugs) && (inherits(drugs[[drug_col]], "ab") | force_ab)) {
       drugs <- drugs %>% mutate(antibiotic = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
     }
   } else if (class_col %in% colnames(geno_table)) {
@@ -131,7 +130,7 @@ summarise_geno <- function(geno_table,
       select(any_of(c(marker_col, drug_col, class_col, variation_col))) %>%
       count(across(everything()))
     # add full drug name
-    if ((inherits(drugs[[1]], "ab") | force_ab) & (drug_col %in% colnames(markers))) {
+    if (!is.null(drugs) && (inherits(drugs[[drug_col]], "ab") | force_ab) && (drug_col %in% colnames(markers))) {
       markers <- markers %>%
         mutate(antibiotic = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
     }
@@ -202,22 +201,22 @@ summarise_pheno <- function(pheno_table,
 
   # ensure we have columns for mic and disk, set to NA if they were not in the input
   if (is.null(mic_col)) {
-    pheno_table <- mutate(mic = NA)
+    pheno_table <- pheno_table %>% mutate(mic = NA)
     mic_col <- "mic"
-    cat("No MIC data colummn provided\n")
+    cat("No MIC data column provided\n")
   }
   if (is.null(disk_col)) {
-    pheno_table <- mutate(disk = NA)
+    pheno_table <- pheno_table %>% mutate(disk = NA)
     disk_col <- "disk"
-    cat("No disk data colummn provided\n")
+    cat("No disk data column provided\n")
   }
 
   pheno_table <- pheno_table %>%
     mutate(INTERNAL_measures = case_when(
-      is.na(mic) & is.na(disk) ~ "none",
-      is.na(mic) & !is.na(disk) ~ "disk",
-      !is.na(mic) & is.na(disk) ~ "mic",
-      !is.na(mic) & !is.na(disk) ~ "both"
+      is.na(!!sym(mic_col) & is.na(!!sym(disk_col))) ~ "none",
+      is.na(!!sym(mic_col)) & !is.na(!!sym(disk_col)) ~ "disk",
+      !is.na(!!sym(mic_col)) & is.na(!!sym(disk_col)) ~ "mic",
+      !is.na(!!sym(mic_col)) & !is.na(!!sym(disk_col)) ~ "both"
     ))
 
   drugs <- pheno_table %>%
@@ -225,7 +224,7 @@ summarise_pheno <- function(pheno_table,
     count(across(everything())) %>%
     tidyr::pivot_wider(names_from = "INTERNAL_measures", values_from = n)
 
-  if (inherits(drugs[[1]], "ab") | force_ab) {
+  if (!is.null(drugs) && (inherits(drugs[[drug_col]], "ab") | force_ab)) {
     drugs <- drugs %>%
       mutate(antibiotic_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
   }
@@ -268,13 +267,14 @@ summarise_pheno <- function(pheno_table,
     }
   }
 
+  details <- NULL
   if (!is.null(method_cols)) {
     details <- pheno_table %>%
       select(any_of(c(drug_col, spp_col, method_cols, "INTERNAL_measures"))) %>%
       count(across(everything())) %>%
       tidyr::pivot_wider(names_from = "INTERNAL_measures", values_from = n)
 
-    if (inherits(drugs[[1]], "ab") | force_ab) {
+    if (!is.null(drugs) && (inherits(drugs[[drug_col]], "ab") | force_ab)) {
       details <- details %>%
         mutate(antibiotic_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
     }
@@ -364,12 +364,12 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
   }
   if (!(drug_col %in% colnames(geno_table))) {
     message(paste0("Column ", drug_col, " not found in input genotype table"))
-    geno_table <- geno_table %>% mutate(drug_col := NA)
+    geno_table <- geno_table %>% mutate(!!drug_col := NA)
   }
 
   # drugs with phenotypes available for samples that also appear in geno table
   pheno_drugs <- pheno_table %>%
-    filter(get(pheno_sample_col) %in% overlapping_ids) %>%
+    filter(!!sym(pheno_sample_col) %in% overlapping_ids) %>%
     count(!!sym(drug_col)) %>%
     rowwise() %>% # add class, used to match to genotype
     mutate(drug_class = paste0(unlist(ab_group(!!sym(drug_col), all_groups = T)), collapse = ", ")) %>%
@@ -380,10 +380,10 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
   marker_info <- tibble()
   pheno_info <- tibble()
   pheno_counts <- list()
-  for (ab in unique(pheno_drugs$drug_agent)) {
-    pheno_ab <- pheno_table %>% filter(get(drug_col) == ab)
+  for (ab in unique(pheno_drugs[[drug_col]])) {
+    pheno_ab <- pheno_table %>% filter(!!sym(drug_col) == ab)
     pheno_ids <- pheno_ab %>%
-      pull(get(pheno_sample_col)) %>%
+      pull(!!sym(pheno_sample_col)) %>%
       unique()
     pheno_ab_summary <- summarise_pheno(
       pheno_table = pheno_ab,
@@ -400,8 +400,8 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
 
     # get geno data relevant to this drug, for samples with phenotypes
     geno_ab <- geno_table %>%
-      filter(get(geno_sample_col) %in% pheno_ids) %>%
-      filter(get(drug_col) == ab | get(class_col) %in% ab_group(ab, all_groups = T))
+      filter(!!sym(geno_sample_col) %in% pheno_ids) %>%
+      filter(!!sym(drug_col) == ab | !!sym(class_col) %in% ab_group(ab, all_groups = T))
 
     # summarise markers and hits, store in master list
     geno_ab_summary <- summarise_geno(geno_ab,

@@ -63,7 +63,7 @@ download_ncbi_ast(
 - reformat:
 
   Logical. If `TRUE`, reformats the output using
-  [import_ncbi_biosample](https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.md)
+  [import_ncbi_biosample](https://amrgen.org/reference/import_ncbi_biosample.md)
   for compatibility with AMR analysis workflows. Default is `FALSE`.
   When set to `TRUE`, the data can also be interpreted against
   breakpoints/ECOFF by setting the `interpret_*=TRUE`.
@@ -71,27 +71,24 @@ download_ncbi_ast(
 - interpret_eucast:
 
   Logical. Passed to
-  [interpret_ast](https://AMRverse.github.io/AMRgen/reference/interpret_ast.md)
-  via
-  [import_ncbi_biosample](https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.md).
+  [interpret_ast](https://amrgen.org/reference/interpret_ast.md) via
+  [import_ncbi_biosample](https://amrgen.org/reference/import_ncbi_biosample.md).
   If `TRUE`, interprets MIC values using EUCAST breakpoints. Default is
   `FALSE`. Only used if `reformat`=`TRUE`.
 
 - interpret_clsi:
 
   Logical. Passed to
-  [interpret_ast](https://AMRverse.github.io/AMRgen/reference/interpret_ast.md)
-  via
-  [import_ncbi_biosample](https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.md).
+  [interpret_ast](https://amrgen.org/reference/interpret_ast.md) via
+  [import_ncbi_biosample](https://amrgen.org/reference/import_ncbi_biosample.md).
   If `TRUE`, interprets MIC values using CLSI breakpoints. Default is
   `FALSE`. Only used if `reformat`=`TRUE`.
 
 - interpret_ecoff:
 
   Logical. Passed to
-  [interpret_ast](https://AMRverse.github.io/AMRgen/reference/interpret_ast.md)
-  via
-  [import_ncbi_biosample](https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.md).
+  [interpret_ast](https://amrgen.org/reference/interpret_ast.md) via
+  [import_ncbi_biosample](https://amrgen.org/reference/import_ncbi_biosample.md).
   If `TRUE`, interprets MIC values using ECOFF cutoffs. Default is
   `FALSE`. Only used if `reformat`=`TRUE`.
 
@@ -118,11 +115,10 @@ contains AST test results and associated metadata including:
 
 The function can optionally filter by a one or more antibiotics. It can
 also optionally reformat data for compatibility with AMRgen functions
-via
-[import_ncbi_ast](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md),
+via [import_ncbi_ast](https://amrgen.org/reference/import_ncbi_ast.md),
 and interpret the raw data measures against breakpoints or ECOFF. See
-[import_ncbi_ast](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
-for details of output formats when these options are used.
+[import_ncbi_ast](https://amrgen.org/reference/import_ncbi_ast.md) for
+details of output formats when these options are used.
 
 ## NCBI API usage
 

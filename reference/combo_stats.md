@@ -1,14 +1,13 @@
 # Generate a Series of Plots for AMR Gene and Combination Analysis
 
-This function generates a set of visualizations to analyze AMR gene
+This function generates a set of visualisations to analyse AMR gene
 combinations, MIC values, and gene prevalence from an input
 genotype-phenotype binary matrix. It creates several plots, including
 assay distributions, phenotype breakdown, and positive predictive values
 for each marker combination. The
-[`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
-and [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md)
-functions can be used to generate standard data visualisations using the
-component plots.
+[`amr_upset()`](https://amrgen.org/reference/amr_upset.md) and
+[`ppv()`](https://amrgen.org/reference/ppv.md) functions can be used to
+generate standard data visualisations using the component plots.
 
 ## Usage
 
@@ -39,7 +38,7 @@ combo_stats(
 - binary_matrix:
 
   A data frame containing the original binary matrix output from the
-  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+  [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
   function. Expected columns are an identifier (column 1, any name),
   `pheno` (class sir, with S/I/R categories to colour points), `mic`
   (class mic, with MIC values to plot), and other columns representing

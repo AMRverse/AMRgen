@@ -1,4 +1,4 @@
-# Extract Details from a Generalized Linear Model
+# Extract Details from a Generalised Linear Model
 
 This function extracts and formats the estimates, confidence intervals,
 and p-values from a fitted glm model.

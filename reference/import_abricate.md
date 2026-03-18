@@ -1,6 +1,6 @@
-# Import and Process Abricate Results
+# Import and Process ABRicate Results
 
-This function imports and processes Abricate results, extracting
+This function imports and processes ABRicate results, extracting
 antimicrobial resistance (AMR) elements and mapping them to standardised
 antibiotic names and drug classes. Currently supports results generated
 using the ResFinder database.
@@ -22,7 +22,7 @@ import_abricate(
 
 - input_table:
 
-  A character string specifying a dataframe or path to the Abricate
+  A character string specifying a dataframe or path to the ABRicate
   results table.
 
 - sample_col:
@@ -47,7 +47,7 @@ import_abricate(
 
 - db:
 
-  A character string specifying which AMR gene database Abricate was run
+  A character string specifying which AMR gene database ABRicate was run
   with (default `"resfinder"`; `"ncbi"` is also supported).
 
 ## Value
@@ -83,7 +83,7 @@ functions of the ARMgen package:
 
 The function performs the following steps:
 
-- Reads the Abricate output table via the internal `process_input`
+- Reads the ABRicate output table via the internal `process_input`
   function.
 
 - Standardises the sample column name 'id'.

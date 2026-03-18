@@ -298,7 +298,7 @@ Analysis of combined genotype-phenotype data must be carried out
 separately for each antimicrobial agent. The first step is to generate a
 combined dataframe for the specified agent from the genotype and
 phenotype tables, using the
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
 function. As an example, we will do this for ciprofloxacin with our
 small *S. enterica* dataset, but this could also be done for
 levofloxacin and moxifloxacin.
@@ -351,7 +351,7 @@ described in other vignettes. Here, we show how some can be modified
 with additional metadata variables.
 
 The
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
 output (`cip_bin`) did not retain our additional metadata variables
 `Source` and `Serovar`. To use these variables in downstream analyses,
 we first extract them from `salm_pheno` and then join to `cip_bin` to
@@ -384,7 +384,7 @@ gyrA_mut <- cip_bin_meta %>%
   select(mic, gyrA_mut, Source, Serovar)
 
 # plot the MIC distribution, coloured by count of gyrA mutations
-mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
 #> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
 #> Ensure your input table is already filtered to the antibiotic.
 
@@ -437,8 +437,8 @@ cipro_mic_upset <- amr_upset(
 
 We can generate UpSet plots a subset of isolates by filtering on one of
 our additional metadata variables and then running
-[`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md).
-For example, we can focus on the human isolates only:
+[`amr_upset()`](https://amrgen.org/reference/amr_upset.md). For example,
+we can focus on the human isolates only:
 
 ``` r
 cip_bin_human <- cip_bin_meta %>%

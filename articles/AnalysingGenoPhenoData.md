@@ -40,14 +40,13 @@ library(dplyr)
 
 #### 1a. Importing genotype data to AMRgen’s standard table format
 
-The
-[`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
+The [`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md)
 function lets you load genotype data from AMRFinderPlus output files,
 and process it to generate an object with the key columns needed to work
 with the `AMRgen` package.
 
 ``` r
-# Example AMRFinderPlus genotyping output (from Allthebacteria project)
+# Example AMRFinderPlus genotyping output (from AllTheBacteria project)
 ecoli_geno_raw
 #> # A tibble: 45,228 × 28
 #>    Name      `Protein identifier` `Contig id`  Start   Stop Strand `Gene symbol`
@@ -147,7 +146,7 @@ e.g. `tibble(Name=missing_samples) %>% bind_rows(genotype_table)`.
 #### 1b. Summarising a genotype table
 
 You can summarise the content of a genotype table using the inbuilt
-[`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
+[`summarise_geno()`](https://amrgen.org/reference/summarise_geno.md)
 function.
 
 ``` r
@@ -177,8 +176,7 @@ ecoli_geno_summary$per_type
 #> 5 Protein variant detected        4920     65         18         16    21
 ```
 
-The
-[`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
+The [`summarise_geno()`](https://amrgen.org/reference/summarise_geno.md)
 function also returns a list of drugs and classes represented in the
 table, and the associated number of unique markers, unique samples, and
 total hits for each drug/class. Ordering by sample count, we see the
@@ -191,7 +189,7 @@ beta-lactams… there are 22 different markers with 6,379 hits across
 ``` r
 ecoli_geno_summary$drugs
 #> # A tibble: 44 × 6
-#>    drug_agent antibiotic                  drug_class       markers samples  hits
+#>    drug_agent drug_name                   drug_class       markers samples  hits
 #>    <ab>       <chr>                       <chr>              <int>   <int> <int>
 #>  1 AMC        Amoxicillin/clavulanic acid Aminopenicillins       2      57    57
 #>  2 AMK        Amikacin                    Aminoglycosides        6     176   180
@@ -208,7 +206,7 @@ ecoli_geno_summary$drugs
 # Order by sample count per drug/class
 ecoli_geno_summary$drugs %>% arrange(-samples)
 #> # A tibble: 44 × 6
-#>    drug_agent antibiotic      drug_class                markers samples  hits
+#>    drug_agent drug_name       drug_class                markers samples  hits
 #>    <ab>       <chr>           <chr>                       <int>   <int> <int>
 #>  1 NA         NA              Efflux                          3    5258 11828
 #>  2 NA         NA              Beta-lactams                   22    4989  6379
@@ -232,7 +230,7 @@ unique markers detected across 4,989 unique samples).
 ``` r
 ecoli_geno_summary$drugs %>% arrange(-markers)
 #> # A tibble: 44 × 6
-#>    drug_agent antibiotic      drug_class                markers samples  hits
+#>    drug_agent drug_name       drug_class                markers samples  hits
 #>    <ab>       <chr>           <chr>                       <int>   <int> <int>
 #>  1 NA         NA              Quinolones                     45    1822  4497
 #>  2 NA         NA              Cephalosporins (3rd gen.)      32    1065  1285
@@ -247,8 +245,7 @@ ecoli_geno_summary$drugs %>% arrange(-markers)
 #> # ℹ 34 more rows
 ```
 
-The
-[`summarise_geno()`](https://AMRverse.github.io/AMRgen/reference/summarise_geno.md)
+The [`summarise_geno()`](https://amrgen.org/reference/summarise_geno.md)
 function also returns a list of markers represented in the table,
 annotated with the associated drugs/classes and variation types. The
 column ‘n’ indicates the count of hits detected per marker. Ordering by
@@ -258,7 +255,7 @@ glpT_E448K.
 ``` r
 ecoli_geno_summary$markers %>% arrange(-n)
 #> # A tibble: 349 × 6
-#>    marker     drug_agent antibiotic drug_class    `variation type`             n
+#>    marker     drug_agent drug_name  drug_class    `variation type`             n
 #>    <chr>      <ab>       <chr>      <chr>         <chr>                    <int>
 #>  1 acrF       NA         NA         Efflux        Gene presence detected    5002
 #>  2 blaEC      NA         NA         Beta-lactams  Gene presence detected    4749
@@ -300,18 +297,18 @@ ecoli_geno_summary$markers %>%
   filter(drug_class == "Quinolones") %>%
   arrange(-n)
 #> # A tibble: 45 × 6
-#>    marker         drug_agent antibiotic drug_class `variation type`            n
-#>    <chr>          <ab>       <chr>      <chr>      <chr>                   <int>
-#>  1 gyrA_S83L      NA         NA         Quinolones Protein variant detect…   855
-#>  2 marR_S3N       NA         NA         Quinolones Protein variant detect…   726
-#>  3 parC_S80I      NA         NA         Quinolones Protein variant detect…   639
-#>  4 gyrA_D87N      NA         NA         Quinolones Protein variant detect…   622
-#>  5 parE_I529L     NA         NA         Quinolones Protein variant detect…   442
-#>  6 parC_E84V      NA         NA         Quinolones Protein variant detect…   294
-#>  7 aac(6')-Ib-cr5 NA         NA         Quinolones Gene presence detected    153
-#>  8 parE_D475E     NA         NA         Quinolones Protein variant detect…   147
-#>  9 parE_L416F     NA         NA         Quinolones Protein variant detect…   134
-#> 10 parE_S458A     NA         NA         Quinolones Protein variant detect…   111
+#>    marker         drug_agent drug_name drug_class `variation type`             n
+#>    <chr>          <ab>       <chr>     <chr>      <chr>                    <int>
+#>  1 gyrA_S83L      NA         NA        Quinolones Protein variant detected   855
+#>  2 marR_S3N       NA         NA        Quinolones Protein variant detected   726
+#>  3 parC_S80I      NA         NA        Quinolones Protein variant detected   639
+#>  4 gyrA_D87N      NA         NA        Quinolones Protein variant detected   622
+#>  5 parE_I529L     NA         NA        Quinolones Protein variant detected   442
+#>  6 parC_E84V      NA         NA        Quinolones Protein variant detected   294
+#>  7 aac(6')-Ib-cr5 NA         NA        Quinolones Gene presence detected     153
+#>  8 parE_D475E     NA         NA        Quinolones Protein variant detected   147
+#>  9 parE_L416F     NA         NA        Quinolones Protein variant detected   134
+#> 10 parE_S458A     NA         NA        Quinolones Protein variant detected   111
 #> # ℹ 35 more rows
 
 # Filter to acquired genes and sort by frequency, to see the most common acquired genes
@@ -319,28 +316,27 @@ ecoli_geno_summary$markers %>%
   filter(drug_class == "Quinolones" & `variation type` == "Gene presence detected") %>%
   arrange(-n)
 #> # A tibble: 12 × 6
-#>    marker         drug_agent antibiotic drug_class `variation type`           n
-#>    <chr>          <ab>       <chr>      <chr>      <chr>                  <int>
-#>  1 aac(6')-Ib-cr5 NA         NA         Quinolones Gene presence detected   153
-#>  2 qnrS1          NA         NA         Quinolones Gene presence detected    61
-#>  3 qnrB19         NA         NA         Quinolones Gene presence detected    36
-#>  4 qnrB4          NA         NA         Quinolones Gene presence detected    11
-#>  5 qnrB1          NA         NA         Quinolones Gene presence detected     3
-#>  6 qnrB2          NA         NA         Quinolones Gene presence detected     3
-#>  7 qepA1          NA         NA         Quinolones Gene presence detected     2
-#>  8 qnrA1          NA         NA         Quinolones Gene presence detected     2
-#>  9 qnrB6          NA         NA         Quinolones Gene presence detected     2
-#> 10 qnrS2          NA         NA         Quinolones Gene presence detected     2
-#> 11 qnrB           NA         NA         Quinolones Gene presence detected     1
-#> 12 qnrB7          NA         NA         Quinolones Gene presence detected     1
+#>    marker         drug_agent drug_name drug_class `variation type`           n
+#>    <chr>          <ab>       <chr>     <chr>      <chr>                  <int>
+#>  1 aac(6')-Ib-cr5 NA         NA        Quinolones Gene presence detected   153
+#>  2 qnrS1          NA         NA        Quinolones Gene presence detected    61
+#>  3 qnrB19         NA         NA        Quinolones Gene presence detected    36
+#>  4 qnrB4          NA         NA        Quinolones Gene presence detected    11
+#>  5 qnrB1          NA         NA        Quinolones Gene presence detected     3
+#>  6 qnrB2          NA         NA        Quinolones Gene presence detected     3
+#>  7 qepA1          NA         NA        Quinolones Gene presence detected     2
+#>  8 qnrA1          NA         NA        Quinolones Gene presence detected     2
+#>  9 qnrB6          NA         NA        Quinolones Gene presence detected     2
+#> 10 qnrS2          NA         NA        Quinolones Gene presence detected     2
+#> 11 qnrB           NA         NA        Quinolones Gene presence detected     1
+#> 12 qnrB7          NA         NA        Quinolones Gene presence detected     1
 ```
 
 ### 2. Phenotype table
 
-#### 2a. Importing phenotype datato AMRgen’s standard table format
+#### 2a. Importing phenotype data to AMRgen’s standard table format
 
-The
-[`import_pheno()`](https://AMRverse.github.io/AMRgen/reference/import_pheno.md)
+The [`import_pheno()`](https://amrgen.org/reference/import_pheno.md)
 function imports AST data from NCBI or other standard formats
 
 ``` r
@@ -384,8 +380,8 @@ head(ecoli_ast)
 Data can be imported from various standard formats using the
 `import_pheno` function, and re-interpreted using latest breakpoints
 and/or ECOFF. Use
-[`?import_pheno`](https://AMRverse.github.io/AMRgen/reference/import_pheno.md)
-to see the available formats and other options.
+[`?import_pheno`](https://amrgen.org/reference/import_pheno.md) to see
+the available formats and other options.
 
 If your assay data is not in a standard format, you can wrangle other
 input data files into the necessary format, manually and/or with the
@@ -455,7 +451,7 @@ fields:
 #### 2b. Summarising a phenotype table
 
 You can summarise the content of a phenotype table using the inbuilt
-[`summarise_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_pheno.md)
+[`summarise_pheno()`](https://amrgen.org/reference/summarise_pheno.md)
 function.
 
 ``` r
@@ -475,7 +471,7 @@ ecoli_pheno_summary$uniques
 ```
 
 The
-[`summarise_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_pheno.md)
+[`summarise_pheno()`](https://amrgen.org/reference/summarise_pheno.md)
 function returns a list of drugs and species represented in the table,
 and the associated number of samples with MIC measures, disk measures,
 both, or neither (S/I/R calls only).
@@ -484,27 +480,27 @@ both, or neither (S/I/R calls only).
 # Number of samples with measurements from MIC vs disk vs both or neither, per bug-drug combination
 ecoli_pheno_summary$drugs
 #> # A tibble: 1 × 4
-#>   drug_agent antibiotic_name spp_pheno          mic
-#>   <ab>       <chr>           <chr>            <int>
-#> 1 CIP        Ciprofloxacin   Escherichia coli  4168
+#>   drug_agent drug_name     spp_pheno          mic
+#>   <ab>       <chr>         <chr>            <int>
+#> 1 CIP        Ciprofloxacin Escherichia coli  4168
 
 # Number of samples with measurements from different methods, platforms, and guidelines
 ecoli_pheno_summary$details
 #> # A tibble: 8 × 7
-#>   drug_agent antibiotic_name spp_pheno        method    platform guideline   mic
-#>   <ab>       <chr>           <chr>            <chr>     <chr>    <chr>     <int>
-#> 1 CIP        Ciprofloxacin   Escherichia coli Etest     Etest    CLSI          1
-#> 2 CIP        Ciprofloxacin   Escherichia coli broth di… Microsc… CLSI          2
-#> 3 CIP        Ciprofloxacin   Escherichia coli broth di… Phoenix  CLSI        483
-#> 4 CIP        Ciprofloxacin   Escherichia coli broth di… Phoenix… CLSI          1
-#> 5 CIP        Ciprofloxacin   Escherichia coli broth di… Sensiti… CLSI         59
-#> 6 CIP        Ciprofloxacin   Escherichia coli broth di… Sensiti… CLSI       2708
-#> 7 CIP        Ciprofloxacin   Escherichia coli broth di… Vitek    CLSI        502
-#> 8 CIP        Ciprofloxacin   Escherichia coli broth di… NA       CLSI        412
+#>   drug_agent drug_name     spp_pheno        method      platform guideline   mic
+#>   <ab>       <chr>         <chr>            <chr>       <chr>    <chr>     <int>
+#> 1 CIP        Ciprofloxacin Escherichia coli Etest       Etest    CLSI          1
+#> 2 CIP        Ciprofloxacin Escherichia coli broth dilu… Microsc… CLSI          2
+#> 3 CIP        Ciprofloxacin Escherichia coli broth dilu… Phoenix  CLSI        483
+#> 4 CIP        Ciprofloxacin Escherichia coli broth dilu… Phoenix… CLSI          1
+#> 5 CIP        Ciprofloxacin Escherichia coli broth dilu… Sensiti… CLSI         59
+#> 6 CIP        Ciprofloxacin Escherichia coli broth dilu… Sensiti… CLSI       2708
+#> 7 CIP        Ciprofloxacin Escherichia coli broth dilu… Vitek    CLSI        502
+#> 8 CIP        Ciprofloxacin Escherichia coli broth dilu… NA       CLSI        412
 ```
 
 The
-[`summarise_pheno()`](https://AMRverse.github.io/AMRgen/reference/summarise_pheno.md)
+[`summarise_pheno()`](https://amrgen.org/reference/summarise_pheno.md)
 can also summarise, for each categorical phenotype column, the number in
 each category (S/I/R for interpretation against breakpoints, or NWT/WT
 for interpretation against ECOFF). This is helpful to explore whether
@@ -515,30 +511,30 @@ informative for downstream analyses of genotypes.
 ecoli_pheno_summary$pheno_counts_list
 #> $pheno_clsi
 #> # A tibble: 1 × 6
-#>   drug_agent antibiotic_name spp_pheno            S     I     R
-#>   <ab>       <chr>           <chr>            <int> <int> <int>
-#> 1 CIP        Ciprofloxacin   Escherichia coli  3011    63  1094
+#>   drug_agent drug_name     spp_pheno            S     I     R
+#>   <ab>       <chr>         <chr>            <int> <int> <int>
+#> 1 CIP        Ciprofloxacin Escherichia coli  3011    63  1094
 #> 
 #> $pheno_provided
 #> # A tibble: 1 × 7
-#>   drug_agent antibiotic_name spp_pheno            S     R    NI  `NA`
-#>   <ab>       <chr>           <chr>            <int> <int> <int> <int>
-#> 1 CIP        Ciprofloxacin   Escherichia coli  3113   970    37    48
+#>   drug_agent drug_name     spp_pheno            S     R    NI  `NA`
+#>   <ab>       <chr>         <chr>            <int> <int> <int> <int>
+#> 1 CIP        Ciprofloxacin Escherichia coli  3113   970    37    48
 #> 
 #> $ecoff
 #> # A tibble: 1 × 6
-#>   drug_agent antibiotic_name spp_pheno           NI    WT   NWT
-#>   <ab>       <chr>           <chr>            <int> <int> <int>
-#> 1 CIP        Ciprofloxacin   Escherichia coli   170  2768  1230
+#>   drug_agent drug_name     spp_pheno           NI    WT   NWT
+#>   <ab>       <chr>         <chr>            <int> <int> <int>
+#> 1 CIP        Ciprofloxacin Escherichia coli   170  2768  1230
 ```
 
 ### 3. Plot phenotype data distribution
 
 It is always a good idea to check the distribution of raw AST data that
 we have to work with. The function
-[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
-can be used to plot the distribution of MIC or disk measurements,
-coloured by a variable.
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) can be
+used to plot the distribution of MIC or disk measurements, coloured by a
+variable.
 
 ``` r
 # Example E. coli AST data from NCBI
@@ -552,12 +548,12 @@ assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "m
 It’s a good idea to make sure that the `SIR` field in the input data
 file has been interpreted correctly against the breakpoints. The AMRgen
 function
-[`checkBreakpoints()`](https://AMRverse.github.io/AMRgen/reference/checkBreakpoints.md)
+[`checkBreakpoints()`](https://amrgen.org/reference/checkBreakpoints.md)
 can be used to help look up breakpoints in the `AMR` package. Or, if you
 provide the function
-[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
-with a species and guideline, it can look up the breakpoints and ECOFF
-and annotate these directly on the plot.
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) with a
+species and guideline, it can look up the breakpoints and ECOFF and
+annotate these directly on the plot.
 
 ``` r
 # Look up breakpoints recorded in the AMR package
@@ -582,12 +578,12 @@ assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "m
 When aggregating AST data from different methods and sources, it is a
 good idea to check the distributions broken down by method or source.
 This can be done easily by passing the
-[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md)
 function a variable name to facet by, which means a separate
 distribution will be plotted for each value of that variable (e.g. each
 type of ‘method’ in our AST test data). Note that this public data from
-NCBI includes non-standard values in the platform (Sensititre /
-Sensititer) in the platform
+NCBI includes non-standard values in the platform (e.g., `"Sensititre"`
+/ `"Sensititer"`) in the platform.
 
 ``` r
 # specify facet_var="method" to generate facet plots by assay method
@@ -676,12 +672,82 @@ ggplot2::autoplot(ecoli_cip_vs_ref)
 
 ![](AnalysingGenoPhenoData_files/figure-html/compare_mic_with_eucast_dummy-1.png)
 
-### 5. Combine genotype and phenotype data for a given drug
+#### 5. Summarise the intersection of a genotype table and a phenotype table
+
+You can summarise the intersecting content of a genotype table and a
+phenotype table using the inbuilt
+[`summarise_geno_pheno()`](https://amrgen.org/reference/summarise_geno_pheno.md)
+function.
+
+``` r
+ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno, 
+                                         ecoli_ast, 
+                                         pheno_cols = c("pheno_clsi","ecoff"))
+
+# Total number of samples that appear in both tables, i.e. that have both
+# genotype and phenotype data available
+ecoli_geno_pheno$overlapping_samples
+#> [1] 3629
+
+# Table of drugs encountered in the phenotype table, indicating the
+# number of samples that have phenotype data for this drug and also
+# appear in the genotype table 
+ecoli_geno_pheno$drugs_with_pheno
+#> # A tibble: 2 × 6
+#>   drug_agent     n drug_class       drug_name     spp_pheno          mic
+#>   <ab>       <int> <chr>            <chr>         <chr>            <int>
+#> 1 CIP         3629 Fluoroquinolones Ciprofloxacin Escherichia coli  4168
+#> 2 CIP         3629 Quinolones       Ciprofloxacin Escherichia coli  4168
+
+# List of tables, one for each phenotype column in the input, indicating 
+# the number in each category (WT/NWT, S/I/R), amongst samples that also 
+# appear in the genotype table.
+ecoli_geno_pheno$pheno_counts_list
+#> $ecoff
+#> # A tibble: 1 × 6
+#>   drug_agent drug_name     spp_pheno           NI    WT   NWT
+#>   <ab>       <chr>         <chr>            <int> <int> <int>
+#> 1 CIP        Ciprofloxacin Escherichia coli   170  2768  1230
+#> 
+#> $pheno_clsi
+#> # A tibble: 1 × 6
+#>   drug_agent drug_name     spp_pheno            S     I     R
+#>   <ab>       <chr>         <chr>            <int> <int> <int>
+#> 1 CIP        Ciprofloxacin Escherichia coli  3011    63  1094
+
+# Number of markers encountered for each drug/class in the genotype table, 
+# amongst samples that have phenotype data for the relevant drug/class
+ecoli_geno_pheno$geno_hits
+#> # A tibble: 1 × 6
+#>   drug_agent drug_name drug_class markers samples  hits
+#>   <ab>       <chr>     <chr>        <int>   <int> <int>
+#> 1 NA         NA        Quinolones      44    1039  3618
+
+# Frequency of each marker in the genotype table, amongst samples that have 
+# phenotype data for the relevant drug/class
+ecoli_geno_pheno$geno_markers
+#> # A tibble: 44 × 6
+#>    marker         drug_agent drug_name drug_class `variation type`             n
+#>    <chr>          <ab>       <chr>     <chr>      <chr>                    <int>
+#>  1 aac(6')-Ib-cr  NA         NA        Quinolones Inactivating mutation d…     1
+#>  2 aac(6')-Ib-cr5 NA         NA        Quinolones Gene presence detected     150
+#>  3 acrR_R45C      NA         NA        Quinolones Protein variant detected     1
+#>  4 gyrA_D87G      NA         NA        Quinolones Protein variant detected     3
+#>  5 gyrA_D87N      NA         NA        Quinolones Protein variant detected   611
+#>  6 gyrA_D87Y      NA         NA        Quinolones Protein variant detected    16
+#>  7 gyrA_S83A      NA         NA        Quinolones Protein variant detected     3
+#>  8 gyrA_S83L      NA         NA        Quinolones Protein variant detected   782
+#>  9 gyrA_S83W      NA         NA        Quinolones Protein variant detected     1
+#> 10 marR_R77C      NA         NA        Quinolones Protein variant detected     1
+#> # ℹ 34 more rows
+```
+
+### 6. Combine genotype and phenotype data for a given drug
 
 The genotype and phenotype tables can include data related to many
 different drugs, but we need to analyse things one drug at a time. The
 function
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
 can be used to extract phenotype data for a specified drug, and genotype
 data for markers associated with a specified drug class. It returns a
 single dataframe with one row per strain, for the subset of strains that
@@ -690,6 +756,9 @@ indicates, for one strain, both the phenotypes (with SIR column, any
 assay columns if desired, and boolean 1/0 coding of R and NWT status)
 and the genotypes (one column per marker, with boolean 1/0 coding of
 marker presence/absence).
+
+This binary matrix can be used as the starting a lot of downstream
+analyses, discussed below.
 
 ``` r
 # Get matrix combining phenotype data for ciprofloxacin, binary calls for R/NWT phenotype,
@@ -742,9 +811,6 @@ colnames(cip_bin)
 #> [49] "qnrB"           "acrR_R45C"
 ```
 
-This binary matrix can be used as the starting a lot of downstream
-analyses.
-
 For example, we can use it as input to `assay_by_var` to plot the assay
 distribution coloured by presence of a particular genetic marker
 
@@ -790,14 +856,13 @@ mic_by_marker_count
 
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-3.png)
 
-### 6. Model a binary drug phenotype using genetic marker presence/absence data
+### 7. Model a binary drug phenotype using genetic marker presence/absence data
 
 Logistic regression models can be informative to get an overview of the
 association between a drug resistance phenotype, and each marker thought
 to be associated with the relevant drug class.
 
-The
-[`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md)
+The [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md)
 function uses the `get_binary_matrix` function to generate binary-coded
 genotype and phenotype data for a specified drug and class; and fits two
 logistic regression models of the form
@@ -809,11 +874,10 @@ from a precomputed ECOFF-based call of WT=wildtype/NWT=nonwildtype
 (encoded in the input column `ecoff_col`), or computed from the S/I/R
 phenotype as NWT=R/I and WT=S.
 
-The
-[`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md)
+The [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md)
 function can fit the model using either the standard logistic regression
 approach implemented in the [`glm()`](https://rdrr.io/r/stats/glm.html)
-function, or Firth’s bias-reduced penalized-likelihood logistic
+function, or Firth’s bias-reduced penalised-likelihood logistic
 regression implemented in the `logistf` package. The default is to use
 Firth’s regression, as standard logistic regression can fail if there
 are too few observations in some subgroups, which happens quite often
@@ -841,14 +905,13 @@ The function returns 4 objects:
 - `modelR, modelNWT`: data frames summarising each model, with beta
   coefficient, lower and upper values of 95% confidence intervals, and
   p-value for each marker (generated from the raw model output using
-  [`logistf_details()`](https://AMRverse.github.io/AMRgen/reference/logistf_details.md)
-  or
-  [`glm_details()`](https://AMRverse.github.io/AMRgen/reference/glm_details.md)
-  as relevant)
+  [`logistf_details()`](https://amrgen.org/reference/logistf_details.md)
+  or [`glm_details()`](https://amrgen.org/reference/glm_details.md) as
+  relevant)
 
 - `plot`: a ggplot2 object generated from the `modelR` and `modelNWT`
   objects using the
-  [`compare_estimates()`](https://AMRverse.github.io/AMRgen/reference/compare_estimates.md)
+  [`compare_estimates()`](https://amrgen.org/reference/compare_estimates.md)
   function
 
 - `bin_mat`: the binary matrix used as input to the regression models
@@ -1059,7 +1122,7 @@ models$binary_matrix
 #> #   `aac(6')-Ib-cr5` <dbl>, parC..Glu84Val <dbl>, parE..Ile529Leu <dbl>, …
 ```
 
-### 7. Assess solo positive predictive value of genetic markers
+### 8. Assess solo positive predictive value of genetic markers
 
 The strongest evidence of the effect of an individual genetic marker on
 a drug phenotype is its positive predictive value (PPV) for resistance
@@ -1068,12 +1131,12 @@ known to be associated with resistance to the drug class. This is
 referred to as ‘solo PPV’.
 
 The function
-[`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md)
+[`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md)
 takes as input our genotype and phenotype tables, and calculates solo
 PPV for resistance to a specific drug (included in our phenotype table)
 for markers associated with the specified drug class (included in our
 genotype table). It uses the
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
 function to first calculate the binary matrix, then filters out all
 samples that have more than one marker.
 
@@ -1176,16 +1239,15 @@ soloPPV_cipro$amr_binary
 #> #   parC_E84G <dbl>, qnrS1 <dbl>, marR_S3N <dbl>, `aac(6')-Ib-cr` <dbl>, …
 ```
 
-### 8. Compare markers with assay data
+### 9. Compare markers with assay data
 
 So far we have considered only the impact of individual markers, and
 their association with categorical S/I/R or WT/NWT calls.
 
-The function
-[`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
+The function [`amr_upset()`](https://amrgen.org/reference/amr_upset.md)
 takes as binary matrix table `cip_bin` summarising ciprofloxacin
 resistance vs quinolone markers, generated using
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md),
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md),
 and explores the distribution of MIC or disk diffusion assay values for
 all observed combinations of markers (solo or multiple markers). It
 visualises the data in the form of an upset plot, showing the

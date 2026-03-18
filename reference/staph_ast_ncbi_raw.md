@@ -1,8 +1,8 @@
 # S. aureus Example of Raw Phenotype Data Downloaded from NCBI BioSamples via Entrez API
 
 Phenotypes sourced from NCBI Biosamples using the
-[download_ncbi_ast](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md)
-function without reformating.
+[download_ncbi_ast](https://amrgen.org/reference/download_ncbi_ast.md)
+function without reformatting.
 
 ## Usage
 

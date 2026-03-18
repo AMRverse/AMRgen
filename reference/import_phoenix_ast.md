@@ -74,7 +74,7 @@ import_phoenix_ast(
 - ab:
 
   Optional antibiotic filter/override passed to
-  [`interpret_ast()`](https://AMRverse.github.io/AMRgen/reference/interpret_ast.md).
+  [`interpret_ast()`](https://amrgen.org/reference/interpret_ast.md).
 
 - use_expertized:
 

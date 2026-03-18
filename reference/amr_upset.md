@@ -42,12 +42,12 @@ amr_upset(
 - binary_matrix:
 
   A data frame containing the original binary matrix output from the
-  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+  [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
   function. If not provided (or set to `NULL`), user must specify
   `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and
   optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`,
   `ecoff_col`, `marker_col` to pass to
-  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md).
+  [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md).
 
 - assay:
 
@@ -82,15 +82,15 @@ amr_upset(
 
   (Required if `binary_matrix` not provided) A data frame containing
   genotype data, formatted with
-  [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
-  Only used if `binary_matrix` not provided.
+  [`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md). Only
+  used if `binary_matrix` not provided.
 
 - pheno_table:
 
   (Required if `binary_matrix` not provided) A data frame containing
   phenotype data, formatted with
-  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
-  Only used if `binary_matrix` not provided.
+  [`import_ast()`](https://amrgen.org/reference/import_ast.md). Only
+  used if `binary_matrix` not provided.
 
 - antibiotic:
 

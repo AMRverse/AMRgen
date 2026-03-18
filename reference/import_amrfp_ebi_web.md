@@ -6,9 +6,9 @@ web browser](https://www.ebi.ac.uk/amr/data/?view=predictions). Note
 that files downloaded from the [EBI AMR Portal FTP
 site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), either
 directly or via the function
-[`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md),
-are formatted differently and can be imported using
-[import_amrfp_ebi_ftp](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.md).
+[`download_ebi()`](https://amrgen.org/reference/download_ebi.md), are
+formatted differently and can be imported using
+[import_amrfp_ebi_ftp](https://amrgen.org/reference/import_amrfp_ebi_ftp.md).
 
 ## Usage
 
@@ -55,11 +55,11 @@ These data are pre-processed by EBI to match NCBI class/subclass to
 CARD's antibiotic resistance ontology (ARO), however for consistency
 this function will re-process the data to generate `drug_agent` and
 `drug_class` fields consistent with the
-[`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
+[`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md)
 function (the EBI fields `antibiotic*` are also retained). Note several
-AMRfinderplus fields are excluded from EBI files, including hierarchy
+AMRFinderPlus fields are excluded from EBI files, including hierarchy
 node, method, percent identity and coverage; therefore unlike the
-[`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
+[`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md)
 function, this function cannot assign `variation type` or `node`.
 
 The function performs the following steps:

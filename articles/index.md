@@ -3,14 +3,14 @@
 ### Vignettes
 
 - [Analysing Geno-Pheno
-  Data](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.md):
+  Data](https://amrgen.org/articles/AnalysingGenoPhenoData.md):
 - [Downloading geno-pheno data from NCBI and
-  EBI](https://AMRverse.github.io/AMRgen/articles/DownloadGenoPhenoData.md):
+  EBI](https://amrgen.org/articles/DownloadGenoPhenoData.md):
 - [Example using large-scale regional/national surveillance
-  data](https://AMRverse.github.io/AMRgen/articles/NeisseriaGonoExamples.md):
+  data](https://amrgen.org/articles/NeisseriaGonoExamples.md):
 - [Example with custom stratification by isolate
-  source](https://AMRverse.github.io/AMRgen/articles/SalmonellaExamples.md):
+  source](https://amrgen.org/articles/SalmonellaExamples.md):
 - [Example with custom classification of genotype
-  hits](https://AMRverse.github.io/AMRgen/articles/StaphAureusClindamycin.md):
+  hits](https://amrgen.org/articles/StaphAureusClindamycin.md):
 - [Assessing geno-pheno
-  concordance](https://AMRverse.github.io/AMRgen/articles/Concordance.md):
+  concordance](https://amrgen.org/articles/Concordance.md):

@@ -105,7 +105,7 @@ trimethoprim/sulfamethoxazole, tulathromycin, tylosin, tylvalosin,
 vancomycin, viomycin, and voriconazole.
 
 For the current list, run
-[`eucast_supported_ab_distributions()`](https://AMRverse.github.io/AMRgen/reference/eucast_supported_ab_distributions.md).
+[`eucast_supported_ab_distributions()`](https://amrgen.org/reference/eucast_supported_ab_distributions.md).
 
 ## Examples
 

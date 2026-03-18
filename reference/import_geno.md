@@ -8,11 +8,10 @@ are parsed to standard antibiotic names and/or antibiotic groups
 recognised by the AMR pkg, to facilitate extracting relevant genotype
 markers for comparison to phenotype data for a specific antibiotic (e.g.
 using `AMRgen` functions
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md),
-[`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md),
-[`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
-and
-[`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md)).
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md),
+[`ppv()`](https://amrgen.org/reference/ppv.md),
+[`amr_upset()`](https://amrgen.org/reference/amr_upset.md) and
+[`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md)).
 
 ## Usage
 
@@ -41,31 +40,31 @@ import_geno(input, format = "amrfp", ...)
   Format-specific arguments. See
 
   - `"amrfp"` :
-    [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
+    [`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md)
     AMRFinderPlus output
 
   - `"ebi_web"` :
-    [`import_amrfp_ebi_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.md)
+    [`import_amrfp_ebi_ftp()`](https://amrgen.org/reference/import_amrfp_ebi_ftp.md)
     EBI-processed AMRFinderPlus results (from
     [FTP](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) or
-    [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md))
+    [`download_ebi()`](https://amrgen.org/reference/download_ebi.md))
 
   - `"ebi_ftp"` :
-    [`import_amrfp_ebi_web()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_web.md)
+    [`import_amrfp_ebi_web()`](https://amrgen.org/reference/import_amrfp_ebi_web.md)
     EBI-processed AMRFinderPlus results, (from [EBI AMR
     portal](https://ebi.ac.uk/amr))
 
   - `"kleborate"` :
-    [`import_kleborate()`](https://AMRverse.github.io/AMRgen/reference/import_kleborate.md)
+    [`import_kleborate()`](https://amrgen.org/reference/import_kleborate.md)
     Kleborate output
 
   - `"abricate"` :
-    [`import_abricate()`](https://AMRverse.github.io/AMRgen/reference/import_abricate.md)
+    [`import_abricate()`](https://amrgen.org/reference/import_abricate.md)
     ABRicate output
 
   - `"rgi"` :
-    [`import_rgi()`](https://AMRverse.github.io/AMRgen/reference/import_rgi.md)
-    CARD RGI output
+    [`import_rgi()`](https://amrgen.org/reference/import_rgi.md) CARD
+    RGI output
 
 ## Value
 

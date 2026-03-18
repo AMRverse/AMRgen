@@ -8,21 +8,20 @@ to import AMR genotype data, AST phenotype data, and conduct
 genotype-phenotype analyses to explore the impact of genotypic markers
 on phenotype, including phenotype-genotype concordance.
 
-The
-[`concordance()`](https://AMRverse.github.io/AMRgen/reference/concordance.md)
+The [`concordance()`](https://amrgen.org/reference/concordance.md)
 function in AMRgen compares genotypes (presence of resistance markers)
 to observed phenotypes (resistant vs susceptible) using a binary matrix
 obtained with
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md).
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md).
 A genotypic prediction variable is defined on the basis of presence of
 genetic resistance markers, either all markers in the input table or
 those defined by an input inclusion list or exclusion list (specific
 marker(s), a minimum number of markers). The user may also filter the
 markers to be included in the genotypic prediction based on thresholds
 for solo Positive Predictive Value (PPV, see
-[`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md)
+[`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md)
 function) or logistic regression p-values (see
-[`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md)
+[`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md)
 function.
 
 This genotypic prediction (the “test”) is then compared to the observed
@@ -33,11 +32,11 @@ Sensitivity, Specificity, PPV, Negative Predictive Value (NPV),
 Accuracy, Kappa, and F-measure. Error rates (major error - ME, and very
 major error - VME) are calculated as per ISO 20776-2 (see FDA
 definitions). The
-[`concordance()`](https://AMRverse.github.io/AMRgen/reference/concordance.md)
-function supports evaluating both R and NWT outcomes in a single call,
-with flexible prediction rules and marker inclusion options.
+[`concordance()`](https://amrgen.org/reference/concordance.md) function
+supports evaluating both R and NWT outcomes in a single call, with
+flexible prediction rules and marker inclusion options.
 
-This vignette walks through a workflow to analyze phenotype-genotype
+This vignette walks through a workflow to analyse phenotype-genotype
 concordance using example datasets taken from “A one-year genomic
 investigation of *Escherichia coli* epidemiology and nosocomial spread
 at a large US healthcare network” by Mills et al (2022). The
@@ -77,7 +76,7 @@ in this study were retrieved from the EBI AMR Portal FTP site, following
 these steps:
 
 1.  Downloaded all E. coli phenotype data with the
-    [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
+    [`download_ebi()`](https://amrgen.org/reference/download_ebi.md)
     function from AMRgen, passing options `species="Escherichia coli"`,
     `release = "2025-12"`, and `reformat = TRUE`. Options to reinterpret
     data based on CLSI/EUCAST breakpoints or ECOFFs were not applied.
@@ -142,10 +141,10 @@ column is:
 ### 2. Genotype table
 
 The AMRFinderPlus results for the 2075 isolates in this study were
-retrieved from the Allthebacteria project, following these steps:
+retrieved from the AllTheBacteria project, following these steps:
 
 1.  Downloaded a compressed TSV file containing the aggregated results
-    of running AMRFinderPlus on all samples in the Allthebacteria
+    of running AMRFinderPlus on all samples in the AllTheBacteria
     dataset from <https://osf.io/ck7st> (large file)
 
 2.  Programmatically selected the results for the 2075 *E. coli* samples
@@ -200,10 +199,10 @@ The phenotype table includes data for 18 antibiotics from 11 different
 classes, but we need to analyse concordance one drug at a time.
 
 The function
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
 is used to extract phenotype data for a specified drug (in this example
 Ciprofloxacin), and genotype data for markers associated with a
-specified drug class by AMRFinder Plus (in this example Quinolones). It
+specified drug class by AMRFinderPlus (in this example Quinolones). It
 returns a single dataframe with one row per strain, for the subset of
 strains that appear in both the genotype and phenotype input tables.
 
@@ -258,9 +257,9 @@ Ciprofloxacin phenotype data to better understand this.
 ### 4. Plot Ciprofloxacin phenotype data distribution
 
 The function
-[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
-can be used to plot the distribution of MIC values coloured by a
-variable. In this case, the S/I/R values were coloured by the column
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) can be
+used to plot the distribution of MIC values coloured by a variable. In
+this case, the S/I/R values were coloured by the column
 “pheno_provided”, which were interpreted by the authors with the
 breakpoints from CLSI 2018. We can also compare them to the updated
 breakpoints from CLSI 2025.
@@ -303,7 +302,7 @@ and R\>=1) confirm that the SIR interpretation was as per the 2018
 breakpoints, and that the interpretation would have been different if
 the AST data had been re-interpreted during download by passing the
 option `interpret_clsi=TRUE` to the
-[`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
+[`download_ebi()`](https://amrgen.org/reference/download_ebi.md)
 function.
 
 The plots also show that the ECOFF value of 0.064 is below the minimum
@@ -407,14 +406,13 @@ The low specificity value (caused by the 891 Cip-susceptible isolates
 that carry resistance markers) is not surprising as Ciprofloxacin
 resistance usually results from the accumulation of mutations, with
 isolates carrying only one mutation often remaining susceptible. This
-can be easily visualized with the
-[`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
-function in `AMRgen`.
+can be easily visualised with the
+[`amr_upset()`](https://amrgen.org/reference/amr_upset.md) function in
+`AMRgen`.
 
 ### 6. Compare the presence of markers with susceptibility testing data with an upset plot
 
-The function
-[`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md)
+The function [`amr_upset()`](https://amrgen.org/reference/amr_upset.md)
 takes the binary matrix table `eco_cip_matrix`, and explores the
 distribution of MIC assay values for all observed combinations of
 markers (solo or multiple markers). The resulting upset plot shows the
@@ -442,15 +440,15 @@ combination of this mutations is common in non-susceptpible isolates
 
 To identify the combinations of AMR markers that are associated with
 resistance, we can use the
-[`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md) function
-of the `AMRgen` package
+[`ppv()`](https://amrgen.org/reference/ppv.md) function of the `AMRgen`
+package
 
 ### 7. Identify markers or combination of markers associated with resistance
 
-The [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md)
-function calculates the possible combinations of markers, and returns
-the positive predictive value (PPV) for each combination (with 95% CI)
-and the basic plot elements (including PPV).
+The [`ppv()`](https://amrgen.org/reference/ppv.md) function calculates
+the possible combinations of markers, and returns the positive
+predictive value (PPV) for each combination (with 95% CI) and the basic
+plot elements (including PPV).
 
 ``` r
 # Generate a summary plot of PPV for each solo and combination of markers observed in the mic assay data and order by decreasing ppv value
@@ -519,13 +517,13 @@ and parC_S80I.
 
 We can use all this information to refine our concordance analysis.
 
-Note: the [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md)
-function applies by default a `min_set_size` threshold of 2, meaning
-that only solo markers or marker combinations with at least 2
-occurrences in the dataset are included in the plots. Nevertheless solo
-markers or marker combinations that occur only once in the dataset are
-included in the stats table. In this example, there are 10 marker
-combinations represented by only 1 isolate in the dataset.
+Note: the [`ppv()`](https://amrgen.org/reference/ppv.md) function
+applies by default a `min_set_size` threshold of 2, meaning that only
+solo markers or marker combinations with at least 2 occurrences in the
+dataset are included in the plots. Nevertheless solo markers or marker
+combinations that occur only once in the dataset are included in the
+stats table. In this example, there are 10 marker combinations
+represented by only 1 isolate in the dataset.
 
 ### 8. Analyse concordance refining the definition of the genotypic prediction variable
 
@@ -649,9 +647,8 @@ detriment to sensitivity, NPV or VME.
 
 ### 10. Refine the concordance analysis with the logistic regression model
 
-The
-[`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md)
-function of the `AMRgen` package performs logistic regression to analyze
+The [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md)
+function of the `AMRgen` package performs logistic regression to analyse
 the relationship between genetic markers and phenotype (R, and NWT) for
 a specified antibiotic. It uses the binary matrix `eco_cip_markers` to
 fit logistic regression models for R vs S/I and/or NWT vs WT (by
@@ -721,11 +718,10 @@ parE_L416F, and genes aac(6’)-Ib-cr5 and qnrS1 have an effect on the R
 phenotype (blue). The coefficients are larger than zero and the lower
 confidence value doesn’t cross the zero line on the x-axis.
 
-The
-[`concordance()`](https://AMRverse.github.io/AMRgen/reference/concordance.md)
+The [`concordance()`](https://amrgen.org/reference/concordance.md)
 function returns our data object with the predictions added in a new
 column, “R_pred”. We can use the
-[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md)
 function to colour our input MIC distribution by the genotypic
 prediction.
 

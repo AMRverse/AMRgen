@@ -90,9 +90,9 @@ The dataset (total n = 5,361) includes MIC data for:
 - Cefixime (n=5,361 isolates)
 - Ceftriaxone (n=5,361 isolates)
 
-#### **Identification of genetic AMR determinants using `AMRfinderplus`**
+#### **Identification of genetic AMR determinants using `AMRFinderPlus`**
 
-[`AMRfinderplus v4.0.23`](https://doi.org/10.1038/s41598-021-91456-0)
+[`AMRFinderPlus v4.0.23`](https://doi.org/10.1038/s41598-021-91456-0)
 (database version 2025-03-25.1) was run on all assemblies using the
 following command:
 
@@ -115,9 +115,8 @@ This concatenated table is pre-loaded as `eurogasp_geno_raw`, the
 
 #### **Importing genotype and phenotype data into `AMRgen`**
 
-Use
-[`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
-to parse the AMRfinderplus output:
+Use [`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md) to
+parse the AMRFinderPlus output:
 
 ``` r
 eurogasp_geno <- import_amrfp(
@@ -132,7 +131,7 @@ MIC values across antibiotics may be stored as different types (numeric
 vs. character) due to inequality prefixes such as `<0.016` or `>32`. We
 coerce all antibiotic columns to character before pivoting to avoid type
 conflicts while preserving this information for downstream processing by
-[`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md):
+[`format_ast()`](https://amrgen.org/reference/format_ast.md):
 
 ``` r
 eurogasp_pheno <- eurogasp_pheno_raw %>%
@@ -145,10 +144,10 @@ eurogasp_pheno <- eurogasp_pheno_raw %>%
 ```
 
 Then format with
-[`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md).
-Setting `interpret_eucast = TRUE` and `interpret_ecoff = TRUE` adds
-categorical SIR interpretations (clinical breakpoints) and WT/NWT
-classifications (ECOFF) fron EUCAST:
+[`format_ast()`](https://amrgen.org/reference/format_ast.md). Setting
+`interpret_eucast = TRUE` and `interpret_ecoff = TRUE` adds categorical
+SIR interpretations (clinical breakpoints) and WT/NWT classifications
+(ECOFF) fron EUCAST:
 
 ``` r
 eurogasp_ast <- format_ast(
@@ -178,7 +177,7 @@ eurogasp_ast <- format_ast(
 ```
 
 Importantly, out of the 5,361 strains under study and with phenotype
-data, genetic determinants of AMR were found for 5,186 by AMRfinderplus.
+data, genetic determinants of AMR were found for 5,186 by AMRFinderPlus.
 Negative samples should be added to the genotype table so they are
 properly accounted for in downstream analyses:
 
@@ -201,9 +200,9 @@ eurogasp_double <- eurogasp_ast %>%
 ```
 
 For each antibiotic, we visualise the MIC distribution with
-[`assay_by_var()`](https://AMRverse.github.io/AMRgen/reference/assay_by_var.md)
-and compare it to the EUCAST reference distribution using
-[`compare_mic_with_eucast()`](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md).
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) and
+compare it to the EUCAST reference distribution using
+[`compare_mic_with_eucast()`](https://amrgen.org/reference/get_eucast_amr_distribution.md).
 
 ##### **Azithromycin**
 
@@ -403,7 +402,7 @@ azm_bin <- get_binary_matrix(
 
 Explore the distribution of MIC values across observed marker
 combinations with
-[`amr_upset()`](https://AMRverse.github.io/AMRgen/reference/amr_upset.md):
+[`amr_upset()`](https://amrgen.org/reference/amr_upset.md):
 
 ``` r
 # Calculate upset plots of MIC distributions vs genotype marker combinations
@@ -441,7 +440,7 @@ mutation alone, do not. PPV \> 0.50 indicates that more than 50% of
 isolates carrying a given marker fall in the NWT category..
 
 Now evaluate PPVs for marker combinations with
-[`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md):
+[`ppv()`](https://amrgen.org/reference/ppv.md):
 
 ``` r
 azm_ppv <- ppv(
@@ -466,7 +465,7 @@ Combinations including *23S* rDNA mutations are the only ones with PPV
 raises MIC above the NWT threshold.
 
 Run a Firth’s bias-reduced penalised-likelihood logistic regression with
-[`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md),
+[`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md),
 including markers with a minimum allele frequency (MAF) of ≥ 10
 isolates:
 
@@ -493,8 +492,8 @@ do.
 
 Calculate concordance and resistance prediction metrics using results
 from the logistic regression. The results of the `solo_ppv_analisis()`
-or [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md)
-functions can be provided to the `ppv_results` parameter.
+or [`ppv()`](https://amrgen.org/reference/ppv.md) functions can be
+provided to the `ppv_results` parameter.
 
 ``` r
 azm_concordance <- concordance(
@@ -953,7 +952,7 @@ results from the following sources (total n = 2,101 genomes):
   (2024)](https://doi.org/10.1093/jac/dkae369).
   - ENA [PRJEB76977](https://www.ebi.ac.uk/ena/browser/view/PRJEB76977),
     n=19 genomes.
-- Ceftriaxone-resistant gonoccci from Asia, by [van der Veen *et al.*
+- Ceftriaxone-resistant gonococci from Asia, by [van der Veen *et al.*
   2026](https://doi.org/10.1093/cid/ciaf530).
   - ENA [PRJEB45627](https://www.ebi.ac.uk/ena/browser/view/PRJEB45627),
     [PRJNA577446](https://www.ebi.ac.uk/ena/browser/view/PRJNA577446),
@@ -1153,7 +1152,7 @@ ngono_tet_ast <- format_ast(
 
 Import genotype data and add empty rows for samples with phenotype
 information but for which no genetic AMR determinants are identified by
-AMRfinderplus. For this example, there are 409 samples with MIC in the
+AMRFinderPlus. For this example, there are 409 samples with MIC in the
 phenotype file but AMR determinants were only found for 402.
 
 ``` r

@@ -2,7 +2,7 @@
 
 Compares genotypes (presence of resistance markers) to observed
 phenotypes (R vs S, and/or NWT vs NWT) using a binary matrix from
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md).
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md).
 A genotypic prediction variable is defined on the basis of genotype
 marker data (based on a variety of possible rules including
 any/all/minimum number of markers; specifically those markers or
@@ -40,7 +40,7 @@ concordance(
 - binary_matrix:
 
   A data frame output by
-  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md),
+  [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md),
   containing one row per sample, columns indicating binary phenotypes
   (`R`, `I`, `NWT`) and binary marker presence/absence.
 
@@ -64,15 +64,14 @@ concordance(
 - solo_ppv_results:
 
   Output of
-  [`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md),
+  [`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md),
   used for PPV-based marker filtering when `ppv_threshold` is set.
 
 - ppv_results:
 
-  Output of
-  [`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md),
-  required when `prediction_rule = "combo_ppv"`. The `summary` table
-  from this object is used to identify marker combinations with PPV \>=
+  Output of [`ppv()`](https://amrgen.org/reference/ppv.md), required
+  when `prediction_rule = "combo_ppv"`. The `summary` table from this
+  object is used to identify marker combinations with PPV \>=
   `ppv_threshold` for the relevant outcome (`R.ppv` or `NWT.ppv`).
   Samples whose marker combination matches any passing combination are
   predicted positive.
@@ -117,8 +116,8 @@ concordance(
 - logreg_results:
 
   Output of
-  [`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md).
-  Used for p-value filtering (when `pval_threshold` is set) and for
+  [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md). Used
+  for p-value filtering (when `pval_threshold` is set) and for
   `prediction_rule = "logistic"`.
 
 - pval_threshold:
@@ -162,11 +161,11 @@ When `prediction_col` is supplied, all marker filtering and prediction
 generation are bypassed. The named column (0/1-coded) is used directly
 as the genotypic prediction. This is useful when the user has computed a
 custom prediction (e.g. based on marker combinations from
-[`ppv()`](https://AMRverse.github.io/AMRgen/reference/ppv.md)) and wants
-to evaluate concordance metrics against the truth columns.
+[`ppv()`](https://amrgen.org/reference/ppv.md)) and wants to evaluate
+concordance metrics against the truth columns.
 
 When `prediction_rule = "combo_ppv"`, the function calls
-[`get_combo_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_combo_matrix.md)
+[`get_combo_matrix()`](https://amrgen.org/reference/get_combo_matrix.md)
 internally to derive a combination identifier for each sample. Samples
 whose combination identifier matches any entry in `ppv_results$summary`
 with outcome PPV \>= `ppv_threshold` are predicted positive. The unique
@@ -187,9 +186,9 @@ rates are computed internally:
 
 ## See also
 
-[`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md),
-[`solo_ppv_analysis()`](https://AMRverse.github.io/AMRgen/reference/solo_ppv_analysis.md),
-[`amr_logistic()`](https://AMRverse.github.io/AMRgen/reference/amr_logistic.md),
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md),
+[`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md),
+[`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md),
 [yardstick::yardstick](https://yardstick.tidymodels.org/reference/yardstick-package.html)
 
 ## Examples

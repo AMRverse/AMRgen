@@ -2,7 +2,7 @@
 
 This function performs a Positive Predictive Value (PPV) analysis for
 AMR markers associated with a given antibiotic and drug class. It
-calculates the PPV for solo markers and visualizes the results using
+calculates the PPV for solo markers and visualises the results using
 various plots.
 
 ## Usage
@@ -36,15 +36,15 @@ solo_ppv_analysis(
 
   (Required if `binary_matrix` not provided) A data frame containing
   genotype data, formatted with
-  [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
-  Only used if `binary_matrix` not provided.
+  [`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md). Only
+  used if `binary_matrix` not provided.
 
 - pheno_table:
 
   (Required if `binary_matrix` not provided) A data frame containing
   phenotype data, formatted with
-  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
-  Only used if `binary_matrix` not provided.
+  [`import_ast()`](https://amrgen.org/reference/import_ast.md). Only
+  used if `binary_matrix` not provided.
 
 - antibiotic:
 
@@ -113,12 +113,12 @@ solo_ppv_analysis(
 - binary_matrix:
 
   A data frame containing the original binary matrix output from the
-  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md)
+  [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
   function. If not provided (or set to `NULL`), user must specify
   `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and
   optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`,
   `ecoff_col`, `marker_col` to pass to
-  [`get_binary_matrix()`](https://AMRverse.github.io/AMRgen/reference/get_binary_matrix.md).
+  [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md).
 
 - min:
 
@@ -183,7 +183,7 @@ A list containing the following elements:
 
 ## Details
 
-The function analyzes the predictive power of individual AMR markers
+The function analyses the predictive power of individual AMR markers
 when they are found 'solo' in the genome with no other markers
 associated with the same class. The phenotype data are matched with
 genotype presence/absence and then stratified to compute PPV for

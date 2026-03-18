@@ -3,10 +3,10 @@
 Raw concatenated output from AMRFinderPlus run on *Neisseria
 gonorrhoeae* genome assemblies from 409 isolates collected in eastern
 Spain (2021–2024). This object serves as the genotype input for
-[import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
-and is used to investigate the genetic basis of tetracycline resistance,
-including the chromosomal *rpsJ* V57M mutation and the plasmid-borne
-*tet(M)* gene.
+[import_amrfp](https://amrgen.org/reference/import_amrfp.md) and is used
+to investigate the genetic basis of tetracycline resistance, including
+the chromosomal *rpsJ* V57M mutation and the plasmid-borne *tet(M)*
+gene.
 
 ## Usage
 
@@ -63,7 +63,7 @@ ngono_tet_geno_raw
   `NA`).
 
 - `Hierarchy node`: Gene hierarchy node name required for
-  [import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
+  [import_amrfp](https://amrgen.org/reference/import_amrfp.md).
 
 ## Source
 

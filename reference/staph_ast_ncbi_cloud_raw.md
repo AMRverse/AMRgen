@@ -1,8 +1,8 @@
 # S. aureus Example of Raw Phenotype Data Downloaded from NCBI via Google Cloud BigQuery
 
 Phenotypes sourced from NCBI via
-[query_ncbi_bq_ast](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.md)
-function, without reformating.
+[query_ncbi_bq_ast](https://amrgen.org/reference/query_ncbi_bq_ast.md)
+function, without reformatting.
 
 ## Usage
 

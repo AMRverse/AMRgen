@@ -42,10 +42,9 @@ format_ast(
   containing the AST data in long-form antibiogram format (one row per
   sample and test). This might be a file containing the content of an
   EBI/NCBI AST dataset previously processed using
-  [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md),
-  [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md),
-  or
-  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
+  [`import_ebi_ast()`](https://amrgen.org/reference/import_ebi_ast.md),
+  [`import_ncbi_ast()`](https://amrgen.org/reference/import_ncbi_ast.md),
+  or [`import_ast()`](https://amrgen.org/reference/import_ast.md)
   functions, or files with a similar format/structure but with different
   column names.
 
@@ -181,7 +180,7 @@ format_ast(
   `mic_col`, `disk_col`, `species_col`) to the default names expected by
   AMRgen functions (`id`, `drug_agent`, `mic`, `disk`, `spp_pheno`), to
   match those output by the other
-  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
+  [`import_ast()`](https://amrgen.org/reference/import_ast.md)
   functions.
 
 ## Value

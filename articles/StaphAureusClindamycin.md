@@ -81,7 +81,7 @@ cli_bin_accession <- get_binary_matrix(
 ##  Some samples had multiple phenotype rows, taking the most resistant only for binary matrix
 ##  Defining NWT in binary matrix using ecoff column provided: ecoff
 
-# Visualize with UpSet plot (markers)
+# Visualise with UpSet plot (markers)
 cli_mic_upset <- amr_upset(
   cli_bin,
   min_set_size = 2,
@@ -100,7 +100,7 @@ cli_mic_upset <- amr_upset(
 
 ``` r
 
-# Visualize with UpSet plot (variants)
+# Visualise with UpSet plot (variants)
 cli_mic_upset <- amr_upset(
   cli_bin_accession,
   min_set_size = 2,
@@ -129,7 +129,7 @@ PPV_cli <- ppv(cli_bin, upset_grid = TRUE, plot_assay = TRUE)
 ##  Removing 687 rows with no phenotype call
 ```
 
-![](StaphAureusClindamycin_files/figure-html/visualize%20upset%20plot-1.png)
+![](StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-1.png)
 
 ``` r
 
@@ -138,7 +138,7 @@ PPV_cli <- ppv(cli_bin_accession, upset_grid = TRUE, plot_assay = TRUE)
 ##  Removing 687 rows with no phenotype call
 ```
 
-![](StaphAureusClindamycin_files/figure-html/visualize%20upset%20plot-2.png)
+![](StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-2.png)
 
 We can clearly see from this analysis that the variants of the markers
 have different associations with clindamycin resistance. For example,
@@ -153,7 +153,7 @@ This is a known phenomenon for clindamycin resistance in *S. aureus*,
 where the presence of an erm gene can lead to inducible resistance that
 may not be detected in a standard AST test.
 
-### Assocation of specific variants with sequence types
+### Association of specific variants with sequence types
 
 Finally, we can also look at the association of specific marker variants
 with sequence types, if this data are available. This can be done by
@@ -202,7 +202,7 @@ ggplot(balloon_data, aes(x = ST, y = marker.label)) +
   )
 ```
 
-![](StaphAureusClindamycin_files/figure-html/visualize%20bubble%20plot-1.png)
+![](StaphAureusClindamycin_files/figure-html/visualise%20bubble%20plot-1.png)
 
 We can see from this last figure, that while erm(C)\_WP0012364.1 is
 quite rare, erm(C)\_WP0012363.1 is prevalent in certain STs, such as

@@ -1,12 +1,12 @@
 # Download antimicrobial genotype or phenotype data from the EBI AMR Portal
 
 This function will retrieve genotype or phenotype data from the EBI AMR
-Portal FTP site. The portal uses AMRfinderplus to identify
+Portal FTP site. The portal uses AMRFinderPlus to identify
 AMR-associated genotypes, but the results are processed and not all
-fields returned by AMRfinderplus are included. Optionally, the function
+fields returned by AMRFinderPlus are included. Optionally, the function
 can also reformat the phenotype data for easy use with AMRgen functions
 (using
-[`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md))
+[`import_ebi_ast_ftp()`](https://amrgen.org/reference/import_ebi_ast_ftp.md))
 and re-interpret assay measures using the latest breakpoints/ECOFF.
 
 ## Usage
@@ -91,7 +91,7 @@ download_ebi(
   `antibiotic_ontology` and `antibiotic_ontology_link` annotation fields
   (e.g. one row each for gentamicin and tobramycin). To remove these
   duplicate rows (and the drug-specific annotation fields) and return
-  only one row per hit (i.e. restoring AMRfinderplus output format), set
+  only one row per hit (i.e. restoring AMRFinderPlus output format), set
   this to `TRUE`.
 
 - release:
@@ -103,18 +103,17 @@ download_ebi(
 
   (Optional) Logical specifying whether to reformat the downloaded data
   for easy use with downstream AMRgen functions, using
-  [import_ebi_ast_ftp](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
+  [import_ebi_ast_ftp](https://amrgen.org/reference/import_ebi_ast_ftp.md)
   (phenotypes) or
-  [import_amrfp_ebi_ftp](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.md).
+  [import_amrfp_ebi_ftp](https://amrgen.org/reference/import_amrfp_ebi_ftp.md).
   Default `FALSE`. This does things like format the antibiotic,
   measurement, and phenotype columns to AMR package classes. If set to
   `TRUE` you can also turn on re-interpreting MIC/disk data using latest
   EUCAST/CLSI breakpoints (when `data`="phenotype"). No columns are
   removed from the downloaded data frame, but key fields are renamed,
   see documentation for
-  [format_ast](https://AMRverse.github.io/AMRgen/reference/format_ast.md)
-  and
-  [import_amrfp_ebi_ftp](https://AMRverse.github.io/AMRgen/reference/import_amrfp_ebi_ftp.md).
+  [format_ast](https://amrgen.org/reference/format_ast.md) and
+  [import_amrfp_ebi_ftp](https://amrgen.org/reference/import_amrfp_ebi_ftp.md).
 
 - interpret_eucast:
 

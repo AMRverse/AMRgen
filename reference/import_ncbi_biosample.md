@@ -4,11 +4,11 @@ This function will import antibiotic susceptibility testing (AST) data
 suitable for downstream use with AMRgen analysis functions. The expected
 input is phenotype data retrieved from NCBI BioSample database via the
 function
-[`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md).
+[`download_ncbi_ast()`](https://amrgen.org/reference/download_ncbi_ast.md).
 Note that files downloaded from the NCBI AST web browser
 <https://www.ncbi.nlm.nih.gov/pathogens/ast> are formatted differently
 and can be imported with the function
-[`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md).
+[`import_ncbi_ast()`](https://amrgen.org/reference/import_ncbi_ast.md).
 
 ## Usage
 

@@ -3,7 +3,7 @@
 Minimum inhibitory concentration (MIC) distributions for cefixime in
 *Neisseria gonorrhoeae* isolates. EUCAST reference distribution
 (retrieved March 2026 using
-[`compare_mic_with_eucast()`](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md))
+[`compare_mic_with_eucast()`](https://amrgen.org/reference/get_eucast_amr_distribution.md))
 compared with data from three European Gonococcal Antimicrobial
 Surveillance Programme (Euro-GASP) genomic surveys (2013, 2018, 2020),
 see Harris *et al.* (2018)

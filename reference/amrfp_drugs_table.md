@@ -1,8 +1,8 @@
 # NCBI Subclass mapping to drug class
 
-Mapping of NCBI refgene / AMRfinderplus Subclass terms that are not
+Mapping of NCBI refgene / AMRFinderPlus Subclass terms that are not
 present in the AMR package as drug class terms. Used internally when
-importing AMRfinderplus results into AMRgen genotype table format.
+importing AMRFinderPlus results into AMRgen genotype table format.
 
 ## Usage
 

@@ -9,10 +9,10 @@ identifier (either specified by column names or assuming the first
 column contains the ID), and filters the data according to the specified
 antibiotic and drug class criteria before creating a binary matrix.
 Suitable input files can be generated using
-[`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
-to import phenotype data, and
-[`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
-to import genotype data from AMRFinderPlus.
+[`import_ast()`](https://amrgen.org/reference/import_ast.md) to import
+phenotype data, and
+[`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md) to
+import genotype data from AMRFinderPlus.
 
 ## Usage
 
@@ -40,19 +40,19 @@ get_binary_matrix(
 
   A data frame containing genotype data, in long form with one row per
   sample and genetic marker. Expected format is that output by
-  [`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
-  and must include a column labeled `drug_class` (indicating the
-  antibiotic class associated with each marker), in addition to a column
-  indicating the marker (column name specified via `marker_col`) and a
-  column for sample identifiers (specified via `geno_sample_col`,
-  otherwise it is assumed the first column contains identifiers).
+  [`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md) and
+  must include a column labeled `drug_class` (indicating the antibiotic
+  class associated with each marker), in addition to a column indicating
+  the marker (column name specified via `marker_col`) and a column for
+  sample identifiers (specified via `geno_sample_col`, otherwise it is
+  assumed the first column contains identifiers).
 
 - pheno_table:
 
   A data frame containing phenotype data, in long form with one row per
   sample, drug and assay result. Expected format is that output by
-  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
-  and must include a column `drug_agent` (indicating the drug agent,
+  [`import_ast()`](https://amrgen.org/reference/import_ast.md) and must
+  include a column `drug_agent` (indicating the drug agent,
   interpretable as AMR pkg class `ab`), in addition to a column for
   sample identifiers (specified via `pheno_sample_col`, otherwise it is
   assumed the first column contains identifiers), a column with the

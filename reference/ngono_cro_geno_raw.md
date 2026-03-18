@@ -4,9 +4,9 @@ Raw concatenated output from AMRFinderPlus run on *Neisseria
 gonorrhoeae* genome assemblies from multiple studies enriched for
 ceftriaxone decreased susceptibility and resistance (total n = 2,101
 genomes). This object serves as the genotype input for
-[import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
-and is used to investigate mosaic PBP2 (*penA*) variants associated with
-ceftriaxone resistance.
+[import_amrfp](https://amrgen.org/reference/import_amrfp.md) and is used
+to investigate mosaic PBP2 (*penA*) variants associated with ceftriaxone
+resistance.
 
 ## Usage
 
@@ -61,7 +61,7 @@ ngono_cro_geno_raw
   `NA`).
 
 - `Hierarchy node`: Gene hierarchy node name required for
-  [import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
+  [import_amrfp](https://amrgen.org/reference/import_amrfp.md).
 
 ## Source
 

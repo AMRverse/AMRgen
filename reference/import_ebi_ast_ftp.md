@@ -5,11 +5,11 @@ suitable for downstream use with AMRgen analysis functions. The expected
 input is phenotype data retrieved from the [EBI AMR Portal FTP
 site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either
 directly or via the function
-[`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md).
-Note that files downloaded from the [EBI AMR Portal web
+[`download_ebi()`](https://amrgen.org/reference/download_ebi.md). Note
+that files downloaded from the [EBI AMR Portal web
 browser](https://www.ebi.ac.uk/amr/data/?view=experiments) are formatted
 differently and can be imported with the function
-[`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md).
+[`import_ebi_ast()`](https://amrgen.org/reference/import_ebi_ast.md).
 
 ## Usage
 

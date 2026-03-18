@@ -2,7 +2,7 @@
 
 Data frame containing EUCAST reference distribution for ciprofloxacin in
 E. coli, downloaded using
-[get_eucast_mic_distribution](https://AMRverse.github.io/AMRgen/reference/get_eucast_amr_distribution.md).
+[get_eucast_mic_distribution](https://amrgen.org/reference/get_eucast_amr_distribution.md).
 
 ## Usage
 

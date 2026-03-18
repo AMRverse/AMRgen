@@ -14,7 +14,7 @@ import_amrrules_predictions(
   sir_col = "clinical category",
   ecoff_col = "phenotype",
   method = "genotyping",
-  platform = "AMRfinderplus + AMRrules"
+  platform = "AMRFinderPlus + AMRrules"
 )
 ```
 
@@ -64,7 +64,7 @@ import_amrrules_predictions(
 
 - platform:
 
-  (optional, default `"AMRfinderplus + AMRrules"`) String indicating the
+  (optional, default `"AMRFinderPlus + AMRrules"`) String indicating the
   value to record in a new `platform` field added to the output table.
 
 ## Value

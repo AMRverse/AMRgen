@@ -23,9 +23,8 @@ export_ebi_ast(
 - data:
 
   A data frame in AMRgen long format (e.g. output of
-  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
-  or
-  [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)).
+  [`import_ast()`](https://amrgen.org/reference/import_ast.md) or
+  [`format_ast()`](https://amrgen.org/reference/format_ast.md)).
   Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least one
   phenotype column (see `pheno_col`). Optional columns: `mic`, `disk`,
   `method`, `platform`.
@@ -47,7 +46,7 @@ export_ebi_ast(
   will not be generated and the function will return the formated table
   only, which can be further updated and converted to submission-ready
   JSON later using
-  [`format_ebi_json()`](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
+  [`format_ebi_json()`](https://amrgen.org/reference/format_ebi_json.md).
 
 - domain:
 
@@ -56,7 +55,7 @@ export_ebi_ast(
   not be generated and the function will return the formated table only,
   which can be further updated and converted to submission-ready JSON
   later using
-  [`format_ebi_json()`](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
+  [`format_ebi_json()`](https://amrgen.org/reference/format_ebi_json.md).
 
 - output_dir:
 
@@ -64,7 +63,7 @@ export_ebi_ast(
   written. If not provided, JSON output files will not be generated and
   the function will return the formated table only, which can be further
   updated and converted to submission-ready JSON later using
-  [`format_ebi_json()`](https://AMRverse.github.io/AMRgen/reference/format_ebi_json.md).
+  [`format_ebi_json()`](https://amrgen.org/reference/format_ebi_json.md).
 
 ## Value
 

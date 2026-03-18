@@ -16,8 +16,6 @@ Useful links:
 
 - <https://amrgen.org>
 
-- <https://AMRverse.github.io/AMRgen/>
-
 - <https://github.com/AMRverse/AMRgen>
 
 - Report bugs at <https://github.com/AMRverse/AMRgen/issues>
@@ -57,4 +55,4 @@ Authors:
 
 - Dominique L. Chaput ([ORCID](https://orcid.org/0000-0002-9736-2619))
 
-- Richard Goodman ([ORCID](https://orcid.org/0009-0008-0578-789X))
+- Richard N. Goodman ([ORCID](https://orcid.org/0009-0008-0578-789X))

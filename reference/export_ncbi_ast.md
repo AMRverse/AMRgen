@@ -20,9 +20,8 @@ export_ncbi_ast(
 - data:
 
   A data frame in AMRgen long format (e.g. output of
-  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md)
-  or
-  [`format_ast()`](https://AMRverse.github.io/AMRgen/reference/format_ast.md)).
+  [`import_ast()`](https://amrgen.org/reference/import_ast.md) or
+  [`format_ast()`](https://amrgen.org/reference/format_ast.md)).
   Expected columns: `id`, `drug_agent`, and at least one phenotype
   column (see `pheno_col`). Optional columns: `mic`, `disk`, `method`,
   `guideline`, `platform`.

@@ -1,7 +1,7 @@
 # S. aureus Example of Imported NCBI Phenotype Data
 
 Phenotypes sourced from NCBI Biosamples using the
-[download_ncbi_ast](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md)
+[download_ncbi_ast](https://amrgen.org/reference/download_ncbi_ast.md)
 function and imported to AMRgen phenotype table format.
 
 ## Usage
@@ -15,9 +15,9 @@ staph_ast_ncbi
 `staph_ast_ncbi` A data frame with 143 rows and 19 columns representing
 all Staphylococcus aureus phenotyping results for amikacin and
 doxycycline downloaded from NCBI using
-[download_ncbi_ast](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md),
+[download_ncbi_ast](https://amrgen.org/reference/download_ncbi_ast.md),
 imported into AMRgen format using
-[import_ast](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
+[import_ast](https://amrgen.org/reference/import_ast.md).
 
 Columns include:
 

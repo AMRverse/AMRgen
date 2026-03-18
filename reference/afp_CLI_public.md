@@ -2,9 +2,8 @@
 
 Processed and filtered output from AMRFinderPlus run on *Staphylococcus
 aureus* genome assemblies from AllTheBacteria. This object was processed
-by
-[import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
-and is used to investigate the genetic basis of clindamycin resistance.
+by [import_amrfp](https://amrgen.org/reference/import_amrfp.md) and is
+used to investigate the genetic basis of clindamycin resistance.
 
 ## Usage
 
@@ -61,10 +60,10 @@ afp_CLI_public
   `NA`).
 
 - `Hierarchy node`: Gene hierarchy node name required for
-  [import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
+  [import_amrfp](https://amrgen.org/reference/import_amrfp.md).
 
 - `variation type`: Type of genetic variation interpreted by
-  [import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
+  [import_amrfp](https://amrgen.org/reference/import_amrfp.md).
 
 ## Source
 

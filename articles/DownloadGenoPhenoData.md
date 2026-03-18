@@ -26,7 +26,7 @@ library(dplyr)
 #### Option 1a: Download AST data from NCBI via rentrez
 
 The
-[`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md)
+[`download_ncbi_ast()`](https://amrgen.org/reference/download_ncbi_ast.md)
 function lets you download antibiogram data from NCBI via their ‘EUtils’
 API using the rentrez R pacakge. You must specify a species, and can
 optionally limit the download to one or more specific drugs. The
@@ -160,7 +160,7 @@ explore NCBI Pathogen Detection data see
 <https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/>.
 
 The
-[`query_ncbi_bq_ast()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.md)
+[`query_ncbi_bq_ast()`](https://amrgen.org/reference/query_ncbi_bq_ast.md)
 function lets you download antibiogram data from NCBI via Google Cloud
 BigQuery using the bigrquery R pacakge. You must specify a species, and
 can optionally limit the download to one or more specific drugs. The
@@ -171,7 +171,7 @@ CLSI.
 This function is fast but requires authentication via a [Google Cloud
 account](https://docs.cloud.google.com/docs/get-started) and may require
 payment. Free trial accounts can be set up, but require credit card
-authorization. Google currently provides enough free tier usage for
+authorisation. Google currently provides enough free tier usage for
 \>150 different queries for genotype data per month. To use this you
 will also need to install the `bigrquery` package and authorize it to
 use your Google cloud account.
@@ -208,8 +208,8 @@ staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi
 ##### To download genotype data
 
 The
-[`query_ncbi_bq_geno()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.md)
-function lets you download AMRfinderplus genotype data, for BioSamples
+[`query_ncbi_bq_geno()`](https://amrgen.org/reference/query_ncbi_bq_geno.md)
+function lets you download AMRFinderPlus genotype data, for BioSamples
 that have matching AST data, from NCBI via Google Cloud BigQuery using
 the bigrquery R pacakge. You must specify a species, and can optionally
 limit the download to one or more specific drug classes (see [NCBI AMR
@@ -222,8 +222,8 @@ Note that to save memory and disk space BioSamples with no AST data in
 NCBI will not be included in the download.
 
 Not all NCBI genotype results are updated with each new release of
-AMRfinderplus, so older genomes may have genotype results obtained with
-older versions of AMRfinderplus, and newer genomes will have genotype
+AMRFinderPlus, so older genomes may have genotype results obtained with
+older versions of AMRFinderPlus, and newer genomes will have genotype
 results obtained with more recent versions.
 
 ``` r
@@ -317,14 +317,14 @@ staph_ami_mic_plot
 ![](DownloadGenoPhenoData_files/figure-html/assay_by_var_staph_ami-1.png)
 For more guidance on how to visulaise phenotypic data and combine it
 with genotypic data, have a look at the other `AMRgen`
-[vignettes](https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
+[vignettes](https://amrgen.org/articles/AnalysingGenoPhenoData.html).
 
 ### Option 2: Download data from EBI
 
 The `download_ebi` function lets you retrieve phenotype or genotype data
 (by setting `data ="genotype'`) from the [EBI AMR
 Portal](https://www.ebi.ac.uk/amr). Genotypes are called using
-AMRfinderplus but processed by EBI. You can optionally filter the
+AMRFinderPlus but processed by EBI. You can optionally filter the
 downloaded file to a specified genus or species, and a specific
 antibiotic (for phenotype data) or NCBI class/subclass (for genotype
 data; check the [NCBI AMR Class-Subclass
@@ -380,7 +380,7 @@ Currently, not all samples in the EBI AMR portal have both AST and
 genotype data.
 
 Note the input assemblies used to call genotypes, and the version of
-AMRfinderplus, in the EBI portal can be different from what’s available
+AMRFinderPlus, in the EBI portal can be different from what’s available
 for download from NCBI using the above functions.
 
 ``` r
@@ -494,4 +494,4 @@ genotype marker associated with tetracyclines (in this case `tet(38)`,
 
 For more examples on how to do join geno-pheno analyses and
 visualisations, so the other AMRgen
-[Vignettes](https://amrverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
+[Vignettes](https://amrgen.org/articles/AnalysingGenoPhenoData.html).

@@ -1,8 +1,8 @@
 # S. aureus Example of Raw Genotype Data Downloaded from NCBI via Google Cloud BigQuery
 
-AMRfinderplus genotypes sourced from NCBI via
-[query_ncbi_bq_ast](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_ast.md)
-function, without reformating.
+AMRFinderPlus genotypes sourced from NCBI via
+[query_ncbi_bq_ast](https://amrgen.org/reference/query_ncbi_bq_ast.md)
+function, without reformatting.
 
 ## Usage
 
@@ -23,7 +23,7 @@ Columns include:
 - `scientific_name`: Organism name.
 
 - `Gene symbol`, `Class`, `Subclass`, `Element type`, `Element subtype`,
-  `Method`, `Hierarchy_node`: Key results fields from AMRfinderplus.
+  `Method`, `Hierarchy_node`: Key results fields from AMRFinderPlus.
 
 ## Source
 

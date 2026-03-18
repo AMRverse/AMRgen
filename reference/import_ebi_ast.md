@@ -6,9 +6,9 @@ that has been downloaded from the EBI AMR portal website
 from the EBI AMR Portal FTP site
 (<ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/>), either
 directly or via the function
-[`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md),
-is formatted differently and can instead be processed using the
-[`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
+[`download_ebi()`](https://amrgen.org/reference/download_ebi.md), is
+formatted differently and can instead be processed using the
+[`import_ebi_ast_ftp()`](https://amrgen.org/reference/import_ebi_ast_ftp.md)
 function.
 
 ## Usage

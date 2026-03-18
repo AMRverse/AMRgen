@@ -22,13 +22,12 @@ summarise_geno(
 - geno_table:
 
   A tibble or data frame containing genotype data, in the format output
-  by
-  [import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
+  by [import_amrfp](https://amrgen.org/reference/import_amrfp.md).
 
 - sample_col:
 
   Character. Name of the column containing sample identifiers. Default
-  is `"Name"`.
+  is `"id"`.
 
 - marker_col:
 
@@ -101,59 +100,52 @@ column is not recognized as an `"ab"` object.
 ## Examples
 
 ``` r
-geno_table <- import_amrfp(ecoli_geno_raw)
-summarise_geno(geno_table)
+summarise_geno(staph_geno_ebi)
 #> $uniques
-#> # A tibble: 6 × 2
-#>   column         n_unique
-#>   <chr>             <int>
-#> 1 id                 5258
-#> 2 marker              244
-#> 3 drug_agent           35
-#> 4 drug_class           26
-#> 5 gene                196
-#> 6 variation type        5
+#> # A tibble: 4 × 2
+#>   column     n_unique
+#>   <chr>         <int>
+#> 1 marker           22
+#> 2 drug_agent       12
+#> 3 drug_class        6
+#> 4 gene             22
 #> 
 #> $per_type
-#> # A tibble: 5 × 6
-#>   `variation type`                  id marker drug_agent drug_class  gene
-#>   <chr>                          <int>  <int>      <int>      <int> <int>
-#> 1 Gene presence detected          5258    164         22         17   164
-#> 2 Inactivating mutation detected   615     42         15         14    42
-#> 3 Nucleotide variant detected       57      2          3          3     1
-#> 4 Promoter variant detected         93      4          1          1     1
-#> 5 Protein variant detected        4920     65         18         16    21
+#> NULL
 #> 
 #> $drugs
-#> # A tibble: 44 × 6
-#>    drug_agent antibiotic                  drug_class       markers samples  hits
-#>    <ab>       <chr>                       <chr>              <int>   <int> <int>
-#>  1 AMC        Amoxicillin/clavulanic acid Aminopenicillins       2      57    57
-#>  2 AMK        Amikacin                    Aminoglycosides        6     176   180
-#>  3 AMP        Ampicillin                  Aminopenicillins       6     749   749
-#>  4 APR        Apramycin                   Aminoglycosides        1      98    98
-#>  5 ATM        Aztreonam                   Monobactams            2      39    39
-#>  6 AZM        Azithromycin                Macrolides             4     472   478
-#>  7 BLM        Bleomycin                   Glycopeptides          2      40    40
-#>  8 CHL        Chloramphenicol             Phenicols             15    1121  1181
-#>  9 CLI        Clindamycin                 Lincosamides           1      26    26
-#> 10 CLR        Clarithromycin              Macrolides             1       1     1
-#> # ℹ 34 more rows
+#> # A tibble: 14 × 5
+#>    drug_agent drug_name     drug_class              markers  hits
+#>    <ab>       <chr>         <chr>                     <int> <int>
+#>  1 AMK        Amikacin      Aminoglycosides               6  7745
+#>  2 APR        Apramycin     Aminoglycosides               1    12
+#>  3 CLI        Clindamycin   Macrolides/lincosamides       1     8
+#>  4 ERY        Erythromycin  Macrolides/lincosamides       1     8
+#>  5 GEN        Gentamicin    Aminoglycosides               5  4321
+#>  6 KAN        Kanamycin     Aminoglycosides               6  7861
+#>  7 LMU        Lefamulin     Pleuromutilins                1     8
+#>  8 SPT        Spectinomycin Other antibacterials          2  1671
+#>  9 STR1       Streptomycin  Aminoglycosides               3   582
+#> 10 TGC        Tigecycline   Tetracyclines                 2  7576
+#> 11 TOB        Tobramycin    Aminoglycosides               5  4445
+#> 12 NA         NA            Aminoglycosides               2    43
+#> 13 NA         NA            Tetracyclines                 6 11649
+#> 14 NA         NA            NA                            1    16
 #> 
 #> $markers
-#> # A tibble: 349 × 6
-#>    marker      drug_agent antibiotic  drug_class      `variation type`         n
-#>    <chr>       <ab>       <chr>       <chr>           <chr>                <int>
-#>  1 aac(2')-IIa KAS        Kasugamycin Aminoglycosides Gene presence detec…     1
-#>  2 aac(3)-II   GEN        Gentamicin  Aminoglycosides Inactivating mutati…     1
-#>  3 aac(3)-IId  GEN        Gentamicin  Aminoglycosides Gene presence detec…   204
-#>  4 aac(3)-IId  GEN        Gentamicin  Aminoglycosides Inactivating mutati…     1
-#>  5 aac(3)-IIe  GEN        Gentamicin  Aminoglycosides Gene presence detec…   120
-#>  6 aac(3)-IIg  GEN        Gentamicin  Aminoglycosides Gene presence detec…     2
-#>  7 aac(3)-IVa  APR        Apramycin   Aminoglycosides Gene presence detec…    98
-#>  8 aac(3)-IVa  GEN        Gentamicin  Aminoglycosides Gene presence detec…    98
-#>  9 aac(3)-IVa  TOB        Tobramycin  Aminoglycosides Gene presence detec…    98
-#> 10 aac(3)-Ib   GEN        Gentamicin  Aminoglycosides Gene presence detec…     1
-#> # ℹ 339 more rows
+#> # A tibble: 42 × 5
+#>    marker                 drug_agent drug_name     drug_class               n
+#>    <chr>                  <ab>       <chr>         <chr>                <int>
+#>  1 aac(6')-Ie             AMK        Amikacin      Aminoglycosides          9
+#>  2 aac(6')-Ie             KAN        Kanamycin     Aminoglycosides          9
+#>  3 aac(6')-Ie             TOB        Tobramycin    Aminoglycosides          9
+#>  4 aac(6')-Ie/aph(2'')-Ia AMK        Amikacin      Aminoglycosides       4272
+#>  5 aac(6')-Ie/aph(2'')-Ia GEN        Gentamicin    Aminoglycosides       4272
+#>  6 aac(6')-Ie/aph(2'')-Ia KAN        Kanamycin     Aminoglycosides       4272
+#>  7 aac(6')-Ie/aph(2'')-Ia TOB        Tobramycin    Aminoglycosides       4272
+#>  8 aadD1                  KAN        Kanamycin     Aminoglycosides        124
+#>  9 aadD1                  TOB        Tobramycin    Aminoglycosides        124
+#> 10 ant(3'')-IIa           SPT        Spectinomycin Other antibacterials     2
+#> # ℹ 32 more rows
 #> 
 ```

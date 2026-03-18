@@ -42,7 +42,7 @@ query_ncbi_bq_geno(
 ## Value
 
 A tibble containing genotype data with columns renamed to match
-[`import_amrfp()`](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
+[`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md)
 expectations.
 
 ## Examples

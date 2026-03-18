@@ -30,10 +30,10 @@ import_pheno(
   site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or
   [NCBI browser](https://www.ncbi.nlm.nih.gov/pathogens/ast), or using
   the functions
-  [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md),
-  [`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md),
+  [`download_ebi()`](https://amrgen.org/reference/download_ebi.md),
+  [`download_ncbi_ast()`](https://amrgen.org/reference/download_ncbi_ast.md),
   or
-  [`query_ncbi_bq_geno()`](https://AMRverse.github.io/AMRgen/reference/query_ncbi_bq_geno.md);
+  [`query_ncbi_bq_geno()`](https://amrgen.org/reference/query_ncbi_bq_geno.md);
   or the files may be exported from supported AST instruments.
 
 - format:
@@ -71,34 +71,34 @@ import_pheno(
   Format-specific arguments. See
 
   - `"ebi"` :
-    [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
+    [`import_ebi_ast()`](https://amrgen.org/reference/import_ebi_ast.md)
 
   - `"ebi_web"` :
-    [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
+    [`import_ebi_ast()`](https://amrgen.org/reference/import_ebi_ast.md)
 
   - `"ebi_ftp"`
-    :[`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
+    :[`import_ebi_ast_ftp()`](https://amrgen.org/reference/import_ebi_ast_ftp.md)
 
   - `"ncbi"` :
-    [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
+    [`import_ncbi_ast()`](https://amrgen.org/reference/import_ncbi_ast.md)
 
   - `"ncbi_biosample"` :
-    [`import_ncbi_biosample()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_biosample.md)
+    [`import_ncbi_biosample()`](https://amrgen.org/reference/import_ncbi_biosample.md)
 
   - `"vitek"` :
-    [`import_vitek_ast()`](https://AMRverse.github.io/AMRgen/reference/import_vitek_ast.md)
+    [`import_vitek_ast()`](https://amrgen.org/reference/import_vitek_ast.md)
 
   - `"microscan"` :
-    [`import_microscan_ast()`](https://AMRverse.github.io/AMRgen/reference/import_microscan_ast.md)
+    [`import_microscan_ast()`](https://amrgen.org/reference/import_microscan_ast.md)
 
   - `"sensititre"` :
-    [`import_sensititre_ast()`](https://AMRverse.github.io/AMRgen/reference/import_sensititre_ast.md)
+    [`import_sensititre_ast()`](https://amrgen.org/reference/import_sensititre_ast.md)
 
   - `"phoenix"` :
-    [`import_phoenix_ast()`](https://AMRverse.github.io/AMRgen/reference/import_phoenix_ast.md)
+    [`import_phoenix_ast()`](https://amrgen.org/reference/import_phoenix_ast.md)
 
   - `"whonet"` :
-    [`import_whonet_ast()`](https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.md)
+    [`import_whonet_ast()`](https://amrgen.org/reference/import_whonet_ast.md)
 
 ## Value
 

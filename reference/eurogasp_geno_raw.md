@@ -5,7 +5,7 @@ Raw concatenated output from AMRFinderPlus v4.0.23 (database
 three Euro-GASP genomic surveys (2013, 2018, 2020). Assemblies were
 generated with SPAdes v3.15.5 and quality-assessed with QUAST v5.1. This
 object serves as the genotype input for
-[import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md).
+[import_amrfp](https://amrgen.org/reference/import_amrfp.md).
 
 ## Usage
 
@@ -66,8 +66,8 @@ eurogasp_geno_raw
   this dataset).
 
 - `Hierarchy node`: Gene hierarchy node name, required for
-  [import_amrfp](https://AMRverse.github.io/AMRgen/reference/import_amrfp.md)
-  (enabled by `--print_node` flag).
+  [import_amrfp](https://amrgen.org/reference/import_amrfp.md) (enabled
+  by `--print_node` flag).
 
 ## Source
 

@@ -22,12 +22,12 @@ interpret_ast(
 
   A tibble containing the phenotype measures in standard AMRgen format,
   as output by
-  [`import_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
-  It must contain assay measurements in columns `mic` (class `mic`)
-  and/or `disk` (class `disk`). Interpretation requires an organism
-  (column `spp_pheno` of class `mo`, or a single value passed via the
-  `species` parameter) and an antibiotic (column `drug_agent` of class
-  `ab`, or a single value passed via the `ab` parameter).
+  [`import_ast()`](https://amrgen.org/reference/import_ast.md). It must
+  contain assay measurements in columns `mic` (class `mic`) and/or
+  `disk` (class `disk`). Interpretation requires an organism (column
+  `spp_pheno` of class `mo`, or a single value passed via the `species`
+  parameter) and an antibiotic (column `drug_agent` of class `ab`, or a
+  single value passed via the `ab` parameter).
 
 - interpret_ecoff:
 

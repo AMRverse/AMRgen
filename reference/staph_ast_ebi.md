@@ -1,8 +1,8 @@
 # S. aureus Example of Imported EBI Phenotype Data
 
 Phenotypes sourced from EBI AMR Portal using the
-[download_ebi](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
-function and imported to AMRgen phenotype table format.
+[download_ebi](https://amrgen.org/reference/download_ebi.md) function
+and imported to AMRgen phenotype table format.
 
 ## Usage
 
@@ -15,9 +15,9 @@ staph_ast_ebi
 `staph_ast_ebi` A data frame with 218 rows and 46 columns representing
 all Staphylococcus phenotyping results for amikacin and doxycycline
 downloaded from EBI using
-[download_ebi](https://AMRverse.github.io/AMRgen/reference/download_ebi.md),
-and imported into AMRgen format using
-[import_ast](https://AMRverse.github.io/AMRgen/reference/import_ast.md).
+[download_ebi](https://amrgen.org/reference/download_ebi.md), and
+imported into AMRgen format using
+[import_ast](https://amrgen.org/reference/import_ast.md).
 
 Columns include:
 

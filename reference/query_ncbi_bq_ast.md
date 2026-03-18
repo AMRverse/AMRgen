@@ -43,7 +43,7 @@ query_ncbi_bq_ast(
 ## Value
 
 A tibble containing AST data with columns renamed to match
-[`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
+[`import_ncbi_ast()`](https://amrgen.org/reference/import_ncbi_ast.md)
 expectations.
 
 ## Details

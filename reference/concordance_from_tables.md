@@ -26,13 +26,13 @@ concordance_from_tables(
 
   A tibble or data frame containing real (observed) phenotype data, in
   the format output by
-  [`import_pheno()`](https://AMRverse.github.io/AMRgen/reference/import_pheno.md).
+  [`import_pheno()`](https://amrgen.org/reference/import_pheno.md).
 
 - pheno_pred_table:
 
   A tibble or data frame containing predicted phenotype calls, e.g.
   AMRrules predictions imported in AMRgen using
-  [`import_amrrules_predictions()`](https://AMRverse.github.io/AMRgen/reference/import_amrrules_predictions.md).
+  [`import_amrrules_predictions()`](https://amrgen.org/reference/import_amrrules_predictions.md).
 
 - true_SIR_col:
 

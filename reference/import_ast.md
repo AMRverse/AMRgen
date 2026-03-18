@@ -38,9 +38,8 @@ import_ast(
   browser (e.g.
   <https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa>),
   or using the functions
-  [`download_ebi()`](https://AMRverse.github.io/AMRgen/reference/download_ebi.md)
-  or
-  [`download_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/download_ncbi_ast.md);
+  [`download_ebi()`](https://amrgen.org/reference/download_ebi.md) or
+  [`download_ncbi_ast()`](https://amrgen.org/reference/download_ncbi_ast.md);
   or the files may be exported from supported AST instruments.
 
 - format:
@@ -49,19 +48,19 @@ import_ast(
   `"ebi_web"`, `"ebi_ftp"`, `"ncbi"`, `"vitek"`, `"microscan"`,
   `"sensititre"`, or `"whonet"`. This determines whether the data is
   passed on to the
-  [`import_ebi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast.md)
+  [`import_ebi_ast()`](https://amrgen.org/reference/import_ebi_ast.md)
   (ebi/ebi_web),
-  [`import_ebi_ast_ftp()`](https://AMRverse.github.io/AMRgen/reference/import_ebi_ast_ftp.md)
+  [`import_ebi_ast_ftp()`](https://amrgen.org/reference/import_ebi_ast_ftp.md)
   (ebi_ftp),
-  [`import_ncbi_ast()`](https://AMRverse.github.io/AMRgen/reference/import_ncbi_ast.md)
+  [`import_ncbi_ast()`](https://amrgen.org/reference/import_ncbi_ast.md)
   (ncbi),
-  [`import_vitek_ast()`](https://AMRverse.github.io/AMRgen/reference/import_vitek_ast.md)
+  [`import_vitek_ast()`](https://amrgen.org/reference/import_vitek_ast.md)
   (vitek),
-  [`import_microscan_ast()`](https://AMRverse.github.io/AMRgen/reference/import_microscan_ast.md)
+  [`import_microscan_ast()`](https://amrgen.org/reference/import_microscan_ast.md)
   (microscan),
-  [`import_sensititre_ast()`](https://AMRverse.github.io/AMRgen/reference/import_sensititre_ast.md)
+  [`import_sensititre_ast()`](https://amrgen.org/reference/import_sensititre_ast.md)
   (sensititre), or
-  [`import_whonet_ast()`](https://AMRverse.github.io/AMRgen/reference/import_whonet_ast.md)
+  [`import_whonet_ast()`](https://amrgen.org/reference/import_whonet_ast.md)
   (whonet) function to process.
 
 - interpret_eucast:

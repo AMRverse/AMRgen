@@ -244,7 +244,7 @@ utils::globalVariables(c(
   "sir_interp",
   "disk_raw",
   "collection_date",
-  "specimen_type"
+  "specimen_type",
   "index",
   "predNWT",
   "predR",

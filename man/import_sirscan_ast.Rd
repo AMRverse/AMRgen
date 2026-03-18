@@ -84,9 +84,9 @@ pheno <- import_sirscan_ast(
 
 # MIC + interpretations only, with EUCAST re-interpretation
 pheno <- import_sirscan_ast(
-  mic_file     = "CMI_SALMO.csv",
+  mic_file = "CMI_SALMO.csv",
   interpr_file = "INTERPR_SALMO.csv",
-  species      = "Salmonella enterica",
+  species = "Salmonella enterica",
   interpret_eucast = TRUE
 )
 }

@@ -2223,24 +2223,25 @@ import_phoenix_ast <- function(input,
 #'
 #' # MIC + interpretations only, with EUCAST re-interpretation
 #' pheno <- import_sirscan_ast(
-#'   mic_file     = "CMI_SALMO.csv",
+#'   mic_file = "CMI_SALMO.csv",
 #'   interpr_file = "INTERPR_SALMO.csv",
-#'   species      = "Salmonella enterica",
+#'   species = "Salmonella enterica",
 #'   interpret_eucast = TRUE
 #' )
 #' }
 import_sirscan_ast <- function(
-    mic_file             = NULL,
-    disk_file            = NULL,
-    interpr_file         = NULL,
-    source               = NULL,
-    species              = NULL,
-    ab                   = NULL,
-    instrument_guideline = NULL,
-    sirscan_codes        = sirscan_codes,
-    interpret_eucast     = FALSE,
-    interpret_clsi       = FALSE,
-    interpret_ecoff      = FALSE) {
+  mic_file = NULL,
+  disk_file = NULL,
+  interpr_file = NULL,
+  source = NULL,
+  species = NULL,
+  ab = NULL,
+  instrument_guideline = NULL,
+  sirscan_codes = sirscan_codes,
+  interpret_eucast = FALSE,
+  interpret_clsi = FALSE,
+  interpret_ecoff = FALSE
+) {
   if (is.null(mic_file) && is.null(disk_file) && is.null(interpr_file)) {
     stop("At least one of 'mic_file', 'disk_file', or 'interpr_file' must be provided")
   }
@@ -2301,19 +2302,23 @@ import_sirscan_ast <- function(
 
   # ── Read and pivot each provided file ───────────────────────────────────────
   result_interpr <- NULL
-  result_mic     <- NULL
-  result_disk    <- NULL
+  result_mic <- NULL
+  result_disk <- NULL
 
   if (!is.null(interpr_file)) result_interpr <- pivot_sirscan(read_sirscan_file(interpr_file), "pheno_provided")
-  if (!is.null(mic_file))     result_mic     <- pivot_sirscan(read_sirscan_file(mic_file),     "mic_raw")
-  if (!is.null(disk_file))    result_disk    <- pivot_sirscan(read_sirscan_file(disk_file),    "disk_raw")
+  if (!is.null(mic_file)) result_mic <- pivot_sirscan(read_sirscan_file(mic_file), "mic_raw")
+  if (!is.null(disk_file)) result_disk <- pivot_sirscan(read_sirscan_file(disk_file), "disk_raw")
 
   # ── Build combined long frame ────────────────────────────────────────────────
   # Use interpretation as the base when available (it carries all metadata
   # columns). Additional value columns are joined by (.row_id, ab_col).
-  ast_long <- if (!is.null(result_interpr)) result_interpr else
-    if (!is.null(result_mic)) result_mic else
-      result_disk
+  ast_long <- if (!is.null(result_interpr)) {
+    result_interpr
+  } else if (!is.null(result_mic)) {
+    result_mic
+  } else {
+    result_disk
+  }
 
   if (!is.null(result_mic) && !"mic_raw" %in% colnames(ast_long)) {
     ast_long <- ast_long %>%
@@ -2333,14 +2338,14 @@ import_sirscan_ast <- function(
   ast_long <- ast_long %>% select(-.row_id)
 
   # Initialise any missing value columns
-  if (!"mic_raw"       %in% colnames(ast_long)) ast_long$mic_raw       <- NA_character_
-  if (!"disk_raw"      %in% colnames(ast_long)) ast_long$disk_raw      <- NA_character_
+  if (!"mic_raw" %in% colnames(ast_long)) ast_long$mic_raw <- NA_character_
+  if (!"disk_raw" %in% colnames(ast_long)) ast_long$disk_raw <- NA_character_
   if (!"pheno_provided" %in% colnames(ast_long)) ast_long$pheno_provided <- NA_character_
 
   # ── Standard column assignments ─────────────────────────────────────────────
 
   # Sample ID — first column (N° CNR or localised equivalent)
-  id_col   <- colnames(ast_long)[1]
+  id_col <- colnames(ast_long)[1]
   ast_long <- ast_long %>% rename(id = !!sym(id_col))
 
   # Drug agent — translate known SIRscan codes, then parse with as.ab()
@@ -2370,7 +2375,8 @@ import_sirscan_ast <- function(
 
   # Specimen type — column whose name contains "l.vement" / "levement" (Prélèvement)
   spec_col <- colnames(ast_long)[grepl("l.{0,2}vement", colnames(ast_long),
-                                       ignore.case = TRUE, perl = TRUE)][1]
+    ignore.case = TRUE, perl = TRUE
+  )][1]
   if (!is.na(spec_col)) {
     ast_long <- ast_long %>% rename(specimen_type = !!sym(spec_col))
   }
@@ -2378,10 +2384,10 @@ import_sirscan_ast <- function(
   # Method — derived from which file(s) contributed data for each row
   ast_long <- ast_long %>%
     mutate(method = case_when(
-      !is.na(.data$mic_raw)  & is.na(.data$disk_raw)  ~ "broth dilution",
-      is.na(.data$mic_raw)   & !is.na(.data$disk_raw) ~ "disk diffusion",
-      !is.na(.data$mic_raw)  & !is.na(.data$disk_raw) ~ "broth dilution",
-      TRUE                                              ~ NA_character_
+      !is.na(.data$mic_raw) & is.na(.data$disk_raw) ~ "broth dilution",
+      is.na(.data$mic_raw) & !is.na(.data$disk_raw) ~ "disk diffusion",
+      !is.na(.data$mic_raw) & !is.na(.data$disk_raw) ~ "broth dilution",
+      TRUE ~ NA_character_
     ))
 
   ast_long <- ast_long %>% mutate(platform = "SIRscan")
@@ -2428,6 +2434,8 @@ import_sirscan_ast <- function(
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno", "collection_date", "specimen_type"
     )))
+}
+
 #' Import and process antimicrobial phenotype data from common sources
 #'
 #' This function imports an antibiotic susceptibility testing datasets in formats exported by EBI, NCBI, WHOnet and several automated AST instruments (Vitek, Microscan, Sensititre, Phoenix). It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF).

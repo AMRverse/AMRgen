@@ -5,7 +5,7 @@
 \alias{kleborate_raw}
 \title{Example Kleborate Genotype Data from EuSCAPE project}
 \format{
-\code{kleborate_raw} A data frame with 1,689 rows and 122 columns:
+\code{kleborate_raw} A data frame with 1,490 rows and 122 columns:
 \itemize{
 \item \code{strain}: Sample identifier
 \item ...: Kleborate results columns

@@ -522,7 +522,7 @@
 #'
 #' Raw Kleborate results file for *Klebsiella pneumoniae* genomes, one row per sample.
 #'
-#' @format `kleborate_raw` A data frame with 1,689 rows and 122 columns:
+#' @format `kleborate_raw` A data frame with 1,490 rows and 122 columns:
 #' - `strain`: Sample identifier
 #' - ...: Kleborate results columns
 #' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).

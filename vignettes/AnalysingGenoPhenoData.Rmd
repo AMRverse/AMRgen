@@ -271,9 +271,41 @@ ecoli_cip_vs_ref
 ggplot2::autoplot(ecoli_cip_vs_ref)
 ```
 
-## 5. Combine genotype and phenotype data for a given drug
+### 5. Summarise the intersection of a genotype table and a phenotype table
+You can summarise the intersecting content of a genotype table and a phenotype table using the inbuilt `summarise_geno_pheno()` function.
+``` {r summarise_geno_pheno}
+ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno, 
+                                         ecoli_ast, 
+                                         pheno_cols = c("pheno_clsi","ecoff"))
+
+# Total number of samples that appear in both tables, i.e. that have both
+# genotype and phenotype data available
+ecoli_geno_pheno$overlapping_samples
+
+# Table of drugs encountered in the phenotype table, indicating the
+# number of samples that have phenotype data for this drug and also
+# appear in the genotype table 
+ecoli_geno_pheno$drugs_with_pheno
+
+# List of tables, one for each phenotype column in the input, indicating 
+# the number in each category (WT/NWT, S/I/R), amongst samples that also 
+# appear in the genotype table.
+ecoli_geno_pheno$pheno_counts_list
+
+# Number of markers encountered for each drug/class in the genotype table, 
+# amongst samples that have phenotype data for the relevant drug/class
+ecoli_geno_pheno$geno_hits
+
+# Frequency of each marker in the genotype table, amongst samples that have 
+# phenotype data for the relevant drug/class
+ecoli_geno_pheno$geno_markers
+```
+
+## 6. Combine genotype and phenotype data for a given drug
 
 The genotype and phenotype tables can include data related to many different drugs, but we need to analyse things one drug at a time. The function `get_binary_matrix()` can be used to extract phenotype data for a specified drug, and genotype data for markers associated with a specified drug class. It returns a single dataframe with one row per strain, for the subset of strains that appear in both the genotype and phenotype input tables. Each row indicates, for one strain, both the phenotypes (with SIR column, any assay columns if desired, and boolean 1/0 coding of R and NWT status) and the genotypes (one column per marker, with boolean 1/0 coding of marker presence/absence).
+
+This binary matrix can be used as the starting a lot of downstream analyses, discussed below.
 
 ``` {r get_binary_matrix}
 # Get matrix combining phenotype data for ciprofloxacin, binary calls for R/NWT phenotype,
@@ -295,8 +327,6 @@ head(cip_bin)
 # list colnames, to see full list of quinolone markers included
 colnames(cip_bin)
 ```
-
-This binary matrix can be used as the starting a lot of downstream analyses.
 
 For example, we can use it as input to `assay_by_var` to plot the assay distribution coloured by presence of a particular genetic marker
 ``` {r assay_by_genotype}
@@ -323,7 +353,7 @@ mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "
 mic_by_marker_count
 ```
 
-## 6. Model a binary drug phenotype using genetic marker presence/absence data
+## 7. Model a binary drug phenotype using genetic marker presence/absence data
 
 Logistic regression models can be informative to get an overview of the association between a drug resistance phenotype, and each marker thought to be associated with the relevant drug class.
 
@@ -382,7 +412,7 @@ models$modelNWT
 models$binary_matrix
 ```
 
-## 7. Assess solo positive predictive value of genetic markers
+## 8. Assess solo positive predictive value of genetic markers
 
 The strongest evidence of the effect of an individual genetic marker on a drug phenotype is its positive predictive value (PPV) for resistance amongst strains that carry this marker 'solo' with no other markers known to be associated with resistance to the drug class. This is referred to as 'solo PPV'. 
 
@@ -419,7 +449,7 @@ soloPPV_cipro$solo_binary
 soloPPV_cipro$amr_binary
 ```
 
-## 8. Compare markers with assay data
+## 9. Compare markers with assay data
 
 So far we have considered only the impact of individual markers, and their association with categorical S/I/R or WT/NWT calls.
 

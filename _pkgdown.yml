@@ -79,10 +79,7 @@ reference:
       - get_binary_matrix
       - get_combo_matrix
       - combo_stats
-      - as.gene
-      - gtdb.mo
       - starts_with("query_ncbi")
-      - hamronize_data
 
   - title: "Resistance Interpretation"
     desc: >

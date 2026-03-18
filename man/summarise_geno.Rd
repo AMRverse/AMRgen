@@ -50,6 +50,6 @@ The \code{force_ab} parameter allows the addition of full antibiotic names using
 }
 \examples{
 
-summarise_geno(summarise_geno(staph_geno_ebi))
+summarise_geno(staph_geno_ebi)
 
 }

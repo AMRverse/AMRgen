@@ -26,7 +26,7 @@
 #' @importFrom tidyr pivot_longer
 #' @examples
 #'
-#' summarise_geno(summarise_geno(staph_geno_ebi))
+#' summarise_geno(staph_geno_ebi)
 #'
 #' @export
 summarise_geno <- function(geno_table,
@@ -102,7 +102,7 @@ summarise_geno <- function(geno_table,
     }
     # add full drug name
     if (!is.null(drugs) && (inherits(drugs[[drug_col]], "ab") | force_ab)) {
-      drugs <- drugs %>% mutate(antibiotic = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
+      drugs <- drugs %>% mutate(drug_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
     }
   } else if (class_col %in% colnames(geno_table)) {
     # only have classes
@@ -132,7 +132,7 @@ summarise_geno <- function(geno_table,
     # add full drug name
     if (!is.null(drugs) && (inherits(drugs[[drug_col]], "ab") | force_ab) && (drug_col %in% colnames(markers))) {
       markers <- markers %>%
-        mutate(antibiotic = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
+        mutate(drug_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
     }
   }
 
@@ -226,7 +226,7 @@ summarise_pheno <- function(pheno_table,
 
   if (!is.null(drugs) && (inherits(drugs[[drug_col]], "ab") | force_ab)) {
     drugs <- drugs %>%
-      mutate(antibiotic_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
+      mutate(drug_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
   }
 
   if (spp_col %in% colnames(drugs)) {
@@ -255,7 +255,7 @@ summarise_pheno <- function(pheno_table,
         tidyr::pivot_wider(names_from = pheno_col, values_from = n)
       if (inherits(pheno_counts[[1]], "ab") | force_ab) {
         pheno_counts <- pheno_counts %>%
-          mutate(antibiotic_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
+          mutate(drug_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
       }
       if (spp_col %in% colnames(pheno_counts)) {
         if (inherits(pheno_counts[[spp_col]], "mo")) {
@@ -276,7 +276,7 @@ summarise_pheno <- function(pheno_table,
 
     if (!is.null(drugs) && (inherits(drugs[[drug_col]], "ab") | force_ab)) {
       details <- details %>%
-        mutate(antibiotic_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
+        mutate(drug_name = ab_name(!!sym(drug_col)), .after = !!sym(drug_col))
     }
 
     if (spp_col %in% colnames(details)) {

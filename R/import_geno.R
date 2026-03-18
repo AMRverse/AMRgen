@@ -354,6 +354,382 @@ import_amrfp_ebi <- function(input_table, web = FALSE) {
   }
 }
 
+#' Import and Process Kleborate Results
+#'
+#' This function imports and processes genotyping results from Kleborate (https://github.com/klebgenomics/Kleborate), extracting antimicrobial resistance determinants and mapping them to standardised drug classes.
+#' @param input_table A character string specifying a dataframe or path to the Kleborate results table (TSV format).
+#' @param sample_col A character string specifying the column that identifies samples in the dataset (default `strain`).
+#' @param kleborate_class_table A tibble containing a reference table mapping Kleborate drug class column names (`Kleborate_Class`) to standardised drug classes (`drug_class`). Defaults to `kleborate_classes`, which is provided internally.
+#' @param hgvs Logical indicating whether to expect mutations in [HGVS nomenclature](https://hgvs-nomenclature.org/stable/) syntax (used in Kleborate releases since v3.1.3). Default `TRUE`, which expects mutations formatted as e.g. "GyrA:p.S83F". Set to `FALSE` if your results were generated using older versions where mutations were formatted as e.g. "GyrA_83F".
+#' @importFrom dplyr filter left_join mutate select bind_rows rename_with join_by
+#' @importFrom tidyr separate_longer_delim separate
+#' @importFrom rlang sym
+#' @importFrom stringr str_remove_all
+#' @return A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package:
+#' - `id`: The sample identifier (`character`).
+#' - `marker`: The name of the genotype marker as it appears in the input (e.g. `GyrA:p.S83F` for recent versions of Kleborate, or `GyrA-83F` for earlier versions not using [HGVS nomenclature](https://hgvs-nomenclature.org/stable/)) (`character`).
+#' - `gene`: The gene identifier (`character`).
+#' - `mutation`: The mutation detected within the gene, converted to [HGVS nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g. `Ser83Phe`) (`character`).
+#' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, drawn from the Kleborate column in which the marker was reported (`character`).
+#' - `drug_agent`: Values are recorded as `NA` as Kleborate doesn't report markers assigned to individual drug level.
+#' - `variation type`: Type of variation, e.g. `Gene presence detected`, `Protein variant detected`, `Nucleotide variant detected`, `Inactivating mutation detected`.
+#' ... Other fields specific to the input file
+#' @details
+#' The function performs the following steps:
+#' - Reads the Kleborate output table.
+#' - Transforms Kleborate output into long form (i.e., one AMR determinant per row).
+#' - Maps Kleborate drug classes to standardised drug class names recognised by the AMR pkg.
+#' This processing ensures compatibility with downstream AMRgen analysis workflows.
+#' @examples
+#' # example Kleborate data from EUSCAPE project
+#' kleborate_raw
+#'
+#' # import first few rows of this data frame and parse it to standard genotype table format
+#' kleborate_geno <- import_kleborate(kleborate_raw %>% head(n = 10))
+#'
+#' # parse the output of an older version of Kleborate (v3.1.3) before
+#' # HGVS syntax was introduced for mutations
+#' kleborate_geno <- import_kleborate(kleborate_raw_v313 %>% head(n = 10), hgvs = FALSE)
+#' @export
+import_kleborate <- function(input_table,
+                             sample_col = "strain",
+                             kleborate_class_table = kleborate_classes,
+                             hgvs = TRUE) {
+  in_table <- process_input(input_table)
+  
+  in_table <- in_table %>% rename(id = !!sym(sample_col))
+  
+  geno_table <- in_table %>%
+    select(any_of(c("id", kleborate_class_table$Kleborate_Class))) %>%
+    pivot_longer(-id, names_to = "Kleborate_Class", values_to = "marker") %>%
+    filter(marker != "-") %>%
+    tidyr::separate_longer_delim(marker, delim = ";") %>%
+    left_join(kleborate_class_table, by = join_by(Kleborate_Class)) %>%
+    mutate(marker = str_remove_all(marker, "\\^"))
+  
+  # version-specific processing
+  
+  if (hgvs) { # newer versions use HGVS nomenclature (e.g. [gene]_:p.[mutation])
+    geno_table <- geno_table %>%
+      mutate(`variation type` = case_when(
+        grepl("Ter", marker) ~ "Inactivating mutation detected",
+        grepl("del", marker) ~ "Inactivating mutation detected",
+        grepl("_mut", Kleborate_Class) & grepl(":p.", marker) ~ "Protein variant detected",
+        grepl("_mut", Kleborate_Class) & grepl(":c.", marker) ~ "Nucleotide variant detected",
+        TRUE ~ "Gene presence detected"
+      )) %>%
+      separate(marker, into = c("gene", "mutation"), sep = ":", remove = FALSE, fill = "right") %>%
+      mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
+                                    paste0(gene, ":-"),
+                                    marker
+      )) %>%
+      relocate(Kleborate_Class, .after = "variation type") %>%
+      mutate(drug_agent = NA)
+  } else { # older versions use informal nomenclature (e.g. [gene]-[mutation], [gene]-X%, OmpK36GD)
+    geno_table <- geno_table %>%
+      mutate(`variation type` = case_when(
+        grepl("-[0-9]+%$", marker) ~ "Inactivating mutation detected",
+        grepl("_mut", Kleborate_Class) & grepl("_[a-z][0-9]+[a-z]$", marker) ~ "Nucleotide variant detected", # Omp mutation c>t
+        grepl("_mut", Kleborate_Class) & grepl("-[0-9]+[A-Z]$", marker) ~ "Protein variant detected", # gyrA/parC mutations
+        grepl("_mut", Kleborate_Class) & marker %in% c("OmpK36GD", "OmpK36TD") ~ "Protein variant detected",
+        TRUE ~ "Gene presence detected"
+      )) %>%
+      mutate(
+        gene = if_else(grepl("%", marker), sub("-.*", "", marker), marker),
+        mutation = if_else(grepl("%", marker), sub(".*-", "", marker), NA)
+      ) %>%
+      mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
+                                    paste0(gene, ":-"),
+                                    marker
+      )) %>%
+      relocate(Kleborate_Class, .after = "variation type") %>%
+      mutate(drug_agent = NA)
+  }
+  
+  return(geno_table)
+}
+
+#' Import and Process Resistance Gene Identifier (RGI) Results
+#'
+#' This function imports and processes genotyping results from the Resistance Gene Identifier (RGI, <https://github.com/arpcard/rgi>), extracting antimicrobial resistance determinants and mapping them to standardised drug classes/antibiotics.
+#' @param input_table A character string specifying a dataframe or path to the RGI results table (TSV format).
+#' @param orf_id_col A character string specifying the column that identifies open reading frame ID (ORF_ID) in the dataset (default `ORF_ID`). This column includes the sample ID and the contig / genomic location and is a default output of RGI.
+#' @param sample_id_sep A character string specifying the separator by which the sample ID is separated from the remaining text in `ORF_ID` (Default: `.fasta.txt:`) . For example: in the `ORF_ID` column, "SAMEA3498968.fasta.txt:1_96 # 109511 # 110635....", the sample ID separator is `.fasta.txt:`.
+#' @param model_col A character string specifying the column that identifies model type identified by RGI (default `Model_type`).
+#' @param antibiotic_col Character string specifying the antibiotic column (default `Antibiotic`).
+#' @param class_col Character string specifying the drug class column (default `Drug Class`).
+#' @param exclude_loose Logical indicating whether to exclude Loose hits (AMR markers that fall below a curated bitscore cutoff as defined by CARD/RGI). Default `TRUE`, which excludes Loose hits.
+#' @param rgi_short_name A tibble containing a reference table mapping model IDs (from CARD/RGI) to shortened model names as provided by CARD (<https://card.mcmaster.ca/download> in aro_index.tsv). Defaults to `rgi_short_name_table`, which is provided internally.
+#' @param rgi_drugs A tibble containing a reference table mapping CARD drug class / drug agents to standardised drug classes/names. Defaults to `rgi_drugs_table`, which is provided internally.
+#' @importFrom AMR as.ab ab_group
+#' @importFrom dplyr filter left_join mutate select bind_rows
+#' @importFrom tidyr separate_longer_delim
+#' @importFrom stringr str_remove_all
+#' @return A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible. The output retains the original columns from the RGI output along with the newly mapped variables.
+#' @details
+#' The function performs the following steps:
+#' - Reads the RGI output table.
+#' - Transforms RGI output into long form (i.e., one AMR determinant AND drug class / antibiotic per row).
+#' - Maps CARD drug classes and antibiotics to standardised names.
+#' This processing ensures compatibility with downstream AMRgen analysis workflows.
+#' @export
+#' @examples
+#' # example RGI data (including Perfect, Strict, and Loose hits)
+#' rgi_raw
+#'
+#' # import using sample_id_sep=`_genomic.fna.txt:` and include Loose hits
+#' rgi <- import_rgi(rgi_raw, sample_id_sep = "_genomic.fna.txt:", exclude_loose = FALSE)
+#'
+#' # example RGI data from EuSCAPE project (including only Perfect and Strict hits)
+#' rgi_EuSCAPE_raw
+#'
+#' # import using defaults (sample_id_sep=`.fasta.txt:`, exclude_loose = `TRUE`)
+#' import_rgi(rgi_EuSCAPE_raw)
+import_rgi <- function(input_table,
+                       orf_id_col = "ORF_ID",
+                       sample_id_sep = ".fasta.txt:",
+                       model_col = "Model_type",
+                       antibiotic_col = "Antibiotic",
+                       class_col = "Drug Class",
+                       exclude_loose = TRUE,
+                       rgi_short_name = rgi_short_name_table,
+                       rgi_drugs = rgi_drugs_table) {
+  in_table <- process_input(input_table)
+  
+  in_table <- left_join(in_table, rgi_short_name, by = c("Model_ID" = "Model ID")) %>%
+    mutate(id = sub(paste0(sample_id_sep, ".*"), "", .data[[orf_id_col]]))
+  
+  in_table[(in_table == "n/a") | (in_table == "")] <- NA
+  
+  if (exclude_loose) { # exclude Loose hits
+    geno_table <- in_table %>% filter(`Cut_Off` != "Loose")
+  } else { # include all hits
+    geno_table <- in_table
+  }
+  
+  # AMR marker name assignment
+  if ("CARD.Short.Name" %in% colnames(geno_table)) { # Use CARD Short Name for marker label
+    geno_table <- geno_table %>% mutate(marker = `CARD Short Name`)
+  } else if ("Best_Hit_ARO" %in% colnames(geno_table)) { # Use Best_Hit_ARO for marker label (noting that the names could be very long)
+    geno_table <- geno_table %>% mutate(marker = `Best_Hit_ARO`)
+  } else {
+    stop(paste("Input file lacks the expected column: `CARD Short Name` OR Best_Hit_ARO \n"))
+  }
+  
+  # Assign variation type based on RGI 'Model_type' column
+  if (model_col %in% colnames(geno_table)) {
+    geno_table <- geno_table %>%
+      mutate(`variation type` = case_when(
+        !!sym(model_col) == "protein homolog model" ~ "Gene presence detected",
+        !!sym(model_col) %in% c("protein variant model", "protein overexpression model") ~ "Protein variant detected",
+        !!sym(model_col) == "rRNA gene variant model" ~ "Nucleotide variant detected",
+        TRUE ~ NA
+      ))
+  } else {
+    cat("Need method column: Model_type", "\n")
+  }
+  
+  # Check mutation column exists and reformat table to long form - one mutation per row
+  if ("SNPs_in_Best_Hit_ARO" %in% colnames(geno_table)) {
+    geno_table <- geno_table %>%
+      rename(mutation = SNPs_in_Best_Hit_ARO) %>%
+      separate_longer_delim(mutation, delim = ", ")
+  } else {
+    stop(paste("Input file lacks the expected column: SNPs_in_Best_Hit_ARO \n"))
+  }
+  
+  # create AMRrules style label with gene:mutation
+  variant_models <- c(
+    "protein variant model",
+    "protein overexpression model",
+    "rRNA gene variant model"
+  )
+  
+  geno_table_label <- geno_table %>%
+    mutate(
+      marker.label = case_when(
+        !!sym(model_col) %in% variant_models ~ if_else(
+          !is.na(mutation),
+          paste(`CARD Short Name`, mutation, sep = "_"),
+          paste0(`CARD Short Name`, ":-")
+        ),
+        !!sym(model_col) == "protein homolog model" ~ if_else(
+          Cut_Off == "Perfect",
+          `CARD Short Name`,
+          paste0(`CARD Short Name`, ":-") # Strict or Loose hit
+        ),
+        TRUE ~ `CARD Short Name`
+      )
+    )
+  
+  # Identify any drug classes / antibiotics we _know_ aren't in the AMR package, using the internal data
+  # Join introduces these as new drug_internal or drug_class_internal column
+  # Standardizing antibiotic names & drug class first, if no antibiotic, then standardize drug class
+  
+  if (antibiotic_col %in% colnames(geno_table_label) | class_col %in% colnames(geno_table_label)) {
+    # rows where Antibiotic exists
+    df_antibiotic <- geno_table_label %>%
+      filter(!is.na(!!sym(antibiotic_col)) & !!sym(antibiotic_col) != "") %>%
+      separate_longer_delim(!!sym(antibiotic_col), delim = "; ") %>%
+      left_join(rgi_drugs, by = setNames("RGI_DrugClassAgent", antibiotic_col)) %>%
+      rename(drug_internal = drug_agent) %>%
+      rename(drug_class_internal = drug_class) %>%
+      mutate(
+        drug_to_parse = if_else(!is.na(drug_internal), NA, !!sym(antibiotic_col))
+      ) %>%
+      mutate(
+        drug_agent = AMR::as.ab(drug_to_parse),
+        drug_class_agent = AMR::ab_group(drug_to_parse)
+      ) %>%
+      mutate(
+        drug_agent = coalesce(drug_internal, as.character(drug_agent)),
+        drug_class = coalesce(drug_class_internal, as.character(drug_class_agent))
+      )
+    
+    # rows where Antibiotic is NA
+    df_drugclass <- geno_table_label %>%
+      filter(is.na(!!sym(antibiotic_col)) | !!sym(antibiotic_col) == "") %>%
+      mutate(
+        !!sym(class_col) := if_else(
+          (is.na(!!sym(class_col)) | !!sym(class_col) == "") &
+            grepl("antibiotic efflux", `Resistance Mechanism`, ignore.case = TRUE),
+          "antibiotic efflux",
+          !!sym(class_col)
+        )
+      ) %>%
+      filter(!is.na(!!sym(class_col)) & !!sym(class_col) != "") %>%
+      separate_longer_delim(!!sym(class_col), delim = "; ") %>%
+      left_join(
+        rgi_drugs %>% select(RGI_DrugClassAgent, drug_class),
+        by = setNames("RGI_DrugClassAgent", class_col)
+      )
+    
+    # recombine
+    geno_table_label_ab <- bind_rows(df_antibiotic, df_drugclass) %>%
+      select(-drug_internal, -drug_class_internal, -drug_to_parse, -drug_class_agent) %>%
+      dplyr::relocate(any_of(c("id", "marker", "mutation", "drug_agent", "drug_class", "variation type", "marker.label")), .before = dplyr::everything())
+  } else {
+    stop(paste("Input file lacks the expected column: Antibiotic OR `Drug Class` OR `Resistance Mechanism`\n"))
+  }
+  
+  return(geno_table_label_ab)
+}
+
+#' Import and Process Abricate Results
+#'
+#' This function imports and processes Abricate results, extracting antimicrobial resistance (AMR) elements and mapping them to standardised antibiotic names and drug classes. Currently supports results generated using the ResFinder database.
+#' @param input_table A character string specifying a dataframe or path to the Abricate results table.
+#' @param sample_col A character string specifying the column that identifies samples in the dataset (default `"FILE"`).
+#' @param gene_col A character string specifying the column that identifies gene symbols in the dataset (default `"GENE"`).
+#' @param product_col A character string specifying the column that identifies product names in the dataset (default `"PRODUCT"`).
+#' @param ab_col A character string specifying the column that identifies which drug/s each detected gene is associated with (default `"RESISTANCE"`).
+#' @param db A character string specifying which AMR gene database Abricate was run with (default `"resfinder"`; `"ncbi"` is also supported).
+#' @importFrom AMR as.ab
+#' @importFrom dplyr mutate filter relocate any_of everything rename
+#' @importFrom tidyr separate_longer_delim
+#' @importFrom rlang := sym .data
+#' @return A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package:
+#' - `id`: The sample identifier (`character`).
+#' - `marker`: The name of the genotype marker, as it appears in the `GENE` column of the input file (`character`).
+#' - `gene`: The name of the gene product, as it appears in the `PRODUCT` column of the input file (`character`).
+#' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, parsed from the `RESISTANCE` column of the input file which depends on the database that ABRicate was run with (`character`).
+#' - `drug_agent`: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg, parsed from the `RESISTANCE` column of the input file (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
+#' - `variation type`: Type of variation, i.e. `Gene presence detected`, as ABRicate only detects presence/absence of genes in the query database.
+#' ... Other fields specific to the input file
+#' @details
+#' The function performs the following steps:
+#' - Reads the Abricate output table via the internal `process_input` function.
+#' - Standardises the sample column name 'id'.
+#' - Assigns standardised column names for genes, markers, and sets variation type to "Gene presence detected".
+#' - Splits multiple resistance annotations (separated by semicolons) into separate rows.
+#' - Converts drug agent names and classes to terms recognised by the AMR package.
+#' @export
+#' @examples
+#' \dontrun{
+#' geno_table <- import_abricate("path/to/abricate_resfinder.tsv")
+#'
+#' geno_table2 <- import_abricate("path/to/abricate_ncbi.tsv", db = "ncbi")
+#' }
+import_abricate <- function(input_table,
+                            sample_col = "FILE",
+                            gene_col = "GENE",
+                            product_col = "PRODUCT",
+                            ab_col = "RESISTANCE",
+                            db = "resfinder") {
+  # note this also strips the # from the start of the file
+  in_table <- process_input(input_table)
+  
+  in_table <- in_table %>% rename(id = !!sym(sample_col))
+  
+  # Process Core Columns
+  in_table <- in_table %>%
+    dplyr::mutate(
+      marker := !!sym(gene_col),
+      gene := !!sym(product_col),
+      `variation type` = "Gene presence detected",
+      mutation = NA_character_
+    )
+  
+  # Expand Drugs (Handle RESISTANCE column)
+  ## TO CHECK: this is coded for resfinder results, where classes are separated by ';'
+  ## if using db=ncbi, does this column include multiple subclasses separated by "/" as done in AMRfp?
+  in_table <- in_table %>%
+    tidyr::separate_longer_delim(!!sym(ab_col), delim = ";") %>%
+    dplyr::mutate(!!sym(ab_col) := trimws(!!sym(ab_col))) %>%
+    dplyr::filter(!!sym(ab_col) != "")
+  
+  if ("DATABASE" %in% colnames(in_table)) {
+    db_value <- unique(in_table$DATABASE)
+    if (db_value != db) {
+      message(paste0("Warning, 'db' parameter ", db, " does not match DATABASE field in input file: ", paste0(db_value, collapse = ", ")))
+    }
+  }
+  
+  
+  # Parse RESISTANCE column values to standard antibiotic and class names used in AMR pkg
+  if (db == "ncbi") {
+    # first, identify any subclasses we _know_ aren't in the AMR package, using the internal data
+    # join introduces these as new drug_class column
+    in_table <- in_table %>%
+      left_join(amrfp_drugs_table, by = setNames("AMRFP_Subclass", ab_col)) %>%
+      rename(drug_class_internal = drug_class)
+    
+    # then for the columns which are NA, we want to use the Subclass col and convert to ab using AMR pkg
+    in_table <- in_table %>%
+      mutate(subclass_to_parse = if_else(!is.na(drug_class_internal), NA, !!sym(ab_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
+      mutate(drug_agent = AMR::as.ab(subclass_to_parse)) %>%
+      mutate(drug_class_from_agent = AMR::ab_group(subclass_to_parse)) %>%
+      mutate(drug_class = coalesce(drug_class_internal, drug_class_from_agent))
+  } else { # parse drugs directly with AMR package; this works for resfinder
+    in_table <- in_table %>%
+      mutate(drug_agent = AMR::as.ab(!!sym(ab_col))) %>%
+      mutate(drug_class = AMR::ab_group(drug_agent))
+    
+    # Harmonise outliers match how we parse NCBI subclass
+    in_table <- in_table %>%
+      mutate(drug_class = case_when(
+        drug_agent %in% c("Sulfamethoxazole", "Sulfathiazole") ~ "Sulfonamides",
+        drug_class %in% c("Penicillins", "Aminopenicillins", "Ureidopenicillins", "Monobactams") ~ "Beta-lactams",
+        drug_class == "Fluoroquinolones" ~ "Quinolones",
+        TRUE ~ drug_class
+      ))
+  }
+  
+  # Move standard AMRgen genotype table cols to the start for visibility
+  in_table <- in_table %>%
+    dplyr::relocate(dplyr::any_of(c(
+      "id",
+      "marker",
+      "gene",
+      "mutation",
+      "drug_agent",
+      "drug_class",
+      "variation type"
+    )), .before = dplyr::everything())
+  
+  return(in_table)
+}
+
 
 #' Convert mutation string based on method
 #'

@@ -417,10 +417,10 @@ export_ebi_ast <- function(data,
 #' breakpoint version used for interpretation (e.g. `"EUCAST 2024"`).
 #' @param submission_account Character string specifying the Webin
 #' submission account identifier (e.g. `"Webin-###"`).
-#' @param domain Character string specifying the domain used in the
-#' submission metadata (default `"self.ExampleDomain"`).
 #' @param output_dir Character string specifying the directory where JSON
 #' files should be written.
+#' @param domain (Optional) Character string specifying the domain used in the
+#' submission metadata (default `"self.ExampleDomain"`).
 #' @return Invisibly returns `NULL`. The function prints JSON-formatted
 #' AMR submission records to file.
 #'
@@ -440,7 +440,6 @@ export_ebi_ast <- function(data,
 #'   ast_dataset,
 #'   breakpoint_version = "EUCAST 2015",
 #'   submission_account = "Webin-###",
-#'   domain = "self.ExampleDomain",
 #'   output_dir = "/path/to/output/"
 #' )
 #' }
@@ -450,8 +449,8 @@ export_ebi_ast <- function(data,
 format_ebi_json <- function(ebi_antibiogram_table,
                             breakpoint_version,
                             submission_account,
-                            domain = "self.ExampleDomain",
-                            output_dir) {
+                            output_dir,
+                            domain = NULL) {
   if (!dir.exists(output_dir)) {
     safe_execute(dir.create(output_dir, recursive = TRUE))
     cat(paste0("Directory '", output_dir, "' created successfully.\n"))
@@ -466,19 +465,19 @@ format_ebi_json <- function(ebi_antibiogram_table,
       output_records[[entry]] <- list(
         "antibioticName" = list(
           value = records_by_sample[[biosample]]$antibiotic_name[entry],
-          iri = "null"
+          iri = NULL
         ),
         "astStandard" = list(
           value = records_by_sample[[biosample]]$ast_standard[entry],
-          iri = "null"
+          iri = NULL
         ),
         "breakpointVersion" = list(
           value = breakpoint_version,
-          iri = "null"
+          iri = NULL
         ),
         "laboratoryTypingMethod" = list(
           value = records_by_sample[[biosample]]$laboratory_typing_method[entry],
-          iri = "null"
+          iri = NULL
         ),
         "measurement" = list(
           value = records_by_sample[[biosample]]$measurement[entry],
@@ -486,19 +485,19 @@ format_ebi_json <- function(ebi_antibiogram_table,
         ),
         "measurementUnits" = list(
           value = records_by_sample[[biosample]]$measurement_units[entry],
-          iri = "null"
+          iri = NULL
         ),
         "measurementSign" = list(
           value = records_by_sample[[biosample]]$measurement_sign[entry],
-          iri = "null"
+          iri = NULL
         ),
         "resistancePhenotype" = list(
           value = records_by_sample[[biosample]]$resistance_phenotype[entry],
-          iri = "null"
+          iri = NULL
         ),
         "platform" = list(
           value = records_by_sample[[biosample]]$platform[entry],
-          iri = "null"
+          iri = NULL
         )
       )
     }
@@ -510,7 +509,7 @@ format_ebi_json <- function(ebi_antibiogram_table,
           domain = domain,
           webinSubmissionAccountId = submission_account,
           type = "AMR",
-          schema = "null",
+          schema = NULL,
           content = output_records
         )
       )
@@ -522,7 +521,8 @@ format_ebi_json <- function(ebi_antibiogram_table,
       biosample_amr_record,
       json_outfile,
       pretty = TRUE,
-      auto_unbox = TRUE
+      auto_unbox = TRUE,
+      null = "null"
     ))
   }
 }

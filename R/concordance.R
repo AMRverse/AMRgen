@@ -316,7 +316,7 @@ concordance <- function(binary_matrix,
         passing_markers <- ppv_data %>%
           filter(category == outcome, ppv >= ppv_threshold) %>%
           pull(marker)
-        # normalize : to .. for matching binary_matrix column names
+        # normalise : to .. for matching binary_matrix column names
         passing_markers_norm <- gsub(":", "..", passing_markers)
         selected_markers <- intersect(selected_markers, passing_markers_norm)
       }
@@ -329,7 +329,7 @@ concordance <- function(binary_matrix,
           passing_lr <- logreg_summary %>%
             filter(marker != "(Intercept)", pval < pval_threshold) %>%
             pull(marker)
-          # normalize : to .. for matching binary_matrix column names
+          # normalise : to .. for matching binary_matrix column names
           passing_lr_norm <- gsub(":", "..", passing_lr)
           selected_markers <- intersect(selected_markers, passing_lr_norm)
         }

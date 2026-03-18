@@ -5,16 +5,16 @@
 \alias{geno_eco_2075}
 \title{E. coli genotype data from Mills et al 2022}
 \format{
-\code{geno_eco_2075} A data frame with 56064 rows and 24 columns representing AMRfinderplus genotyping results for 2075 E. coli isolates.
+\code{geno_eco_2075} A data frame with 56064 rows and 24 columns representing AMRFinderPlus genotyping results for 2075 E. coli isolates.
 
 Columns include:
 \itemize{
 \item \code{id}: Sample identifier.
-\item \code{drug_agent}, \code{drug_class}: Antibiotic agent and class, determined by parsing AMRfinderplus \code{subclass} field in the downloaded file.
+\item \code{drug_agent}, \code{drug_class}: Antibiotic agent and class, determined by parsing AMRFinderPlus \code{subclass} field in the downloaded file.
 \item \code{gene}, \code{node}, \code{marker}: gene symbol, parsed from \code{amr_element_symbol} field in the downloaded file.
 \item \code{mutation}: mutation within gene, parsed into HGVS nomenclature format from \code{amr_element_symbol} field in the downloaded file.
 \item \code{marker.label}: label for genotype marker, combining \code{gene} and \code{mutation} information (deletion variants represented as \code{"gene:-"}).
-\item ...: Additional data columns from AMRfinderplus
+\item ...: Additional data columns from AMRFinderPlus
 }
 }
 \source{
@@ -24,6 +24,6 @@ Columns include:
 geno_eco_2075
 }
 \description{
-Genotyping data for isolates published in Mills et al, Genome Medicine (2022) 14:147, generated using AMRfinderplus v3.12.8 and downloaded from the \href{https://github.com/AllTheBacteria/AllTheBacteria/tree/main/reproducibility/All-samples/AMR/AMRFinderPlus}{AllTheBacteria} project, and imported to AMRgen genotype table format. Corresponding MIC data is available in \code{pheno_eco_2075}.
+Genotyping data for isolates published in Mills et al, Genome Medicine (2022) 14:147, generated using AMRFinderPlus v3.12.8 and downloaded from the \href{https://github.com/AllTheBacteria/AllTheBacteria/tree/main/reproducibility/All-samples/AMR/AMRFinderPlus}{AllTheBacteria} project, and imported to AMRgen genotype table format. Corresponding MIC data is available in \code{pheno_eco_2075}.
 }
 \keyword{datasets}

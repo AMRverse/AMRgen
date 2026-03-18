@@ -83,7 +83,7 @@ A list containing the following elements:
 }
 }
 \description{
-This function generates a set of visualizations to analyze AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The \code{\link[=amr_upset]{amr_upset()}} and \code{\link[=ppv]{ppv()}} functions can be used to generate standard data visualisations using the component plots.
+This function generates a set of visualisations to analyse AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The \code{\link[=amr_upset]{amr_upset()}} and \code{\link[=ppv]{ppv()}} functions can be used to generate standard data visualisations using the component plots.
 }
 \details{
 Marker combinations are defined as unique patterns of gene presence/absence

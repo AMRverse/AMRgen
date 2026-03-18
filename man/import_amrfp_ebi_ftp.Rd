@@ -27,7 +27,7 @@ Note that files downloaded from the \href{https://www.ebi.ac.uk/amr/data/?view=p
 }
 \details{
 These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate \code{drug_agent} and \code{drug_class} fields consistent with the \code{\link[=import_amrfp]{import_amrfp()}} function (the EBI fields \verb{antibiotic*} are also retained).
-Note several AMRfinderplus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the \code{\link[=import_amrfp]{import_amrfp()}} function, this function cannot assign \verb{variation type} or \code{node}.
+Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the \code{\link[=import_amrfp]{import_amrfp()}} function, this function cannot assign \verb{variation type} or \code{node}.
 
 The function performs the following steps:
 \itemize{

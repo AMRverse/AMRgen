@@ -25,8 +25,8 @@ argument if their SIRscan configuration uses different code meanings.
 }
 \details{
 Confirmed codes (verified from Bio-Rad catalogue or collaborator communication):
-\code{CF30} (cephalothin 30 µg disk), \code{MA} (cefamandole), \code{SSS} (sulfonamides),
-\code{SXT25} (trimethoprim/sulfamethoxazole 25 µg disk).
+\code{CF30} (cephalothin 30 mcg disk), \code{MA} (cefamandole), \code{SSS} (sulfonamides),
+\code{SXT25} (trimethoprim/sulfamethoxazole 25 mcg disk).
 
 Codes mapped by French CASFM/SIRscan convention, not yet confirmed in official
 Bio-Rad documentation: \code{S} (streptomycin), \code{K} (kanamycin),

@@ -121,7 +121,7 @@
 
 #' S. aureus Example of Raw Phenotype Data Downloaded from NCBI BioSamples via Entrez API
 #'
-#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function without reformating.
+#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function without reformatting.
 #' @format `staph_ast_ncbi_raw` A data frame with 143 rows and 13 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
 #'
 #' Columns include:
@@ -135,7 +135,7 @@
 
 #' S. aureus Example of Raw Phenotype Data Downloaded from NCBI via Google Cloud BigQuery
 #'
-#' Phenotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformating.
+#' Phenotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformatting.
 #' @format `staph_ast_ncbi_cloud_raw` A data frame with 142 rows and 11 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
 #'
 #' Columns include:
@@ -149,13 +149,13 @@
 
 #' S. aureus Example of Raw Genotype Data Downloaded from NCBI via Google Cloud BigQuery
 #'
-#' AMRfinderplus genotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformating.
+#' AMRFinderPlus genotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformatting.
 #' @format `staph_geno_ncbi_cloud_raw` A data frame with 4064 rows and 9 columns representing all Staphylococcus aureus genotyping results for markers associated with class aminoglycoside or tetracycline.
 #'
 #' Columns include:
 #' - `biosample_acc`: Sample identifier.
 #' - `scientific_name`: Organism name.
-#' - `Gene symbol`, `Class`, `Subclass`, `Element type`, `Element subtype`, `Method`, `Hierarchy_node`: Key results fields from AMRfinderplus.
+#' - `Gene symbol`, `Class`, `Subclass`, `Element type`, `Element subtype`, `Method`, `Hierarchy_node`: Key results fields from AMRFinderPlus.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/>
 "staph_geno_ncbi_cloud_raw"
 
@@ -183,7 +183,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
+#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
@@ -194,7 +194,7 @@
 
 #' NCBI Subclass mapping to drug class
 #'
-#' Mapping of NCBI refgene / AMRfinderplus Subclass terms that are not present in the AMR package as drug class terms. Used internally when importing AMRfinderplus results into AMRgen genotype table format.
+#' Mapping of NCBI refgene / AMRFinderPlus Subclass terms that are not present in the AMR package as drug class terms. Used internally when importing AMRFinderPlus results into AMRgen genotype table format.
 #' @format `amrfp_drugs_table` A data frame with 21 rows and 2 columns.
 #'
 #' Columns include:
@@ -219,8 +219,8 @@
 #'
 #' @details
 #' Confirmed codes (verified from Bio-Rad catalogue or collaborator communication):
-#' `CF30` (cephalothin 30 µg disk), `MA` (cefamandole), `SSS` (sulfonamides),
-#' `SXT25` (trimethoprim/sulfamethoxazole 25 µg disk).
+#' `CF30` (cephalothin 30 mcg disk), `MA` (cefamandole), `SSS` (sulfonamides),
+#' `SXT25` (trimethoprim/sulfamethoxazole 25 mcg disk).
 #'
 #' Codes mapped by French CASFM/SIRscan convention, not yet confirmed in official
 #' Bio-Rad documentation: `S` (streptomycin), `K` (kanamycin),
@@ -250,16 +250,16 @@
 
 #' E. coli genotype data from Mills et al 2022
 #'
-#' Genotyping data for isolates published in Mills et al, Genome Medicine (2022) 14:147, generated using AMRfinderplus v3.12.8 and downloaded from the [AllTheBacteria](https://github.com/AllTheBacteria/AllTheBacteria/tree/main/reproducibility/All-samples/AMR/AMRFinderPlus) project, and imported to AMRgen genotype table format. Corresponding MIC data is available in `pheno_eco_2075`.
-#' @format `geno_eco_2075` A data frame with 56064 rows and 24 columns representing AMRfinderplus genotyping results for 2075 E. coli isolates.
+#' Genotyping data for isolates published in Mills et al, Genome Medicine (2022) 14:147, generated using AMRFinderPlus v3.12.8 and downloaded from the [AllTheBacteria](https://github.com/AllTheBacteria/AllTheBacteria/tree/main/reproducibility/All-samples/AMR/AMRFinderPlus) project, and imported to AMRgen genotype table format. Corresponding MIC data is available in `pheno_eco_2075`.
+#' @format `geno_eco_2075` A data frame with 56064 rows and 24 columns representing AMRFinderPlus genotyping results for 2075 E. coli isolates.
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
+#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
-#' - ...: Additional data columns from AMRfinderplus
+#' - ...: Additional data columns from AMRFinderPlus
 #' @source <https://github.com/AllTheBacteria/AllTheBacteria>
 "geno_eco_2075"
 

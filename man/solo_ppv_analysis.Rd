@@ -74,10 +74,10 @@ A list containing the following elements:
 }
 }
 \description{
-This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given antibiotic and drug class. It calculates the PPV for solo markers and visualizes the results using various plots.
+This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given antibiotic and drug class. It calculates the PPV for solo markers and visualises the results using various plots.
 }
 \details{
-The function analyzes the predictive power of individual AMR markers when they are found 'solo' in the genome with no other markers associated with the same class. The phenotype data are matched with genotype presence/absence and then stratified to compute PPV for resistance and non-wild-type interpretations. The function also generates plots to aid in interpretation.
+The function analyses the predictive power of individual AMR markers when they are found 'solo' in the genome with no other markers associated with the same class. The phenotype data are matched with genotype presence/absence and then stratified to compute PPV for resistance and non-wild-type interpretations. The function also generates plots to aid in interpretation.
 }
 \examples{
 \dontrun{

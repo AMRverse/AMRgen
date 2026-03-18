@@ -16,7 +16,7 @@
 
 #' AMR Logistic Regression Analysis
 #'
-#' Performs logistic regression to analyze the relationship between genetic markers and phenotype (R, and NWT) for a specified antibiotic.
+#' Performs logistic regression to analyse the relationship between genetic markers and phenotype (R, and NWT) for a specified antibiotic.
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
 #' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_ast()]. Only used if `binary_matrix` not provided.
 #' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the `drug_agent` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.

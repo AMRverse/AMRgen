@@ -250,7 +250,7 @@ print.model_summary <- function(x, ...) {
   message("Use ggplot2::autoplot() on this output to visualise")
 }
 
-#' Extract Details from a Generalized Linear Model
+#' Extract Details from a Generalised Linear Model
 #'
 #' This function extracts and formats the estimates, confidence intervals, and p-values from a fitted glm model.
 #' @param model A fitted glm model object.

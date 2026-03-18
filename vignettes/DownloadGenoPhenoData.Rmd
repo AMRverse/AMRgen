@@ -90,7 +90,7 @@ NCBI data can be accessed via Google Cloud BigQuery. This requires a Google Clou
 
 The `query_ncbi_bq_ast()` function lets you download antibiogram data from NCBI via Google Cloud BigQuery using the bigrquery R pacakge. You must specify a species, and can optionally limit the download to one or more specific drugs. The function can also re-format the data into an AMRgen phenotype table, and re-interpret phenotypes against clinical breakpoints from EUCAST or CLSI. 
 
-This function is fast but requires authentication via a [Google Cloud account](https://docs.cloud.google.com/docs/get-started) and may require payment. Free trial accounts can be set up, but require credit card authorization. Google currently provides enough free tier usage for >150 different queries for genotype data per month. To use this you will also need to install the `bigrquery` package and authorize it to use your Google cloud account.
+This function is fast but requires authentication via a [Google Cloud account](https://docs.cloud.google.com/docs/get-started) and may require payment. Free trial accounts can be set up, but require credit card authorisation. Google currently provides enough free tier usage for >150 different queries for genotype data per month. To use this you will also need to install the `bigrquery` package and authorize it to use your Google cloud account.
 
 ```{r install_bigrquery, eval=F}
 install.packages("bigrquery")
@@ -115,11 +115,11 @@ staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi
 ```
 
 #### To download genotype data
-The `query_ncbi_bq_geno()` function lets you download AMRfinderplus genotype data, for BioSamples that have matching AST data, from NCBI via Google Cloud BigQuery using the bigrquery R pacakge. You must specify a species, and can optionally limit the download to one or more specific drug classes (see [NCBI AMR Class-Subclass Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid terms). The function can also re-format the data into an AMRgen genotype table. 
+The `query_ncbi_bq_geno()` function lets you download AMRFinderPlus genotype data, for BioSamples that have matching AST data, from NCBI via Google Cloud BigQuery using the bigrquery R pacakge. You must specify a species, and can optionally limit the download to one or more specific drug classes (see [NCBI AMR Class-Subclass Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid terms). The function can also re-format the data into an AMRgen genotype table. 
 
 Note that to save memory and disk space BioSamples with no AST data in NCBI will not be included in the download.
 
-Not all NCBI genotype results are updated with each new release of AMRfinderplus, so older genomes may have genotype results obtained with older versions of AMRfinderplus, and newer genomes will have genotype results obtained with more recent versions.
+Not all NCBI genotype results are updated with each new release of AMRFinderPlus, so older genomes may have genotype results obtained with older versions of AMRFinderPlus, and newer genomes will have genotype results obtained with more recent versions.
 
 ``` {r download_ncbi_geno_bigquery, eval=F}
 # Download Staphylococcus aureus genotype data from NCBI, filtering for variants associated with class 'AMINOGLYCOSIDES' or 'TETRACYCLINES'
@@ -175,7 +175,7 @@ For more guidance on how to visulaise phenotypic data and combine it with genoty
 
 
 ## Option 2: Download data from EBI
-The `download_ebi` function lets you retrieve phenotype or genotype data (by setting `data ="genotype'`) from the [EBI AMR Portal](https://www.ebi.ac.uk/amr). Genotypes are called using AMRfinderplus but processed by EBI. You can optionally filter the downloaded file to a specified genus or species, and a specific antibiotic (for phenotype data) or NCBI class/subclass (for genotype data; check the [NCBI AMR Class-Subclass Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid terms). The function can also reformat and re-interpret the retrieved results with the breakpoint standards of your choosing.
+The `download_ebi` function lets you retrieve phenotype or genotype data (by setting `data ="genotype'`) from the [EBI AMR Portal](https://www.ebi.ac.uk/amr). Genotypes are called using AMRFinderPlus but processed by EBI. You can optionally filter the downloaded file to a specified genus or species, and a specific antibiotic (for phenotype data) or NCBI class/subclass (for genotype data; check the [NCBI AMR Class-Subclass Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid terms). The function can also reformat and re-interpret the retrieved results with the breakpoint standards of your choosing.
 
 Note that while NCBI and EBI AST databases have a lot of overlapping content, they are not identical and each includes biosamples that the other does not.
 
@@ -202,7 +202,7 @@ head(staph_ast_ebi)
 
 Genotype data can be retrieved from EBI using the same function. Currently, not all samples in the EBI AMR portal have both AST and genotype data.
 
-Note the input assemblies used to call genotypes, and the version of AMRfinderplus, in the EBI portal can be different from what's available for download from NCBI using the above functions.
+Note the input assemblies used to call genotypes, and the version of AMRFinderPlus, in the EBI portal can be different from what's available for download from NCBI using the above functions.
 
 ``` {r download_ebi_geno_realnotrun, eval=F}
 # Download genotype data for Staphylococcus, filter to markers associated with aminoglycosides or tetracyclines, and re-format the data into an AMRgen genotype table. Note that not all samples with phenotype data have genotype data.

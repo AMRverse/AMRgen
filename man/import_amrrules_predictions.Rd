@@ -12,7 +12,7 @@ import_amrrules_predictions(
   sir_col = "clinical category",
   ecoff_col = "phenotype",
   method = "genotyping",
-  platform = "AMRfinderplus + AMRrules"
+  platform = "AMRFinderPlus + AMRrules"
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ import_amrrules_predictions(
 
 \item{method}{(optional, default \code{"genotyping"}) String indicating the value to record in a new \code{method} field added to the output table.}
 
-\item{platform}{(optional, default \code{"AMRfinderplus + AMRrules"}) String indicating the value to record in a new \code{platform} field added to the output table.}
+\item{platform}{(optional, default \code{"AMRFinderPlus + AMRrules"}) String indicating the value to record in a new \code{platform} field added to the output table.}
 }
 \value{
 A data frame with the processed AST data, including additional columns:

@@ -209,7 +209,7 @@ import_amrfp <- function(input_table,
 #' Note that files downloaded from the [EBI AMR Portal web browser](https://www.ebi.ac.uk/amr/data/?view=predictions) are formatted differently and can be imported using [import_amrfp_ebi_web].
 #'
 #' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug_agent` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
-#' Note several AMRfinderplus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
+#' Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
 #' @param input_table R object or file path for the input EBI genotype table (R object, or file path to a TSV or CSV file).
 #' @return A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables:
 #' - `id`: The sample identifier (`character`).
@@ -263,7 +263,7 @@ import_amrfp_ebi_ftp <- function(input_table) {
 #' Note that files downloaded from the [EBI AMR Portal FTP site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), either directly or via the function [download_ebi()], are formatted differently and can be imported using [import_amrfp_ebi_ftp].
 #'
 #' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug_agent` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
-#' Note several AMRfinderplus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
+#' Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
 #' @param input_table R object or file path for the input EBI genotype table (R object, or file path to a TSV or CSV file).
 #' @return A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables:
 #' - `id`: The sample identifier (`character`).
@@ -311,7 +311,7 @@ import_amrfp_ebi_web <- function(input_table) {
 #' This function imports EBI-processed AMRFinderPlus genotyping results. The expected input is genotype data downloaded from the [EBI AMR Portal web browser](https://www.ebi.ac.uk/amr/data/?view=predictions), or the [EBI AMR Portal FTP site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either directly or via the function [download_ebi()].
 #'
 #' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug_agent` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
-#' Note several AMRfinderplus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
+#' Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
 #' @param input_table R object or file path for the input EBI genotype table (R object, or file path to a TSV or CSV file).
 #' @param web Logical indicating whether the data is from the web portal (default `FALSE`). If `FALSE` input is assumed to be from FTP or [download_ebi].
 #' @return A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables:

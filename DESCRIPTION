@@ -63,6 +63,7 @@ Remotes:
 License: GPL-3 | file LICENSE
 URL: https://amrgen.org, https://github.com/AMRverse/AMRgen
 BugReports: https://github.com/AMRverse/AMRgen/issues
+Language: en-GB
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

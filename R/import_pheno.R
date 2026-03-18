@@ -2726,7 +2726,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
 #' @param sir_col (optional, default `"clinical category"`) String indicating the name of the input data column that indicates the S/I/R prediction.
 #' @param ecoff_col (optional, default `"phenotype"`) String indicating the name of the input data column that indicates the WT/NWT prediction.
 #' @param method (optional, default `"genotyping"`) String indicating the value to record in a new `method` field added to the output table.
-#' @param platform (optional, default `"AMRfinderplus + AMRrules"`) String indicating the value to record in a new `platform` field added to the output table.
+#' @param platform (optional, default `"AMRFinderPlus + AMRrules"`) String indicating the value to record in a new `platform` field added to the output table.
 #' @importFrom AMR as.ab as.mo as.sir
 #' @importFrom dplyr any_of mutate relocate
 #' @return A data frame with the processed AST data, including additional columns:
@@ -2743,7 +2743,7 @@ import_amrrules_predictions <- function(input,
                                         sir_col = "clinical category", # convert with as.sir
                                         ecoff_col = "phenotype", # convert with as.sir
                                         method = "genotyping",
-                                        platform = "AMRfinderplus + AMRrules") {
+                                        platform = "AMRFinderPlus + AMRrules") {
   intable <- process_input(input)
 
   if (!is.null(sample_col)) {

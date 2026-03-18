@@ -79,9 +79,9 @@ The dataset (total n = 5,361) includes MIC data for:
 * Cefixime (n=5,361 isolates)
 * Ceftriaxone (n=5,361 isolates)
 
-### **Identification of genetic AMR determinants using `AMRfinderplus`**
+### **Identification of genetic AMR determinants using `AMRFinderPlus`**
 
-[`AMRfinderplus v4.0.23`](https://doi.org/10.1038/s41598-021-91456-0) (database version 2025-03-25.1) was run on all assemblies using the following command:
+[`AMRFinderPlus v4.0.23`](https://doi.org/10.1038/s41598-021-91456-0) (database version 2025-03-25.1) was run on all assemblies using the following command:
 
 ```{bash amrfp_run, eval=F, echo=T}
 amrfinder --threads 4 --print_node -O Neisseria_gonorrhoeae --name ${IN%.fasta} -n $IN -o ${IN%.fasta}_amrfp.tsv \
@@ -100,7 +100,7 @@ This concatenated table is pre-loaded as `eurogasp_geno_raw`, the **genotype inp
 
 ### **Importing genotype and phenotype data into `AMRgen`**
 
-Use `import_amrfp()` to parse the AMRfinderplus output:
+Use `import_amrfp()` to parse the AMRFinderPlus output:
 
 ```{r import_geno, warning=FALSE}
 eurogasp_geno <- import_amrfp(
@@ -135,7 +135,7 @@ eurogasp_ast <- format_ast(
 )
 ```
 
-Importantly, out of the 5,361 strains under study and with phenotype data, genetic determinants of AMR were found for 5,186 by AMRfinderplus. Negative samples should be added to the genotype table so they are properly accounted for in downstream analyses:
+Importantly, out of the 5,361 strains under study and with phenotype data, genetic determinants of AMR were found for 5,186 by AMRFinderPlus. Negative samples should be added to the genotype table so they are properly accounted for in downstream analyses:
 
 ```{r eurogasp_neg}
 negative_eurogasp <- eurogasp_pheno_raw %>%
@@ -625,7 +625,7 @@ In this use case, we explore combinations of PBP2 mutations and their associated
   * ENA [PRJEB57389](https://www.ebi.ac.uk/ena/browser/view/PRJEB57389), n=8 genomes.
 * Ceftriaxone-resistant gonococci from England, by [Fifer *et al.* (2024)](https://doi.org/10.1093/jac/dkae369).
   * ENA [PRJEB76977](https://www.ebi.ac.uk/ena/browser/view/PRJEB76977), n=19 genomes.
-* Ceftriaxone-resistant gonoccci from Asia, by [van der Veen *et al.* 2026](https://doi.org/10.1093/cid/ciaf530).
+* Ceftriaxone-resistant gonococci from Asia, by [van der Veen *et al.* 2026](https://doi.org/10.1093/cid/ciaf530).
   * ENA [PRJEB45627](https://www.ebi.ac.uk/ena/browser/view/PRJEB45627), [PRJNA577446](https://www.ebi.ac.uk/ena/browser/view/PRJNA577446), [PRJNA776899](https://www.ebi.ac.uk/ena/browser/view/PRJNA776899), [PRJNA778600](https://www.ebi.ac.uk/ena/browser/view/PRJNA778600), [PRJNA560592](https://www.ebi.ac.uk/ena/browser/view/PRJNA560592), [PRJNA874857](https://www.ebi.ac.uk/ena/browser/view/PRJNA874857), [PRJNA909328](https://www.ebi.ac.uk/ena/browser/view/PRJNA909328), [PRJNA957547](https://www.ebi.ac.uk/ena/browser/view/PRJNA957547), [PRJNA1161034](https://www.ebi.ac.uk/ena/browser/view/PRJNA1161034),
 [PRJNA1189294](https://www.ebi.ac.uk/ena/browser/view/PRJNA1189294),  n=113 genomes.
 * World Health Organization (WHO) reference genomes, by [Unemo *et al.* (2024)](https://doi.org/10.1093/jac/dkae176).
@@ -744,7 +744,7 @@ ngono_tet_ast <- format_ast(
 )
 ```
 
-Import genotype data and add empty rows for samples with phenotype information but for which no genetic AMR determinants are identified by AMRfinderplus. For this example, there are 409 samples with MIC in the phenotype file but AMR determinants were only found for 402.
+Import genotype data and add empty rows for samples with phenotype information but for which no genetic AMR determinants are identified by AMRFinderPlus. For this example, there are 409 samples with MIC in the phenotype file but AMR determinants were only found for 402.
 
 ```{r import_geno_tetR, warning=FALSE}
 ngono_tet_geno <- import_amrfp(

@@ -65,7 +65,7 @@ A list with the following components:
 }
 }
 \description{
-Performs logistic regression to analyze the relationship between genetic markers and phenotype (R, and NWT) for a specified antibiotic.
+Performs logistic regression to analyse the relationship between genetic markers and phenotype (R, and NWT) for a specified antibiotic.
 }
 \examples{
 # Example usage of the amr_logistic function

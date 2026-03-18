@@ -619,6 +619,7 @@ import_ncbi_biosample <- function(input,
   ast <- process_input(input)
 
   # Note: NCBI antibiogram spec lists "MIC" as a synonym for "broth dilution"
+  # EUtils/API format has a single Measurement column; method indicates MIC vs disk diffusion
   ast <- ast %>%
     mutate(mic = if_else(`Laboratory typing method` == "MIC",
       paste0(`Measurement sign`, Measurement),
@@ -1547,7 +1548,9 @@ import_sensititre_ast <- function(input,
 #' and converts it to the standardised long-format used by AMRgen.
 #'
 #' @param input A dataframe or path to a CSV file containing WHONET AST output data
-#' @param sample_col Column name for sample identifiers. Default: `"Identification number"`
+#' @param sample_col Column name for sample identifiers. If `NULL` (default), the function
+#'   auto-detects from known WHONET column names: `"Identification number"`, `"Identification"`,
+#'   `"laboratory"`, `"patient_id"`. Supply a column name explicitly to override.
 #' @param source Optional string value to record in the `source` column for all data points (e.g., dataset name or study identifier)
 #' @param species Optional string indicating a single species to use for phenotype interpretation (otherwise this is inferred per-sample from the input)
 #' @param ab Optional string indicating a single antibiotic to use for phenotype interpretation (otherwise this is inferred per-sample from the input)
@@ -1584,7 +1587,7 @@ import_sensititre_ast <- function(input,
 #' }
 #' @export
 import_whonet_ast <- function(input,
-                              sample_col = "Identification number",
+                              sample_col = NULL,
                               source = NULL,
                               species = NULL,
                               ab = NULL,
@@ -1594,8 +1597,17 @@ import_whonet_ast <- function(input,
                               include_patient_info = FALSE) {
   ast <- process_input(input)
 
-  # Validate sample column exists
-  if (!(sample_col %in% colnames(ast))) {
+  # Auto-detect or validate sample column
+  known_sample_cols <- c("Identification number", "Identification", "laboratory", "patient_id")
+  if (is.null(sample_col)) {
+    sample_col <- known_sample_cols[known_sample_cols %in% colnames(ast)][1]
+    if (is.na(sample_col)) {
+      stop(paste(
+        "Could not auto-detect sample column. Please specify sample_col. Looked for:",
+        paste(known_sample_cols, collapse = ", ")
+      ))
+    }
+  } else if (!(sample_col %in% colnames(ast))) {
     stop(paste("Invalid column name:", sample_col))
   }
 

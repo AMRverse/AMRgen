@@ -1,12 +1,14 @@
 ---
-title: "Analysing chloramphenicol resistance and susceptibility"
+title: "Analysing the impact of deletion variants on susceptibility"
 author: "Richard Goodman"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analysing chloramphenicol resistance and susceptibility}
+  %\VignetteIndexEntry{Analysing the impact of deletion variants on susceptibility}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+# Exploring catB3 deletion variants and impact on chloramphenicol susceptibility in *Escherichia coli*
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -38,7 +40,7 @@ A recent study ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2))
 
 Here we use a matched phenotype/genotype dataset used in the ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) study and publicly available datasets from NCBI to investigate these genotype-phenotype mismatches with the AMRgen package. 
 
-# 2. Analysis of DASSIM Dataset 
+## 1.1 Sourcing data from the DASSIM study 
 
 One of the datasets used to highlight genotype-phenotype mismatches in the [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) paper was the DASSIM dataset ([Lewis et al. 2022](https://doi.org/10.1038/s41564-022-01216-7)).
 
@@ -50,7 +52,7 @@ Antimicrobial sensitivity testing (AST) was carried out on a subset of isolates 
 
 However this dataset only contains the interpreted phenotype data (S/I/R) which is what we work with in this example. 
 
-## 2.1 Downloading DASSIM Genotype data 
+## 1.1a DASSIM Genotype data 
 
 We downloaded genome data from the following papers:
 
@@ -70,19 +72,13 @@ The genomes are deposited in the European Nucleotide Archive (ENA) under the pro
 
 The fastq files were downloaded, processed with cutadapt, filtered to >Q20 with FASTQC, and assembled with SPAdes v3.11.1 as described in [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2). 
 
-Antimicrobial resistance genes (ARGs) were called with AMRFinderPlus v4.0.23 to produce the data frame [DASSIM_geno] which is included in the AMRgen package as a data object `DASSIM_geno`:
-```{r DASSIM_geno}
-head(DASSIM_geno)
-```
+Antimicrobial resistance genes (ARGs) were called with AMRFinderPlus v4.0.23 to produce the data frame [DASSIM_geno] which is included in the AMRgen package as a data object `DASSIM_geno`.
 
-## 2.2 Downloading DASSIM Phenotype data 
+### 1.1b DASSIM Phenotype data 
 
 We downloaded the AST data from the [blantyreESBL Github](https://joelewis101.github.io/blantyreESBL/) from Dr. Joe Lewis at <https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_AST.rda>.
 
 This is included in the AMRgen package as a data object: `btESBL_AST`.
-```{r btESBL_AST}
-head(btESBL_AST)
-```
 
 Additional metadata relating to the isolates can be found in [Supplementary Data 1](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-024-53391-2/MediaObjects/41467_2024_53391_MOESM4_ESM.xls) of the following paper:
 
@@ -90,110 +86,63 @@ Additional metadata relating to the isolates can be found in [Supplementary Data
 Nat Commun 15, 9019 (2024).
 Fabrice E Graf, Richard N Goodman, Sarah Gallichan, Sally Forrest, Esther Picton-Barlow, Alice J Fraser, Minh-Duy Phan, Madalitso Mphasa, Alasdair T M Hubbard, Patrick Musicha, Mark A Schembri, Adam P Roberts, Thomas Edwards, Joseph M Lewis, Nicholas A Feasey.
 
-This data is included in the AMRgen package as data object: `DASSIM_phenoDASSIM_pheno`:
-```{r DASSIM_pheno}
-head(DASSIM_pheno)
-```
+This data is included in the AMRgen package as data object: `DASSIM_pheno_raw`.
 
-## 2.3 Setting up R 
+# 2. Analysis 
+
+
+## 2.1 Setting up R 
 
 First we set up R and load our libraries. 
 
 ```{r, echo = T, error=FALSE, warning=FALSE, message=FALSE, results = 'hide'}
 library(AMRgen)
-library(readr)
-library(tidyr)
 library(dplyr)
-library(ggplot2)
-library(stringr)
-library(readxl)
-library(patchwork)
-#library(gggenes)
 ```
 
 
-## 2.4 Importing and cleaning data
+## 2.2 Format the phenotype data
 
-Next we will import and check the data from the DASSIM dataset 
-
-
-## 2.5 Importing phenotype data
-
-The phenotype data is read in manually here as it is not in standard format. 
-
-See [section 3.3](#readingNCBIAST) for how to read in AST data from the NCBI standard format using the `import_ast()` function.
+The phenotype data in `btESBL_AST` needs to be reformated to long format, and sequence identifiers imported from `DASSIM_pheno_raw` so we can match the phenotype data to the genotypes.
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE}
-
-# Join the two datasets together
-DASSIM_pheno_2 = inner_join(DASSIM_pheno, btESBL_AST, join_by("Strain_ID" == "supplier_name"))
-
-# Restructure the phenotype dataset 
-DASSIM_pheno_2 = DASSIM_pheno_2 %>% 
-  rename("id" = "Strain_ID") %>% 
-  pivot_longer(names_to = "Antibiotic", 
-               values_to = "Resistance phenotype", 
-               cols = "amikacin":"meropenem") %>% 
-  mutate(mic = NA) %>% 
-  rename("pheno" = "Resistance phenotype") %>% 
-  relocate(id)
-
-# Rename
-DASSIM_pheno_rename = DASSIM_pheno_2 %>% select("id", "seq")
-
-# Apply AMR parsing using the AMR package
-DASSIM_pheno_2 = DASSIM_pheno_2 %>% 
-  mutate(full_pheno = pheno) %>% 
-  mutate(
-    # Standardise the terms to S, I, and R
+# Convert the S/I/R phenotype data to long format for easy use with AMRgen functions
+DASSIM_pheno <- btESBL_AST %>% 
+  pivot_longer(names_to = "drug_agent", 
+               values_to = "pheno", 
+               cols = "amikacin":"meropenem") %>%
+  mutate(# Standardise the terms to S, I, and R
     pheno = case_when(
       tolower(pheno) %in% c("sensitive", "susceptible", "s") ~ "S",
       tolower(pheno) %in% c("intermediate", "i") ~ "I",
       tolower(pheno) %in% c("resistant", "r") ~ "R",
       TRUE ~ NA_character_ # Any other unrecognized values become NA
-    )
-  ) %>% 
-  # Convert to the AMR 'sir' class
+  )) %>% 
   mutate(pheno = AMR::as.sir(pheno))
 
-DASSIM_pheno_2 = DASSIM_pheno_2 %>% mutate(drug_agent = Antibiotic)
+# add the sequence identifier from DASSIM_pheno_raw so we can match to genotype data
+DASSIM_pheno <- DASSIM_pheno %>%
+  left_join(DASSIM_pheno_raw %>% select(Strain_ID, seq, ST), join_by("supplier_name" == "Strain_ID")) %>%
+  rename(id=seq) %>%
+  relocate(id) %>% mutate(mic=NA)
 
-# Select only what is necessary 
-DASSIM_pheno_2 = DASSIM_pheno_2 %>% select(id,
-                                           seq,
-                                           pheno,
-                                           Antibiotic,
-                                           mic,
-                                           drug_agent) 
+head(DASSIM_pheno)
+```
 
+## 2.3 Check the genotype data
+
+``` {r}
+head(DASSIM_geno)
 ```
 
 
-## 2.6 Importing genotype data
-
-Since the genomes were screened for AMR genes using AMRfinderplus we will use the `import_amrfp()` function.
-
-```{r, eval=FALSE}
-
-# Use import_amrfp() for AMRfinderplus data
-DASSIM_geno = import_amrfp("DASSIM_BSI_Malawi_amrfinder_v4.0.23_geno.tsv")
-
-```
-
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-
-# Rename to match genotype and phenotype data
-DASSIM_pheno_rename = DASSIM_pheno_2 %>% select("id", "seq")
-DASSIM_geno_2 = right_join(DASSIM_pheno_rename, DASSIM_geno, join_by("seq" == "id"))
-```
-
-## 2.7 PPV Analysis of DASSIM dataset
+## 2.4 PPV Analysis of DASSIM dataset
 
 The function `ppv()` predicts positive predictive value of genetic markers (i.e. genes/mutations) for resistance among strains that carry these markers. 
 
 We will look at the markers associated with the antibiotics used in the AST assays for the DASSIM study. 
 
-- Chloramphenicol
+- chloramphenicol
 - amikacin
 - gentamicin
 - cotrimoxazole
@@ -203,72 +152,92 @@ For each of these first we create a binary matrix using `get_binary_matrix()` wh
 
 We can then plot the PPV graphs using `ppv()` 
 
-
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-
 # Get binary matrix
-DASSIM_CHL_bin_mat = get_binary_matrix(DASSIM_geno_2, DASSIM_pheno_2, antibiotic="chloramphenicol", sir_col="pheno")
+DASSIM_CHL_bin_mat = get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "chloramphenicol", sir_col="pheno")
 # Plot ppv
-DASSIM_CHL_PPV = ppv(DASSIM_CHL_bin_mat, antibiotic="Chloramphenicol", sir_col="pheno", upset_grid = TRUE)
-
+DASSIM_CHL_PPV = ppv(DASSIM_CHL_bin_mat, antibiotic = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
 ```
 
-The *oqx* genes are masking the other genes so we can remove them using `select()` to remove them and focus on the genes of interest for chloramphenicol 
+We can see that *oqx* genes on their own don't impact resistance. As they are common, they obscure the impact of other genes, so we can remove them using `select()` to focus on the genes of interest for chloramphenicol.
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-
 DASSIM_CHL_nooqx_bin_mat = DASSIM_CHL_bin_mat %>% select(!contains("oqx"))
-DASSIM_CHL_nooqx_PPV = ppv(DASSIM_CHL_nooqx_bin_mat, antibiotic="Chloramphenicol", sir_col="pheno", upset_grid = TRUE)
-
+DASSIM_CHL_nooqx_PPV = ppv(DASSIM_CHL_nooqx_bin_mat, antibiotic = "Chloramphenicol", sir_col="pheno", upset_grid = FALSE)
 ```
 
-This result clearly shows how the presence of *catB3* is not indicative of resistance, whereas for *catA2* it is. 
+This result clearly shows how the detection of *catB3* is not a good predictor of resistance, whereas detection of *catA2* is. 
 
+
+Now let's check how well aminoglycoside markers predict resistance to amikacin and gentamicin.
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-
-DASSIM_AMK_bin_mat = get_binary_matrix(DASSIM_geno_2, DASSIM_pheno_2, antibiotic="amikacin", sir_col="pheno")
+DASSIM_AMK_bin_mat = get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic="amikacin", sir_col="pheno")
 DASSIM_AMK_PPV = ppv(DASSIM_AMK_bin_mat, antibiotic="amikacin", sir_col="pheno", upset_grid = TRUE)
 
-DASSIM_GEN_bin_mat = get_binary_matrix(DASSIM_geno_2, DASSIM_pheno_2, antibiotic="gentamicin",sir_col="pheno")
+DASSIM_GEN_bin_mat = get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic="gentamicin",sir_col="pheno")
 DASSIM_GEN_PPV = ppv(DASSIM_GEN_bin_mat, antibiotic="gentamicin",  sir_col="pheno", upset_grid = TRUE)
-
 ```
 
-Here we see aminoglycoside antibiotic resistance genes are mainly susceptible to amikacin and mainly resistant to gentamicin. This is because amikacin is a semi-synthetic drug with an addition of a specific side chain, called the L-hydroxyaminobutyryl amide (HABA) group. This HABA side chain blocks the Aminoglycoside-Modifying Enzymes (AMEs) from reaching the sites on the molecule where they would normally attach their deactivating tags.
+Here we see many of the aminoglycoside-associated resistance genes detected in these genomes are predictive of resistance to gentamicin, but none are associated with amikacin resistance. This is because amikacin is a semi-synthetic drug with an addition of a specific side chain, called the L-hydroxyaminobutyryl amide (HABA) group. This HABA side chain blocks the Aminoglycoside-Modifying Enzymes (AMEs) from reaching the sites on the molecule where they would normally attach their deactivating tags.
 
+
+Now let's check how well markers associated with trimethoprims or sulfonamides predict resistance to co-trimoxazole.
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-
-DASSIM_SXT_bin_mat = get_binary_matrix(DASSIM_geno_2, DASSIM_pheno_2, antibiotic="cotrimoxazole", sir_col="pheno")
+DASSIM_SXT_bin_mat = get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic="cotrimoxazole", sir_col="pheno")
 DASSIM_SXT_PPV = ppv(DASSIM_SXT_bin_mat, antibiotic="cotrimoxazole", sir_col="pheno", upset_grid = TRUE)
-
 ```
 
-Co-trimoxazole is a combination drug made of Sulfamethoxazole and Trimethoprim. It is prescribed prophylactically in Malawi for HIV-positive individuals ([Everett et al. 2011](https://doi.org/10.1371/journal.pone.0017765)). Since it is a combination drug it required both Sulfamethoxazole resistance genes (e.g., *sul*) and Trimethoprim resistance genes (e.g., *dfrA*).
+Co-trimoxazole is a combination drug made of sulfamethoxazole and trimethoprim. It is prescribed prophylactically in Malawi for HIV-positive individuals ([Everett et al. 2011](https://doi.org/10.1371/journal.pone.0017765)). Since it is a combination drug it requires both Sulfamethoxazole resistance genes (e.g., *sul*) and Trimethoprim resistance genes (e.g., *dfrA*).
 
+Meropenem is a last resort carbapenem antibiotic. ppv() by default returns all markers associated with beta-lactam resistance, for comparison with meropenem phenotypes. However while many beta-lactamases were detected, none are known carbapenemases (e.g., *bla~NDM~*, *bla~KPC~*, *bla~VIM~*, *bla~IMP~*, *bla~OXA-48-like~*). Consistent with this only a single isolate, carrying multiple beta-lactamases, was phenotyped as resistant to meropenem.
 ```{r, fig.width=13, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-
-DASSIM_MEM_bin_mat = get_binary_matrix(DASSIM_geno_2, DASSIM_pheno_2, antibiotic="meropenem", sir_col="pheno")
+DASSIM_MEM_bin_mat = get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic="meropenem", sir_col="pheno")
 DASSIM_MEM_PPV = ppv(DASSIM_MEM_bin_mat, antibiotic="meropenem", sir_col="pheno", upset_grid = TRUE)
-
 ```
 
-Meropenem is a last resort carbapanem antibiotic, only specific carbapenemase genes (e.g., *bla~NDM~*, *bla~KPC~*, *bla~VIM~*, *bla~IMP~*, *bla~OXA-48-like~*) can confer resistance to meropenem which is why the *bla* genes here are mostly susceptible. 
-
-This analysis highlights how AMRgen can clearly highlight genotype/phenotype mismatches for specific genetic markers related to a variety of antibiotics. 
+This analysis highlights how AMRgen can be used to explore genotype/phenotype associations for specific genetic markers related to a variety of antibiotics. 
 
 Next we'll explore the chloramphenicol susceptibility associated with the *catB3* gene with more functions of the AMRgen package. For this we need raw AST data (e.g., MIC or disc diffusion), so we will go to NCBI to download public datasets. 
 
-# 3. Analysis of NCBI AST and MICROBIGGE data  
+# 3. Analysis of publicly available phenotype and genotype data for chloramphenicol
 
-## 3.1 Downloading NCBI AST and MICROBIGGE data  
+## 3.1 Importing public data from NCBI
 
 The National Center for Biotechnology Information (NCBI) provides tools for analysing antimicrobial resistance (AMR).
 
-**NCBI AST**
+**Phenotypes: NCBI AST**
 
 The Antibiotic Susceptibility Test (AST) Browser serves as a centralised resource for viewing and filtering phenotypic susceptibility data, allowing researchers to correlate specific bacterial isolates with their phenotypic resistance profiles.
 
-The Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E) is a specialised portal within the NCBI Pathogen Detection system that enables users to query a database of over 46,000 isolates to identify specific AMR genes and point mutations. 
+AST data can be retrieved directly from NCBI using the AMRgen functions `download_ncbi_ast()` (slow but does not require authorisation) or `query_ncbi_bq_ast()` (very fast, requires a Google Cloud account), or via the NCBI AST Browser. For more details see the [DownloadGenoPhenoData] vignette.
+
+``` {r download_ncbi_ast_notrun, eval=F}
+# Download E. coli AST data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
+ecoli_ast_ncbi_via_biosample <- download_ncbi_ast(
+  species = "E. coli",
+  antibiotic = "chloramphenicol",
+  reformat = TRUE,
+  interpret_clsi = TRUE
+)
+```
+
+```{r install_bigrquery, eval=F}
+# Download E. coli AST data from NCBI via Google Cloud, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
+
+install.packages("bigrquery")
+library(bigrquery)
+bigrquery::bq_auth()
+
+# replace xxx with your project id
+ecoli_ast_ncbi_via_cloud <- query_ncbi_bq_ast(
+    taxgroup = "E.coli and Shigella",
+    antibiotic = "chloramphenicol", 
+    project_id="xxx"
+)
+
+ecoli_ast_ncbi_via_cloud_interpreted <- import_ncbi_ast(ecoli_ast_ncbi_via_cloud, 
+                                            interpret_clsi = TRUE)
+```
 
 Navigate to the [*NCBI  Antibiotic Susceptibility Test (AST) Browser*](https://www.ncbi.nlm.nih.gov/pathogens/ast) in a web browser and search for 
 
@@ -276,109 +245,75 @@ Navigate to the [*NCBI  Antibiotic Susceptibility Test (AST) Browser*](https://w
 
 > https://www.ncbi.nlm.nih.gov/pathogens/ast#chloramphenicol%20AND%20Escherichia
 
-Save this as a `tsv` file: `CHL_Ecoli_asts.tsv`.
+Save this as a `tsv` file: `CHL_Ecoli_asts.tsv`, and import it using the AMRgen function `import_pheno`. 
 
-**MicroBIGG-E**
+```{r, error=FALSE, warning=FALSE, message=FALSE, eval=FALSE}
+# import phenotype data
+NCBI_Ecoli_AST_chl = import_pheno("data-raw/CHL_Ecoli_asts.tsv", format="ncbi")
+```
+
+A copy of this imported data (downloaded March 2026) is included in AMRgen as data frame `NCBI_Ecoli_AST_chl`.
+
+```{r NCBI_Ecoli_AST_chl}
+head(NCBI_Ecoli_AST_chl)
+```
+
+**Genotypes: MicroBIGG-E**
+
+The Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E) is a specialised portal within the NCBI Pathogen Detection system that enables users to query a database of over 46,000 isolates to identify specific AMR genes and point mutations. 
 
 Navigate to the [*NCBI Pathogen Detection Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E)*](https://www.ncbi.nlm.nih.gov/pathogens/microbigge) in a web browser and search for:
-
-> `catB3 AND Escherichia`
-
-> https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#catB3%20AND%20Escherichia
-
-Also search for:
 
 > `chloramphenicol AND Escherichia`
 
 > https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#chloramphenicol%20AND%20Escherichia
 
-Save these as `tsv` files: `catB3_Ecoli_microbigge.tsv` (*catB3* only) and `CHL-R_Ecoli_microbigge.tsv` (all chloramphenicol resistance genes). 
-
-## 3.2 Reading in genotype and phenotype data 
-
-No we have the data we will read in the NCBI and MICROBIGGE data into R.
-
-We will include the database containing all chloramphenicol resistance genes and *catB3* only. 
+Save this as a `tsv` file: `CHL-R_Ecoli_microbigge.tsv`, and import it using the AMRgen function `import_gheno`.  
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE, eval=FALSE}
-
 # import phenotype data
-NCBI_AST_CHL = read_tsv("CHL_Ecoli_asts.tsv")
-NCBI_AST_CHL = NCBI_AST_CHL %>% rename("BioSample" = "#BioSample")
+MICROBIGGE_Ecoli_CHLR <- import_geno("data-raw/CHL-R_Ecoli_microbigge.tsv", format="amrfp", sample_col="BioSample")
 ```
 
-```{r, error=FALSE, warning=FALSE, message=FALSE, eval=FALSE}
-# import genotype
-MICROBIGGE_CATB3 = read_tsv("catB3_Ecoli_microbigge.tsv")
-MICROBIGGE_CHLR = read_tsv("CHL-R_Ecoli_microbigge.tsv")
+A copy of this imported data (downloaded March 2026) is included in AMRgen as data frame `MICROBIGGE_Ecoli_CHLR`.
+
+```{r MICROBIGGE_Ecoli_CHLR}
+head(MICROBIGGE_Ecoli_CHLR)
 ```
 
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-# stats 
-MB_CHLR = unique(MICROBIGGE_CHLR$BioSample)
-ASTn = unique(NCBI_AST_CHL$BioSample)
-length(MB_CHLR)
-length(ASTn)
 
+## 3.2 Filter data to samples with chloramphenicol phenotype data, and chloramphenicol genotypic markers detected
+
+``` {r filter}
+# filter AST data, re-interpret using CLSI breakpoints
+AST_pheno <- NCBI_Ecoli_AST_chl %>% filter(id %in% MICROBIGGE_Ecoli_CHLR$id) %>% interpret_ast(interpret_clsi=TRUE)
+MB_CHLR_geno <- MICROBIGGE_Ecoli_CHLR %>% filter(id %in% NCBI_Ecoli_AST_chl$id)
+
+# check how many samples we have
+length(unique(AST_pheno$id))
+
+# check the genes
+MB_CHLR_geno %>% count(gene)
+
+# filter to find samples with catB3
+MB_CATB3_geno <- MB_CHLR_geno %>% filter(gene == "catB3")
+MB_nonCATB3_geno <- MB_CHLR_geno %>% filter(gene != "catB3")
+
+# filter AST data to samples with catB3 and no other chloramphenicol markers
+AST_CATB3_pheno <- AST_pheno %>% filter(id %in% MB_CATB3_geno$id) %>%
+  filter(!(id %in% MB_nonCATB3_geno$id))
+
+# check how many samples we have with catB3
+length(unique(AST_CATB3_pheno$id))
 ```
 
-## 3.3 Processing genotype and phenotype data {#readingNCBIAST}
+## 3.3 Exploring chloramphenicol phenotype distributions with `assay_by_var()`
 
-Here we will filter our genotype (MICROBIGG-E) datasets with `inner_join()` and `filter()` so we're only working with samples that have both AST data and genomic data on MicroBIGG-E.
-
-Then use we the `import_amrfp()` from `AMRgen` to load in the genotype dataset in a standardised format that can be used with downstream `AMRgen` functions. Then we rename and move the
-Biosample column so it can be processed by `AMRgen` functions. 
-
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-
-# Genotype processing - all CHLR genes
-MB_AST_CHLR = inner_join(NCBI_AST_CHL, MICROBIGGE_CHLR, by = "BioSample")
-# list of shared Biosamples
-biosamples_CHLR_list = MB_AST_CHLR$BioSample
-# Filter the target table (replace 'other_table' and 'column_name' with yours)
-MB_CHLR_geno = MICROBIGGE_CHLR %>% filter(BioSample %in% biosamples_CHLR_list)
-# Add a Name column 
-MB_CHLR_geno = MB_CHLR_geno %>% mutate(Name = BioSample)
-# Use the native import_amrfp() to 
-MB_CHLR_geno_2 = import_amrfp(MB_CHLR_geno)
-# rename and move the Biosample column so it can be processed by AMRgen functions 
-MB_CHLR_geno_2 =  MB_CHLR_geno_2 %>% mutate(id = BioSample) %>% relocate(id, .before = marker)
-
-# Genotype processing - CATB3 
-# Same processes as above 
-MB_AST_CATB3 = inner_join(NCBI_AST_CHL, MICROBIGGE_CATB3, by = "BioSample")
-biosamples_CATB3_list = MB_AST_CATB3$BioSample
-MB_CATB3_geno = MICROBIGGE_CATB3 %>% filter(BioSample %in% biosamples_CATB3_list)
-MB_CATB3_geno  = MB_CATB3_geno %>% mutate(Name = BioSample)
-MB_CATB3_geno_2 = import_amrfp(MB_CATB3_geno)
-MB_CATB3_geno_2 =  MB_CATB3_geno_2 %>% mutate(id = BioSample)
-MB_CATB3_geno_2  = MB_CATB3_geno_2 %>% relocate(id, .before = marker)
-```
-
-Next we filter our phenotype (NCBI AST) datasets with `filter()` so we're only working with samples with both phenotype and genotype data.
-
-We can use the `import_ast()` function in `AMRgen` to read our AST data directly, we just need to define format (NCBI) and which method to interpret (EUCAST or CLSI).
-
-Here we chose to interpret with CLSI standards using `interpret_clsi = TRUE` but we can also interpret with EUCAST standards using `interpret_eucast = TRUE` instead. 
-
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-
-# Pheno processing
-AST_pheno = NCBI_AST_CHL %>% filter(BioSample %in% biosamples_CHLR_list)
-AST_pheno = import_ast(AST_pheno, format = "ncbi", interpret_clsi = TRUE)
-
-```
-
-## 3.4 Exploring chloramphenicol phenotype distributions with `assay_by_var()`
-
-We now have our phenotype and genotype data loaded in from NCBI.
-
-First we can explore phenotype distributions based on MIC data using the `assay_by_var()` function. 
+Now we can explore phenotype distributions based on MIC data using the `assay_by_var()` function. 
 
 We visualise the MIC distribution with `assay_by_var()` on all chloramphenicol AST data. 
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE}
-
 AST_pheno = AST_pheno %>%
   mutate(across(all_of("mic"), ~ AMR::as.mic(.x, round_to_next_log2 = TRUE)))
 
@@ -387,58 +322,39 @@ assay_by_var(pheno_table = AST_pheno,
              measure = "mic", 
              colour_by = "pheno_clsi",
              species = "Escherichia coli")
-
 ```
 
-Next we can visualise the MIC distribution with `assay_by_var()` on the AST data of isolates containing the *catB3* gene 
+Next we can visualise the MIC distribution with `assay_by_var()` on the AST data of isolates containing the *catB3* gene only
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE}
 
 # CATB3 specific 
 
-AST_pheno_CATB3 = AST_pheno %>% filter(id %in% biosamples_CATB3_list)
-
-assay_by_var(pheno_table = AST_pheno_CATB3, 
+assay_by_var(pheno_table = AST_CATB3_pheno, 
              antibiotic = "CHL", 
              measure = "mic", 
              colour_by = "pheno_clsi",
              species = "Escherichia coli") + 
-  labs(title = "Chloramphenicol MIC distribution for isolates with catB3")
-
+  labs(title = "Chloramphenicol MIC distribution for isolates with catB3 only")
 ```
 
-The distribution shifts to the right and towards sensitive for the *catB3* gene only, when compared to all the chloramphenicol genes. 
+The distribution shifts to the right and towards sensitive for isolates with the *catB3* gene only, when compared to those with any chloramphenicol-associated gene. 
 
 We can then split the plot based on how truncated the *catB3* gene is as a percentage of coverage with 100% aligning across the entire length of the gene and <100% showing a truncation or deletion (see [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) for more about the IS*26* mediated truncation of *catB3*)
 
 ```{r, fig.width=8, fig.height=10, error=FALSE, warning=FALSE, message=FALSE}
+# add genotype data to the phenotype table for isolates with catB3 alone
+AST_CATB3_pheno_2 = MB_CATB3_geno %>% select(id, gene, `% Coverage of reference`) %>% 
+  distinct(id, .keep_all = TRUE) %>% right_join(AST_CATB3_pheno, by = "id")
 
-AST_CATB3_geno_3 = MB_CHLR_geno_2 %>% group_by(id) %>%
-  # Keep the isolate only if ALL values in its 'gene' column are exactly "catB3"
-  filter(all(gene == "catB3")) %>%
-  ungroup() 
+# check coverage, all values are either 100% or 66.7-70%
+AST_CATB3_pheno_2 %>% count(`% Coverage of reference`)
 
-AST_CATB3_pheno_2 = AST_CATB3_geno_3 %>% select(id, gene, `% Coverage of reference`) %>% distinct(id, .keep_all = TRUE) %>% inner_join(AST_pheno_CATB3, by = "id")
+# define a grouping variable 'truncation' indicating samples with full coverage vs <=70%
+AST_CATB3_pheno_3 = AST_CATB3_pheno_2 %>% 
+  mutate(truncation = ifelse(`% Coverage of reference` > 70, "100% catB3 coverage", "<= 70 % catB3 coverage") )
 
-assay_by_var(pheno_table = AST_CATB3_pheno_2, 
-             antibiotic = "CHL", 
-             measure = "mic", 
-             colour_by = "pheno_clsi",
-             species = "Escherichia coli",
-             facet_var = "% Coverage of reference")  + 
-  labs(title = "Chloramphenicol MIC distribution for isolates with catB3", 
-       subtitle = "seperated by percentage of coverage (%)") + 
-  ylim(0, 31)
-
-
-```
-
-We can then add a new column for coverage > 70 or <= 70 so we can create a new graph where we facet by only two categories. 
-
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-
-AST_CATB3_pheno_3 = AST_CATB3_pheno_2 %>% mutate(truncation = ifelse(`% Coverage of reference` > 70, "100% catB3 coverage", "<= 70 % catB3 coverage") )
-
+# plot the MIC distribution for these 2 groups
 MIC_dist_by_cov = assay_by_var(pheno_table = AST_CATB3_pheno_3, 
              antibiotic = "CHL", 
              measure = "mic", 
@@ -448,26 +364,27 @@ MIC_dist_by_cov = assay_by_var(pheno_table = AST_CATB3_pheno_3,
   labs(title = " ", 
        subtitle = " ",
        x = "MIC measurement",
-       fill = "phenotype (CLSI)") + 
-  ylim(0, 45)
+       fill = "phenotype (CLSI)")
 
 MIC_dist_by_cov
+
+# check counts and median MIC per group
+AST_CATB3_pheno_3 %>% group_by(truncation) %>% summarise(median=median(mic, na.rm=T), n=n(), R=sum(pheno_clsi=="S"))
 ```
 
+As we can see, isolates with truncated *catB3* genes (n=110) have median MIC of 4 mg/L, and most (n=100) were classed as susceptible (MIC <16 mg/L). In contrast, those with full-length *catB3* genes (n=6) had higher values, and only 3 were classed as susceptible.
 
-As we can see, the majority of isolates that are sensitive with truncated *catB3* genes have a coverage of 70% and 69.52%.
+## 3.4 Analysing genotype and phenotype data with `ppv()`
 
-We therefore need to look at all chloramphenicol resistance genes matched with the AST data. 
+Now let's look at the geno-pheno associations across all the isolates with matched data. We first build a binary matrix using the genotype and phenotype tables as input with `get_binary_matrix()`
 
-## 3.5 Analysing genotype and phenotype data with `ppv()`
-
-We first build a binary matrix using the genotype and phenotype tables as input with `get_binary_matrix()`
-
-Then we view it as an upset grid, with a upset plot, SIR stacked barplot and positive predictive value (ppv) using the `ppv()` function. 
+Then we can view it as an upset grid, with a upset plot, SIR stacked barplot and positive predictive value (ppv) using the `ppv()` function. 
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
+MB_CHLR_geno <- MB_CHLR_geno %>%
+  mutate(marker = ifelse(marker=="catB3" & `% Coverage of reference` < 100, "catB3 (truncated)", marker))
 
-CHL_bin_mat = get_binary_matrix(MB_CHLR_geno_2, 
+CHL_bin_mat = get_binary_matrix(MB_CHLR_geno, 
                                 AST_pheno, 
                                 antibiotic="CHL", 
                                 drug_class_list=c("Phenicols"), 
@@ -478,111 +395,18 @@ CHL_PPV = ppv(CHL_bin_mat,
                antibiotic="Chloramphenicol", 
                drug_class_list=c("Phenicols"), 
                sir_col="pheno_clsi", 
-               upset_grid = TRUE) 
+               upset_grid = TRUE,
+               assay = "mic", 
+               plot_assay = TRUE,
+               order = "value") 
 ```
+## 3.5 Logistic regression
 
-This shows us an interesting result in regards to the *catB3* gene. 
-
-There are 129 isolates with a *catB3* gene, of these:
-
-- 116 isolates with only 1 *catB3* gene (88.7% susceptible, n = 116)
-- 2 isolates with *catB3* and *cmlA6* (50% susceptible, n = 2)
-- 11 isolates with *catB3* and *catA1* (9.1% susceptible, n = 11)
-
-Therefore having one *catB3* gene makes it highly likely that the isolate will be susceptible. 
-
-We can plot again with a boxplot of the MIC values. 
-
-```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-CHL_mic_upset = amr_upset(
-  CHL_bin_mat,
-  sir_col="pheno_clsi",
-  assay = "mic",
-  order = "value"
-)
-```
-
-This gives a clearer image of the distribution of MIC values for each gene and gene combination. 
-
-Now we can focus in on just the *catB3* genes. 
-
-```{r, fig.width=10, fig.height=6}
-
-MB_CHLR_geno_3 = AST_CATB3_pheno_3 %>% select(id, mic, pheno_clsi) %>% inner_join(MB_CHLR_geno_2, by = "id")
-
-CATB3_bin_mat = get_binary_matrix(MB_CHLR_geno_3, 
-                                AST_CATB3_pheno_3, 
-                                antibiotic="CHL", 
-                                drug_class_list=c("Phenicols"), 
-                                sir_col="pheno_clsi", 
-                                keep_assay_values = TRUE)
-
-CATB3_ppv_only = ppv(CATB3_bin_mat, 
-               antibiotic="Chloramphenicol", 
-               drug_class_list=c("Phenicols"), 
-               sir_col="pheno_clsi", 
-               upset_grid = TRUE) 
-```
-
-Now I am interested in the *catB3* genes that are truncated vs those that aren't. 
-
-I can join together the table with the coverage information (our original genotype table) with the binary matrix. I can then select for any *catB3* genes with coverage below 71% which indicates a truncated gene (interestingly no genes have a coverage between 71% and 100% coverage, it is either <= 70% or 100%).
-
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-CHL_bin_mat_2 = MB_CATB3_geno_2 %>% 
-  select(id, gene, `% Coverage of reference`) %>% 
-  distinct(id, .keep_all = TRUE) %>% 
-  inner_join(CHL_bin_mat, by = "id")
-
-as.numeric(CHL_bin_mat_2$`% Coverage of reference`)
-
-CHL_bin_mat_truncated = CHL_bin_mat_2 %>% filter(`% Coverage of reference` < 71.00) %>% select(- c(gene, "% Coverage of reference"))
-
-CHL_PPV = ppv(CHL_bin_mat_truncated, 
-               antibiotic="Chloramphenicol", 
-               drug_class_list=c("Phenicols"), 
-               sir_col="pheno_clsi", 
-               upset_grid = TRUE)
-```
-
-Thus the majority of susceptible isolates with *catB3* have the trunacted variant. 
-
-Interestingly 6 are still resistant and 4 are Intermediate even though they only have one *catB3* gene.
-
-We can filter the dataset to look at these isolates. 
-
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-
-CHL_bin_mat_truncated_RI = CHL_bin_mat_truncated %>% filter(catA1 == 0 & cmlA6 == 0 & pheno == "R" | pheno == "I")
-
-CHL_bin_mat_truncated_RI
-```
-
-Next we can look at the isolates with the full *catB3* genes. 
-
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-
-CHL_bin_mat_full_gene = CHL_bin_mat_2 %>% filter(`% Coverage of reference` > 71.00) %>% select(- c(gene, "% Coverage of reference"))
-
-CHL_PPV = ppv(CHL_bin_mat_full_gene, 
-               antibiotic="Chloramphenicol", 
-               drug_class_list=c("Phenicols"), 
-               sir_col="pheno_clsi", 
-               upset_grid = TRUE)
-
-```
-
-The isolates with *catB3* genes only (at 100%) are split between S, I and R. 
-
-## 3.6 Logistic regression
-
-We can plot a coefficient plot using the `amr_logistic()` function to show the statistical relationship between chloramphenicol resistance genes and phenotypic resistance to
-chloramphenicol. 
+We can plot a coefficient plot using the `amr_logistic()` function to show the statistical relationship between chloramphenicol resistance genes and phenotypic resistance to chloramphenicol. 
 
 We just need the binary matrix as input (from `get_binary_matrix()`) and we can define the antibiotic, the column containing the ecoff and a threshold for the number of samples a marker is present in. 
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE}
-
 CHL_logist = amr_logistic(
   binary_matrix = CHL_bin_mat,
   antibiotic = "chloramphenicol",
@@ -591,105 +415,9 @@ CHL_logist = amr_logistic(
   single_plot = TRUE
 )
 
-
+# model coefficients
+CHL_logist$modelR
 ```
+This plot shows that both *catA1* and *cmlA1* have a strong positive association with phenotypic resistance whereas truncated *catB3* has a strong negative association with resistance (i.e. a stronger association with susceptibility to chloramphenicol). 
 
-This plot shows that both *catA1* and *cmlA1* have a strong positive association with phenotypic resistance whereas *catB3* has a strong negative association with resistance (i.e. a stronger association with susceptibility to chloramphenicol). Since the 95% Confidence Interval (CI) doesn't cross the line of no effect (x = 0) for any gene, the associations between genotype and phenotype are statistically significant.
-
-## 3.7 Investigating *catB3* gene truncation
-
-Next we can plot a histogram to see the distribution of gene lengths for the six chloramphenicol resistance genes. 
-
-```{r, error=FALSE, warning=FALSE, message=FALSE}
-
-
-counts = MB_CHLR_geno_2 %>% select(id, gene, `% Coverage of reference`) %>% 
-  distinct(id, .keep_all = TRUE) %>% inner_join(AST_pheno, by = "id") %>% 
-  count(`% Coverage of reference`, gene, sort = TRUE)  %>%  
-  rename("%_coverage" = `% Coverage of reference`)
-
-counts
-
-ggplot(counts, aes(x = `%_coverage`, y = n)) + 
-   geom_col(fill = "steelblue", width = 1) +
-   theme_minimal() + facet_wrap(~ gene)
-
-```
-
-This plot shows how *catA1* and *cmlA1* both have mostly 100% coverage of the genes, however *catB3* peaks at ~70% coverage of the gene. 
-
-Next we can use the gggenes package to plot the unique *catB3* gene lengths as arrows to visualise the differences.
-
-```{r, error=FALSE, warning=FALSE, message=FALSE, eval=F}
-
-#  Read the dataset
-AST_CATB3_geno_3
-
-# Mutate to create normalised start and stop columns
-genes_normalized = AST_CATB3_geno_3 %>%
-  mutate(
-    # Calculate the total length of the gene
-    gene_length = abs(Stop - Start),
-    
-    # Create the new relative coordinates
-    new_start = 0,
-    new_stop = gene_length,
-    
-    # Create a numeric direction column to point the arrow correctly based on Strand
-    direction = ifelse(Strand == "-", -1, 1)
-  )
-
-catB3_genes_normalized = genes_normalized %>% distinct(gene_length, .keep_all = TRUE)
-
-# define the vertical line at 70 %
-vline_pos = 481 
-
-# 3. Plot the data using gggenes
-catB3_genes_plot = ggplot(catB3_genes_normalized, aes(xmin = new_start, 
-                          xmax = new_stop, 
-                          y = reorder(as.factor(gene_length), gene_length), 
-                          fill = gene, 
-                          forward = direction)) +
-  geom_gene_arrow(fill = "#268B43") +
-  geom_vline(xintercept = vline_pos, 
-             linetype = "dashed", 
-             color = "red", 
-             size = 1) +
-  # Label on the left side of the line
-  annotate("text", 
-           x = vline_pos - 10,  # Shift slightly left of the line
-           y = -Inf,             # Places it at the very bottom of the plot
-           label = "Truncated (<= 70%)", 
-           hjust = 1,           
-           vjust = -2, 
-           size = 3, 
-           color = "black", 
-           fontface = "bold") +
-  
-  # Label on the right side of the line
-  annotate("text", 
-           x = vline_pos + 10,  # Shift slightly right of the line
-           y = -Inf,             # Places it at the very top of the plot
-           label = "Full length (100%)", 
-           hjust = 0,           # Left-align the text so it pushes away from the line
-           vjust = -2,           # Shift it down slightly from the top edge
-           size = 3,
-           color = "black", 
-           fontface = "bold") +
-  theme_genes() +
-  labs(subtitle = "catB3", 
-       x = "Relative Gene Length (bp)", 
-       y = "catB3 size in bp") + 
-  theme(
-    plot.subtitle = element_text(hjust = 0.5,vjust = -2)
-  )
-
-# visualise the plot 
-catB3_genes_plot
-```
-
-This shows the variation in truncated *catB3* genes, with 14 unique truncated variants which are all ≤ 70% coverage and ≤ 481 bp, however, if we consider truncations with ≤ 7 bp
-difference, these split into 5 groups: 476-481 bp, 437-444bp, 420bp, 388bp and 344 bp. Since IS*26* was shown to cause truncations, these variations likely highlight the various
-insertion sites of IS*26* within the *catB3* gene. 
-
-Experimental evolution from ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) suggested that these silencing events are highly stable under antibiotic pressure, reinforcing the potential for CHL to be reintroduced as a targeted reserve agent for ESBL-E infections in low-resource settings.
+Experimental evolution analysis by [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) suggested that these *catB3* silencing events are highly stable under antibiotic pressure, reinforcing the potential for chloramphenicol to be reintroduced as a targeted reserve agent for ESBL-E infections in low-resource settings.

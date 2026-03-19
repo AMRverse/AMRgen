@@ -633,7 +633,7 @@
 #' Molecular mechanisms of re-emerging chloramphenicol susceptibility in extended-spectrum beta-lactamase-producing 
 #' Enterobacterales. Nat Commun 15, 9019 (2024). Fabrice E Graf et al. 
 #' 
-#' @format `DASSIM_pheno` A data frame with 840 rows and 15 columns:
+#' @format `DASSIM_pheno_raw` A data frame with 840 rows and 15 columns:
 #' - `Strain_ID`:  Strain_ID.
 #' - `ST`:  Sequence Type.
 #' - `Species`:  Species.
@@ -650,7 +650,7 @@
 #' - `lane`:  lane.
 #' - `seq`:  seq.
 #' @source <https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-024-53391-2/MediaObjects/41467_2024_53391_MOESM4_ESM.xls>
-"DASSIM_pheno"
+"DASSIM_pheno_raw"
 
 
 #' blantyreESBL AST data 
@@ -720,78 +720,29 @@
 #'
 #' NCBI Antibiotic Susceptibility Test (AST) Browser data for Escherichia coli tested against chloramphenicol.
 #'
-#' @format `NCBI_AST_CHL` A data frame with 6859 rows and 17 columns:
-#' - `BioSample`:  BioSample.
-#' - `Organism group`:  Organism group.
-#' - `Scientific name`:  Scientific name.
-#' - `Isolation type`:  Isolation type.
-#' - `Location`:  Location.
-#' - `Isolation source`:  Isolation source.
-#' - `Isolate`:  Isolate.
-#' - `Antibiotic`:  Antibiotic.
-#' - `Resistance phenotype`:  Resistance phenotype.
-#' - `Measurement sign`:  Measurement sign.
-#' - `MIC (mg/L)`:  MIC (mg/L).
-#' - `Disk diffusion (mm)`:  Disk diffusion (mm).
-#' - `Laboratory typing platform`:  Laboratory typing platform.
-#' - `Vendor`:  Vendor.
-#' - `Laboratory typing method version or reagent`:  Laboratory typing method version or reagent.
-#' - `Testing standard`:  Testing standard.
-#' - `Create date`:  Create date.
+#' @format `NCBI_Ecoli_AST_chl` A data frame with 6,859 rows and 17 columns:
+#' - `id`: Sample identifier, imported from the `BioSample` column in the raw input.
+#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
+#' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`.
+#' - `disk`: Disk diffusion zone, formatted using `as.disk`.
+#' - `method`, `platform`, `guideline`: Test method and platform and interpretation guideline.
+#' - `pheno_provided`: S/I/R interpretation as provided in the raw input.
+#' - `spp_pheno`: Species identifier, interpreted from `Scientific name` using `as.mo`, used to interpret `ecoff` and `pheno` columns.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast#chloramphenicol%20AND%20Escherichia>
-"NCBI_AST_CHL"
-
-#' MicroBIGG-E for E.coli containing catB3
-#'
-#' NCBI Pathogen Detection Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E) 
-#' for Escherichia coli containing catB3
-#'
-#' @format `MICROBIGGE_CATB3` A data frame with 35054 rows and 18 columns:
-#' - `#Scientific name`:  #Scientific name.
-#' - `Protein`:  Protein.
-#' - `BioSample`:  BioSample.
-#' - `Isolate`:  Isolate.
-#' - `Contig`:  Contig.
-#' - `Start`:  Start.
-#' - `Stop`:  Stop.
-#' - `Strand`:  Strand.
-#' - `Element symbol`:  Element symbol.
-#' - `Element name`:  Element name.
-#' - `Type`:  Type.
-#' - `Scope`:  Scope.
-#' - `Subtype`:  Subtype.
-#' - `Class`:  Class.
-#' - `Subclass`:  Subclass.
-#' - `Method`:  Method.
-#' - `% Coverage of reference`:  % Coverage of reference.
-#' - `% Identity to reference`:  % Identity to reference.
-#' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#catB3%20AND%20Escherichia>
-"MICROBIGGE_CATB3"
+"NCBI_Ecoli_AST_chl"
 
 
 #' MicroBIGG-E for E.coli containing all chloramphenicol resistance genes 
 #'
-#' NCBI Pathogen Detection Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E) 
-#' for Escherichia coli containing all chloramphenicol resistance genes 
+#' Data from NCBI Pathogen Detection Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E), 
+#' containing all chloramphenicol resistance gene hits in Escherichia coli genomes, imported using [import_amrfp()].
 #'
-#' @format `MICROBIGGE_CHLR` A data frame with 95732 rows and 18 columns:
-#' - `#Scientific name`:  #Scientific name.
-#' - `Protein`:  Protein.
-#' - `BioSample`:  BioSample.
-#' - `Isolate`:  Isolate.
-#' - `Contig`:  Contig.
-#' - `Start`:  Start.
-#' - `Stop`:  Stop.
-#' - `Strand`:  Strand.
-#' - `Element symbol`:  Element symbol.
-#' - `Element name`:  Element name.
-#' - `Type`:  Type.
-#' - `Scope`:  Scope.
-#' - `Subtype`:  Subtype.
-#' - `Class`:  Class.
-#' - `Subclass`:  Subclass.
-#' - `Method`:  Method.
+#' @format `MICROBIGGE_Ecoli_CHLR` A data frame with 95,776 rows and 27 columns:
+#' - `id`:  BioSample.
+#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
+#' - `gene`, `node`, `marker`: gene identifiers.
+#' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `% Coverage of reference`:  % Coverage of reference.
 #' - `% Identity to reference`:  % Identity to reference.
-#' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#chloramphenicol%20AND%20Escherichia>
-"MICROBIGGE_CHLR"
+#' - ...: Additional data columns from AMRfinderplus#' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#chloramphenicol%20AND%20Escherichia>
+"MICROBIGGE_Ecoli_CHLR"

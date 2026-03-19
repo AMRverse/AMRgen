@@ -396,9 +396,9 @@ import_kleborate <- function(input_table,
                              kleborate_class_table = kleborate_classes,
                              hgvs = TRUE) {
   in_table <- process_input(input_table)
-  
+
   in_table <- in_table %>% rename(id = !!sym(sample_col))
-  
+
   geno_table <- in_table %>%
     select(any_of(c("id", kleborate_class_table$Kleborate_Class))) %>%
     pivot_longer(-id, names_to = "Kleborate_Class", values_to = "marker") %>%
@@ -406,9 +406,9 @@ import_kleborate <- function(input_table,
     tidyr::separate_longer_delim(marker, delim = ";") %>%
     left_join(kleborate_class_table, by = join_by(Kleborate_Class)) %>%
     mutate(marker = str_remove_all(marker, "\\^"))
-  
+
   # version-specific processing
-  
+
   if (hgvs) { # newer versions use HGVS nomenclature (e.g. [gene]_:p.[mutation])
     geno_table <- geno_table %>%
       mutate(`variation type` = case_when(
@@ -420,8 +420,8 @@ import_kleborate <- function(input_table,
       )) %>%
       separate(marker, into = c("gene", "mutation"), sep = ":", remove = FALSE, fill = "right") %>%
       mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
-                                    paste0(gene, ":-"),
-                                    marker
+        paste0(gene, ":-"),
+        marker
       )) %>%
       relocate(Kleborate_Class, .after = "variation type") %>%
       mutate(drug_agent = NA)
@@ -439,13 +439,13 @@ import_kleborate <- function(input_table,
         mutation = if_else(grepl("%", marker), sub(".*-", "", marker), NA)
       ) %>%
       mutate(marker.label = if_else(`variation type` == "Inactivating mutation detected",
-                                    paste0(gene, ":-"),
-                                    marker
+        paste0(gene, ":-"),
+        marker
       )) %>%
       relocate(Kleborate_Class, .after = "variation type") %>%
       mutate(drug_agent = NA)
   }
-  
+
   return(geno_table)
 }
 
@@ -495,18 +495,18 @@ import_rgi <- function(input_table,
                        rgi_short_name = rgi_short_name_table,
                        rgi_drugs = rgi_drugs_table) {
   in_table <- process_input(input_table)
-  
+
   in_table <- left_join(in_table, rgi_short_name, by = c("Model_ID" = "Model ID")) %>%
     mutate(id = sub(paste0(sample_id_sep, ".*"), "", .data[[orf_id_col]]))
-  
+
   in_table[(in_table == "n/a") | (in_table == "")] <- NA
-  
+
   if (exclude_loose) { # exclude Loose hits
     geno_table <- in_table %>% filter(`Cut_Off` != "Loose")
   } else { # include all hits
     geno_table <- in_table
   }
-  
+
   # AMR marker name assignment
   if ("CARD.Short.Name" %in% colnames(geno_table)) { # Use CARD Short Name for marker label
     geno_table <- geno_table %>% mutate(marker = `CARD Short Name`)
@@ -515,7 +515,7 @@ import_rgi <- function(input_table,
   } else {
     stop(paste("Input file lacks the expected column: `CARD Short Name` OR Best_Hit_ARO \n"))
   }
-  
+
   # Assign variation type based on RGI 'Model_type' column
   if (model_col %in% colnames(geno_table)) {
     geno_table <- geno_table %>%
@@ -528,7 +528,7 @@ import_rgi <- function(input_table,
   } else {
     cat("Need method column: Model_type", "\n")
   }
-  
+
   # Check mutation column exists and reformat table to long form - one mutation per row
   if ("SNPs_in_Best_Hit_ARO" %in% colnames(geno_table)) {
     geno_table <- geno_table %>%
@@ -537,14 +537,14 @@ import_rgi <- function(input_table,
   } else {
     stop(paste("Input file lacks the expected column: SNPs_in_Best_Hit_ARO \n"))
   }
-  
+
   # create AMRrules style label with gene:mutation
   variant_models <- c(
     "protein variant model",
     "protein overexpression model",
     "rRNA gene variant model"
   )
-  
+
   geno_table_label <- geno_table %>%
     mutate(
       marker.label = case_when(
@@ -561,11 +561,11 @@ import_rgi <- function(input_table,
         TRUE ~ `CARD Short Name`
       )
     )
-  
+
   # Identify any drug classes / antibiotics we _know_ aren't in the AMR package, using the internal data
   # Join introduces these as new drug_internal or drug_class_internal column
   # Standardizing antibiotic names & drug class first, if no antibiotic, then standardize drug class
-  
+
   if (antibiotic_col %in% colnames(geno_table_label) | class_col %in% colnames(geno_table_label)) {
     # rows where Antibiotic exists
     df_antibiotic <- geno_table_label %>%
@@ -585,7 +585,7 @@ import_rgi <- function(input_table,
         drug_agent = coalesce(drug_internal, as.character(drug_agent)),
         drug_class = coalesce(drug_class_internal, as.character(drug_class_agent))
       )
-    
+
     # rows where Antibiotic is NA
     df_drugclass <- geno_table_label %>%
       filter(is.na(!!sym(antibiotic_col)) | !!sym(antibiotic_col) == "") %>%
@@ -603,7 +603,7 @@ import_rgi <- function(input_table,
         rgi_drugs %>% select(RGI_DrugClassAgent, drug_class),
         by = setNames("RGI_DrugClassAgent", class_col)
       )
-    
+
     # recombine
     geno_table_label_ab <- bind_rows(df_antibiotic, df_drugclass) %>%
       select(-drug_internal, -drug_class_internal, -drug_to_parse, -drug_class_agent) %>%
@@ -611,7 +611,7 @@ import_rgi <- function(input_table,
   } else {
     stop(paste("Input file lacks the expected column: Antibiotic OR `Drug Class` OR `Resistance Mechanism`\n"))
   }
-  
+
   return(geno_table_label_ab)
 }
 
@@ -658,9 +658,9 @@ import_abricate <- function(input_table,
                             db = "resfinder") {
   # note this also strips the # from the start of the file
   in_table <- process_input(input_table)
-  
+
   in_table <- in_table %>% rename(id = !!sym(sample_col))
-  
+
   # Process Core Columns
   in_table <- in_table %>%
     dplyr::mutate(
@@ -669,7 +669,7 @@ import_abricate <- function(input_table,
       `variation type` = "Gene presence detected",
       mutation = NA_character_
     )
-  
+
   # Expand Drugs (Handle RESISTANCE column)
   ## TO CHECK: this is coded for resfinder results, where classes are separated by ';'
   ## if using db=ncbi, does this column include multiple subclasses separated by "/" as done in AMRfp?
@@ -677,15 +677,15 @@ import_abricate <- function(input_table,
     tidyr::separate_longer_delim(!!sym(ab_col), delim = ";") %>%
     dplyr::mutate(!!sym(ab_col) := trimws(!!sym(ab_col))) %>%
     dplyr::filter(!!sym(ab_col) != "")
-  
+
   if ("DATABASE" %in% colnames(in_table)) {
     db_value <- unique(in_table$DATABASE)
     if (db_value != db) {
       message(paste0("Warning, 'db' parameter ", db, " does not match DATABASE field in input file: ", paste0(db_value, collapse = ", ")))
     }
   }
-  
-  
+
+
   # Parse RESISTANCE column values to standard antibiotic and class names used in AMR pkg
   if (db == "ncbi") {
     # first, identify any subclasses we _know_ aren't in the AMR package, using the internal data
@@ -693,7 +693,7 @@ import_abricate <- function(input_table,
     in_table <- in_table %>%
       left_join(amrfp_drugs_table, by = setNames("AMRFP_Subclass", ab_col)) %>%
       rename(drug_class_internal = drug_class)
-    
+
     # then for the columns which are NA, we want to use the Subclass col and convert to ab using AMR pkg
     in_table <- in_table %>%
       mutate(subclass_to_parse = if_else(!is.na(drug_class_internal), NA, !!sym(ab_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
@@ -704,7 +704,7 @@ import_abricate <- function(input_table,
     in_table <- in_table %>%
       mutate(drug_agent = AMR::as.ab(!!sym(ab_col))) %>%
       mutate(drug_class = AMR::ab_group(drug_agent))
-    
+
     # Harmonise outliers match how we parse NCBI subclass
     in_table <- in_table %>%
       mutate(drug_class = case_when(
@@ -714,7 +714,7 @@ import_abricate <- function(input_table,
         TRUE ~ drug_class
       ))
   }
-  
+
   # Move standard AMRgen genotype table cols to the start for visibility
   in_table <- in_table %>%
     dplyr::relocate(dplyr::any_of(c(
@@ -726,7 +726,7 @@ import_abricate <- function(input_table,
       "drug_class",
       "variation type"
     )), .before = dplyr::everything())
-  
+
   return(in_table)
 }
 

@@ -158,7 +158,7 @@ get_binary_matrix <- function(geno_table,
       if (nrow(pheno_matched) < pheno_matched_rows_unfiltered) {
         cat(" Some samples had multiple phenotype rows, taking the most resistant only for binary matrix\n")
       }
-    } 
+    }
   }
   if (!most_resistant) { # take least resistant
     pheno_matched_rows_unfiltered <- nrow(pheno_matched)

@@ -660,14 +660,14 @@
 #' DASSIM phenotype metadata
 #'
 #' Additional metadata relating to the DASSIM isolates found in Supplementary Data 1 of the following paper:
-#' Molecular mechanisms of re-emerging chloramphenicol susceptibility in extended-spectrum beta-lactamase-producing 
-#' Enterobacterales. Nat Commun 15, 9019 (2024). Fabrice E Graf et al. 
-#' 
+#' Molecular mechanisms of re-emerging chloramphenicol susceptibility in extended-spectrum beta-lactamase-producing
+#' Enterobacterales. Nat Commun 15, 9019 (2024). Fabrice E Graf et al.
+#'
 #' @format `DASSIM_pheno_raw` A data frame with 840 rows and 15 columns:
 #' - `Strain_ID`:  Strain_ID.
 #' - `ST`:  Sequence Type.
 #' - `Species`:  Species.
-#' - `CHL susceptibility`:  susceptibility to chloramphenicol 
+#' - `CHL susceptibility`:  susceptibility to chloramphenicol
 #' - `CatA1`:  CatA1 presence/absence
 #' - `CatA2`:  CatA2 presence/absence
 #' - `CatB4`:  CatB4 presence/absence
@@ -683,11 +683,11 @@
 "DASSIM_pheno_raw"
 
 
-#' blantyreESBL AST data 
+#' blantyreESBL AST data
 #'
 #' The antimicrobial susceptibility testing (AST) data from the blantyreESBL Github from Dr. Joseph Lewis.
-#' Antimicrobial sensitivity testing (AST) was carried out on a subset of isolates using the disc-diffusion method 
-#' using British Society for Antimicrobial Chemotherapy (BSAC) guidelines (https://bsac.org.uk/). 
+#' Antimicrobial sensitivity testing (AST) was carried out on a subset of isolates using the disc-diffusion method
+#' using British Society for Antimicrobial Chemotherapy (BSAC) guidelines (https://bsac.org.uk/).
 #' AST was carried out for meropenem, amikacin, chloramphenicol, ciprofloxacin, co-trimoxazole and gentamicin.
 #' However this dataset only contains the raw phenotype data (S/R).
 #'
@@ -707,7 +707,7 @@
 
 #' DASSIM genotype data (AMRfinderplus)
 #'
-#' The DASSIM dataset screened for Antimicrobial resistance genes (ARGs) using AMRfinderplus v4.0.23 
+#' The DASSIM dataset screened for Antimicrobial resistance genes (ARGs) using AMRfinderplus v4.0.23
 #'
 #' @format `DASSIM_geno` A data frame with 12414 rows and 31 columns:
 #' - `Name`:  Name.
@@ -746,7 +746,7 @@
 "DASSIM_geno"
 
 
-#' NCBI AST for Escherichia coli tested against chloramphenicol 
+#' NCBI AST for Escherichia coli tested against chloramphenicol
 #'
 #' NCBI Antibiotic Susceptibility Test (AST) Browser data for Escherichia coli tested against chloramphenicol.
 #'
@@ -762,9 +762,9 @@
 "NCBI_Ecoli_AST_chl"
 
 
-#' MicroBIGG-E for E.coli containing all chloramphenicol resistance genes 
+#' MicroBIGG-E for E.coli containing all chloramphenicol resistance genes
 #'
-#' Data from NCBI Pathogen Detection Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E), 
+#' Data from NCBI Pathogen Detection Microbial Browser for Identification of Genetic and Genomic Elements (MicroBIGG-E),
 #' containing all chloramphenicol resistance gene hits in Escherichia coli genomes, imported using [import_amrfp()].
 #'
 #' @format `MICROBIGGE_Ecoli_CHLR` A data frame with 95,776 rows and 27 columns:

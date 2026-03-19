@@ -111,7 +111,7 @@ staph_ast_ncbi_cloud_raw <- query_ncbi_bq_ast(
 ``` {r download_ncbi_ast_bigquery_dummy}
 # Import and reinterpret using CLSI breakpoints
 # NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
-staph_ast_ncbi_cloud <- query_ncbi_bq_ast(staph_ast_ncbi_cloud_raw, interpret_clsi = TRUE)
+staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi = TRUE)
 ```
 
 #### To download genotype data

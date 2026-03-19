@@ -277,9 +277,10 @@ ggplot2::autoplot(ecoli_cip_vs_ref)
 ### 5. Summarise the intersection of a genotype table and a phenotype table
 You can summarise the intersecting content of a genotype table and a phenotype table using the inbuilt `summarise_geno_pheno()` function.
 ``` {r summarise_geno_pheno}
-ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno, 
-                                         ecoli_ast, 
-                                         pheno_cols = c("pheno_clsi","ecoff"))
+ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno,
+  ecoli_ast,
+  pheno_cols = c("pheno_clsi", "ecoff")
+)
 
 # Total number of samples that appear in both tables, i.e. that have both
 # genotype and phenotype data available
@@ -287,19 +288,19 @@ ecoli_geno_pheno$overlapping_samples
 
 # Table of drugs encountered in the phenotype table, indicating the
 # number of samples that have phenotype data for this drug and also
-# appear in the genotype table 
+# appear in the genotype table
 ecoli_geno_pheno$drugs_with_pheno
 
-# List of tables, one for each phenotype column in the input, indicating 
-# the number in each category (WT/NWT, S/I/R), amongst samples that also 
+# List of tables, one for each phenotype column in the input, indicating
+# the number in each category (WT/NWT, S/I/R), amongst samples that also
 # appear in the genotype table.
 ecoli_geno_pheno$pheno_counts_list
 
-# Number of markers encountered for each drug/class in the genotype table, 
+# Number of markers encountered for each drug/class in the genotype table,
 # amongst samples that have phenotype data for the relevant drug/class
 ecoli_geno_pheno$geno_hits
 
-# Frequency of each marker in the genotype table, amongst samples that have 
+# Frequency of each marker in the genotype table, amongst samples that have
 # phenotype data for the relevant drug/class
 ecoli_geno_pheno$geno_markers
 ```

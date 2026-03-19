@@ -59,11 +59,11 @@ articles:
     contents:
       - AnalysingGenoPhenoData
       - DownloadGenoPhenoData
+      - Concordance
       - NeisseriaGonoExamples
       - SalmonellaExamples
       - StaphAureusClindamycin
-      - AnalysingcatB3ChloramphenicolSusceptibility
-      - Concordance
+      - DeletionVariantsCatB3
 
 # Reference section grouping
 reference:

@@ -99,6 +99,7 @@ First we set up R and load our libraries.
 library(AMRgen)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 ```
 
 ## 2.2 Format the phenotype data

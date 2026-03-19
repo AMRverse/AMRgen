@@ -259,7 +259,8 @@ utils::globalVariables(c(
   "user",
   "value",
   "variation type",
-  "x"
+  "x",
+  "genes_list"
 ))
 
 

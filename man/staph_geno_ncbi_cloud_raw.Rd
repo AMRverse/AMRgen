@@ -11,7 +11,7 @@ Columns include:
 \itemize{
 \item \code{biosample_acc}: Sample identifier.
 \item \code{scientific_name}: Organism name.
-\item \verb{Gene symbol}, \code{Class}, \code{Subclass}, \verb{Element type}, \verb{Element subtype}, \code{Method}, \code{Hierarchy_node}: Key results fields from AMRfinderplus.
+\item \verb{Gene symbol}, \code{Class}, \code{Subclass}, \verb{Element type}, \verb{Element subtype}, \code{Method}, \code{Hierarchy_node}: Key results fields from AMRFinderPlus.
 }
 }
 \source{
@@ -21,6 +21,6 @@ Columns include:
 staph_geno_ncbi_cloud_raw
 }
 \description{
-AMRfinderplus genotypes sourced from NCBI via \link{query_ncbi_bq_ast} function, without reformating.
+AMRFinderPlus genotypes sourced from NCBI via \link{query_ncbi_bq_ast} function, without reformatting.
 }
 \keyword{datasets}

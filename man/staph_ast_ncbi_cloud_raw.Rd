@@ -22,6 +22,6 @@ Columns include:
 staph_ast_ncbi_cloud_raw
 }
 \description{
-Phenotypes sourced from NCBI via \link{query_ncbi_bq_ast} function, without reformating.
+Phenotypes sourced from NCBI via \link{query_ncbi_bq_ast} function, without reformatting.
 }
 \keyword{datasets}

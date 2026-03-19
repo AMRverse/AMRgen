@@ -22,6 +22,6 @@ Columns include:
 staph_ast_ncbi_raw
 }
 \description{
-Phenotypes sourced from NCBI Biosamples using the \link{download_ncbi_ast} function without reformating.
+Phenotypes sourced from NCBI Biosamples using the \link{download_ncbi_ast} function without reformatting.
 }
 \keyword{datasets}

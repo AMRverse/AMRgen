@@ -87,7 +87,7 @@ cli_bin_accession <- get_binary_matrix(
   marker_col = "marker.label"
 )
 
-# Visualize with UpSet plot (markers)
+# Visualise with UpSet plot (markers)
 cli_mic_upset <- amr_upset(
   cli_bin,
   min_set_size = 2,
@@ -100,7 +100,7 @@ cli_mic_upset <- amr_upset(
   bp_R = 0.5
 )
 
-# Visualize with UpSet plot (variants)
+# Visualise with UpSet plot (variants)
 cli_mic_upset <- amr_upset(
   cli_bin_accession,
   min_set_size = 2,
@@ -118,7 +118,7 @@ cli_mic_upset <- amr_upset(
 
 Next, we will calculate the solo positive predictive value (soloPPV) for each marker and variant. This will allow us to see which markers and variants are most predictive of clindamycin resistance.
 
-```{r visualize upset plot, warning=FALSE, message=FALSE}
+```{r visualise upset plot, warning=FALSE, message=FALSE}
 # soloPPV analysis for markers
 PPV_cli <- ppv(cli_bin, upset_grid = TRUE, plot_assay = TRUE)
 
@@ -128,11 +128,11 @@ PPV_cli <- ppv(cli_bin_accession, upset_grid = TRUE, plot_assay = TRUE)
 
 We can clearly see from this analysis that the variants of the markers have different associations with clindamycin resistance. For example, the erm(C)\_WP0012363.1 and erm(C)\_WP0012364.1 were not above the 0.5 threshold. This highlights the importance of considering the specific variants of the markers when predicting clindamycin resistance. Note: this discrepancy may be caused by inducible resistance, which is not always captured by a standard AST test. This is because the resistance gene may not be expressed under the conditions of the AST test, but can be induced in the presence of certain antibiotics (e.g., erythromycin). This is a known phenomenon for clindamycin resistance in *S. aureus*, where the presence of an erm gene can lead to inducible resistance that may not be detected in a standard AST test.
 
-## Assocation of specific variants with sequence types
+## Association of specific variants with sequence types
 
 Finally, we can also look at the association of specific marker variants with sequence types, if this data are available. This can be done by creating a binary matrix for the variants and then visualizing the associations with a bubble plot.
 
-```{r visualize bubble plot, warning=FALSE, message=FALSE}
+```{r visualise bubble plot, warning=FALSE, message=FALSE}
 # Identify "High-Frequency" STs because we have many STs with only a few samples, which can make the plot cluttered and less informative. By filtering to include only STs with a certain number of samples (e.g., n >= 100), we can focus on the most prevalent STs in the dataset, which are likely to provide more meaningful insights into the associations between specific variants and sequence types.
 high_freq_sts <- ST_data_CLI %>%
   count(ST) %>%

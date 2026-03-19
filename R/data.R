@@ -121,7 +121,7 @@
 
 #' S. aureus Example of Raw Phenotype Data Downloaded from NCBI BioSamples via Entrez API
 #'
-#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function without reformating.
+#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function without reformatting.
 #' @format `staph_ast_ncbi_raw` A data frame with 143 rows and 13 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
 #'
 #' Columns include:
@@ -135,7 +135,7 @@
 
 #' S. aureus Example of Raw Phenotype Data Downloaded from NCBI via Google Cloud BigQuery
 #'
-#' Phenotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformating.
+#' Phenotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformatting.
 #' @format `staph_ast_ncbi_cloud_raw` A data frame with 142 rows and 11 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
 #'
 #' Columns include:
@@ -149,13 +149,13 @@
 
 #' S. aureus Example of Raw Genotype Data Downloaded from NCBI via Google Cloud BigQuery
 #'
-#' AMRfinderplus genotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformating.
+#' AMRFinderPlus genotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformatting.
 #' @format `staph_geno_ncbi_cloud_raw` A data frame with 4064 rows and 9 columns representing all Staphylococcus aureus genotyping results for markers associated with class aminoglycoside or tetracycline.
 #'
 #' Columns include:
 #' - `biosample_acc`: Sample identifier.
 #' - `scientific_name`: Organism name.
-#' - `Gene symbol`, `Class`, `Subclass`, `Element type`, `Element subtype`, `Method`, `Hierarchy_node`: Key results fields from AMRfinderplus.
+#' - `Gene symbol`, `Class`, `Subclass`, `Element type`, `Element subtype`, `Method`, `Hierarchy_node`: Key results fields from AMRFinderPlus.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/>
 "staph_geno_ncbi_cloud_raw"
 
@@ -183,7 +183,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
+#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
@@ -194,13 +194,44 @@
 
 #' NCBI Subclass mapping to drug class
 #'
-#' Mapping of NCBI refgene / AMRfinderplus Subclass terms that are not present in the AMR package as drug class terms. Used internally when importing AMRfinderplus results into AMRgen genotype table format.
+#' Mapping of NCBI refgene / AMRFinderPlus Subclass terms that are not present in the AMR package as drug class terms. Used internally when importing AMRFinderPlus results into AMRgen genotype table format.
 #' @format `amrfp_drugs_table` A data frame with 21 rows and 2 columns.
 #'
 #' Columns include:
 #' - `AMRFP_Subclass`: NCBI term
 #' - `drug_class`: Name of drug class as it should appear in imported genotype table.
 "amrfp_drugs_table"
+
+
+#' SIRscan antibiotic code mapping
+#'
+#' Reference table mapping Bio-Rad SIRscan antibiotic codes to antibiotic names
+#' recognised by [AMR::as.ab()]. Used as the default lookup in
+#' [import_sirscan_ast()] to translate codes that the AMR package does not
+#' recognise directly. Users can supply their own table via the `sirscan_codes`
+#' argument if their SIRscan configuration uses different code meanings.
+#'
+#' @format `sirscan_codes` A data frame with 11 rows and 2 columns:
+#'
+#' Columns include:
+#' - `sirscan_code`: The antibiotic code as it appears in SIRscan export files.
+#' - `ab_name`: Antibiotic name string passed to [AMR::as.ab()] for translation.
+#'
+#' @details
+#' Confirmed codes (verified from Bio-Rad catalogue or collaborator communication):
+#' `CF30` (cephalothin 30 mcg disk), `MA` (cefamandole), `SSS` (sulfonamides),
+#' `SXT25` (trimethoprim/sulfamethoxazole 25 mcg disk).
+#'
+#' Codes mapped by French CASFM/SIRscan convention, not yet confirmed in official
+#' Bio-Rad documentation: `S` (streptomycin), `K` (kanamycin),
+#' `C` (chloramphenicol), `NALI` (nalidixic acid), `AZ` (azithromycin),
+#' `MM` (minocycline), `ERM` (erythromycin).
+#'
+#' Codes with no confirmed mapping (`CAN`, `ECM`, `ICM`) are absent from this
+#' table; they will return `NA` from [AMR::as.ab()] with a warning. Update this
+#' table or supply your own once the correct mappings are known.
+"sirscan_codes"
+
 
 #' E. coli AST data from Mills et al 2022
 #'
@@ -219,16 +250,16 @@
 
 #' E. coli genotype data from Mills et al 2022
 #'
-#' Genotyping data for isolates published in Mills et al, Genome Medicine (2022) 14:147, generated using AMRfinderplus v3.12.8 and downloaded from the [AllTheBacteria](https://github.com/AllTheBacteria/AllTheBacteria/tree/main/reproducibility/All-samples/AMR/AMRFinderPlus) project, and imported to AMRgen genotype table format. Corresponding MIC data is available in `pheno_eco_2075`.
-#' @format `geno_eco_2075` A data frame with 56064 rows and 24 columns representing AMRfinderplus genotyping results for 2075 E. coli isolates.
+#' Genotyping data for isolates published in Mills et al, Genome Medicine (2022) 14:147, generated using AMRFinderPlus v3.12.8 and downloaded from the [AllTheBacteria](https://github.com/AllTheBacteria/AllTheBacteria/tree/main/reproducibility/All-samples/AMR/AMRFinderPlus) project, and imported to AMRgen genotype table format. Corresponding MIC data is available in `pheno_eco_2075`.
+#' @format `geno_eco_2075` A data frame with 56064 rows and 24 columns representing AMRFinderPlus genotyping results for 2075 E. coli isolates.
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
+#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
-#' - ...: Additional data columns from AMRfinderplus
+#' - ...: Additional data columns from AMRFinderPlus
 #' @source <https://github.com/AllTheBacteria/AllTheBacteria>
 "geno_eco_2075"
 
@@ -522,7 +553,7 @@
 #'
 #' Raw Kleborate results file for *Klebsiella pneumoniae* genomes, one row per sample.
 #'
-#' @format `kleborate_raw` A data frame with 1,689 rows and 122 columns:
+#' @format `kleborate_raw` A data frame with 1,490 rows and 122 columns:
 #' - `strain`: Sample identifier
 #' - ...: Kleborate results columns
 #' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).
@@ -548,7 +579,6 @@
 #' - `Kleborate_Class`: Column name in Kleborate output files
 #' - `drug_class`: Valid drug class name recognised by AMR pkg
 "kleborate_classes"
-
 
 
 #' S. aureus Clindamycin Resistance Genotype Data
@@ -746,3 +776,49 @@
 #' - `% Identity to reference`:  % Identity to reference.
 #' - ...: Additional data columns from AMRfinderplus#' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#chloramphenicol%20AND%20Escherichia>
 "MICROBIGGE_Ecoli_CHLR"
+#' Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data
+#'
+#' Raw RGI v6.0.6 results file (run with `--include_loose`) for 12 genomes of multiple species, one AMR determinant per row.
+#' Includes multiple species to cover all four model types currently detected by RGI (protein homolog model, protein variant model, protein overexpression model, and rRNA gene variant model)
+#' Includes Perfect, Strict, and Loose hits to test `exclude_loose` parameter
+#'
+#' @format `rgi_raw` A data frame with 21,203 rows and 28 columns:
+#' - `ORF_ID`: Sample identifier
+#' - ...: RGI results columns
+#' @source Four colistin-resistant isolates from Bioproject PRJNA966919 <https://www.ncbi.nlm.nih.gov/datasets/genome/?bioproject=PRJNA966919>.
+#' @source One genome with rRNA gene variant models detected (GCF_000249055.1).
+"rgi_raw"
+
+#' Table mapping CARD/RGI drug class and antibiotic columns
+#'
+#' Table mapping CARD/RGI drug class / antibiotic columns to class / antibiotic names recognised by AMR pkg
+#'
+#' @format `rgi_drugs_table` A data frame with 3 rows and 70 columns:
+#' - `RGI_DrugClassAgent`: RGI/CARD drug class / antibiotic that is not recognized by AMR pkg
+#' - `drug_class`: Valid drug class name recognised by AMR pkg
+#' - `drug_agent`: Valid antibiotic name recognised by AMR pkg
+"rgi_drugs_table"
+
+#' Table mapping CARD/RGI Model ID and CARD Short Name
+#'
+#' Table mapping all CARD/RGI Model ID and CARD Short Name to convert long names into shortened AMR determinant names
+#'
+#' @format `rgi_short_name_table` A data frame with 6445 rows and 2 columns:
+#' - `Model ID`: RGI/CARD model ID column
+#' - `CARD Short Name`: Shortened AMR determinant names
+#' @source Two columns extracted from: <https://card.mcmaster.ca/latest/data> in aro_index.tsv
+"rgi_short_name_table"
+
+
+#' Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data from EuSCAPE project
+#'
+#' Raw RGI v6.0.6 results file for Klebsiella pneumoniae from EuSCAPE project, one AMR determinant per row.
+#' Includes only Perfect and Strict hits
+#' Columns `Predicted_DNA`, `Predicted_Protein`, and `CARD_Protein_Sequence` were removed to reduce file size.
+#'
+#' @format `rgi_EuSCAPE_raw` A data frame with 59,403 rows and 25 columns:
+#' - `ORF_ID`: Sample identifier
+#' - ...: RGI results columns
+#' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).
+#' See David *et al.* (2019) <https://doi.org/10.1038/s41564-019-0492-8>.
+"rgi_EuSCAPE_raw"

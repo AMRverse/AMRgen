@@ -1,14 +1,10 @@
 # AMRgen
 
-## Overview
-
-<img src="logo.png" width="200" align="right" alt="AMRgen">
-
 **AMRgen** is an open-source R package designed to **bridge the gap between genotypic and phenotypic antimicrobial resistance (AMR) data**. Developed as an extension to the [AMR R package](https://amr-for-r.org), it provides tools to interpret AMR genes, integrate these findings with antimicrobial susceptibility test (AST) data, and calculate genotype-phenotype associations.
 
 This package is developed in collaboration with the ESGEM-AMR Working Group and is tailored for researchers and healthcare professionals tackling AMR globally.
 
-The [AMRgen website](https://AMRverse.github.io/AMRgen) has full function [documentation](https://AMRverse.github.io/AMRgen/reference/index.html) and a [Vignette](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html) working through analysing geno/pheno data using key functions.
+The [AMRgen website](https://amrgen.org) has full function [documentation](https://amrgen.org/reference/index.html) and various [vignette](https://amrgen.org/articles/) working through analysing geno/pheno data using key functions.
 
 ------------------------------------------------------------------------
 
@@ -164,7 +160,7 @@ assay_by_var(ast, measure="mic", colour_by = "pheno_clsi", facet_var = "platform
 ?export_ebi_ast
 ```
 
-For more see the [Vignette](https://AMRverse.github.io/AMRgen/articles/AnalysingGenoPhenoData.html).
+For more the various [vignettes](https://amrgen.org/articles/).
 
 
 ## Contributions

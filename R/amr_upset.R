@@ -16,7 +16,7 @@
 
 #' Generate a Series of Plots for AMR Gene and Combination Analysis
 #'
-#' This function generates a set of visualizations to analyze AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The [amr_upset()] and [ppv()] functions can be used to generate standard data visualisations using the component plots.
+#' This function generates a set of visualisations to analyse AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The [amr_upset()] and [ppv()] functions can be used to generate standard data visualisations using the component plots.
 #' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. Expected columns are an identifier (column 1, any name), `pheno` (class sir, with S/I/R categories to colour points), `mic` (class mic, with MIC values to plot), and other columns representing gene presence/absence (binary coded, i.e., 1 = present, 0 = absent).
 #' @param min_set_size An integer specifying the minimum size for a gene set to be included in the analysis and plots. Default is 2. Only marker combinations with at least this number of occurrences are included in the plots.
 #' @param order A character string indicating the order of the combinations on the x-axis. Options are:

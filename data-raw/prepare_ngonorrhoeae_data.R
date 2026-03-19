@@ -1,5 +1,5 @@
 ## General information
-# Genotype files have been obtained using AMRfinderplus v4.0.23 with database version 2025-03-25.1
+# Genotype files have been obtained using AMRFinderPlus v4.0.23 with database version 2025-03-25.1
 
 ####
 ## Use case 1: Euro-GASP data

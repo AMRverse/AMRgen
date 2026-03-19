@@ -35,7 +35,7 @@ download_ebi(
 
 \item{geno_class}{(Optional) String specifying an antibiotic subclass to filter genotype data on (default NULL). Filter is based on string match, not identity, so e.g. class="TRIMETHOPRIM" will return all rows where the string "TRIMETHOPRIM" is included in the class field. Only used if \code{data}="genotype" and subclass is not specified. Check \href{https://github.com/ncbi/amr/wiki/class-subclass}{NCBI AMR Class-Subclass Reference} for valid terms.}
 
-\item{remove_dup}{(Optional) Logical specifying whether to clean up genotype data by removing duplicates for the same hit (default FALSE). Where a detected gene is associated with a subclass value that is actually a list of multiple drugs/classes, e.g. subclass="GENTAMICIN/TOBRAMYCIN", the EBI data table will have duplicate rows for the same gene hit, but with different values for the \code{antibiotic_name} and associated \code{antibiotic_ontology} and \code{antibiotic_ontology_link} annotation fields (e.g. one row each for gentamicin and tobramycin). To remove these duplicate rows (and the drug-specific annotation fields) and return only one row per hit (i.e. restoring AMRfinderplus output format), set this to \code{TRUE}.}
+\item{remove_dup}{(Optional) Logical specifying whether to clean up genotype data by removing duplicates for the same hit (default FALSE). Where a detected gene is associated with a subclass value that is actually a list of multiple drugs/classes, e.g. subclass="GENTAMICIN/TOBRAMYCIN", the EBI data table will have duplicate rows for the same gene hit, but with different values for the \code{antibiotic_name} and associated \code{antibiotic_ontology} and \code{antibiotic_ontology_link} annotation fields (e.g. one row each for gentamicin and tobramycin). To remove these duplicate rows (and the drug-specific annotation fields) and return only one row per hit (i.e. restoring AMRFinderPlus output format), set this to \code{TRUE}.}
 
 \item{release}{(Optional) String specifying the data release to download (default NULL, will pull latest release).}
 
@@ -51,8 +51,8 @@ download_ebi(
 A data frame containing the phenotype or genotype data retrieved from EBI, optionally reformatted to AMRgen standard formats and classes.
 }
 \description{
-This function will retrieve genotype or phenotype data from the EBI AMR Portal FTP site. The portal uses AMRfinderplus to identify AMR-associated genotypes, but the results are processed and not all fields returned by AMRfinderplus are included.
-Optionally, the function can also reformat the phenotype data for easy use with AMRgen functions (using \link{import_ebi_ast_ftp}) and re-interpret assay measures using the latest breakpoints/ECOFF.
+This function will retrieve genotype or phenotype data from the EBI AMR Portal FTP site. The portal uses AMRFinderPlus to identify AMR-associated genotypes, but the results are processed and not all fields returned by AMRFinderPlus are included.
+Optionally, the function can also reformat the phenotype data for easy use with AMRgen functions (using \code{\link[=import_ebi_ast_ftp]{import_ebi_ast_ftp()}}) and re-interpret assay measures using the latest breakpoints/ECOFF.
 }
 \details{
 See \url{https://www.ebi.ac.uk/amr/about/} for more information on what is available in the portal, and \url{https://github.com/ncbi/amr/wiki/class-subclass} for valid class and subclass terms.

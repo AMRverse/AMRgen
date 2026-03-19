@@ -6,7 +6,7 @@
 \usage{
 import_whonet_ast(
   input,
-  sample_col = "Identification number",
+  sample_col = NULL,
   source = NULL,
   species = NULL,
   ab = NULL,
@@ -19,7 +19,9 @@ import_whonet_ast(
 \arguments{
 \item{input}{A dataframe or path to a CSV file containing WHONET AST output data}
 
-\item{sample_col}{Column name for sample identifiers. Default: \code{"Identification number"}}
+\item{sample_col}{Column name for sample identifiers. If \code{NULL} (default), the function
+auto-detects from known WHONET column names: \code{"Identification number"}, \code{"Identification"},
+\code{"laboratory"}, \code{"patient_id"}. Supply a column name explicitly to override.}
 
 \item{source}{Optional string value to record in the \code{source} column for all data points (e.g., dataset name or study identifier)}
 

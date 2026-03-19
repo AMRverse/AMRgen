@@ -48,7 +48,7 @@ library(dplyr)
 The `import_amrfp()` function lets you load genotype data from AMRFinderPlus output files, and process it to generate an object with the key columns needed to work with the `AMRgen` package.
 
 ``` {r import_amrfp}
-# Example AMRFinderPlus genotyping output (from Allthebacteria project)
+# Example AMRFinderPlus genotyping output (from AllTheBacteria project)
 ecoli_geno_raw
 
 # Load AMRFinderPlus output
@@ -135,8 +135,10 @@ ecoli_geno_summary$markers %>%
 
 ## 2. Phenotype table
 
-### 2a. Importing phenotype datato AMRgen's standard table format
+### 2a. Importing phenotype data to AMRgen's standard table format
+
 The `import_pheno()` function imports AST data from NCBI or other standard formats
+
 ``` {r import_ncbi_ast}
 # Example E. coli AST data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
@@ -231,7 +233,8 @@ checkBreakpoints(species = "E. coli", guide = "CLSI 2025", antibiotic = "Ciprofl
 assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025")
 ```
 
-When aggregating AST data from different methods and sources, it is a good idea to check the distributions broken down by method or source. This can be done easily by passing the `assay_by_var()` function a variable name to facet by, which means a separate distribution will be plotted for each value of that variable (e.g. each type of 'method' in our AST test data). Note that this public data from NCBI includes non-standard values in the platform (Sensititre / Sensititer) in the platform
+When aggregating AST data from different methods and sources, it is a good idea to check the distributions broken down by method or source. This can be done easily by passing the `assay_by_var()` function a variable name to facet by, which means a separate distribution will be plotted for each value of that variable (e.g. each type of 'method' in our AST test data). Note that this public data from NCBI includes non-standard values in the platform (e.g., `"Sensititre"` / `"Sensititer"`) in the platform.
+
 ``` {r plot_mic_breakpoints_method, fig.height=8}
 # specify facet_var="method" to generate facet plots by assay method
 mic_by_platform <- assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
@@ -271,9 +274,41 @@ ecoli_cip_vs_ref
 ggplot2::autoplot(ecoli_cip_vs_ref)
 ```
 
-## 5. Combine genotype and phenotype data for a given drug
+### 5. Summarise the intersection of a genotype table and a phenotype table
+You can summarise the intersecting content of a genotype table and a phenotype table using the inbuilt `summarise_geno_pheno()` function.
+``` {r summarise_geno_pheno}
+ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno, 
+                                         ecoli_ast, 
+                                         pheno_cols = c("pheno_clsi","ecoff"))
+
+# Total number of samples that appear in both tables, i.e. that have both
+# genotype and phenotype data available
+ecoli_geno_pheno$overlapping_samples
+
+# Table of drugs encountered in the phenotype table, indicating the
+# number of samples that have phenotype data for this drug and also
+# appear in the genotype table 
+ecoli_geno_pheno$drugs_with_pheno
+
+# List of tables, one for each phenotype column in the input, indicating 
+# the number in each category (WT/NWT, S/I/R), amongst samples that also 
+# appear in the genotype table.
+ecoli_geno_pheno$pheno_counts_list
+
+# Number of markers encountered for each drug/class in the genotype table, 
+# amongst samples that have phenotype data for the relevant drug/class
+ecoli_geno_pheno$geno_hits
+
+# Frequency of each marker in the genotype table, amongst samples that have 
+# phenotype data for the relevant drug/class
+ecoli_geno_pheno$geno_markers
+```
+
+## 6. Combine genotype and phenotype data for a given drug
 
 The genotype and phenotype tables can include data related to many different drugs, but we need to analyse things one drug at a time. The function `get_binary_matrix()` can be used to extract phenotype data for a specified drug, and genotype data for markers associated with a specified drug class. It returns a single dataframe with one row per strain, for the subset of strains that appear in both the genotype and phenotype input tables. Each row indicates, for one strain, both the phenotypes (with SIR column, any assay columns if desired, and boolean 1/0 coding of R and NWT status) and the genotypes (one column per marker, with boolean 1/0 coding of marker presence/absence).
+
+This binary matrix can be used as the starting a lot of downstream analyses, discussed below.
 
 ``` {r get_binary_matrix}
 # Get matrix combining phenotype data for ciprofloxacin, binary calls for R/NWT phenotype,
@@ -295,8 +330,6 @@ head(cip_bin)
 # list colnames, to see full list of quinolone markers included
 colnames(cip_bin)
 ```
-
-This binary matrix can be used as the starting a lot of downstream analyses.
 
 For example, we can use it as input to `assay_by_var` to plot the assay distribution coloured by presence of a particular genetic marker
 ``` {r assay_by_genotype}
@@ -323,7 +356,7 @@ mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "
 mic_by_marker_count
 ```
 
-## 6. Model a binary drug phenotype using genetic marker presence/absence data
+## 7. Model a binary drug phenotype using genetic marker presence/absence data
 
 Logistic regression models can be informative to get an overview of the association between a drug resistance phenotype, and each marker thought to be associated with the relevant drug class.
 
@@ -331,7 +364,7 @@ The `amr_logistic()` function uses the `get_binary_matrix` function to generate 
 
 Note that the 'NWT' variable in the latter model can be taken either from a precomputed ECOFF-based call of WT=wildtype/NWT=nonwildtype (encoded in the input column `ecoff_col`), or computed from the S/I/R phenotype as NWT=R/I and WT=S.
 
-The `amr_logistic()` function can fit the model using either the standard logistic regression approach implemented in the `glm()` function, or Firth's bias-reduced penalized-likelihood logistic regression implemented in the `logistf` package. The default is to use Firth's regression, as standard logistic regression can fail if there are too few observations in some subgroups, which happens quite often with this kind of data. To use `glm()` instead, set `glm=TRUE`.
+The `amr_logistic()` function can fit the model using either the standard logistic regression approach implemented in the `glm()` function, or Firth's bias-reduced penalised-likelihood logistic regression implemented in the `logistf` package. The default is to use Firth's regression, as standard logistic regression can fail if there are too few observations in some subgroups, which happens quite often with this kind of data. To use `glm()` instead, set `glm=TRUE`.
 
 The function also filters out markers with too few observations in the combined genotype/phenotype dataset. The default minimum is 10 but this can be changed using the `maf` parameter (maf stands for 'minor allele frequency'). If you are having trouble fitting models, it may be because too many markers and combinations have very few observations, and you might try increasing the `maf` value to ensure that rare markers are excluded prior to model fitting.
 
@@ -382,7 +415,7 @@ models$modelNWT
 models$binary_matrix
 ```
 
-## 7. Assess solo positive predictive value of genetic markers
+## 8. Assess solo positive predictive value of genetic markers
 
 The strongest evidence of the effect of an individual genetic marker on a drug phenotype is its positive predictive value (PPV) for resistance amongst strains that carry this marker 'solo' with no other markers known to be associated with resistance to the drug class. This is referred to as 'solo PPV'. 
 
@@ -419,7 +452,7 @@ soloPPV_cipro$solo_binary
 soloPPV_cipro$amr_binary
 ```
 
-## 8. Compare markers with assay data
+## 9. Compare markers with assay data
 
 So far we have considered only the impact of individual markers, and their association with categorical S/I/R or WT/NWT calls.
 

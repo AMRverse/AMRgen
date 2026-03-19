@@ -1,7 +1,7 @@
 Package: AMRgen
 Title: Genotype-Phenotype Integration for Antimicrobial Resistance Research
 Version: 0.0.1.9000
-Date: 2025-09-01
+Date: 2026-03-18
 Authors@R: c(
     person(family = "Berends", c("Matthijs", "S."), comment = c(ORCID = "0000-0001-7620-1800"), email = "m.s.berends@umcg.nl", role = c("aut", "cre")),
     person(family = "Holt",    c("Kathryn", "E."),  comment = c(ORCID = "0000-0003-3949-2471"), email = "drkatholt@gmail.com", role = "aut"),
@@ -14,9 +14,9 @@ Authors@R: c(
     person(family = "Prasad",  c("Arjun", "B."),    comment = c(ORCID = "0000-0002-1343-8664"), role = "aut"),
     person(family = "Sánchez-Busó",  c("Leonor"),   comment = c(ORCID = "0000-0002-4162-0228"), role = "aut"),
     person(family = "Argimón",  c("Silvia"),        comment = c(ORCID = "0000-0002-2884-3857"), role = "aut"),
-    person(family = "Nagy", c("Dorottya"), role = "aut"),
+    person(family = "Nagy", c("Dorottya"),          comment = c(ORCID = "0000-0003-3779-8418"), email = "dorottya.nagy@ndm.ox.ac.uk", role = "aut"),
     person(family = "Chaput", c("Dominique", "L."), comment = c(ORCID = "0000-0002-9736-2619"), role = "aut"),
-    person(family = "Goodman",  c("Richard"),       comment = c(ORCID = "0009-0008-0578-789X"), role = "aut")
+    person(family = "Goodman",  c("Richard", "N."), comment = c(ORCID = "0009-0008-0578-789X"), role = "aut")
     )
 Description: 
     The AMRgen package provides tools for interpreting antimicrobial resistance (AMR) genes, 
@@ -62,8 +62,9 @@ Suggests:
 Remotes:
     msberends/AMR
 License: GPL-3 | file LICENSE
-URL: https://amrgen.org, https://AMRverse.github.io/AMRgen/, https://github.com/AMRverse/AMRgen
+URL: https://amrgen.org, https://github.com/AMRverse/AMRgen
 BugReports: https://github.com/AMRverse/AMRgen/issues
+Language: en-GB
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

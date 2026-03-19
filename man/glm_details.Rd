@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_estimates.R
 \name{glm_details}
 \alias{glm_details}
-\title{Extract Details from a Generalized Linear Model}
+\title{Extract Details from a Generalised Linear Model}
 \usage{
 glm_details(model)
 }

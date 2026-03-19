@@ -15,7 +15,7 @@
 # ===================================================================== #
 
 # Site metadata
-url: 'https://AMRverse.github.io/AMRgen'
+url: 'https://amrgen.org'
 title: 'AMRgen'
 
 # Template settings
@@ -80,10 +80,7 @@ reference:
       - get_binary_matrix
       - get_combo_matrix
       - combo_stats
-      - as.gene
-      - gtdb.mo
       - starts_with("query_ncbi")
-      - hamronize_data
 
   - title: "Resistance Interpretation"
     desc: >
@@ -157,6 +154,11 @@ reference:
       - DASSIM_geno
       - NCBI_Ecoli_AST_chl
       - MICROBIGGE_Ecoli_CHLR
+      - rgi_raw
+      - rgi_short_name_table
+      - rgi_drugs_table
+      - rgi_EuSCAPE_raw
+      - sirscan_codes
 
 # Footer configuration
 footer:

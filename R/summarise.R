@@ -200,27 +200,27 @@ summarise_pheno <- function(pheno_table,
     )
 
   # ensure we have columns for mic and disk, set to NA if they were not in the input
-  if (is.null(mic_col)) {
-    pheno_table <- pheno_table %>% mutate(mic = NA)
+  if (is.null(mic_col) | !(mic_col %in% colnames(pheno_table))) {
+    pheno_table <- pheno_table %>% mutate(mic = NA_character_)
     mic_col <- "mic"
-    cat("No MIC data column provided\n")
+    cat("No MIC data colummn provided\n")
   }
-  if (is.null(disk_col)) {
-    pheno_table <- pheno_table %>% mutate(disk = NA)
+  if (is.null(disk_col) | !(disk_col %in% colnames(pheno_table))) {
+    pheno_table <- pheno_table %>% mutate(disk = NA_character_)
     disk_col <- "disk"
-    cat("No disk data column provided\n")
+    cat("No disk data colummn provided\n")
   }
 
   pheno_table <- pheno_table %>%
     mutate(INTERNAL_measures = case_when(
-      is.na(!!sym(mic_col) & is.na(!!sym(disk_col))) ~ "none",
+      is.na(!!sym(mic_col)) & is.na(!!sym(disk_col)) ~ "none",
       is.na(!!sym(mic_col)) & !is.na(!!sym(disk_col)) ~ "disk",
       !is.na(!!sym(mic_col)) & is.na(!!sym(disk_col)) ~ "mic",
       !is.na(!!sym(mic_col)) & !is.na(!!sym(disk_col)) ~ "both"
     ))
 
   drugs <- pheno_table %>%
-    select(drug_col, spp_col, "INTERNAL_measures") %>%
+    select(any_of(c(drug_col, spp_col, "INTERNAL_measures"))) %>%
     count(across(everything())) %>%
     tidyr::pivot_wider(names_from = "INTERNAL_measures", values_from = n)
 
@@ -240,12 +240,12 @@ summarise_pheno <- function(pheno_table,
   # add pheno counts where available
   pheno_counts_list <- list()
   if (is.null(pheno_cols)) {
-    pheno_cols_list <- pheno_table %>%
+    pheno_cols <- pheno_table %>%
       select(starts_with("pheno"), starts_with("ecoff")) %>%
       colnames()
     cat("No phenotype column names provided via 'pheno_cols'\n")
     cat("These are needed to summarise counts of phenotype category calls per drug.\n")
-    cat(paste0("Relevant columns detected in your input table are: c('", paste(pheno_cols_list, collapse = "','"), "')\n"))
+    cat(paste0("Relevant columns detected in your input table are: c('", paste(pheno_cols, collapse = "','"), "'). Summarising these.\n"))
   }
   if (!is.null(pheno_cols)) {
     for (pheno_col in pheno_cols) {

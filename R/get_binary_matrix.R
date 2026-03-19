@@ -140,14 +140,25 @@ get_binary_matrix <- function(geno_table,
   pheno_matched_rows_unfiltered <- nrow(pheno_matched)
 
   if (most_resistant) { # take most resistant
-    pheno_matched <- pheno_matched %>%
-      arrange(desc(get(sir_col)), desc(mic)) %>%
-      group_by(id) %>%
-      slice_head(n = 1) %>%
-      ungroup()
-    if (nrow(pheno_matched) < pheno_matched_rows_unfiltered) {
-      cat(" Some samples had multiple phenotype rows, taking the most resistant only for binary matrix\n")
-    }
+    if ("mic" %in% colnames(pheno_matched)) {
+      pheno_matched <- pheno_matched %>%
+        arrange(desc(get(sir_col)), desc(mic)) %>%
+        group_by(id) %>%
+        slice_head(n = 1) %>%
+        ungroup()
+      if (nrow(pheno_matched) < pheno_matched_rows_unfiltered) {
+        cat(" Some samples had multiple phenotype rows, taking the most resistant only for binary matrix\n")
+      }
+    } else if ("disk" %in% colnames(pheno_matched)) {
+      pheno_matched <- pheno_matched %>%
+        arrange(desc(get(sir_col)), disk) %>%
+        group_by(id) %>%
+        slice_head(n = 1) %>%
+        ungroup()
+      if (nrow(pheno_matched) < pheno_matched_rows_unfiltered) {
+        cat(" Some samples had multiple phenotype rows, taking the most resistant only for binary matrix\n")
+      }
+    } 
   }
   if (!most_resistant) { # take least resistant
     pheno_matched_rows_unfiltered <- nrow(pheno_matched)

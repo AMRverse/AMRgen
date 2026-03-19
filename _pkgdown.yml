@@ -62,6 +62,7 @@ articles:
       - NeisseriaGonoExamples
       - SalmonellaExamples
       - StaphAureusClindamycin
+      - AnalysingcatB3ChloramphenicolSusceptibility
       - Concordance
 
 # Reference section grouping
@@ -148,6 +149,11 @@ reference:
       - ast_CLI_public
       - afp_CLI_public
       - ST_data_CLI
+      - DASSIM_pheno_raw
+      - btESBL_AST
+      - DASSIM_geno
+      - NCBI_Ecoli_AST_chl
+      - MICROBIGGE_Ecoli_CHLR
       - rgi_raw
       - rgi_short_name_table
       - rgi_drugs_table

@@ -25,7 +25,7 @@
 #' `gcloud auth application-default login`.
 #'
 #' @param taxgroup String specifying the organism group to filter on (e.g.,
-#' "Pseudomonas aeruginosa"). See https://www.ncbi.nlm.nih.gov/pathogens/organisms/
+#' "Pseudomonas aeruginosa"). See <https://www.ncbi.nlm.nih.gov/pathogens/organisms/>
 #' for a list. Required.
 #' @param antibiotic (Optional) String (or vector of strings) specifying the
 #' antibiotic name/s to filter on (default NULL). Uses the AMR package to try

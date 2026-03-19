@@ -4,22 +4,18 @@
 
 This package is developed in collaboration with the ESGEM-AMR Working Group and is tailored for researchers and healthcare professionals tackling AMR globally.
 
-The [AMRgen website](https://amrgen.org) has full function [documentation](https://amrgen.org/reference/index.html) and various [vignette](https://amrgen.org/articles/) working through analysing geno/pheno data using key functions.
+The [AMRgen website](https://amrgen.org) has full function [documentation](https://amrgen.org/reference/index.html) and various [vignettes](https://amrgen.org/articles/) working through analysing geno/pheno data using key functions.
 
 ------------------------------------------------------------------------
 
 ## Key Features
 
--   **Import Genotype and Phenotype Data**: Import from common formats (NCBI or EBI antibiogram format for phenotypes; AMRFinderPlus and hAMRonization for genotypes
+-   **Import Genotype and Phenotype Data**: Import from common formats (NCBI or EBI antibiogram format, VITEK, Sensititre, MicroScan, Phoenix, WHONet for phenotypes; AMRFinderPlus, Abricate, Kleborate, RGI and AMRrules for genotypes.
 -   **Genotype-Phenotype Integration**: Links AMR gene presence with phenotypic resistance profiles, enabling deeper insights into resistance mechanisms.
 -   **Automated EUCAST MIC Distribution Integration**: Fetch MIC distribution data directly from [EUCAST](https://mic.eucast.org) for seamless comparison with local susceptibility data.
 -   **Visualisation**: Generate powerful UpSet plots to identify intersections of AMR gene presence and phenotypic resistance, highlighting multidrug resistance patterns.
 -   **Modular and Extensible**: Leverages the robust foundation of the AMR package, including antibiotic selectors and clinical breakpoint interpretations.
-
-Planned for development:
-
--   **NCBI-Compliant Export**: Export phenotype data to NCBI-compliant antibiogram format.
--   **Expanded Data Import**: Import and parse phenotype data from other tools (e.g. CARD, ResFinder).
+-   **NCBI- and EBI-Compliant Export**: Export phenotype data to NCBI- and EBI-compliant antibiogram format.
 
 ------------------------------------------------------------------------
 
@@ -58,6 +54,8 @@ library(AMRgen)
 
 ### Investigate ciprofloxacin resistance vs quinolone genotype markers, via solo PPV and upset plots
 
+Below is a quick example demonstrating the major functions with AMRgen and how they can be used to compare ciprofloxacin resistance phenotypes with quinolone genotype markers, in *E. coli*. 
+
 ```r
 # Example public E. coli AST data from NCBI
 #  (already imported via import_ncbi_ast() and re-interpreted with as.sir())
@@ -81,7 +79,49 @@ cip_ppv <- ppv(binary_matrix=soloPPV_cipro$amr_binary, min_set_size=5)
 #  (for markers observed at least 10 times)
 models <- amr_logistic(binary_matrix=soloPPV_cipro$amr_binary, maf=10)
 
+# Caclulate concordance of genotype and phenotype markers
+eco_cip_matrix <- get_binary_matrix(ecoli_geno, ecoli_ast, antibiotic = "Ciprofloxacin", drug_class_list = "Quinolones", sir_col = "pheno_provided", keep_assay_values = TRUE, keep_assay_values_from = "mic")
+
+concordance_cip <- concordance(eco_cip_matrix)
 ```
+
+## Importing geno or pheno data
+
+To learn how to download data from the public archives [NCBI or EBI](http://amrgen.org/articles/DownloadGenoPhenoData.html)
+
+You can see all the various phenotypic import functions for the following formats by running:
+```r
+?import_ast
+```
+
+Currently, AMRgen supports the following phenotype formats:
+
+* EBI
+* NCBI
+* VITEK
+* MicroScan
+* SensiTitre
+* WHOnet
+
+Phenotype data can also be exported in NCBI or EBI formats, for upload to the public archives:
+```r
+?export_ncbi_ast
+?export_ebi_ast
+```
+
+## Example analyses using AMRgen
+
+For a complete example of how to analyse your genotypic and phenotypic data together, see [Analysing Geno-Pheno Data](http://amrgen.org/articles/AnalysingGenoPhenoData.html).
+
+Example analysis of a small *Salmonella enterica* dataset for [ciprofloxacin resistance](http://amrgen.org/articles/SalmonellaExamples.html)
+
+Example analysis of clindamycin resistance in [*Staphylococcus aureus*](http://amrgen.org/articles/StaphAureusClindamycin.html)
+
+Example analysis using large-scale surviellance genotype and phenotype data in [*Neiserria gonohorroeae*](http://amrgen.org/articles/NeisseriaGonoExamples.html)
+
+How to assess concordance of predicted phenotypes with [observed phenotypes](http://amrgen.org/articles/Concordance.html)
+
+For more see the various [vignettes](https://amrgen.org/articles/).
 
 ### Download reference MIC distribution from eucast.org and compare to example data
 
@@ -99,69 +139,6 @@ comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
 comparison
 ggplot2::autoplot(comparison)
 ```
-
-### Download phenotype or genotype data from EBI's AMR portal
-
-```r
-# Get phenotype data for ciprofloxacin in E. coli
-ebi_pheno_ecoli_cip <- download_ebi(species = "Escherichia coli", antibiotic="Cipro", reformat=T)
-
-# Check how many observations we have for MIC data
-ebi_pheno_ecoli_cip %>% filter(!is.na(mic)) %>% nrow()
-
-# Plot MIC distribution, stratified by platform
-assay_by_var(ebi_pheno_ecoli_cip, measure="mic", colour_by = "pheno_provided", facet_var = "platform")
-
-# Compare MIC values with reference distribution from EUCAST
-compare_mics <- compare_mic_with_eucast(ebi_pheno_ecoli_cip$mic, ab = "cipro", mo = "E. coli")
-compare_mics
-ggplot2::autoplot(compare_mics)
-
-# Compare disk diffusion zone values with reference distribution from EUCAST
-compare_disk <- compare_disk_with_eucast(ebi_pheno_ecoli_cip$disk, ab = "cipro", mo = "E. coli")
-compare_disk
-ggplot2::autoplot(compare_disk)
-
-# Get genotype data for ciprofloxacin in E. coli
-ebi_geno <- download_ebi(data="genotype", species = "Escherichia coli", geno_subclass="QUINOLONE", reformat=T)
-
-# Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
-#  (for combinations observed at least 5 times)
-cip_upset_ebi_mic <- amr_upset(geno_table=ecoli_geno, pheno_table=ebi_pheno_ecoli_cip, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_provided", min_set_size=5, assay="mic", order="value")
-```
-
-### Download phenotype data from NCBI BioSample
-
-```r
-# Get all available phenotype data for Klebsiella quasipneumoniae
-# (note this is a small example with <100 samples, as this function queries NCBI BioSample via rentrez and is quite slow)
-ast <- download_ncbi_ast(
-  "Klebsiella quasipneumoniae",
-  reformat = TRUE
-)
-
-# Plot MIC distribution, stratified by platform
-assay_by_var(ast, measure="mic", colour_by = "pheno_provided", facet_var = "platform")
-
-# The downloaded S/I/R calls look odd, so re-interpret direct with latest EUCAST breakpoints and review
-ast <- interpret_ast(ast, interpret_eucast = T, interpret_clsi=T)
-assay_by_var(ast, measure="mic", colour_by = "pheno_eucast", facet_var = "platform")
-assay_by_var(ast, measure="mic", colour_by = "pheno_clsi", facet_var = "platform")
-```
-
-### Import and export 
-
-```r
-# Import phenotype data in NCBI, EBI, Vitek, Sensititre, MicroScan, WHOnet formats
-?import_ast
-
-# Export phenotype data in NCBI or EBI formats
-?export_ncbi_ast
-?export_ebi_ast
-```
-
-For more the various [vignettes](https://amrgen.org/articles/).
-
 
 ## Contributions
 

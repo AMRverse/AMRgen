@@ -84,10 +84,10 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
     if ("drug_agent" %in% colnames(pheno_table)) {
       pheno_table <- pheno_table %>% filter(drug_agent == as.ab(antibiotic))
       if (nrow(pheno_table) == 0) {
-        stop(paste0("Antibiotic '", antibiotic, "' not found in drug_agent column"))
+        stop("Antibiotic '", antibiotic, "' not found in drug_agent column")
       }
     } else {
-      cat(paste0("WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.\nEnsure your input table is already filtered to the antibiotic.\n"))
+      warning("Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.\nEnsure your input table is already filtered to the antibiotic.")
     }
   }
 
@@ -107,7 +107,7 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
 
   if (!is.null(colour_by)) {
     if (!(colour_by %in% colnames(pheno_table))) {
-      cat(paste0("WARNING: Colour variable '", colour_by, "' not found in input table\n"))
+      warning("Colour variable '", colour_by, "' not found in input table")
       colour_by <- NULL
     } else {
       pheno_table <- pheno_table %>%

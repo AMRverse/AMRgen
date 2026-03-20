@@ -122,9 +122,9 @@ checkBreakpoints <- function(species, guide = "EUCAST 2024", antibiotic, assay =
     } else {
       breakpoint_message <- paste("Disk diffusion breakpoints determined using AMR package: S >=", breakpoint_S, "and R <", breakpoint_R)
     }
-    cat(paste0("  ", breakpoint_message, "\n"))
+    message("  ", breakpoint_message)
     if (!is.na(breakpoint_message_multibp)) {
-      cat(paste0("  ", breakpoint_message_multibp, "\n"))
+      message("  ", breakpoint_message_multibp)
     }
   }
   return(list(breakpoint_S = breakpoint_S, breakpoint_R = breakpoint_R, bp_standard = bp_standard))

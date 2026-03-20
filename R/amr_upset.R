@@ -92,7 +92,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   if (sum(!is.na(binary_matrix$pheno)) == 0) {
     if (sum(!is.na(binary_matrix$ecoff)) > 0) {
       binary_matrix <- binary_matrix %>% mutate(pheno = ecoff)
-      cat(" Warning: no values in pheno column, colouring upset plot by ecoff column\n")
+      warning("no values in pheno column, colouring upset plot by ecoff column")
     } else {
       stop(" Failed to make upset plot as no values in field pheno or ecoff")
     }
@@ -104,7 +104,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   # remove rows with no call
   na_to_remove <- sum(is.na(binary_matrix$pheno))
   if (na_to_remove > 0) {
-    cat(" Removing", na_to_remove, "rows with no phenotype call\n")
+    message("Removing ", na_to_remove, " rows with no phenotype call")
     binary_matrix <- binary_matrix %>% filter(!is.na(pheno))
   }
 
@@ -116,10 +116,10 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   # check we have the expected assay column, with data
   if (!is.null(assay)) {
     if (!(assay %in% c("mic", "disk"))) {
-      cat(paste("In valid `assay` value:", assay, "\n"))
+      message("In valid `assay` value: ", assay)
       assay <- NULL
     } else if (!(assay %in% colnames(binary_matrix))) {
-      stop(paste("input", deparse(substitute(binary_matrix)), "must have a column labelled ", assay))
+      stop("input ", deparse(substitute(binary_matrix)), " must have a column labelled ", assay)
     }
   }
   if (!is.null(assay)) {
@@ -343,7 +343,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   # Do by # median assay value in combination (only want each id once)
   else if (order == "value") {
     if (is.null(assay)) {
-      cat("Order set to value, but `assay` not provided. Ordering by genes (set size) instead.\n")
+      message("Order set to value, but `assay` not provided. Ordering by genes (set size) instead.")
     } else {
       if (assay == "mic") {
         # use mic class median (ie ignoring range indicators <>=) for the purpose of ordering columns
@@ -596,7 +596,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 
   # get binary matrix
   if (is.null(binary_matrix)) {
-    cat("Generating geno-pheno binary matrix\n")
+    message("Generating geno-pheno binary matrix")
     binary_matrix <- get_binary_matrix(
       geno_table = geno_table,
       pheno_table = pheno_table,
@@ -765,7 +765,7 @@ ppv <- function(binary_matrix = NULL,
                 pd = position_dodge(width = 0.8)) {
   # get binary matrix
   if (is.null(binary_matrix)) {
-    cat("Generating geno-pheno binary matrix\n")
+    message("Generating geno-pheno binary matrix")
     binary_matrix <- get_binary_matrix(
       geno_table = geno_table,
       pheno_table = pheno_table,

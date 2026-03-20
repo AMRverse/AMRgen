@@ -2230,18 +2230,17 @@ import_phoenix_ast <- function(input,
 #' )
 #' }
 import_sirscan_ast <- function(
-  mic_file = NULL,
-  disk_file = NULL,
-  interpr_file = NULL,
-  source = NULL,
-  species = NULL,
-  ab = NULL,
-  instrument_guideline = NULL,
-  sirscan_codes = sirscan_codes,
-  interpret_eucast = FALSE,
-  interpret_clsi = FALSE,
-  interpret_ecoff = FALSE
-) {
+    mic_file = NULL,
+    disk_file = NULL,
+    interpr_file = NULL,
+    source = NULL,
+    species = NULL,
+    ab = NULL,
+    instrument_guideline = NULL,
+    sirscan_codes = sirscan_codes,
+    interpret_eucast = FALSE,
+    interpret_clsi = FALSE,
+    interpret_ecoff = FALSE) {
   if (is.null(mic_file) && is.null(disk_file) && is.null(interpr_file)) {
     stop("At least one of 'mic_file', 'disk_file', or 'interpr_file' must be provided")
   }

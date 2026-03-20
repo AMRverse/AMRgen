@@ -16,7 +16,7 @@
 
 #' Generate a Series of Plots for AMR Gene and Combination Analysis
 #'
-#' This function generates a set of visualisations to analyse AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The [amr_upset()] and [ppv()] functions can be used to generate standard data visualisations using the component plots.
+#' This internal function generates a set of visualisations to analyse AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The [amr_upset()] and [ppv()] functions can be used to generate standard data visualisations using the component plots.
 #' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. Expected columns are an identifier (column 1, any name), `pheno` (class sir, with S/I/R categories to colour points), `mic` (class mic, with MIC values to plot), and other columns representing gene presence/absence (binary coded, i.e., 1 = present, 0 = absent).
 #' @param min_set_size An integer specifying the minimum size for a gene set to be included in the analysis and plots. Default is 2. Only marker combinations with at least this number of occurrences are included in the plots.
 #' @param order A character string indicating the order of the combinations on the x-axis. Options are:
@@ -25,14 +25,14 @@
 #' - `"value"`: order by the median assay value (MIC or disk zone) for each combination
 #' - `"ppv"`: order by the PPV estimated for each combination
 #' @param boxplot_col Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is `"grey"`.
-#' @param SIR_col A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package [scale_colour_sir()].
+#' @param SIR_col A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and the values should be valid colour names or hexadecimal colour codes. Default values are those used in the AMR package [scale_colour_sir()].
 #' @param assay A character string indicating whether to plot MIC or disk diffusion data. Must be one of:
 #' - `"mic"` (default): plot MIC data stored in column `mic`
 #' - `"disk"`: plot disk diffusion data stored in column `disk`
 #' - `NULL`: don't plot or summarise assay data
 #' @param print_set_size Logical indicating whether, if `plot_set_size=TRUE`, to print the number of strains with each marker combination on the plot. Default is `FALSE`.
 #' @param print_category_counts Logical indicating whether, if `plot_category=TRUE`, to print the number of strains in each resistance category for each marker combination in the plot. Default is `FALSE`.
-#' @param colours_ppv A named vector of colours for the plot of PPV estimates. The names should be `"R"`, `"I"` and `"NWT"`, and the values should be valid color names or hexadecimal color codes.
+#' @param colours_ppv A named vector of colours for the plot of PPV estimates. The names should be `"R"`, `"I"` and `"NWT"`, and the values should be valid colour names or hexadecimal colour codes.
 #' @param pd A `ggplot2::position_dodge()` object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default is `position_dodge(width = 0.8)`.
 #' @param bp_S (optional) S breakpoint to add to plot (numerical).
 #' @param bp_R (optional) R breakpoint to add to plot (numerical).
@@ -62,7 +62,6 @@
 #' isolates are included in the analysis. Median and interquartile range
 #' are calculated per combination. For MIC data, medians may optionally
 #' exclude values expressed as ranges (e.g. "<=0.25").
-#' @export
 #' @examples
 #' \dontrun{
 #' ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
@@ -461,7 +460,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
         x = combination_id, xend = combination_id,
         y = min, yend = max, group = combination_id
       ),
-      color = "black"
+      colour = "black"
     )
 
   ### Plot gene prev / set size
@@ -532,7 +531,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' @param plot_category Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the `pheno` column in the input file). Default is `TRUE`.
 #' @param print_category_counts Logical indicating whether, if `plot_category=TRUE`, to print the number of strains in each resistance category for each marker combination in the plot. Default is `FALSE`.
 #' @param boxplot_col Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is `"grey"`.
-#' @param SIR_col A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package [scale_colour_sir()].
+#' @param SIR_col A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and the values should be valid colour names or hexadecimal colour codes. Default values are those used in the AMR package [scale_colour_sir()].
 #' @param bp_S (optional) S breakpoint to add to plot (numerical).
 #' @param bp_R (optional) R breakpoint to add to plot (numerical).
 #' @param ecoff_bp (optional) ECOFF breakpoint to add to plot (numerical).
@@ -687,8 +686,8 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
 #' @param ecoff_col A character string specifying the column name in `pheno_table` that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Default `"marker"`. Only used if `binary_matrix` not provided.
-#' @param colours_ppv A named vector of colours for the plot of PPV estimates. The names should be `"R"`, `"I"` and `"NWT"`, and the values should be valid color names or hexadecimal color codes.
-#' @param SIR_col A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package [scale_colour_sir()].
+#' @param colours_ppv A named vector of colours for the plot of PPV estimates. The names should be `"R"`, `"I"` and `"NWT"`, and the values should be valid colour names or hexadecimal colour codes.
+#' @param SIR_col A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and the values should be valid colour names or hexadecimal colour codes. Default values are those used in the AMR package [scale_colour_sir()].
 #' @param upset_grid Logical indicating whether to show marker combinations as an upset plot-style grid (default `FALSE`, so that each row is instead labelled with a printed list of markers).
 #' @param marker_label_space Relative width of plotting area to provide to the marker list/grid. (Default `NULL`, which results in a default value of 3 when `upset_grid=FALSE` and 1 otherwise).
 #' @param plot_category Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the `pheno` column in the input file). Default is `TRUE`.
@@ -858,7 +857,7 @@ ppv <- function(binary_matrix = NULL,
         axis.text.x = element_text(angle = 45, hjust = 1)
       )
     if (plot_category) {
-      final_plot <- final_plot + guides(color = "none") # already have SIR legend
+      final_plot <- final_plot + guides(colour = "none") # already have SIR legend
     }
   }
 

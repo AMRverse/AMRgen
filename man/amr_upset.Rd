@@ -79,7 +79,7 @@ amr_upset(
 
 \item{boxplot_col}{Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is \code{"grey"}.}
 
-\item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
+\item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid colour names or hexadecimal colour codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
 
 \item{species}{Optional. Species name used for breakpoint lookup.}
 

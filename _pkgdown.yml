@@ -79,7 +79,6 @@ reference:
       - starts_with("format")
       - get_binary_matrix
       - get_combo_matrix
-      - combo_stats
       - starts_with("query_ncbi")
 
   - title: "Resistance Interpretation"

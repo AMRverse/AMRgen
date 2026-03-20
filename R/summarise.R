@@ -12,12 +12,10 @@
 #' @param force_ab Logical. If `TRUE`, attempts to convert entries in `drug_col` to antibiotic names using [as.ab] even if this column is not of class `"ab"` Default is `FALSE`.
 #'
 #' @return A named list with the following elements:
-#' \describe{
-#'   \item{uniques}{A tibble of the number of unique samples, markers, genes, drugs, classes and variation types detected in `geno_table`.}
-#'   \item{per_type}{A tibble of unique counts of samples, markers, genes, drugs, and classes per variation type.}
-#'   \item{drugs}{A tibble listing the drugs and/or drug classes represented in the table, and the associated number of unique markers, unique samples, and total hits for each drug/class.}
-#'   \item{markers}{A tibble listing the markers represented in the table, and the associated drugs/classes and variation types (if present). Number indicates the count of hits detected per marker.}
-#' }
+#' * `uniques`: A tibble of the number of unique samples, markers, genes, drugs, classes and variation types detected in `geno_table`.
+#' * `per_type`: A tibble of unique counts of samples, markers, genes, drugs, and classes per variation type.
+#' * `drugs`: A tibble listing the drugs and/or drug classes represented in the table, and the associated number of unique markers, unique samples, and total hits for each drug/class.
+#' * `markers`: A tibble listing the markers represented in the table, and the associated drugs/classes and variation types (if present). Number indicates the count of hits detected per marker.
 #'
 #' @details
 #' The function automatically adapts to the presence or absence of columns in `geno_table`.
@@ -160,12 +158,10 @@ summarise_geno <- function(geno_table,
 #' @param force_ab Logical. If `TRUE`, attempts to convert entries in `drug_col` to antibiotic names using [as.ab] even if this column is not of class `"ab"` Default is `FALSE`.
 #'
 #' @return A named list with the following elements:
-#' \describe{
-#'   \item{uniques}{A tibble of the number of unique samples, drugs, organisms, and methods detected in `pheno_table`.}
-#'   \item{drugs}{A tibble listing the drugs included in the table, and the associated number of samples with MIC measures, disk measures, neither or both, for each drug and species.}
-#'   \item{details}{A tibble listing more details of the methods of assay measurements, per drug and species.}
-#'   \item{pheno_counts_list}{A list of tibbles, each corresponding to a unique categorical phenotype column in the input, indicating the counts of each phenotypic category per drug and species.}
-#' }
+#' * `uniques`: A tibble of the number of unique samples, drugs, organisms, and methods detected in `pheno_table`.
+#' * `drugs`: A tibble listing the drugs included in the table, and the associated number of samples with MIC measures, disk measures, neither or both, for each drug and species.
+#' * `details`: A tibble listing more details of the methods of assay measurements, per drug and species.
+#' * `pheno_counts_list`: A list of tibbles, each corresponding to a unique categorical phenotype column in the input, indicating the counts of each phenotypic category per drug and species.
 #'
 #' @details
 #' The function automatically adapts to the presence or absence of columns in `pheno_table`.
@@ -315,12 +311,11 @@ summarise_pheno <- function(pheno_table,
 #' @param method_cols Vector. Vector giving names of columns in the phenotype table containing method or source information by which to summarise MIC/disk data. Default is `c("method", "platform", "guideline", "source")`.
 #'
 #' @return A named list with the following elements:
-#' \describe{
-#'   \item{drugs_with_pheno}{A tibble listing the drugs included in the table, and the associated number of samples with MIC measures, disk measures, neither or both, for each drug; restricted to samples that also appear in the genotype table.}
-#'   \item{geno_hits}{A tibble listing the drugs and/or drug classes corresponding to drugs with phenotypes, and the associated number of unique markers, unique samples, and total hits for each drug/class amongst samples with corresponding phenotype data.}
-#'   \item{geno_markers}{A tibble listing the genotypic markers in the genotype table corresponding to drugs with phenotypes, and the associated drugs/classes and variation types (if present). Number indicates the count of hits detected per marker, amongst samples with corresponding phenotype data.}
-#'   \item{pheno_counts_list}{A list of tibbles, each corresponding to a unique categorical phenotype column in the input, indicating the counts of each phenotypic category per drug and species; restricted to samples that also appear in the genotype table.}
-#' }
+#' * `drugs_with_pheno`: A tibble listing the drugs included in the table, and the associated number of samples with MIC measures, disk measures, neither or both, for each drug; restricted to samples that also appear in the genotype table.
+#' * `geno_hits`: A tibble listing the drugs and/or drug classes corresponding to drugs with phenotypes, and the associated number of unique markers, unique samples, and total hits for each drug/class amongst samples with corresponding phenotype data.
+#' * `geno_markers`: A tibble listing the genotypic markers in the genotype table corresponding to drugs with phenotypes, and the associated drugs/classes and variation types (if present). Number indicates the count of hits detected per marker, amongst samples with corresponding phenotype data.
+#' * `pheno_counts_list`: A list of tibbles, each corresponding to a unique categorical phenotype column in the input, indicating the counts of each phenotypic category per drug and species; restricted to samples that also appear in the genotype table.
+#'
 #' @details
 #' The function automatically adapts to the presence or absence of columns in `pheno_table`.
 #' The `force_ab` parameter allows the addition of full antibiotic names using the `ab_name()` function even when the first column is not recognized as an `"ab"` object.

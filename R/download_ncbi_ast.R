@@ -99,12 +99,13 @@
 #' )
 #' }
 #'
-#' @import rentrez
-#' @import tibble
-#' @import XML
+#' @importFrom rentrez entrez_search entrez_fetch
+#' @importFrom tibble as_tibble tibble
+#' @importFrom XML xmlToList
 #' @importFrom AMR ab_name as.ab
 #' @importFrom purrr modify_tree pluck
 #' @importFrom dplyr bind_rows select filter mutate
+#' @importFrom stringr str_trim
 #' @export
 download_ncbi_ast <- function(species,
                               antibiotic = NULL,
@@ -121,10 +122,10 @@ download_ncbi_ast <- function(species,
   }
 
   # Build query term for entrez
-  entrez_term <- paste0(stringr::str_trim(tolower(species)), "[orgn] AND antibiogram[filter]")
+  entrez_term <- paste0(str_trim(tolower(species)), "[orgn] AND antibiogram[filter]")
 
   # Search for AST entries by pathogen
-  search <- rentrez::entrez_search(
+  search <- entrez_search(
     db = "biosample",
     term = entrez_term,
     retmax = max_records
@@ -150,7 +151,7 @@ download_ncbi_ast <- function(species,
   for (sample in seq(1, length(ids), by = batch_size)) {
     # account for remainder when batching
     if ((sample - 1 + batch_size > length(ids))) {
-      data_xml <- rentrez::entrez_fetch(
+      data_xml <- entrez_fetch(
         db = "biosample",
         id = ids[sample:(length(ids))],
         rettype = "xml",
@@ -162,7 +163,7 @@ download_ncbi_ast <- function(species,
         length(ids), "... \n"
       ))
     } else {
-      data_xml <- rentrez::entrez_fetch(
+      data_xml <- entrez_fetch(
         db = "biosample",
         id = ids[sample:(sample - 1 + batch_size)],
         rettype = "xml",
@@ -176,7 +177,7 @@ download_ncbi_ast <- function(species,
     }
 
     # Flatten XML
-    data_list <- XML::xmlToList(data_xml)
+    data_list <- xmlToList(data_xml)
 
     # extract records
     for (record in 1:length(data_list)) {
@@ -192,7 +193,7 @@ download_ncbi_ast <- function(species,
 
         # Preserve null data points by converting to NA (for headers)
         temp_entry <- temp_entry %>%
-          purrr::modify_tree(
+          modify_tree(
             leaf = \(x) if (is.null(x)) NA else x,
             post = unlist
           ) %>%
@@ -204,20 +205,20 @@ download_ncbi_ast <- function(species,
 
         # Extract BioProject accession while accounting for two varying flattened
         # xml node structures with duplicated identifiers
-        bioproj <- purrr::pluck(data_list[record], "BioSample", "Links", 2, "Link", ".attrs", 3, .default = NA)
+        bioproj <- pluck(data_list[record], "BioSample", "Links", 2, "Link", ".attrs", 3, .default = NA)
 
         if (is.na(bioproj)) {
-          bioproj <- purrr::pluck(data_list[record], "BioSample", "Links", "Link", ".attrs", 3, .default = NA)
+          bioproj <- pluck(data_list[record], "BioSample", "Links", "Link", ".attrs", 3, .default = NA)
         } else {
           bioproj <- NA # when no data listed - very rare
         }
 
         # Extract organism name while accounting for two varied flattened
         # xml node structures
-        organism_name <- purrr::pluck(data_list[record], "BioSample", "Description", "Organism", "OrganismName", .default = NA)
+        organism_name <- pluck(data_list[record], "BioSample", "Description", "Organism", "OrganismName", .default = NA)
 
         if (is.na(organism_name)) {
-          organism_name <- purrr::pluck(data_list[record], "BioSample", "Description", "Organism", "taxonomy_name", .default = NA)
+          organism_name <- pluck(data_list[record], "BioSample", "Description", "Organism", "taxonomy_name", .default = NA)
         }
 
         # Add accessions and organism cols to AST data
@@ -246,7 +247,7 @@ download_ncbi_ast <- function(species,
   # filter data by drug where specified by user
   if (!is.null(antibiotic)) {
     if (!force_antibiotic) {
-      antibiotic <- na.omit(tolower(AMR::ab_name(AMR::as.ab(antibiotic))))
+      antibiotic <- na.omit(ab_name(as.ab(antibiotic), tolower = TRUE))
     }
 
     cat(paste("...Filtering by antibiotic:", paste(antibiotic, collapse = ", "), "\n"))

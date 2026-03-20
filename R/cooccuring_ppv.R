@@ -17,15 +17,15 @@
 #' @param plot_cols Named vector of colors for "R" and "NWT".
 #'
 #' @return A list containing:
-#' \item{stats}{Data frame of calculated PPV statistics per profile.}
-#' \item{plot}{The combined ggplot/patchwork object.}
-#' \item{data}{The filtered data frame used for the analysis.}
+#' * `stats`: Data frame of calculated PPV statistics per profile.
+#' * `plot`: The combined ggplot/patchwork object.
+#' * `data`: The filtered data frame used for the analysis.
 #' @export
-#' @import dplyr
-#' @import ggplot2
-#' @import patchwork
+#' @importFrom dplyr filter group_by summarise mutate bind_rows relocate rename arrange pull count n
+#' @importFrom ggplot2 ggplot aes geom_segment geom_point geom_bar geom_text geom_vline geom_linerange theme_light scale_x_discrete scale_fill_manual scale_y_discrete scale_x_continuous scale_colour_manual labs theme element_blank element_text position_dodge position_fill after_stat
+#' @importFrom patchwork plot_layout plot_annotation
 #' @importFrom AMR scale_fill_sir
-#' @importFrom tidyr pivot_longer unnest
+#' @importFrom tidyr unnest
 #' @examples
 #' \dontrun{
 #' geno_table <- import_amrfp(ecoli_geno_raw, "Name")
@@ -141,7 +141,7 @@ cooccuring_ppv_analysis <- function(geno_table, pheno_table, antibiotic, drug_cl
     # The Matrix Grid
     geom_segment(
       data = matrix_lines, aes(x = min, xend = max, y = marker, yend = marker),
-      color = "grey50", linewidth = 0.5
+      colour = "grey50", linewidth = 0.5
     ) +
     geom_point(size = 3) +
     theme_light() +
@@ -186,7 +186,7 @@ cooccuring_ppv_analysis <- function(geno_table, pheno_table, antibiotic, drug_cl
   y_axis_labels <- paste0("(n=", label_data$n, ")")
 
   g_ppv <- ggplot(profile_stats, aes(y = marker, group = category, col = category)) +
-    geom_vline(xintercept = 0.5, linetype = 2, color = "grey") +
+    geom_vline(xintercept = 0.5, linetype = 2, colour = "grey") +
     geom_linerange(aes(xmin = ci.lower, xmax = ci.upper), position = pd) +
     geom_point(aes(x = ppv), position = pd) +
     theme_light() +

@@ -209,13 +209,13 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
 
     # add breakpoints to plot
     if (!is.null(bp_S)) {
-      plot_all <- plot_all + geom_vline(xintercept = bp_S, color = bp_cols["S"], linetype = 2)
+      plot_all <- plot_all + geom_vline(xintercept = bp_S, colour = bp_cols["S"], linetype = 2)
     }
     if (!is.null(bp_R)) {
-      plot_all <- plot_all + geom_vline(xintercept = bp_R, color = bp_cols["R"], linetype = 2)
+      plot_all <- plot_all + geom_vline(xintercept = bp_R, colour = bp_cols["R"], linetype = 2)
     }
     if (!is.null(bp_ecoff)) {
-      plot_all <- plot_all + geom_vline(xintercept = bp_ecoff, color = bp_cols["E"], linetype = 2)
+      plot_all <- plot_all + geom_vline(xintercept = bp_ecoff, colour = bp_cols["E"], linetype = 2)
     }
   } else {
     plot_all <- NULL

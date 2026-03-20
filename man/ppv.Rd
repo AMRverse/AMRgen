@@ -67,9 +67,9 @@ ppv(
 
 \item{marker_col}{A character string specifying the column name in \code{geno_table} containing the marker identifiers. Default \code{"marker"}. Only used if \code{binary_matrix} not provided.}
 
-\item{colours_ppv}{A named vector of colours for the plot of PPV estimates. The names should be \code{"R"}, \code{"I"} and \code{"NWT"}, and the values should be valid color names or hexadecimal color codes.}
+\item{colours_ppv}{A named vector of colours for the plot of PPV estimates. The names should be \code{"R"}, \code{"I"} and \code{"NWT"}, and the values should be valid colour names or hexadecimal colour codes.}
 
-\item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
+\item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid colour names or hexadecimal colour codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
 
 \item{upset_grid}{Logical indicating whether to show marker combinations as an upset plot-style grid (default \code{FALSE}, so that each row is instead labelled with a printed list of markers).}
 

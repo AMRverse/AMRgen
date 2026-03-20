@@ -49,9 +49,11 @@ cooccuring_ppv_analysis(
 }
 \value{
 A list containing:
-\item{stats}{Data frame of calculated PPV statistics per profile.}
-\item{plot}{The combined ggplot/patchwork object.}
-\item{data}{The filtered data frame used for the analysis.}
+\itemize{
+\item \code{stats}: Data frame of calculated PPV statistics per profile.
+\item \code{plot}: The combined ggplot/patchwork object.
+\item \code{data}: The filtered data frame used for the analysis.
+}
 }
 \description{
 This function performs a Positive Predictive Value (PPV) analysis for single or multiple AMR markers associated with a given antibiotic and drug class. It calculates the PPV for single and co-occurring markers and visualizes the results using UpSet-style matrix plot.

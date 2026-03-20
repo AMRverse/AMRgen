@@ -48,11 +48,11 @@ combo_stats(
 
 \item{print_category_counts}{Logical indicating whether, if \code{plot_category=TRUE}, to print the number of strains in each resistance category for each marker combination in the plot. Default is \code{FALSE}.}
 
-\item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid color names or hexadecimal color codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
+\item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid colour names or hexadecimal colour codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
 
 \item{boxplot_col}{Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is \code{"grey"}.}
 
-\item{colours_ppv}{A named vector of colours for the plot of PPV estimates. The names should be \code{"R"}, \code{"I"} and \code{"NWT"}, and the values should be valid color names or hexadecimal color codes.}
+\item{colours_ppv}{A named vector of colours for the plot of PPV estimates. The names should be \code{"R"}, \code{"I"} and \code{"NWT"}, and the values should be valid colour names or hexadecimal colour codes.}
 
 \item{antibiotic}{Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.}
 
@@ -83,7 +83,7 @@ A list containing the following elements:
 }
 }
 \description{
-This function generates a set of visualisations to analyse AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The \code{\link[=amr_upset]{amr_upset()}} and \code{\link[=ppv]{ppv()}} functions can be used to generate standard data visualisations using the component plots.
+This internal function generates a set of visualisations to analyse AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The \code{\link[=amr_upset]{amr_upset()}} and \code{\link[=ppv]{ppv()}} functions can be used to generate standard data visualisations using the component plots.
 }
 \details{
 Marker combinations are defined as unique patterns of gene presence/absence

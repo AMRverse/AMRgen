@@ -37,11 +37,11 @@ summarise_pheno(
 }
 \value{
 A named list with the following elements:
-\describe{
-\item{uniques}{A tibble of the number of unique samples, drugs, organisms, and methods detected in \code{pheno_table}.}
-\item{drugs}{A tibble listing the drugs included in the table, and the associated number of samples with MIC measures, disk measures, neither or both, for each drug and species.}
-\item{details}{A tibble listing more details of the methods of assay measurements, per drug and species.}
-\item{pheno_counts_list}{A list of tibbles, each corresponding to a unique categorical phenotype column in the input, indicating the counts of each phenotypic category per drug and species.}
+\itemize{
+\item \code{uniques}: A tibble of the number of unique samples, drugs, organisms, and methods detected in \code{pheno_table}.
+\item \code{drugs}: A tibble listing the drugs included in the table, and the associated number of samples with MIC measures, disk measures, neither or both, for each drug and species.
+\item \code{details}: A tibble listing more details of the methods of assay measurements, per drug and species.
+\item \code{pheno_counts_list}: A list of tibbles, each corresponding to a unique categorical phenotype column in the input, indicating the counts of each phenotypic category per drug and species.
 }
 }
 \description{

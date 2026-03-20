@@ -62,6 +62,7 @@
 #' isolates are included in the analysis. Median and interquartile range
 #' are calculated per combination. For MIC data, medians may optionally
 #' exclude values expressed as ranges (e.g. "<=0.25").
+#' @noRd
 #' @examples
 #' \dontrun{
 #' ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")

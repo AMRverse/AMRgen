@@ -463,7 +463,7 @@ import_kleborate <- function(input_table,
 #' @param rgi_drugs A tibble containing a reference table mapping CARD drug class / drug agents to standardised drug classes/names. Defaults to `rgi_drugs_table`, which is provided internally.
 #' @param samples_no_amr A vector of sample IDs that have no RGI output because there are no AMR markers identified. For example `c("SampleA", "SampleB")`. (default = `NULL`)
 #' @importFrom AMR as.ab ab_group
-#' @importFrom dplyr filter left_join mutate select bind_rows
+#' @importFrom dplyr filter left_join mutate select bind_rows anti_join
 #' @importFrom tidyr separate_longer_delim
 #' @importFrom stringr str_remove_all
 #' @return A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible. The output retains the original columns from the RGI output along with the newly mapped variables.

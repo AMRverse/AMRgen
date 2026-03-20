@@ -104,6 +104,7 @@ reference:
       - checkBreakpoints
       - concordance
       - concordance_from_tables
+      - cooccuring_ppv_analysis
       - print.amr_concordance
 
   - title: "Visualisation & Reporting"

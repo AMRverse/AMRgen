@@ -13,7 +13,8 @@ import_rgi(
   class_col = "Drug Class",
   exclude_loose = TRUE,
   rgi_short_name = rgi_short_name_table,
-  rgi_drugs = rgi_drugs_table
+  rgi_drugs = rgi_drugs_table,
+  samples_no_amr = NULL
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ import_rgi(
 \item{rgi_short_name}{A tibble containing a reference table mapping model IDs (from CARD/RGI) to shortened model names as provided by CARD (\url{https://card.mcmaster.ca/download} in aro_index.tsv). Defaults to \code{rgi_short_name_table}, which is provided internally.}
 
 \item{rgi_drugs}{A tibble containing a reference table mapping CARD drug class / drug agents to standardised drug classes/names. Defaults to \code{rgi_drugs_table}, which is provided internally.}
+
+\item{samples_no_amr}{A vector of sample IDs that have no RGI output because there are no AMR markers identified. For example \code{c("SampleA", "SampleB")}. (default = \code{NULL})}
 }
 \value{
 A tibble containing the processed AMR determinants and drug classes that is AMRgen compatible. The output retains the original columns from the RGI output along with the newly mapped variables.

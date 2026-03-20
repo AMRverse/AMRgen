@@ -5,7 +5,7 @@
 \alias{rgi_EuSCAPE_raw}
 \title{Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data from EuSCAPE project}
 \format{
-\code{rgi_EuSCAPE_raw} A data frame with 59,403 rows and 25 columns:
+\code{rgi_EuSCAPE_raw} A data frame with 59,448 rows and 25 columns:
 \itemize{
 \item \code{ORF_ID}: Sample identifier
 \item ...: RGI results columns
@@ -21,6 +21,7 @@ rgi_EuSCAPE_raw
 \description{
 Raw RGI v6.0.6 results file for Klebsiella pneumoniae from EuSCAPE project, one AMR determinant per row.
 Includes only Perfect and Strict hits
+Samples IDs that have no AMR markers were added to the \code{ORF_ID} column with remaining blank rows since RGI will generate blank outputs for these samples
 Columns \code{Predicted_DNA}, \code{Predicted_Protein}, and \code{CARD_Protein_Sequence} were removed to reduce file size.
 }
 \keyword{datasets}

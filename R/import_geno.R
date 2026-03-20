@@ -461,6 +461,7 @@ import_kleborate <- function(input_table,
 #' @param exclude_loose Logical indicating whether to exclude Loose hits (AMR markers that fall below a curated bitscore cutoff as defined by CARD/RGI). Default `TRUE`, which excludes Loose hits.
 #' @param rgi_short_name A tibble containing a reference table mapping model IDs (from CARD/RGI) to shortened model names as provided by CARD (<https://card.mcmaster.ca/download> in aro_index.tsv). Defaults to `rgi_short_name_table`, which is provided internally.
 #' @param rgi_drugs A tibble containing a reference table mapping CARD drug class / drug agents to standardised drug classes/names. Defaults to `rgi_drugs_table`, which is provided internally.
+#' @param samples_no_amr A vector of sample IDs that have no RGI output because there are no AMR markers identified. For example `c("SampleA", "SampleB")`. (default = `NULL`)
 #' @importFrom AMR as.ab ab_group
 #' @importFrom dplyr filter left_join mutate select bind_rows
 #' @importFrom tidyr separate_longer_delim
@@ -493,7 +494,8 @@ import_rgi <- function(input_table,
                        class_col = "Drug Class",
                        exclude_loose = TRUE,
                        rgi_short_name = rgi_short_name_table,
-                       rgi_drugs = rgi_drugs_table) {
+                       rgi_drugs = rgi_drugs_table,
+                       samples_no_amr = NULL) {
   in_table <- process_input(input_table)
 
   in_table <- left_join(in_table, rgi_short_name, by = c("Model_ID" = "Model ID")) %>%
@@ -501,6 +503,7 @@ import_rgi <- function(input_table,
 
   in_table[(in_table == "n/a") | (in_table == "")] <- NA
 
+  # Exclude Loose parameter
   if (exclude_loose) { # exclude Loose hits
     geno_table <- in_table %>% filter(`Cut_Off` != "Loose")
   } else { # include all hits
@@ -604,7 +607,7 @@ import_rgi <- function(input_table,
         by = setNames("RGI_DrugClassAgent", class_col)
       )
 
-    # recombine
+    # Recombine df_antibiotic and df_drugclass
     geno_table_label_ab <- bind_rows(df_antibiotic, df_drugclass) %>%
       select(-drug_internal, -drug_class_internal, -drug_to_parse, -drug_class_agent) %>%
       dplyr::relocate(any_of(c("id", "marker", "mutation", "drug_agent", "drug_class", "variation type", "marker.label")), .before = dplyr::everything())
@@ -612,6 +615,44 @@ import_rgi <- function(input_table,
     stop(paste("Input file lacks the expected column: Antibiotic OR `Drug Class` OR `Resistance Mechanism`\n"))
   }
 
+  # All samples in input
+  all_samples <- in_table %>%
+    select(id) %>%
+    distinct()
+
+  # Samples with AMR hits
+  samples_with_hits <- geno_table %>%
+    filter(!is.na(Cut_Off)) %>%
+    select(id) %>%
+    distinct()
+
+  # Auto-detected missing samples (sample name in ID column, but remaining rows are NA)
+  auto_no_amr <- anti_join(all_samples, samples_with_hits, by = "id")
+
+  # Combine with user input
+  if (!is.null(samples_no_amr)) {
+    user_no_amr <- tibble(id = samples_no_amr)
+    combined_no_amr <- bind_rows(auto_no_amr, user_no_amr) %>% distinct()
+  } else {
+    combined_no_amr <- auto_no_amr
+  }
+
+  # Remove duplicates already in final table
+  combined_no_amr <- combined_no_amr %>%
+    filter(!id %in% geno_table_label_ab$id)
+
+  # Append and add "No AMR markers" in Cut_Off column just as a marker
+  if (nrow(combined_no_amr) > 0 && ncol(geno_table_label_ab) > 0) {
+    no_amr_full <- geno_table_label_ab[0, ]
+    no_amr_full <- no_amr_full[rep(1, nrow(combined_no_amr)), ]
+    no_amr_full$id <- combined_no_amr$id
+
+    if ("Cut_Off" %in% colnames(no_amr_full)) {
+      no_amr_full$Cut_Off <- "No AMR markers"
+    }
+
+    geno_table_label_ab <- bind_rows(geno_table_label_ab, no_amr_full)
+  }
   return(geno_table_label_ab)
 }
 

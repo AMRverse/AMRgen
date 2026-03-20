@@ -78,67 +78,67 @@ format_ast <- function(input,
   ast <- process_input(input)
 
   if (!is.null(species)) {
-    cat(paste("Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value", species, "\n"))
+    message("Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value ", species)
     ast$spp_pheno <- as.mo(species)
   }
 
   if (!is.null(species_col)) {
     if (species_col %in% colnames(ast)) {
       ast <- ast %>% mutate(!!sym(species_col) := as.mo(!!sym(species_col)))
-      cat(paste("Parsing column", species_col, "as micro-organism (class 'mo')\n"))
+      message("Parsing column ", species_col, " as micro-organism (class 'mo')")
       if (rename_cols & species_col != "spp_pheno") {
         ast <- ast %>% rename(spp_pheno = !!sym(species_col))
-        cat(paste("Renaming column", species_col, "to standard name 'spp_pheno'\n"))
+        message("Renaming column ", species_col, " to standard name 'spp_pheno'")
       }
       if ((interpret_ecoff | interpret_eucast | interpret_clsi) & !("spp_pheno" %in% colnames(ast))) {
         ast <- ast %>% mutate(spp_pheno = !!sym(species_col)) # we need a column named spp_pheno for interpretation
       }
     } else {
-      cat(paste("Could not find species_col", species_col, "in input table\n"))
+      message("Could not find species_col ", species_col, " in input table")
     }
   }
 
   if (!is.null(ab)) {
-    cat(paste("Adding new antibiotic column 'drug_agent' (class 'ab') with constant value", ab, "\n"))
+    message("Adding new antibiotic column 'drug_agent' (class 'ab') with constant value ", ab)
     ast$drug_agent <- as.ab(ab)
   }
 
   if (!is.null(ab_col)) {
     if (ab_col %in% colnames(ast)) {
       ast <- ast %>% mutate(!!sym(ab_col) := as.ab(!!sym(ab_col)))
-      cat(paste("Parsing column", ab_col, "as antibiotic (class 'ab')\n"))
+      message("Parsing column ", ab_col, " as antibiotic (class 'ab')")
       if (rename_cols & ab_col != "drug_agent") {
         ast <- ast %>% rename(drug_agent = !!sym(ab_col))
-        cat(paste("Renaming column", ab_col, "to standard name 'drug_agent'\n"))
+        message("Renaming column ", ab_col, " to standard name 'drug_agent'")
       }
     } else {
-      cat(paste("Could not find ab_col", ab_col, "in input table\n"))
+      message("Could not find ab_col ", ab_col, " in input table")
     }
   }
 
   if (!is.null(mic_col)) {
     if (mic_col %in% colnames(ast)) {
       ast <- ast %>% mutate(!!sym(mic_col) := as.mic(!!sym(mic_col)))
-      cat(paste("Parsing column", mic_col, "as class 'mic'\n"))
+      message("Parsing column ", mic_col, " as class 'mic'")
       if (rename_cols & mic_col != "mic") {
         ast <- ast %>% rename(mic = !!sym(mic_col))
-        cat(paste("Renaming column", mic_col, "to standard name 'mic'\n"))
+        message("Renaming column ", mic_col, " to standard name 'mic'")
       }
     } else {
-      cat(paste("Could not find mic_col", mic_col, "in input table\n"))
+      message("Could not find mic_col ", mic_col, " in input table")
     }
   }
 
   if (!is.null(disk_col)) {
     if (disk_col %in% colnames(ast)) {
       ast <- ast %>% mutate(!!sym(disk_col) := as.disk(!!sym(disk_col)))
-      cat(paste("Parsing column", disk_col, "as class 'disk'\n"))
+      message("Parsing column ", disk_col, " as class 'disk'")
       if (rename_cols & disk_col != "disk") {
         ast <- ast %>% rename(disk = !!sym(disk_col))
-        cat(paste("Renaming column", disk_col, "to standard name 'disk'\n"))
+        message("Renaming column ", disk_col, " to standard name 'disk'")
       }
     } else {
-      cat(paste("Could not find disk_col", disk_col, "in input table\n"))
+      message("Could not find disk_col ", disk_col, " in input table")
     }
   }
 
@@ -146,18 +146,18 @@ format_ast <- function(input,
     if (is_string(pheno_cols)) { # single column
       if (pheno_cols %in% colnames(ast)) {
         ast <- ast %>% mutate(!!sym(pheno_cols) := as.sir(!!sym(pheno_cols)))
-        cat(paste("Parsing column", pheno_cols, "as class 'sir'\n"))
+        message("Parsing column ", pheno_cols, " as class 'sir'")
       } else {
-        cat(paste("Could not find pheno_cols", pheno_cols, "in input table\n"))
+        message("Could not find pheno_cols ", pheno_cols, " in input table")
       }
     } else {
       for (pheno_col in pheno_cols) {
         if (!is.null(pheno_col)) {
           if (pheno_col %in% colnames(ast)) {
             ast <- ast %>% mutate(!!sym(pheno_col) := as.sir(!!sym(pheno_col)))
-            cat(paste("Parsing column", pheno_col, "as class 'sir'\n"))
+            message("Parsing column ", pheno_col, " as class 'sir'")
           } else {
-            cat(paste("Could not find pheno_col", pheno_col, "in input table\n"))
+            message("Could not find pheno_col ", pheno_col, " in input table")
           }
         }
       }
@@ -168,10 +168,10 @@ format_ast <- function(input,
     if (method_col %in% colnames(ast)) {
       if (rename_cols & method_col != "method") {
         ast <- ast %>% rename(method = !!sym(method_col))
-        cat(paste("Renaming column", method_col, "to standard name 'method'\n"))
+        message("Renaming column ", method_col, " to standard name 'method'")
       }
     } else {
-      cat(paste("Could not find method_col", method_col, "in input table\n"))
+      message("Could not find method_col ", method_col, " in input table")
     }
   }
 
@@ -179,10 +179,10 @@ format_ast <- function(input,
     if (platform_col %in% colnames(ast)) {
       if (rename_cols & platform_col != "platform") {
         ast <- ast %>% rename(platform = !!sym(platform_col))
-        cat(paste("Renaming column", platform_col, "to standard name 'platform'\n"))
+        message("Renaming column ", platform_col, " to standard name 'platform'")
       }
     } else {
-      cat(paste("Could not find platform_col", platform_col, "in input table\n"))
+      message("Could not find platform_col ", platform_col, " in input table")
     }
   }
 
@@ -190,10 +190,10 @@ format_ast <- function(input,
     if (guideline_col %in% colnames(ast)) {
       if (rename_cols & guideline_col != "guideline") {
         ast <- ast %>% rename(guideline = !!sym(guideline_col))
-        cat(paste("Renaming column", guideline_col, "to standard name 'guideline'\n"))
+        message("Renaming column ", guideline_col, " to standard name 'guideline'")
       }
     } else {
-      cat(paste("Could not find guideline_col", guideline_col, "in input table\n"))
+      message("Could not find guideline_col ", guideline_col, " in input table")
     }
   }
 
@@ -201,10 +201,10 @@ format_ast <- function(input,
     if (source_col %in% colnames(ast)) {
       if (rename_cols & source_col != "source") {
         ast <- ast %>% rename(source = !!sym(source_col))
-        cat(paste("Renaming column", source_col, "to standard name 'source'\n"))
+        message("Renaming column ", source_col, " to standard name 'source'")
       }
     } else {
-      cat(paste("Could not find source_col", source_col, "in input table\n"))
+      message("Could not find source_col ", source_col, " in input table")
     }
   }
 
@@ -269,14 +269,13 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
   if (interpret_ecoff | interpret_eucast | interpret_clsi) {
     # check we have species
     if (!is.null(species)) {
-      cat(paste0("Interpreting all data as species: ", mo_name(as.mo(species)), "\n"))
+      message("Interpreting all data as species: ", mo_name(as.mo(species)))
       if ("spp_pheno" %in% colnames(ast)) {
         if (length(unique(ast$spp_pheno)) > 1) {
-          cat("Warning: ignoring 'spp_pheno' column in input table, which contains multiple species:\n")
-          cat(paste(unique(ast$spp_pheno), collapse = ", "))
-          cat("\n")
+          warning("ignoring 'spp_pheno' column in input table, which contains multiple species:")
+          message(toString(unique(ast$spp_pheno)))
         } else if (as.mo(unique(ast$spp_pheno)) != as.mo(species)) {
-          cat(paste0("Warning: ignoring 'spp_pheno' column in input table, which indicates a different species: ", unique(ast$spp_pheno), "\n"))
+          warning("ignoring 'spp_pheno' column in input table, which indicates a different species: ", unique(ast$spp_pheno))
         }
       }
       ast <- ast %>% mutate(spp_pheno = as.mo(species))
@@ -286,14 +285,13 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 
     # check we have antibiotic
     if (!is.null(ab)) {
-      cat(paste0("Interpreting all data as drug: ", ab_name(as.ab(ab)), "\n"))
+      message("Interpreting all data as drug: ", ab_name(as.ab(ab)))
       if ("drug_agent" %in% colnames(ast)) {
         if (length(unique(ast$drug_agent)) > 1) {
-          cat("Warning: ignoring 'drug_agent' column in input table, which contains multiple drugs:\n")
-          cat(paste(unique(ast$drug_agent), collapse = ", "))
-          cat("\n")
+          warning("ignoring 'drug_agent' column in input table, which contains multiple drugs:")
+          message(toString(unique(ast$drug_agent)))
         } else if (as.ab(unique(ast$drug_agent)) != as.ab(ab)) {
-          cat(paste0("Warning: ignoring 'drug_agent' column in input table, which indicates a different drug: ", unique(ast$drug_agent), "\n"))
+          warning("ignoring 'drug_agent' column in input table, which indicates a different drug: ", unique(ast$drug_agent))
         }
       }
       ast <- ast %>% mutate(drug_agent = as.ab(ab))
@@ -472,7 +470,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
   if ("Laboratory typing platform" %in% colnames(ast)) {
     ast <- ast %>% mutate(platform = `Laboratory typing platform`)
   } else {
-    cat("Warning: Expected AST platform column 'Laboratory typing platform' not found in input\n")
+    warning("Expected AST platform column 'Laboratory typing platform' not found in input")
   }
 
   # parse method column
@@ -482,7 +480,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
       mutate(method = `Laboratory typing method`) %>%
       mutate(method = if_else(!is.na(method) & method == "MIC", "broth dilution", method))
   } else {
-    cat("Warning: Expected AST method column 'Laboratory typing method' not found in input\n")
+    warning("Expected AST method column 'Laboratory typing method' not found in input")
     # if no method field, guess from MIC/disk column values
     if ("MIC (mg/L)" %in% colnames(ast) & "Disk diffusion (mm)" %in% colnames(ast)) {
       ast <- ast %>% mutate(method = case_when(
@@ -514,14 +512,14 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
   if ("Testing standard" %in% colnames(ast)) {
     ast <- ast %>% mutate(guideline = `Testing standard`)
   } else {
-    cat("Warning: Expected AST standard column 'Testing standard' not found in input\n")
+    warning("Expected AST standard column 'Testing standard' not found in input")
   }
 
   # parse disk column
   if ("Disk diffusion (mm)" %in% colnames(ast)) {
     ast <- ast %>% mutate(disk = as.disk(`Disk diffusion (mm)`))
   } else {
-    cat("Warning: Expected column 'Disk diffusion (mm)' not found in input\n")
+    warning("Expected column 'Disk diffusion (mm)' not found in input")
   }
 
   # parse mic column
@@ -532,11 +530,11 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
         mutate(mic = gsub("==", "", mic))
     } else {
       ast <- ast %>% mutate(mic = `MIC (mg/L)`)
-      cat("Warning: Expected column 'Measurement sign' not found in input, be careful interpreting MIC\n")
+      warning("Expected column 'Measurement sign' not found in input, be careful interpreting MIC")
     }
     ast <- ast %>% mutate(mic = as.mic(mic))
   } else {
-    cat("Warning: Expected column 'MIC (mg/L)' not found in input\n")
+    warning("Expected column 'MIC (mg/L)' not found in input")
   }
 
   # parse antibiotic column
@@ -550,7 +548,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
   if ("Scientific name" %in% colnames(ast)) {
     ast <- ast %>% mutate(spp_pheno = as.mo(`Scientific name`))
   } else {
-    cat("Warning: Expected species column 'Scientific name' not found in input\n")
+    warning("Expected species column 'Scientific name' not found in input")
   }
 
   # parse bioproject column as source
@@ -559,9 +557,9 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
   } else {
     if (!is.null(source)) {
       ast <- ast %>% mutate(source = source)
-      cat(paste0("Setting source to user-provided value: ", source, "\n"))
+      message("Setting source to user-provided value: ", source)
     } else {
-      cat("Warning: Expected column 'BioProject' not found in input\n")
+      warning("Expected column 'BioProject' not found in input")
     }
   }
 
@@ -578,7 +576,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
         ))
     }
   } else {
-    cat("Warning: Expected phenotype SIR column 'Resistance phenotype' not found in input\n")
+    warning("Expected phenotype SIR column 'Resistance phenotype' not found in input")
   }
 
   ast <- interpret_ast(ast, interpret_ecoff = interpret_ecoff, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, species = species, ab = ab)
@@ -720,7 +718,7 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
       mutate(disk = as.disk(disk))
   } else {
     ast <- ast %>% mutate(disk = as.disk(NA))
-    cat("No disk data (units 'mm') found in input\n")
+    message("No disk data (units 'mm') found in input")
   }
 
   # parse mic data
@@ -732,7 +730,7 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
       mutate(mic = as.mic(mic))
   } else {
     ast <- ast %>% mutate(mic = as.mic(NA))
-    cat("No MIC data (units 'mg/L') found in input\n")
+    message("No MIC data (units 'mg/L') found in input")
   }
 
   # parse antibiotic column
@@ -746,25 +744,25 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
   if ("phenotype-organism" %in% colnames(ast)) {
     ast <- ast %>% mutate(spp_pheno = as.mo(`phenotype-organism`))
   } else {
-    cat("Warning: Expected species column 'phenotype-organism' not found in input\n")
+    warning("Expected species column 'phenotype-organism' not found in input")
   }
 
   if ("phenotype-platform" %in% colnames(ast)) {
     ast <- ast %>% mutate(platform = `phenotype-platform`)
   } else {
-    cat("Warning: Expected AST platform column 'phenotype-platform' not found in input\n")
+    warning("Expected AST platform column 'phenotype-platform' not found in input")
   }
 
   if ("phenotype-laboratory_typing_method" %in% colnames(ast)) {
     ast <- ast %>% mutate(method = `phenotype-laboratory_typing_method`)
   } else {
-    cat("Warning: Expected AST method column 'phenotype-laboratory_typing_method' not found in input\n")
+    warning("Expected AST method column 'phenotype-laboratory_typing_method' not found in input")
   }
 
   if ("phenotype-ast_standard" %in% colnames(ast)) {
     ast <- ast %>% mutate(guideline = `phenotype-ast_standard`)
   } else {
-    cat("Warning: Expected AST standard column 'phenotype-ast_standard' not found in input\n")
+    warning("Expected AST standard column 'phenotype-ast_standard' not found in input")
   }
 
   if ("phenotype-AMR_associated_publications" %in% colnames(ast)) {
@@ -773,13 +771,13 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
     if (!is.null(source)) {
       ast <- ast %>% mutate(source = source)
     }
-    cat("Warning: Expected pubmed ID column 'phenotype-AMR_associated_publications' not found in input\n")
+    warning("Expected pubmed ID column 'phenotype-AMR_associated_publications' not found in input")
   }
 
   if ("phenotype-resistance_phenotype" %in% colnames(ast)) {
     ast <- ast %>% mutate(pheno_provided = as.sir(`phenotype-resistance_phenotype`))
   } else {
-    cat("Warning: Expected pubmed ID column 'phenotype-resistance_phenotype' not found in input\n")
+    warning("Expected pubmed ID column 'phenotype-resistance_phenotype' not found in input")
   }
 
   ast <- interpret_ast(ast, interpret_ecoff = interpret_ecoff, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, species = species, ab = ab)
@@ -894,7 +892,7 @@ import_vitek_ast <- function(input,
   # Drop 'Family -...' columns (resistance mechanism descriptions in lab VITEK files)
   family_cols <- all_cols[grepl("^Family -", all_cols)]
   if (length(family_cols) > 0) {
-    cat(paste0("Dropping ", length(family_cols), " 'Family -...' resistance mechanism columns\n"))
+    message("Dropping ", length(family_cols), " 'Family -...' resistance mechanism columns")
     ast <- ast %>% dplyr::select(-any_of(family_cols))
     all_cols <- colnames(ast)
   }
@@ -1101,7 +1099,7 @@ import_microscan_ast <- function(input,
   # Try process_input first, fall back to read_csv if only 1 column detected
   ast <- process_input(input)
   if (ncol(ast) <= 1 && is.character(input) && file.exists(input)) {
-    cat("Re-reading as CSV (file appears to be comma-separated despite .txt extension)\n")
+    message("Re-reading as CSV (file appears to be comma-separated despite .txt extension)")
     ast <- readr::read_csv(input, show_col_types = FALSE)
     ast <- ast %>% dplyr::rename_with(~ stringr::str_remove(.x, "#"))
   }
@@ -1167,7 +1165,7 @@ import_microscan_ast <- function(input,
 
   if (!is.null(detected_lang)) {
     lang <- lang_markers[[detected_lang]]
-    cat(paste0("Detected ", detected_lang, "-language MicroScan export, translating column names\n"))
+    message("Detected ", detected_lang, "-language MicroScan export, translating column names")
 
     # Translate metadata column names
     for (orig in names(lang$meta)) {
@@ -1387,7 +1385,7 @@ import_sensititre_ast <- function(input,
   n_commas <- nchar(first_line) - nchar(gsub(",", "", first_line, fixed = TRUE))
   sep <- if (n_tabs >= n_commas) "\t" else ","
 
-  cat(paste0("Reading ", length(raw_lines), " rows from Sensititre file\n"))
+  message("Reading ", length(raw_lines), " rows from Sensititre file")
 
   # Parse each line, extract drug triplets
   all_rows <- list()
@@ -1404,7 +1402,7 @@ import_sensititre_ast <- function(input,
       fields
     ))[1]
     if (is.na(ts_idx)) {
-      cat(paste0("Warning: No timestamp found in row ", row_idx, ", skipping\n"))
+      warning("No timestamp found in row ", row_idx, ", skipping")
       next
     }
 
@@ -2633,7 +2631,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
                        interpret_clsi = FALSE, interpret_ecoff = FALSE,
                        species = NULL, ab = NULL, source = NULL) {
   if (format %in% c("ebi_web", "ebi")) {
-    cat("Reading in as EBI AST format downloaded from the web portal\n")
+    message("Reading in as EBI AST format downloaded from the web portal")
     ast <- import_ebi_ast(input,
       interpret_eucast = interpret_eucast,
       interpret_clsi = interpret_clsi,
@@ -2643,7 +2641,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   }
 
   if (format == "ebi_ftp") {
-    cat("Reading in as EBI AST format downloaded from the FTP portal\n")
+    message("Reading in as EBI AST format downloaded from the FTP portal")
     ast <- import_ebi_ast_ftp(input,
       interpret_eucast = interpret_eucast,
       interpret_clsi = interpret_clsi,
@@ -2652,12 +2650,12 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   }
 
   if (format == "ncbi") {
-    cat("Reading in as NCBI AST format\n")
+    message("Reading in as NCBI AST format")
     ast <- import_ncbi_ast(input, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, interpret_ecoff = interpret_ecoff, species = species, ab = ab)
   }
 
   if (format == "vitek") {
-    cat("Reading in as VITEK AST format\n")
+    message("Reading in as VITEK AST format")
     ast <- import_vitek_ast(input,
       interpret_eucast = interpret_eucast,
       interpret_clsi = interpret_clsi,
@@ -2667,7 +2665,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   }
 
   if (format == "microscan") {
-    cat("Reading in as MicroScan AST format\n")
+    message("Reading in as MicroScan AST format")
     ast <- import_microscan_ast(input,
       interpret_eucast = interpret_eucast,
       interpret_clsi = interpret_clsi,
@@ -2677,7 +2675,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   }
 
   if (format == "sensititre") {
-    cat("Reading in as Sensititre AST format\n")
+    message("Reading in as Sensititre AST format")
     ast <- import_sensititre_ast(input,
       interpret_eucast = interpret_eucast,
       interpret_clsi = interpret_clsi,
@@ -2687,7 +2685,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   }
 
   if (format == "whonet") {
-    cat("Reading in as WHONET AST format\n")
+    message("Reading in as WHONET AST format")
     ast <- import_whonet_ast(input,
       interpret_eucast = interpret_eucast,
       interpret_clsi = interpret_clsi,
@@ -2697,7 +2695,7 @@ import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
   }
 
   if (format == "phoenix") {
-    cat("Reading in as BD Phoenix AST format\n")
+    message("Reading in as BD Phoenix AST format")
     ast <- import_phoenix_ast(input,
       interpret_eucast = interpret_eucast,
       interpret_clsi = interpret_clsi,
@@ -2777,9 +2775,9 @@ import_amrrules_predictions <- function(input,
       intable <- intable %>%
         mutate(!!sym(sir_col) := if_else(is.na(!!sym(sir_col)), "S", !!sym(sir_col))) %>%
         mutate(!!sym(sir_col) := as.sir(!!sym(sir_col)))
-      cat(paste("Parsing column", sir_col, "as class 'sir'\n"))
+      message("Parsing column ", sir_col, " as class 'sir'")
     } else {
-      cat(paste("Could not find SIR prediction column", sir_col, "in input table\n"))
+      message("Could not find SIR prediction column ", sir_col, " in input table")
     }
   }
   if (!is.null(ecoff_col)) {
@@ -2792,9 +2790,9 @@ import_amrrules_predictions <- function(input,
           TRUE ~ NA
         )) %>%
         mutate(!!sym(ecoff_col) := as.sir(!!sym(ecoff_col)))
-      cat(paste("Parsing column", ecoff_col, "as class 'sir'\n"))
+      message("Parsing column ", ecoff_col, " as class 'sir'")
     } else {
-      cat(paste("Could not find WT/NWT phenotype prediction column", ecoff_col, "in input table\n"))
+      message("Could not find WT/NWT phenotype prediction column ", ecoff_col, " in input table")
     }
   }
 

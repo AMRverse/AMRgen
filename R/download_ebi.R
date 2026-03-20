@@ -118,11 +118,11 @@ download_ebi <- function(data = "phenotype",
 
   filename <- paste0(data, ".parquet")
 
-  cat(paste("Downloading", data, "data from EBI AMR portal (https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/)\n"))
+  message("Downloading ", data, " data from EBI AMR portal (https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/)")
 
   if (!is.null(release)) {
     user_release <- release
-    cat(paste(" Requesting data from user-specified release", user_release, "\n"))
+    message(" Requesting data from user-specified release ", user_release)
   } else {
     # get list of releases
     folders <- str_split(RCurl::getURL(ebi_url, dirlistonly = TRUE), "\n")[[1]]
@@ -130,7 +130,7 @@ download_ebi <- function(data = "phenotype",
     release_list_url <- paste0(ebi_url, "releases.yml")
     lines <- RCurl::getURL(release_list_url) %>% readr::read_lines()
     user_release <- sub("latest: ", "", lines[1])
-    cat(paste("...Requesting data from latest release", user_release, "\n"))
+    message("...Requesting data from latest release ", user_release)
   }
 
   ebi_dat <- tryCatch(
@@ -141,7 +141,7 @@ download_ebi <- function(data = "phenotype",
       warning = function(w) invokeRestart("muffleWarning")
     ),
     error = function(e) {
-      cat(paste0("Could not find release ", user_release, ", defaulting to last known release 2025-12\n"))
+      message("Could not find release ", user_release, ", defaulting to last known release 2025-12")
       arrow::read_parquet(print(paste0(ebi_url, "2025-12", "/", paste0(data, ".parquet"))))
     }
   )
@@ -149,11 +149,11 @@ download_ebi <- function(data = "phenotype",
   # filter by genus or species as required
   if (!is.null(genus)) {
     user_genus <- genus
-    cat(paste("...Filtering by genus", genus, "\n"))
+    message("...Filtering by genus ", genus)
     ebi_dat <- ebi_dat %>%
       filter(genus == user_genus)
   } else if (!is.null(species)) {
-    cat(paste("...Filtering by species", species, "\n"))
+    message("...Filtering by species ", species)
     user_species <- species
     ebi_dat <- ebi_dat %>%
       filter(species == user_species)
@@ -162,56 +162,56 @@ download_ebi <- function(data = "phenotype",
   # filter by subclass/class/antibiotic as required
   if (!is.null(geno_subclass)) {
     if (data == "genotype") {
-      cat(paste("...Filtering by subclass", paste(geno_subclass, collapse = ","), "\n"))
+      message("...Filtering by subclass ", toString(geno_subclass, sep = ","))
       ebi_dat <- ebi_dat %>%
         filter(grepl(paste(geno_subclass, collapse = "|"), subclass))
       for (sc in geno_subclass) {
         if (sum(grepl(sc, ebi_dat$subclass)) == 0) {
-          cat(paste("......subclass not found:", sc, "\n"))
+          message("......subclass not found: ", sc)
         }
       }
       if (!is.null(geno_class)) {
-        cat(paste("...Warning, not using classes provided, filtering on subclass instead\n"))
+        message("...Warning, not using classes provided, filtering on subclass instead")
       }
       if (!is.null(antibiotic)) {
-        cat(paste("...Warning, not using antibiotic names provided, filtering on subclass instead\n"))
+        message("...Warning, not using antibiotic names provided, filtering on subclass instead")
       }
     } else {
-      cat(paste("...Warning, not using subclasses provided as these are only relevant to genotype data\n"))
+      message("...Warning, not using subclasses provided as these are only relevant to genotype data")
     }
   } else if (!is.null(geno_class)) {
     if (data == "genotype") {
-      cat(paste("...Filtering by class", paste(geno_class, collapse = ","), "\n"))
+      message("...Filtering by class ", toString(geno_class, sep = ","))
       ebi_dat <- ebi_dat %>%
         filter(grepl(paste(geno_class, collapse = "|"), class))
       for (cl in geno_subclass) {
         if (sum(grepl(cl, ebi_dat$class)) == 0) {
-          cat(paste("......class not found:", cl, "\n"))
+          message("......class not found: ", cl)
         }
       }
       if (!is.null(antibiotic)) {
-        cat(paste("...Warning, not using antibiotic names provided, filtering on class instead\n"))
+        message("...Warning, not using antibiotic names provided, filtering on class instead")
       }
     } else {
-      cat(paste("...Warning, not using classes provided as these are only relevant to genotype data\n"))
+      message("...Warning, not using classes provided as these are only relevant to genotype data")
     }
   } else if (!is.null(antibiotic)) {
     if (!force_antibiotic) {
       antibiotic <- na.omit(tolower(AMR::ab_name(AMR::as.ab(antibiotic))))
       antibiotic <- sub("/", "-", antibiotic)
     }
-    cat(paste("...Filtering by antibiotic:", paste(antibiotic, collapse = ", "), "\n"))
+    message("...Filtering by antibiotic: ", toString(antibiotic))
     ebi_dat <- ebi_dat %>%
       filter(antibiotic_name %in% antibiotic)
     for (ab in antibiotic) {
       if (!(ab %in% ebi_dat$antibiotic_name)) {
-        cat(paste("......antibiotic not found:", ab, "\n"))
+        message("......antibiotic not found: ", ab)
       }
     }
   }
 
   if (remove_dup & data == "genotype") {
-    cat("...Checking for duplicate rows ")
+    message("...Checking for duplicate rows")
     before <- nrow(ebi_dat)
     ebi_dat <- ebi_dat %>%
       select(BioSample_ID:subclass) %>%
@@ -219,23 +219,23 @@ download_ebi <- function(data = "phenotype",
     after <- nrow(ebi_dat)
     if (after < before) {
       n <- before - after
-      cat(paste("(removed", n, "rows)\n"))
+      message("(removed ", n, " rows)")
     } else {
-      cat(paste("(none detected)\n"))
+      message("(none detected)")
     }
   }
 
   # reformat as per AMRgen import functions
   if (reformat) {
     if (data == "phenotype") {
-      cat(paste("Reformatting phenotype data for easy use with AMRgen functions\n"))
+      message("Reformatting phenotype data for easy use with AMRgen functions")
       ebi_dat <- import_ebi_ast_ftp(ebi_dat,
         interpret_eucast = interpret_eucast,
         interpret_clsi = interpret_clsi,
         interpret_ecoff = interpret_ecoff
       )
     } else if (data == "genotype") {
-      cat(paste("Reformatting genotype data for easy use with AMRgen functions\n"))
+      message("Reformatting genotype data for easy use with AMRgen functions")
       ebi_dat <- import_amrfp_ebi(ebi_dat)
     }
   }

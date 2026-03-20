@@ -94,7 +94,7 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
                               )) {
   # get binary matrix
   if (is.null(binary_matrix)) {
-    cat("Generating geno-pheno binary matrix\n")
+    message("Generating geno-pheno binary matrix")
 
     # check there is a SIR column specified
     if (is.null(sir_col)) {
@@ -104,7 +104,7 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
         colnames() %>%
         first()
       if (!is.na(sir_col)) {
-        cat(paste("WARNING: `sir_col` not provided, using first column with prefix 'pheno':", sir_col))
+        warning("`sir_col` not provided, using first column with prefix 'pheno': ", sir_col)
       } else {
         stop("`sir_col` not provided. Please specify a column with S/I/R phenotype values.")
       }

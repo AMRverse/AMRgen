@@ -453,7 +453,7 @@ format_ebi_json <- function(ebi_antibiogram_table,
                             domain = NULL) {
   if (!dir.exists(output_dir)) {
     safe_execute(dir.create(output_dir, recursive = TRUE))
-    cat(paste0("Directory '", output_dir, "' created successfully.\n"))
+    message("Directory '", output_dir, "' created successfully.")
   }
 
   records_by_sample <- split(ebi_antibiogram_table, ebi_antibiogram_table$biosample_id)

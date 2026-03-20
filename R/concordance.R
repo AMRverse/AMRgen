@@ -262,10 +262,7 @@ concordance <- function(binary_matrix,
   if (!is.null(markers)) {
     unknown <- setdiff(markers, all_markers)
     if (length(unknown) > 0) {
-      warning(paste(
-        "Markers not found in binary_matrix (ignored):",
-        paste(unknown, collapse = ", ")
-      ))
+      warning("Markers not found in binary_matrix (ignored): ", toString(unknown))
     }
     shared_markers <- intersect(markers, all_markers)
   }
@@ -336,10 +333,7 @@ concordance <- function(binary_matrix,
       }
 
       if (length(selected_markers) == 0) {
-        warning(paste0(
-          "No markers remaining for outcome '", outcome,
-          "' after filtering. Skipping."
-        ))
+        warning("No markers remaining for outcome '", outcome, "' after filtering. Skipping.")
         next
       }
 
@@ -351,10 +345,7 @@ concordance <- function(binary_matrix,
       filter(!is.na(get(outcome)))
 
     if (nrow(df) == 0) {
-      warning(paste0(
-        "No samples with non-NA values in truth column '",
-        outcome, "'. Skipping."
-      ))
+      warning("No samples with non-NA values in truth column '", outcome, "'. Skipping.")
       next
     }
 
@@ -370,19 +361,14 @@ concordance <- function(binary_matrix,
       # predict positive if sample's marker combination has outcome PPV >= threshold
       ppv_col_name <- paste0(outcome, ".ppv")
       if (!(ppv_col_name %in% colnames(ppv_results$summary))) {
-        warning(paste0(
-          "Column '", ppv_col_name, "' not found in ppv_results$summary for outcome '",
-          outcome, "'. Skipping."
-        ))
+        warning("Column '", ppv_col_name, "' not found in ppv_results$summary for outcome '", outcome, "'. Skipping.")
         next
       }
       passing_combos <- ppv_results$summary %>%
         filter(.data[[ppv_col_name]] >= ppv_threshold) %>%
         pull(combination_id)
       if (length(passing_combos) == 0) {
-        warning(paste0(
-          "No marker combinations pass ppv_threshold for outcome '", outcome, "'. Skipping."
-        ))
+        warning("No marker combinations pass ppv_threshold for outcome '", outcome, "'. Skipping.")
         next
       }
       combo_df <- combo_bm %>% filter(!is.na(get(outcome)))
@@ -531,29 +517,24 @@ concordance <- function(binary_matrix,
 #' @param ... Additional arguments (ignored).
 #' @export
 print.amr_concordance <- function(x, ...) {
-  cat("AMR Genotype-Phenotype Concordance\n")
-  cat(paste0("Prediction rule: ", x$prediction_rule, "\n"))
+  message("AMR Genotype-Phenotype Concordance")
+  message("Prediction rule: ", x$prediction_rule)
 
   for (outcome in names(x$conf_mat)) {
-    cat(paste0("\n--- Outcome: ", outcome, " ---\n"))
+    message("\n--- Outcome: ", outcome, " ---")
     mu <- x$markers_used[[outcome]]
     if (length(mu) == 0) {
-      cat(paste0("Samples: ", x$n[outcome], "\n\n"))
+      message("Samples: ", x$n[outcome])
+      message("")
     } else {
-      cat(paste0(
-        "Samples: ", x$n[outcome],
-        " | Markers: ", length(mu), "\n"
-      ))
-      cat(paste0(
-        "Markers used: ",
-        paste(gsub("\\.\\.", ":", mu), collapse = ", "),
-        "\n\n"
-      ))
+      message("Samples: ", x$n[outcome], " | Markers: ", length(mu))
+      message("Markers used: ", toString(gsub("\\.\\.", ":", mu)))
+      message("")
     }
 
-    cat("Confusion Matrix:\n")
+    message("Confusion Matrix:")
     print(x$conf_mat[[outcome]])
-    cat("\n")
+    message("")
 
     # format and display metrics for this outcome
     m <- x$metrics[x$metrics$outcome == outcome, ]
@@ -565,16 +546,16 @@ print.amr_concordance <- function(x, ...) {
       format(round(val, digits), nsmall = digits)
     }
 
-    cat("Metrics:\n")
-    cat(paste0("  Sensitivity : ", fmt("sens"), "\n"))
-    cat(paste0("  Specificity : ", fmt("spec"), "\n"))
-    cat(paste0("  PPV         : ", fmt("ppv"), "\n"))
-    cat(paste0("  NPV         : ", fmt("npv"), "\n"))
-    cat(paste0("  Accuracy    : ", fmt("accuracy"), "\n"))
-    cat(paste0("  Kappa       : ", fmt("kap"), "\n"))
-    cat(paste0("  F-measure   : ", fmt("f_meas"), "\n"))
-    cat(paste0("  VME         : ", fmt("VME"), "\n"))
-    cat(paste0("  ME          : ", fmt("ME"), "\n"))
+    message("Metrics:")
+    message("  Sensitivity : ", fmt("sens"))
+    message("  Specificity : ", fmt("spec"))
+    message("  PPV         : ", fmt("ppv"))
+    message("  NPV         : ", fmt("npv"))
+    message("  Accuracy    : ", fmt("accuracy"))
+    message("  Kappa       : ", fmt("kap"))
+    message("  F-measure   : ", fmt("f_meas"))
+    message("  VME         : ", fmt("VME"))
+    message("  ME          : ", fmt("ME"))
   }
 
   invisible(x)
@@ -715,12 +696,12 @@ concordance_from_tables <- function(pheno_table,
       } # finished with this drug
     } else {
       if (!is.null(true_SIR_col)) {
-        message(paste("true_SIR_col", true_SIR_col, "not found"))
+        message("true_SIR_col ", true_SIR_col, " not found")
       }
     }
   } else {
     if (!is.null(pred_SIR)) {
-      message(paste("pred_SIR", pred_SIR, "not found"))
+      message("pred_SIR ", pred_SIR, " not found")
     }
   }
 
@@ -797,12 +778,12 @@ concordance_from_tables <- function(pheno_table,
       } # finished with this drug
     } else {
       if (!is.null(true_ecoff_col)) {
-        message(paste("true_ecoff_col", true_ecoff_col, "not found"))
+        message("true_ecoff_col ", true_ecoff_col, " not found")
       }
     }
   } else {
     if (!is.null(pred_ecoff)) {
-      message(paste("pred_ecoff", pred_ecoff, "not found"))
+      message("pred_ecoff ", pred_ecoff, " not found")
     }
   }
 

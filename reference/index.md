@@ -83,8 +83,6 @@ from public repositories or internal formats.
   : Get Binary Matrix of Genotype and Phenotype Data
 - [`get_combo_matrix()`](https://amrgen.org/reference/get_combo_matrix.md)
   : Add marker combinations to a binary geno-pheno matrix
-- [`combo_stats()`](https://amrgen.org/reference/combo_stats.md) :
-  Generate a Series of Plots for AMR Gene and Combination Analysis
 - [`query_ncbi_bq_ast()`](https://amrgen.org/reference/query_ncbi_bq_ast.md)
   : Query antimicrobial phenotype (AST) data from NCBI Pathogen
   Detection BigQuery
@@ -140,6 +138,8 @@ logistic regression and Firth regression.
 - [`concordance_from_tables()`](https://amrgen.org/reference/concordance_from_tables.md)
   : Assess concordance between tables of observed and predicted
   phenotypes
+- [`cooccuring_ppv_analysis()`](https://amrgen.org/reference/cooccuring_ppv_analysis.md)
+  : Co-occuring PPV Analysis
 - [`print(`*`<amr_concordance>`*`)`](https://amrgen.org/reference/print.amr_concordance.md)
   : Print method for amr_concordance objects
 
@@ -262,6 +262,22 @@ Example datasets for demonstration and reproducible analysis.
 - [`ST_data_CLI`](https://amrgen.org/reference/ST_data_CLI.md) :
 
   ST data for *Staphylococcus aureus* genomes for clindamycin vignette
+
+- [`DASSIM_pheno_raw`](https://amrgen.org/reference/DASSIM_pheno_raw.md)
+  : DASSIM phenotype metadata
+
+- [`btESBL_AST`](https://amrgen.org/reference/btESBL_AST.md) :
+  blantyreESBL AST data
+
+- [`DASSIM_geno`](https://amrgen.org/reference/DASSIM_geno.md) : DASSIM
+  genotype data (AMRfinderplus)
+
+- [`NCBI_Ecoli_AST_chl`](https://amrgen.org/reference/NCBI_Ecoli_AST_chl.md)
+  : NCBI AST for Escherichia coli tested against chloramphenicol
+
+- [`MICROBIGGE_Ecoli_CHLR`](https://amrgen.org/reference/MICROBIGGE_Ecoli_CHLR.md)
+  : MicroBIGG-E for E.coli containing all chloramphenicol resistance
+  genes
 
 - [`rgi_raw`](https://amrgen.org/reference/rgi_raw.md) : Example
   Resistance Gene Identifier (RGI) v6.0.6 Genotype Data

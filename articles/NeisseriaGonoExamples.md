@@ -159,7 +159,7 @@ eurogasp_ast <- format_ast(
   interpret_eucast = TRUE,
   interpret_ecoff = TRUE
 )
-#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae 
+#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae
 #> Parsing column spp_pheno as micro-organism (class 'mo')
 #> Parsing column antibiotic as antibiotic (class 'ab')
 #> Renaming column antibiotic to standard name 'drug_agent'
@@ -413,8 +413,7 @@ azi_upset <- amr_upset(
   order = "value",
   species = "Neisseria gonorrhoeae"
 )
-#>  Warning: no values in pheno column, colouring upset plot by ecoff column
-#>  Removing 306 rows with no phenotype call
+#> Removing 306 rows with no phenotype call
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/azm_upset-1.png)
@@ -452,8 +451,7 @@ azm_ppv <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
-#>  Warning: no values in pheno column, colouring upset plot by ecoff column
-#>  Removing 306 rows with no phenotype call
+#> Removing 306 rows with no phenotype call
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -602,7 +600,7 @@ cip_upset <- amr_upset(
   antibiotic = "Ciprofloxacin",
   species = "Neisseria gonorrhoeae"
 )
-#>  Removing 336 rows with no phenotype call
+#> Removing 336 rows with no phenotype call
 #>   MIC breakpoints determined using AMR package: S <= 0.032 and R > 0.06
 #>   MIC breakpoints determined using AMR package: S <= 0.032 and R > 0.06
 ```
@@ -639,7 +637,7 @@ cip_ppv <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
-#>  Removing 336 rows with no phenotype call
+#> Removing 336 rows with no phenotype call
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -994,7 +992,7 @@ ngono_cro_ast <- format_ast(
   mic_col = "mic",
   interpret_eucast = TRUE
 )
-#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae 
+#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae
 #> Parsing column spp_pheno as micro-organism (class 'mo')
 #> Parsing column antibiotic as antibiotic (class 'ab')
 #> Renaming column antibiotic to standard name 'drug_agent'
@@ -1133,7 +1131,7 @@ ngono_tet_ast <- format_ast(
   interpret_eucast = TRUE,
   interpret_ecoff = TRUE
 )
-#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae 
+#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae
 #> Parsing column spp_pheno as micro-organism (class 'mo')
 #> Parsing column antibiotic as antibiotic (class 'ab')
 #> Renaming column antibiotic to standard name 'drug_agent'

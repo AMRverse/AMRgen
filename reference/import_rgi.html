@@ -46,7 +46,8 @@
 <span>  class_col <span class="op">=</span> <span class="st">"Drug Class"</span>,</span>
 <span>  exclude_loose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  rgi_short_name <span class="op">=</span> <span class="va">rgi_short_name_table</span>,</span>
-<span>  rgi_drugs <span class="op">=</span> <span class="va">rgi_drugs_table</span></span>
+<span>  rgi_drugs <span class="op">=</span> <span class="va">rgi_drugs_table</span>,</span>
+<span>  samples_no_amr <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -88,6 +89,10 @@
 
 <dt id="arg-rgi-drugs">rgi_drugs<a class="anchor" aria-label="anchor" href="#arg-rgi-drugs"></a></dt>
 <dd><p>A tibble containing a reference table mapping CARD drug class / drug agents to standardised drug classes/names. Defaults to <code>rgi_drugs_table</code>, which is provided internally.</p></dd>
+
+
+<dt id="arg-samples-no-amr">samples_no_amr<a class="anchor" aria-label="anchor" href="#arg-samples-no-amr"></a></dt>
+<dd><p>A vector of sample IDs that have no RGI output because there are no AMR markers identified. For example <code>c("SampleA", "SampleB")</code>. (default = <code>NULL</code>)</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -132,7 +137,7 @@ This processing ensures compatibility with downstream AMRgen analysis workflows.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># example RGI data from EuSCAPE project (including only Perfect and Strict hits)</span></span></span>
 <span class="r-in"><span><span class="va">rgi_EuSCAPE_raw</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 59,402 × 26</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 59,447 × 26</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ORF_ID                 Contig  Start   Stop Orientation Cut_Off Pass_Bitscore</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SAMEA3498968.fasta.tx…      1 <span style="text-decoration: underline;">109</span>511 <span style="text-decoration: underline;">110</span>635 -           Strict            700</span>
@@ -145,7 +150,7 @@ This processing ensures compatibility with downstream AMRgen analysis workflows.
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SAMEA3498968.fasta.tx…      2 <span style="text-decoration: underline;">437</span>973 <span style="text-decoration: underline;">441</span>050 -           Strict           <span style="text-decoration: underline;">1</span>800</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SAMEA3498968.fasta.tx…      2 <span style="text-decoration: underline;">441</span>051 <span style="text-decoration: underline;">444</span>173 -           Strict           <span style="text-decoration: underline;">1</span>800</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SAMEA3498968.fasta.tx…      3 <span style="text-decoration: underline;">347</span>739 <span style="text-decoration: underline;">348</span>971 +           Strict            700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 59,392 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 59,437 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 19 more variables: Best_Hit_Bitscore &lt;dbl&gt;, Best_Hit_ARO &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Best_Identities &lt;dbl&gt;, ARO &lt;dbl&gt;, Model_type &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   SNPs_in_Best_Hit_ARO &lt;chr&gt;, Other_SNPs &lt;chr&gt;, `Drug Class` &lt;chr&gt;,</span></span>
@@ -155,7 +160,7 @@ This processing ensures compatibility with downstream AMRgen analysis workflows.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># import using defaults (sample_id_sep=`.fasta.txt:`, exclude_loose = `TRUE`)</span></span></span>
 <span class="r-in"><span><span class="fu">import_rgi</span><span class="op">(</span><span class="va">rgi_EuSCAPE_raw</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 292,972 × 33</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 293,017 × 33</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id        marker mutation drug_agent drug_class `variation type` marker.label</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SAMEA349… Klebs… <span style="color: #BB0000;">NA</span>       FOX        Cephalosp… Gene presence d… Kpne_OmpK37…</span>
@@ -168,7 +173,7 @@ This processing ensures compatibility with downstream AMRgen analysis workflows.
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SAMEA349… Klebs… <span style="color: #BB0000;">NA</span>       RIF        Rifamycins Gene presence d… Kpne_KpnE   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SAMEA349… Klebs… <span style="color: #BB0000;">NA</span>       COL        Polymyxins Gene presence d… Kpne_KpnE   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SAMEA349… Klebs… <span style="color: #BB0000;">NA</span>       COL        Polymyxins Gene presence d… Kpne_KpnE   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 292,962 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 293,007 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 26 more variables: ORF_ID &lt;chr&gt;, Contig &lt;dbl&gt;, Start &lt;dbl&gt;, Stop &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Orientation &lt;chr&gt;, Cut_Off &lt;chr&gt;, Pass_Bitscore &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Best_Hit_Bitscore &lt;dbl&gt;, Best_Hit_ARO &lt;chr&gt;, Best_Identities &lt;dbl&gt;,</span></span>

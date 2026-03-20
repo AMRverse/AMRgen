@@ -680,9 +680,10 @@ phenotype table using the inbuilt
 function.
 
 ``` r
-ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno, 
-                                         ecoli_ast, 
-                                         pheno_cols = c("pheno_clsi","ecoff"))
+ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno,
+  ecoli_ast,
+  pheno_cols = c("pheno_clsi", "ecoff")
+)
 
 # Total number of samples that appear in both tables, i.e. that have both
 # genotype and phenotype data available
@@ -691,7 +692,7 @@ ecoli_geno_pheno$overlapping_samples
 
 # Table of drugs encountered in the phenotype table, indicating the
 # number of samples that have phenotype data for this drug and also
-# appear in the genotype table 
+# appear in the genotype table
 ecoli_geno_pheno$drugs_with_pheno
 #> # A tibble: 2 × 6
 #>   drug_agent     n drug_class       drug_name     spp_pheno          mic
@@ -699,8 +700,8 @@ ecoli_geno_pheno$drugs_with_pheno
 #> 1 CIP         3629 Fluoroquinolones Ciprofloxacin Escherichia coli  4168
 #> 2 CIP         3629 Quinolones       Ciprofloxacin Escherichia coli  4168
 
-# List of tables, one for each phenotype column in the input, indicating 
-# the number in each category (WT/NWT, S/I/R), amongst samples that also 
+# List of tables, one for each phenotype column in the input, indicating
+# the number in each category (WT/NWT, S/I/R), amongst samples that also
 # appear in the genotype table.
 ecoli_geno_pheno$pheno_counts_list
 #> $ecoff
@@ -715,7 +716,7 @@ ecoli_geno_pheno$pheno_counts_list
 #>   <ab>       <chr>         <chr>            <int> <int> <int>
 #> 1 CIP        Ciprofloxacin Escherichia coli  3011    63  1094
 
-# Number of markers encountered for each drug/class in the genotype table, 
+# Number of markers encountered for each drug/class in the genotype table,
 # amongst samples that have phenotype data for the relevant drug/class
 ecoli_geno_pheno$geno_hits
 #> # A tibble: 1 × 6
@@ -723,7 +724,7 @@ ecoli_geno_pheno$geno_hits
 #>   <ab>       <chr>     <chr>        <int>   <int> <int>
 #> 1 NA         NA        Quinolones      44    1039  3618
 
-# Frequency of each marker in the genotype table, amongst samples that have 
+# Frequency of each marker in the genotype table, amongst samples that have
 # phenotype data for the relevant drug/class
 ecoli_geno_pheno$geno_markers
 #> # A tibble: 44 × 6
@@ -816,7 +817,7 @@ distribution coloured by presence of a particular genetic marker
 
 ``` r
 assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", antibiotic = "Ciprofloxacin")
-#> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
+#> Warning in assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
 #> Ensure your input table is already filtered to the antibiotic.
 ```
 
@@ -831,7 +832,7 @@ gyrA_mut <- cip_bin %>%
 
 # plot the MIC distribution, coloured by count of gyrA mutations
 mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin")
-#> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
+#> Warning in assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
 #> Ensure your input table is already filtered to the antibiotic.
 
 mic_by_gyrA_count
@@ -848,7 +849,7 @@ marker_count <- cip_bin %>%
 
 # plot the MIC distribution, coloured by count of associated genetic markers
 mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1))
-#> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
+#> Warning in assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
 #> Ensure your input table is already filtered to the antibiotic.
 
 mic_by_marker_count
@@ -1024,7 +1025,7 @@ models <- amr_logistic(
   maf = 10
 )
 #> Generating geno-pheno binary matrix
-#>  Defining NWT in binary matrix using ecoff column provided: ecoff 
+#>  Defining NWT in binary matrix using ecoff column provided: ecoff
 #> ...Fitting logistic regression model to R using logistf
 #>    Filtered data contains 3629 samples (793 => 1, 2836 => 0) and 19 variables.
 #> Warning in logistf::logistf(R ~ ., data = to_fit, pl = FALSE): logistf.fit:

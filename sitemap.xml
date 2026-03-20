@@ -3,6 +3,7 @@
 <url><loc>https://amrgen.org/LICENSE-text.html</loc></url>
 <url><loc>https://amrgen.org/articles/AnalysingGenoPhenoData.html</loc></url>
 <url><loc>https://amrgen.org/articles/Concordance.html</loc></url>
+<url><loc>https://amrgen.org/articles/DeletionVariantsCatB3.html</loc></url>
 <url><loc>https://amrgen.org/articles/DownloadGenoPhenoData.html</loc></url>
 <url><loc>https://amrgen.org/articles/NeisseriaGonoExamples.html</loc></url>
 <url><loc>https://amrgen.org/articles/SalmonellaExamples.html</loc></url>
@@ -11,6 +12,10 @@
 <url><loc>https://amrgen.org/authors.html</loc></url>
 <url><loc>https://amrgen.org/index.html</loc></url>
 <url><loc>https://amrgen.org/reference/AMRgen-package.html</loc></url>
+<url><loc>https://amrgen.org/reference/DASSIM_geno.html</loc></url>
+<url><loc>https://amrgen.org/reference/DASSIM_pheno_raw.html</loc></url>
+<url><loc>https://amrgen.org/reference/MICROBIGGE_Ecoli_CHLR.html</loc></url>
+<url><loc>https://amrgen.org/reference/NCBI_Ecoli_AST_chl.html</loc></url>
 <url><loc>https://amrgen.org/reference/ST_data_CLI.html</loc></url>
 <url><loc>https://amrgen.org/reference/afp_CLI_public.html</loc></url>
 <url><loc>https://amrgen.org/reference/amr_logistic.html</loc></url>
@@ -19,16 +24,17 @@
 <url><loc>https://amrgen.org/reference/assay_by_var.html</loc></url>
 <url><loc>https://amrgen.org/reference/ast_CLI_public.html</loc></url>
 <url><loc>https://amrgen.org/reference/azm_comparison.html</loc></url>
+<url><loc>https://amrgen.org/reference/btESBL_AST.html</loc></url>
 <url><loc>https://amrgen.org/reference/cfm_comparison.html</loc></url>
 <url><loc>https://amrgen.org/reference/checkBreakpoints.html</loc></url>
 <url><loc>https://amrgen.org/reference/cip_comparison.html</loc></url>
-<url><loc>https://amrgen.org/reference/combo_stats.html</loc></url>
 <url><loc>https://amrgen.org/reference/compare_estimates.html</loc></url>
 <url><loc>https://amrgen.org/reference/compare_geno_pheno_id.html</loc></url>
 <url><loc>https://amrgen.org/reference/concordance.html</loc></url>
 <url><loc>https://amrgen.org/reference/concordance_from_tables.html</loc></url>
 <url><loc>https://amrgen.org/reference/convert_aa_code.html</loc></url>
 <url><loc>https://amrgen.org/reference/convert_mutation.html</loc></url>
+<url><loc>https://amrgen.org/reference/cooccuring_ppv_analysis.html</loc></url>
 <url><loc>https://amrgen.org/reference/cro_comparison.html</loc></url>
 <url><loc>https://amrgen.org/reference/download_ebi.html</loc></url>
 <url><loc>https://amrgen.org/reference/download_ncbi_ast.html</loc></url>

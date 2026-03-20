@@ -2,7 +2,9 @@
 
 Raw RGI v6.0.6 results file for Klebsiella pneumoniae from EuSCAPE
 project, one AMR determinant per row. Includes only Perfect and Strict
-hits Columns `Predicted_DNA`, `Predicted_Protein`, and
+hits Samples IDs that have no AMR markers were added to the `ORF_ID`
+column with remaining blank rows since RGI will generate blank outputs
+for these samples Columns `Predicted_DNA`, `Predicted_Protein`, and
 `CARD_Protein_Sequence` were removed to reduce file size.
 
 ## Usage
@@ -13,7 +15,7 @@ rgi_EuSCAPE_raw
 
 ## Format
 
-`rgi_EuSCAPE_raw` A data frame with 59,403 rows and 25 columns:
+`rgi_EuSCAPE_raw` A data frame with 59,448 rows and 25 columns:
 
 - `ORF_ID`: Sample identifier
 

@@ -112,34 +112,26 @@ summarise_geno_pheno(
 
 A named list with the following elements:
 
-- drugs_with_pheno:
+- `drugs_with_pheno`: A tibble listing the drugs included in the table,
+  and the associated number of samples with MIC measures, disk measures,
+  neither or both, for each drug; restricted to samples that also appear
+  in the genotype table.
 
-  A tibble listing the drugs included in the table, and the associated
-  number of samples with MIC measures, disk measures, neither or both,
-  for each drug; restricted to samples that also appear in the genotype
-  table.
+- `geno_hits`: A tibble listing the drugs and/or drug classes
+  corresponding to drugs with phenotypes, and the associated number of
+  unique markers, unique samples, and total hits for each drug/class
+  amongst samples with corresponding phenotype data.
 
-- geno_hits:
-
-  A tibble listing the drugs and/or drug classes corresponding to drugs
-  with phenotypes, and the associated number of unique markers, unique
-  samples, and total hits for each drug/class amongst samples with
-  corresponding phenotype data.
-
-- geno_markers:
-
-  A tibble listing the genotypic markers in the genotype table
-  corresponding to drugs with phenotypes, and the associated
+- `geno_markers`: A tibble listing the genotypic markers in the genotype
+  table corresponding to drugs with phenotypes, and the associated
   drugs/classes and variation types (if present). Number indicates the
   count of hits detected per marker, amongst samples with corresponding
   phenotype data.
 
-- pheno_counts_list:
-
-  A list of tibbles, each corresponding to a unique categorical
-  phenotype column in the input, indicating the counts of each
-  phenotypic category per drug and species; restricted to samples that
-  also appear in the genotype table.
+- `pheno_counts_list`: A list of tibbles, each corresponding to a unique
+  categorical phenotype column in the input, indicating the counts of
+  each phenotypic category per drug and species; restricted to samples
+  that also appear in the genotype table.
 
 ## Details
 

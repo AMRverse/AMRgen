@@ -129,9 +129,6 @@ different associations with clindamycin resistance.</p>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">##  Converting ast_CLI_public column `drug_agent` to class `ab` in binary matrix</span></span>
-<span><span class="co">##  Some samples had multiple phenotype rows, taking the most resistant only for binary matrix</span></span>
-<span><span class="co">##  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
 <span></span>
 <span><span class="co"># Generate binary matrix with variants</span></span>
 <span><span class="va">cli_bin_accession</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
@@ -143,9 +140,6 @@ different associations with clindamycin resistance.</p>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">##  Converting ast_CLI_public column `drug_agent` to class `ab` in binary matrix</span></span>
-<span><span class="co">##  Some samples had multiple phenotype rows, taking the most resistant only for binary matrix</span></span>
-<span><span class="co">##  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
 <span></span>
 <span><span class="co"># Visualise with UpSet plot (markers)</span></span>
 <span><span class="va">cli_mic_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
@@ -158,8 +152,7 @@ different associations with clindamycin resistance.</p>
 <span>  print_category_counts <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  bp_S <span class="op">=</span> <span class="fl">0.25</span>,</span>
 <span>  bp_R <span class="op">=</span> <span class="fl">0.5</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">##  Removing 687 rows with no phenotype call</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -174,8 +167,7 @@ different associations with clindamycin resistance.</p>
 <span>  print_category_counts <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  bp_S <span class="op">=</span> <span class="fl">0.25</span>,</span>
 <span>  bp_R <span class="op">=</span> <span class="fl">0.5</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">##  Removing 687 rows with no phenotype call</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-2.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
@@ -186,14 +178,12 @@ for each marker and variant. This will allow us to see which markers and
 variants are most predictive of clindamycin resistance.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># soloPPV analysis for markers</span></span>
-<span><span class="va">PPV_cli</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">cli_bin</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span>, plot_assay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">##  Removing 687 rows with no phenotype call</span></span></code></pre></div>
+<span><span class="va">PPV_cli</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">cli_bin</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span>, plot_assay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># soloPPV analysis for variants</span></span>
-<span><span class="va">PPV_cli</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">cli_bin_accession</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span>, plot_assay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">##  Removing 687 rows with no phenotype call</span></span></code></pre></div>
+<span><span class="va">PPV_cli</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">cli_bin_accession</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span>, plot_assay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-2.png" class="r-plt" alt="" width="100%"></p>
 <p>We can clearly see from this analysis that the variants of the
 markers have different associations with clindamycin resistance. For

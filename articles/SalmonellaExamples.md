@@ -174,7 +174,7 @@ salm_ast <- format_ast(
   mic_col = "MIC.values",
   interpret_eucast = TRUE
 )
-#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Salmonella enterica 
+#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Salmonella enterica
 #> Parsing column spp_pheno as micro-organism (class 'mo')
 #> Parsing column antibiotic as antibiotic (class 'ab')
 #> Renaming column antibiotic to standard name 'drug_agent'
@@ -385,8 +385,6 @@ gyrA_mut <- cip_bin_meta %>%
 
 # plot the MIC distribution, coloured by count of gyrA mutations
 mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
-#> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
-#> Ensure your input table is already filtered to the antibiotic.
 
 mic_by_gyrA_count
 ```
@@ -405,8 +403,6 @@ marker_count <- cip_bin_meta %>%
 # plot the MIC distribution, coloured by count of associated genetic markers
 mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1)) +
   facet_wrap(~Source, ncol = 1)
-#> WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
-#> Ensure your input table is already filtered to the antibiotic.
 
 mic_by_marker_count
 ```

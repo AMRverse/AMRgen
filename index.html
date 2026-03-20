@@ -59,14 +59,14 @@
 </div>
 <p><strong>AMRgen</strong> is an open-source R package designed to <strong>bridge the gap between genotypic and phenotypic antimicrobial resistance (AMR) data</strong>. Developed as an extension to the <a href="https://amr-for-r.org" class="external-link">AMR R package</a>, it provides tools to interpret AMR genes, integrate these findings with antimicrobial susceptibility test (AST) data, and calculate genotype-phenotype associations.</p>
 <p>This package is developed in collaboration with the ESGEM-AMR Working Group and is tailored for researchers and healthcare professionals tackling AMR globally.</p>
-<p>The <a href="https://amrgen.org">AMRgen website</a> has full function <a href="https://amrgen.org/reference/index.html">documentation</a> and various <a href="https://amrgen.org/articles/">vignette</a> working through analysing geno/pheno data using key functions.</p>
+<p>The <a href="https://amrgen.org">AMRgen website</a> has full function <a href="https://amrgen.org/reference/index.html">documentation</a> and various <a href="https://amrgen.org/articles/">vignettes</a> working through analysing geno/pheno data using key functions.</p>
 <hr>
 <div class="section level2">
 <h2 id="key-features">Key Features<a class="anchor" aria-label="anchor" href="#key-features"></a>
 </h2>
 <ul>
 <li>
-<strong>Import Genotype and Phenotype Data</strong>: Import from common formats (NCBI or EBI antibiogram format for phenotypes; AMRFinderPlus and hAMRonization for genotypes</li>
+<strong>Import Genotype and Phenotype Data</strong>: Import from common formats (NCBI or EBI antibiogram format, VITEK, Sensititre, MicroScan, Phoenix, WHONet for phenotypes; AMRFinderPlus, ABRicate, Kleborate, RGI and AMRrules for genotypes.</li>
 <li>
 <strong>Genotype-Phenotype Integration</strong>: Links AMR gene presence with phenotypic resistance profiles, enabling deeper insights into resistance mechanisms.</li>
 <li>
@@ -75,13 +75,8 @@
 <strong>Visualisation</strong>: Generate powerful UpSet plots to identify intersections of AMR gene presence and phenotypic resistance, highlighting multidrug resistance patterns.</li>
 <li>
 <strong>Modular and Extensible</strong>: Leverages the robust foundation of the AMR package, including antibiotic selectors and clinical breakpoint interpretations.</li>
-</ul>
-<p>Planned for development:</p>
-<ul>
 <li>
-<strong>NCBI-Compliant Export</strong>: Export phenotype data to NCBI-compliant antibiogram format.</li>
-<li>
-<strong>Expanded Data Import</strong>: Import and parse phenotype data from other tools (e.g. CARD, ResFinder).</li>
+<strong>NCBI- and EBI-Compliant Export</strong>: Export phenotype data to NCBI- and EBI-compliant antibiogram format.</li>
 </ul>
 <hr>
 </div>
@@ -114,6 +109,7 @@
 <div class="section level3">
 <h3 id="investigate-ciprofloxacin-resistance-vs-quinolone-genotype-markers-via-solo-ppv-and-upset-plots">Investigate ciprofloxacin resistance vs quinolone genotype markers, via solo PPV and upset plots<a class="anchor" aria-label="anchor" href="#investigate-ciprofloxacin-resistance-vs-quinolone-genotype-markers-via-solo-ppv-and-upset-plots"></a>
 </h3>
+<p>Below is a quick example demonstrating the major functions with AMRgen and how they can be used to compare ciprofloxacin resistance phenotypes with quinolone genotype markers, in <em>E. coli</em>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example public E. coli AST data from NCBI</span></span>
 <span><span class="co">#  (already imported via import_ncbi_ast() and re-interpreted with as.sir())</span></span>
@@ -135,12 +131,48 @@
 <span></span>
 <span><span class="co"># Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers</span></span>
 <span><span class="co">#  (for markers observed at least 10 times)</span></span>
-<span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, maf<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, maf<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Caclulate concordance of genotype and phenotype markers</span></span>
+<span><span class="va">eco_cip_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>, sir_col <span class="op">=</span> <span class="st">"pheno_provided"</span>, keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>, keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">concordance_cip</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/concordance.html">concordance</a></span><span class="op">(</span><span class="va">eco_cip_matrix</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="importing-geno-or-pheno-data">Importing geno or pheno data<a class="anchor" aria-label="anchor" href="#importing-geno-or-pheno-data"></a>
+</h2>
+<p>To learn how to download data from the public archives <a href="http://amrgen.org/articles/DownloadGenoPhenoData.html" class="external-link">NCBI or EBI</a></p>
+<p>You can see all the various phenotypic import functions for the following formats by running:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">?</span><span class="va">import_ast</span></span></code></pre></div>
+<p>Currently, AMRgen supports the following phenotype formats:</p>
+<ul>
+<li>EBI</li>
+<li>NCBI</li>
+<li>VITEK</li>
+<li>MicroScan</li>
+<li>SensiTitre</li>
+<li>WHOnet</li>
+</ul>
+<p>Phenotype data can also be exported in NCBI or EBI formats, for upload to the public archives:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">?</span><span class="va">export_ncbi_ast</span></span>
+<span><span class="op">?</span><span class="va">export_ebi_ast</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example-analyses-using-amrgen">Example analyses using AMRgen<a class="anchor" aria-label="anchor" href="#example-analyses-using-amrgen"></a>
+</h2>
+<p>For a complete example of how to analyse your genotypic and phenotypic data together, see <a href="http://amrgen.org/articles/AnalysingGenoPhenoData.html" class="external-link">Analysing Geno-Pheno Data</a>.</p>
+<p>Example analysis of a small <em>Salmonella enterica</em> dataset for <a href="http://amrgen.org/articles/SalmonellaExamples.html" class="external-link">ciprofloxacin resistance</a></p>
+<p>Example analysis of clindamycin resistance in <a href="http://amrgen.org/articles/StaphAureusClindamycin.html" class="external-link"><em>Staphylococcus aureus</em></a></p>
+<p>Example analysis using large-scale surviellance genotype and phenotype data in <a href="http://amrgen.org/articles/NeisseriaGonoExamples.html" class="external-link"><em>Neiserria gonohorroeae</em></a></p>
+<p>How to assess concordance of predicted phenotypes with <a href="http://amrgen.org/articles/Concordance.html" class="external-link">observed phenotypes</a></p>
+<p>For more see the various <a href="https://amrgen.org/articles/">vignettes</a>.</p>
 <div class="section level3">
 <h3 id="download-reference-mic-distribution-from-eucastorg-and-compare-to-example-data">Download reference MIC distribution from eucast.org and compare to example data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distribution-from-eucastorg-and-compare-to-example-data"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get MIC reference distribution for ciprofloxacin in E. coli</span></span>
 <span><span class="va">ecoli_cip_mic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">get_eucast_mic_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"E. coli"</span><span class="op">)</span></span>
 <span></span>
@@ -153,67 +185,6 @@
 <span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ecoli_cip</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
 <span><span class="va">comparison</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="download-phenotype-or-genotype-data-from-ebis-amr-portal">Download phenotype or genotype data from EBI’s AMR portal<a class="anchor" aria-label="anchor" href="#download-phenotype-or-genotype-data-from-ebis-amr-portal"></a>
-</h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Get phenotype data for ciprofloxacin in E. coli</span></span>
-<span><span class="va">ebi_pheno_ecoli_cip</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ebi.html">download_ebi</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"Escherichia coli"</span>, antibiotic<span class="op">=</span><span class="st">"Cipro"</span>, reformat<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Check how many observations we have for MIC data</span></span>
-<span><span class="va">ebi_pheno_ecoli_cip</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">mic</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Plot MIC distribution, stratified by platform</span></span>
-<span><span class="fu"><a href="reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">ebi_pheno_ecoli_cip</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_provided"</span>, facet_var <span class="op">=</span> <span class="st">"platform"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Compare MIC values with reference distribution from EUCAST</span></span>
-<span><span class="va">compare_mics</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ebi_pheno_ecoli_cip</span><span class="op">$</span><span class="va">mic</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
-<span><span class="va">compare_mics</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">compare_mics</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Compare disk diffusion zone values with reference distribution from EUCAST</span></span>
-<span><span class="va">compare_disk</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">compare_disk_with_eucast</a></span><span class="op">(</span><span class="va">ebi_pheno_ecoli_cip</span><span class="op">$</span><span class="va">disk</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
-<span><span class="va">compare_disk</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">compare_disk</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Get genotype data for ciprofloxacin in E. coli</span></span>
-<span><span class="va">ebi_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ebi.html">download_ebi</a></span><span class="op">(</span>data<span class="op">=</span><span class="st">"genotype"</span>, species <span class="op">=</span> <span class="st">"Escherichia coli"</span>, geno_subclass<span class="op">=</span><span class="st">"QUINOLONE"</span>, reformat<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations</span></span>
-<span><span class="co">#  (for combinations observed at least 5 times)</span></span>
-<span><span class="va">cip_upset_ebi_mic</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>geno_table<span class="op">=</span><span class="va">ecoli_geno</span>, pheno_table<span class="op">=</span><span class="va">ebi_pheno_ecoli_cip</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, drug_class_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno_provided"</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span>, order<span class="op">=</span><span class="st">"value"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="download-phenotype-data-from-ncbi-biosample">Download phenotype data from NCBI BioSample<a class="anchor" aria-label="anchor" href="#download-phenotype-data-from-ncbi-biosample"></a>
-</h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Get all available phenotype data for Klebsiella quasipneumoniae</span></span>
-<span><span class="co"># (note this is a small example with &lt;100 samples, as this function queries NCBI BioSample via rentrez and is quite slow)</span></span>
-<span><span class="va">ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ncbi_ast.html">download_ncbi_ast</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Klebsiella quasipneumoniae"</span>,</span>
-<span>  reformat <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Plot MIC distribution, stratified by platform</span></span>
-<span><span class="fu"><a href="reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">ast</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_provided"</span>, facet_var <span class="op">=</span> <span class="st">"platform"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># The downloaded S/I/R calls look odd, so re-interpret direct with latest EUCAST breakpoints and review</span></span>
-<span><span class="va">ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/interpret_ast.html">interpret_ast</a></span><span class="op">(</span><span class="va">ast</span>, interpret_eucast <span class="op">=</span> <span class="cn">T</span>, interpret_clsi<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">ast</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span>, facet_var <span class="op">=</span> <span class="st">"platform"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">ast</span>, measure<span class="op">=</span><span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>, facet_var <span class="op">=</span> <span class="st">"platform"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="import-and-export">Import and export<a class="anchor" aria-label="anchor" href="#import-and-export"></a>
-</h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Import phenotype data in NCBI, EBI, Vitek, Sensititre, MicroScan, WHOnet formats</span></span>
-<span><span class="op">?</span><span class="va">import_ast</span></span>
-<span></span>
-<span><span class="co"># Export phenotype data in NCBI or EBI formats</span></span>
-<span><span class="op">?</span><span class="va">export_ncbi_ast</span></span>
-<span><span class="op">?</span><span class="va">export_ebi_ast</span></span></code></pre></div>
-<p>For more the various <a href="https://amrgen.org/articles/">vignettes</a>.</p>
 </div>
 </div>
 <div class="section level2">

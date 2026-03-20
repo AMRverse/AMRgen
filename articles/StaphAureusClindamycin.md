@@ -63,9 +63,6 @@ cli_bin <- get_binary_matrix(
   keep_assay_values = TRUE,
   marker_col = "marker.label"
 )
-##  Converting ast_CLI_public column `drug_agent` to class `ab` in binary matrix
-##  Some samples had multiple phenotype rows, taking the most resistant only for binary matrix
-##  Defining NWT in binary matrix using ecoff column provided: ecoff
 
 # Generate binary matrix with variants
 cli_bin_accession <- get_binary_matrix(
@@ -77,9 +74,6 @@ cli_bin_accession <- get_binary_matrix(
   keep_assay_values = TRUE,
   marker_col = "marker.label"
 )
-##  Converting ast_CLI_public column `drug_agent` to class `ab` in binary matrix
-##  Some samples had multiple phenotype rows, taking the most resistant only for binary matrix
-##  Defining NWT in binary matrix using ecoff column provided: ecoff
 
 # Visualise with UpSet plot (markers)
 cli_mic_upset <- amr_upset(
@@ -93,7 +87,6 @@ cli_mic_upset <- amr_upset(
   bp_S = 0.25,
   bp_R = 0.5
 )
-##  Removing 687 rows with no phenotype call
 ```
 
 ![](StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-1.png)
@@ -112,7 +105,6 @@ cli_mic_upset <- amr_upset(
   bp_S = 0.25,
   bp_R = 0.5
 )
-##  Removing 687 rows with no phenotype call
 ```
 
 ![](StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-2.png)
@@ -126,7 +118,6 @@ variants are most predictive of clindamycin resistance.
 ``` r
 # soloPPV analysis for markers
 PPV_cli <- ppv(cli_bin, upset_grid = TRUE, plot_assay = TRUE)
-##  Removing 687 rows with no phenotype call
 ```
 
 ![](StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-1.png)
@@ -135,7 +126,6 @@ PPV_cli <- ppv(cli_bin, upset_grid = TRUE, plot_assay = TRUE)
 
 # soloPPV analysis for variants
 PPV_cli <- ppv(cli_bin_accession, upset_grid = TRUE, plot_assay = TRUE)
-##  Removing 687 rows with no phenotype call
 ```
 
 ![](StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-2.png)

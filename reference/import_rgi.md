@@ -17,7 +17,8 @@ import_rgi(
   class_col = "Drug Class",
   exclude_loose = TRUE,
   rgi_short_name = rgi_short_name_table,
-  rgi_drugs = rgi_drugs_table
+  rgi_drugs = rgi_drugs_table,
+  samples_no_amr = NULL
 )
 ```
 
@@ -76,6 +77,12 @@ import_rgi(
   agents to standardised drug classes/names. Defaults to
   `rgi_drugs_table`, which is provided internally.
 
+- samples_no_amr:
+
+  A vector of sample IDs that have no RGI output because there are no
+  AMR markers identified. For example `c("SampleA", "SampleB")`.
+  (default = `NULL`)
+
 ## Value
 
 A tibble containing the processed AMR determinants and drug classes that
@@ -126,7 +133,7 @@ rgi <- import_rgi(rgi_raw, sample_id_sep = "_genomic.fna.txt:", exclude_loose = 
 
 # example RGI data from EuSCAPE project (including only Perfect and Strict hits)
 rgi_EuSCAPE_raw
-#> # A tibble: 59,402 × 26
+#> # A tibble: 59,447 × 26
 #>    ORF_ID                 Contig  Start   Stop Orientation Cut_Off Pass_Bitscore
 #>    <chr>                   <dbl>  <dbl>  <dbl> <chr>       <chr>           <dbl>
 #>  1 SAMEA3498968.fasta.tx…      1 109511 110635 -           Strict            700
@@ -139,7 +146,7 @@ rgi_EuSCAPE_raw
 #>  8 SAMEA3498968.fasta.tx…      2 437973 441050 -           Strict           1800
 #>  9 SAMEA3498968.fasta.tx…      2 441051 444173 -           Strict           1800
 #> 10 SAMEA3498968.fasta.tx…      3 347739 348971 +           Strict            700
-#> # ℹ 59,392 more rows
+#> # ℹ 59,437 more rows
 #> # ℹ 19 more variables: Best_Hit_Bitscore <dbl>, Best_Hit_ARO <chr>,
 #> #   Best_Identities <dbl>, ARO <dbl>, Model_type <chr>,
 #> #   SNPs_in_Best_Hit_ARO <chr>, Other_SNPs <chr>, `Drug Class` <chr>,
@@ -149,7 +156,7 @@ rgi_EuSCAPE_raw
 
 # import using defaults (sample_id_sep=`.fasta.txt:`, exclude_loose = `TRUE`)
 import_rgi(rgi_EuSCAPE_raw)
-#> # A tibble: 292,972 × 33
+#> # A tibble: 293,017 × 33
 #>    id        marker mutation drug_agent drug_class `variation type` marker.label
 #>    <chr>     <chr>  <chr>    <chr>      <chr>      <chr>            <chr>       
 #>  1 SAMEA349… Klebs… NA       FOX        Cephalosp… Gene presence d… Kpne_OmpK37…
@@ -162,7 +169,7 @@ import_rgi(rgi_EuSCAPE_raw)
 #>  8 SAMEA349… Klebs… NA       RIF        Rifamycins Gene presence d… Kpne_KpnE   
 #>  9 SAMEA349… Klebs… NA       COL        Polymyxins Gene presence d… Kpne_KpnE   
 #> 10 SAMEA349… Klebs… NA       COL        Polymyxins Gene presence d… Kpne_KpnE   
-#> # ℹ 292,962 more rows
+#> # ℹ 293,007 more rows
 #> # ℹ 26 more variables: ORF_ID <chr>, Contig <dbl>, Start <dbl>, Stop <dbl>,
 #> #   Orientation <chr>, Cut_Off <chr>, Pass_Bitscore <dbl>,
 #> #   Best_Hit_Bitscore <dbl>, Best_Hit_ARO <chr>, Best_Identities <dbl>,

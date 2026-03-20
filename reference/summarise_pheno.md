@@ -76,27 +76,19 @@ summarise_pheno(
 
 A named list with the following elements:
 
-- uniques:
+- `uniques`: A tibble of the number of unique samples, drugs, organisms,
+  and methods detected in `pheno_table`.
 
-  A tibble of the number of unique samples, drugs, organisms, and
-  methods detected in `pheno_table`.
+- `drugs`: A tibble listing the drugs included in the table, and the
+  associated number of samples with MIC measures, disk measures, neither
+  or both, for each drug and species.
 
-- drugs:
+- `details`: A tibble listing more details of the methods of assay
+  measurements, per drug and species.
 
-  A tibble listing the drugs included in the table, and the associated
-  number of samples with MIC measures, disk measures, neither or both,
-  for each drug and species.
-
-- details:
-
-  A tibble listing more details of the methods of assay measurements,
-  per drug and species.
-
-- pheno_counts_list:
-
-  A list of tibbles, each corresponding to a unique categorical
-  phenotype column in the input, indicating the counts of each
-  phenotypic category per drug and species.
+- `pheno_counts_list`: A list of tibbles, each corresponding to a unique
+  categorical phenotype column in the input, indicating the counts of
+  each phenotypic category per drug and species.
 
 ## Details
 
@@ -111,7 +103,7 @@ column is not recognized as an `"ab"` object.
 summarise_pheno(staph_ast_ebi)
 #> No phenotype column names provided via 'pheno_cols'
 #> These are needed to summarise counts of phenotype category calls per drug.
-#> Relevant columns detected in your input table are: c('pheno_provided','pheno_eucast','pheno_clsi','pheno_eucast_mic','pheno_eucast_disk','pheno_clsi_mic','pheno_clsi_disk','ecoff','ecoff_mic','ecoff_disk')
+#> Relevant columns detected in your input table are: c('pheno_provided, pheno_eucast, pheno_clsi, pheno_eucast_mic, pheno_eucast_disk, pheno_clsi_mic, pheno_clsi_disk, ecoff, ecoff_mic, ecoff_disk'). Summarising these.
 #> $uniques
 #> # A tibble: 7 × 2
 #>   column     n_unique
@@ -144,7 +136,76 @@ summarise_pheno(staph_ast_ebi)
 #> # ℹ 1 more variable: none <int>
 #> 
 #> $pheno_counts_list
-#> list()
+#> $pheno_counts_list$pheno_provided
+#> # A tibble: 2 × 6
+#>   drug_agent drug_name   spp_pheno                 S     R     I
+#>   <ab>       <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus    12    72    NA
+#> 2 DOX        Doxycycline Staphylococcus aureus   103    20    11
+#> 
+#> $pheno_counts_list$pheno_eucast
+#> # A tibble: 2 × 6
+#>   drug_agent drug_name   spp_pheno                 S     R  `NA`
+#>   <ab>       <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus    12     2    70
+#> 2 DOX        Doxycycline Staphylococcus aureus    38     9    87
+#> 
+#> $pheno_counts_list$pheno_clsi
+#> # A tibble: 2 × 7
+#>   drug_agent drug_name   spp_pheno              `NA`     S     I     R
+#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus    84    NA    NA    NA
+#> 2 DOX        Doxycycline Staphylococcus aureus    87    41     5     1
+#> 
+#> $pheno_counts_list$pheno_eucast_mic
+#> # A tibble: 2 × 6
+#>   drug_agent drug_name   spp_pheno                 S     R  `NA`
+#>   <ab>       <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus     9     2    73
+#> 2 DOX        Doxycycline Staphylococcus aureus    38     9    87
+#> 
+#> $pheno_counts_list$pheno_eucast_disk
+#> # A tibble: 2 × 5
+#>   drug_agent drug_name   spp_pheno                 S  `NA`
+#>   <ab>       <chr>       <chr>                 <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus     3    81
+#> 2 DOX        Doxycycline Staphylococcus aureus    NA   134
+#> 
+#> $pheno_counts_list$pheno_clsi_mic
+#> # A tibble: 2 × 7
+#>   drug_agent drug_name   spp_pheno              `NA`     S     I     R
+#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus    84    NA    NA    NA
+#> 2 DOX        Doxycycline Staphylococcus aureus    87    41     5     1
+#> 
+#> $pheno_counts_list$pheno_clsi_disk
+#> # A tibble: 2 × 4
+#>   drug_agent drug_name   spp_pheno              `NA`
+#>   <ab>       <chr>       <chr>                 <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus    84
+#> 2 DOX        Doxycycline Staphylococcus aureus   134
+#> 
+#> $pheno_counts_list$ecoff
+#> # A tibble: 2 × 7
+#>   drug_agent drug_name   spp_pheno                WT   NWT  `NA`    NI
+#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus    12     2    70    NA
+#> 2 DOX        Doxycycline Staphylococcus aureus    NA     9    87    38
+#> 
+#> $pheno_counts_list$ecoff_mic
+#> # A tibble: 2 × 7
+#>   drug_agent drug_name   spp_pheno                WT   NWT  `NA`    NI
+#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus     9     2    73    NA
+#> 2 DOX        Doxycycline Staphylococcus aureus    NA     9    87    38
+#> 
+#> $pheno_counts_list$ecoff_disk
+#> # A tibble: 2 × 5
+#>   drug_agent drug_name   spp_pheno                WT  `NA`
+#>   <ab>       <chr>       <chr>                 <int> <int>
+#> 1 AMK        Amikacin    Staphylococcus aureus     3    81
+#> 2 DOX        Doxycycline Staphylococcus aureus    NA   134
+#> 
 #> 
 
 summarise_pheno(staph_ast_ebi, pheno_cols = c("pheno_provided", "pheno_clsi", "ecoff"))

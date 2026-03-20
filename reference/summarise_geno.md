@@ -68,26 +68,18 @@ summarise_geno(
 
 A named list with the following elements:
 
-- uniques:
+- `uniques`: A tibble of the number of unique samples, markers, genes,
+  drugs, classes and variation types detected in `geno_table`.
 
-  A tibble of the number of unique samples, markers, genes, drugs,
-  classes and variation types detected in `geno_table`.
+- `per_type`: A tibble of unique counts of samples, markers, genes,
+  drugs, and classes per variation type.
 
-- per_type:
+- `drugs`: A tibble listing the drugs and/or drug classes represented in
+  the table, and the associated number of unique markers, unique
+  samples, and total hits for each drug/class.
 
-  A tibble of unique counts of samples, markers, genes, drugs, and
-  classes per variation type.
-
-- drugs:
-
-  A tibble listing the drugs and/or drug classes represented in the
-  table, and the associated number of unique markers, unique samples,
-  and total hits for each drug/class.
-
-- markers:
-
-  A tibble listing the markers represented in the table, and the
-  associated drugs/classes and variation types (if present). Number
+- `markers`: A tibble listing the markers represented in the table, and
+  the associated drugs/classes and variation types (if present). Number
   indicates the count of hits detected per marker.
 
 ## Details

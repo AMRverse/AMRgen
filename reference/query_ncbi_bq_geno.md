@@ -20,7 +20,7 @@ query_ncbi_bq_geno(
 - taxgroup:
 
   String specifying the organism group to filter on (e.g., "Pseudomonas
-  aeruginosa"). See https://www.ncbi.nlm.nih.gov/pathogens/organisms/
+  aeruginosa"). See <https://www.ncbi.nlm.nih.gov/pathogens/organisms/>
   for a list. Required.
 
 - geno_subclass:

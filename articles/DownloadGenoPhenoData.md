@@ -466,7 +466,7 @@ head(tet_bin)
 ``` r
 # plot positive predictive value for each marker/combination
 tet_ppv <- ppv(tet_bin)
-#>  Removing 69 rows with no phenotype call
+#> Removing 69 rows with no phenotype call
 ```
 
 ![](DownloadGenoPhenoData_files/figure-html/ppv-1.png)

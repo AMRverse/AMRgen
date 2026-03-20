@@ -683,9 +683,10 @@ table<a class="anchor" aria-label="anchor" href="#summarise-the-intersection-of-
 phenotype table using the inbuilt <code><a href="../reference/summarise_geno_pheno.html">summarise_geno_pheno()</a></code>
 function.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ecoli_geno_pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_geno_pheno.html">summarise_geno_pheno</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, </span>
-<span>                                         <span class="va">ecoli_ast</span>, </span>
-<span>                                         pheno_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pheno_clsi"</span>,<span class="st">"ecoff"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ecoli_geno_pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_geno_pheno.html">summarise_geno_pheno</a></span><span class="op">(</span><span class="va">ecoli_geno</span>,</span>
+<span>  <span class="va">ecoli_ast</span>,</span>
+<span>  pheno_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pheno_clsi"</span>, <span class="st">"ecoff"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Total number of samples that appear in both tables, i.e. that have both</span></span>
 <span><span class="co"># genotype and phenotype data available</span></span>
@@ -694,7 +695,7 @@ function.</p>
 <span></span>
 <span><span class="co"># Table of drugs encountered in the phenotype table, indicating the</span></span>
 <span><span class="co"># number of samples that have phenotype data for this drug and also</span></span>
-<span><span class="co"># appear in the genotype table </span></span>
+<span><span class="co"># appear in the genotype table</span></span>
 <span><span class="va">ecoli_geno_pheno</span><span class="op">$</span><span class="va">drugs_with_pheno</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
 <span><span class="co">#&gt;   drug_agent     n drug_class       drug_name     spp_pheno          mic</span></span>
@@ -702,8 +703,8 @@ function.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> CIP         <span style="text-decoration: underline;">3</span>629 Fluoroquinolones Ciprofloxacin Escherichia coli  <span style="text-decoration: underline;">4</span>168</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> CIP         <span style="text-decoration: underline;">3</span>629 Quinolones       Ciprofloxacin Escherichia coli  <span style="text-decoration: underline;">4</span>168</span></span>
 <span></span>
-<span><span class="co"># List of tables, one for each phenotype column in the input, indicating </span></span>
-<span><span class="co"># the number in each category (WT/NWT, S/I/R), amongst samples that also </span></span>
+<span><span class="co"># List of tables, one for each phenotype column in the input, indicating</span></span>
+<span><span class="co"># the number in each category (WT/NWT, S/I/R), amongst samples that also</span></span>
 <span><span class="co"># appear in the genotype table.</span></span>
 <span><span class="va">ecoli_geno_pheno</span><span class="op">$</span><span class="va">pheno_counts_list</span></span>
 <span><span class="co">#&gt; $ecoff</span></span>
@@ -718,7 +719,7 @@ function.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> CIP        Ciprofloxacin Escherichia coli  <span style="text-decoration: underline;">3</span>011    63  <span style="text-decoration: underline;">1</span>094</span></span>
 <span></span>
-<span><span class="co"># Number of markers encountered for each drug/class in the genotype table, </span></span>
+<span><span class="co"># Number of markers encountered for each drug/class in the genotype table,</span></span>
 <span><span class="co"># amongst samples that have phenotype data for the relevant drug/class</span></span>
 <span><span class="va">ecoli_geno_pheno</span><span class="op">$</span><span class="va">geno_hits</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
@@ -726,7 +727,7 @@ function.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Quinolones      44    <span style="text-decoration: underline;">1</span>039  <span style="text-decoration: underline;">3</span>618</span></span>
 <span></span>
-<span><span class="co"># Frequency of each marker in the genotype table, amongst samples that have </span></span>
+<span><span class="co"># Frequency of each marker in the genotype table, amongst samples that have</span></span>
 <span><span class="co"># phenotype data for the relevant drug/class</span></span>
 <span><span class="va">ecoli_geno_pheno</span><span class="op">$</span><span class="va">geno_markers</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 44 × 6</span></span></span>
@@ -815,7 +816,7 @@ plot the assay distribution coloured by presence of a particular genetic
 marker</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">cip_bin</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"parC_S80I"</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.</span></span>
+<span><span class="co">#&gt; Warning in assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.</span></span>
 <span><span class="co">#&gt; Ensure your input table is already filtered to the antibiotic.</span></span></code></pre></div>
 <p><img src="AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -827,7 +828,7 @@ marker</p>
 <span></span>
 <span><span class="co"># plot the MIC distribution, coloured by count of gyrA mutations</span></span>
 <span><span class="va">mic_by_gyrA_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">gyrA_mut</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"gyrA_mut"</span>, colour_legend_label <span class="op">=</span> <span class="st">"No. gyrA mutations"</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.</span></span>
+<span><span class="co">#&gt; Warning in assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.</span></span>
 <span><span class="co">#&gt; Ensure your input table is already filtered to the antibiotic.</span></span>
 <span></span>
 <span><span class="va">mic_by_gyrA_count</span></span></code></pre></div>
@@ -841,7 +842,7 @@ marker</p>
 <span></span>
 <span><span class="co"># plot the MIC distribution, coloured by count of associated genetic markers</span></span>
 <span><span class="va">mic_by_marker_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">marker_count</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"marker_count"</span>, colour_legend_label <span class="op">=</span> <span class="st">"No. markers detected"</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, bar_cols <span class="op">=</span> <span class="fu">viridisLite</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">marker_count</span><span class="op">$</span><span class="va">marker_count</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; WARNING: Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.</span></span>
+<span><span class="co">#&gt; Warning in assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.</span></span>
 <span><span class="co">#&gt; Ensure your input table is already filtered to the antibiotic.</span></span>
 <span></span>
 <span><span class="va">mic_by_marker_count</span></span></code></pre></div>
@@ -1005,7 +1006,7 @@ regression models</p></li>
 <span>  maf <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Generating geno-pheno binary matrix</span></span>
-<span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff </span></span>
+<span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
 <span><span class="co">#&gt; ...Fitting logistic regression model to R using logistf</span></span>
 <span><span class="co">#&gt;    Filtered data contains 3629 samples (793 =&gt; 1, 2836 =&gt; 0) and 19 variables.</span></span>
 <span><span class="co">#&gt; Warning in logistf::logistf(R ~ ., data = to_fit, pl = FALSE): logistf.fit:</span></span>

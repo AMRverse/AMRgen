@@ -117,20 +117,11 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A named list with the following elements:</p><dl><dt>drugs_with_pheno</dt>
-<dd><p>A tibble listing the drugs included in the table, and the associated number of samples with MIC measures, disk measures, neither or both, for each drug; restricted to samples that also appear in the genotype table.</p></dd>
-
-<dt>geno_hits</dt>
-<dd><p>A tibble listing the drugs and/or drug classes corresponding to drugs with phenotypes, and the associated number of unique markers, unique samples, and total hits for each drug/class amongst samples with corresponding phenotype data.</p></dd>
-
-<dt>geno_markers</dt>
-<dd><p>A tibble listing the genotypic markers in the genotype table corresponding to drugs with phenotypes, and the associated drugs/classes and variation types (if present). Number indicates the count of hits detected per marker, amongst samples with corresponding phenotype data.</p></dd>
-
-<dt>pheno_counts_list</dt>
-<dd><p>A list of tibbles, each corresponding to a unique categorical phenotype column in the input, indicating the counts of each phenotypic category per drug and species; restricted to samples that also appear in the genotype table.</p></dd>
-
-
-</dl></div>
+    <p>A named list with the following elements:</p><ul><li><p><code>drugs_with_pheno</code>: A tibble listing the drugs included in the table, and the associated number of samples with MIC measures, disk measures, neither or both, for each drug; restricted to samples that also appear in the genotype table.</p></li>
+<li><p><code>geno_hits</code>: A tibble listing the drugs and/or drug classes corresponding to drugs with phenotypes, and the associated number of unique markers, unique samples, and total hits for each drug/class amongst samples with corresponding phenotype data.</p></li>
+<li><p><code>geno_markers</code>: A tibble listing the genotypic markers in the genotype table corresponding to drugs with phenotypes, and the associated drugs/classes and variation types (if present). Number indicates the count of hits detected per marker, amongst samples with corresponding phenotype data.</p></li>
+<li><p><code>pheno_counts_list</code>: A list of tibbles, each corresponding to a unique categorical phenotype column in the input, indicating the counts of each phenotypic category per drug and species; restricted to samples that also appear in the genotype table.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function automatically adapts to the presence or absence of columns in <code>pheno_table</code>.

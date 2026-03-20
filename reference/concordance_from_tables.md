@@ -74,48 +74,41 @@ concordance_from_tables(
 
 A named list with the following elements:
 
-- obs_pred:
+- `obs_pred`: A copy of the `pheno_table` with the predictions from
+  `pheno_pred_table` merged in.
 
-  A copy of the pheno_table with the predictions from pheno_pred_table
-  merged in.
+- `metrics`: A
+  [tibble](https://tibble.tidyverse.org/reference/tibble.html) listing
+  concordance metrics, comparing observed vs predicted R and/or NWT
+  calls, for all drugs with matched samples in both input tables.
 
-- metrics:
-
-  A tibble listing concordance metrics, comparing observed vs predicted
-  R and/or NWT calls, for all drugs with matched samples in both input
+- `drugs_R`: A long-form
+  [tibble](https://tibble.tidyverse.org/reference/tibble.html) listing
+  the number of samples with each combination of observed and predicted
+  binary calls for R, for all drugs with matched samples in both input
   tables.
 
-- drugs_R:
+- `drugs_NWT`: A long-form
+  [tibble](https://tibble.tidyverse.org/reference/tibble.html) listing
+  the number of samples with each combination of observed and predicted
+  binary calls for NWT, for all drugs with matched samples in both input
+  tables.
 
-  A long form tibble listing the number of samples with each combination
-  of observed and predicted binary calls for R, for all drugs with
-  matched samples in both input tables.
+- `plot_R`: A [list](https://rdrr.io/r/base/list.html) containing
+  two-panel plots summarising observed vs predicted clinical categories,
+  one for each drug.
 
-- drugs_NWT:
+- `plot_NWT`: A [list](https://rdrr.io/r/base/list.html) containing
+  two-panel plots summarising observed vs predicted WT/NWT categories,
+  one for each drug.
 
-  A long form tibble listing the number of samples with each combination
-  of observed and predicted binary calls for NWT, for all drugs with
-  matched samples in both input tables.
+- `plot_R_dist`: A [list](https://rdrr.io/r/base/list.html) containing
+  plots of the assay value distributions (MIC or disk zones), coloured
+  by S/I/R prediction, one for each drug.
 
-- plot_R:
-
-  A list containing two-panel plots summarising observed vs predicted
-  clinical categories, one for each drug.
-
-- plot_NWT:
-
-  A list containing two-panel plots summarising observed vs predicted
-  WT/NWT categories, one for each drug.
-
-- plot_R_dist:
-
-  A list containing plots of the assay value distributions (MIC or disk
-  zones), coloured by S/I/R prediction, one for each drug.
-
-- plot_NWT_dist:
-
-  A list containing plots of the assay value distributions (MIC or disk
-  zones), coloured by WT/NWT prediction, one for each drug.
+- `plot_NWT_dist`: A [list](https://rdrr.io/r/base/list.html) containing
+  plots of the assay value distributions (MIC or disk zones), coloured
+  by WT/NWT prediction, one for each drug.
 
 ## Examples
 

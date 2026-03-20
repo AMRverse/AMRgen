@@ -92,32 +92,15 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A named list with the following elements:</p><dl><dt>obs_pred</dt>
-<dd><p>A copy of the pheno_table with the predictions from pheno_pred_table merged in.</p></dd>
-
-<dt>metrics</dt>
-<dd><p>A tibble listing concordance metrics, comparing observed vs predicted R and/or NWT calls, for all drugs with matched samples in both input tables.</p></dd>
-
-<dt>drugs_R</dt>
-<dd><p>A long form tibble listing the number of samples with each combination of observed and predicted binary calls for R, for all drugs with matched samples in both input tables.</p></dd>
-
-<dt>drugs_NWT</dt>
-<dd><p>A long form tibble listing the number of samples with each combination of observed and predicted binary calls for NWT, for all drugs with matched samples in both input tables.</p></dd>
-
-<dt>plot_R</dt>
-<dd><p>A list containing two-panel plots summarising observed vs predicted clinical categories, one for each drug.</p></dd>
-
-<dt>plot_NWT</dt>
-<dd><p>A list containing two-panel plots summarising observed vs predicted WT/NWT categories, one for each drug.</p></dd>
-
-<dt>plot_R_dist</dt>
-<dd><p>A list containing plots of the assay value distributions (MIC or disk zones), coloured by S/I/R prediction, one for each drug.</p></dd>
-
-<dt>plot_NWT_dist</dt>
-<dd><p>A list containing plots of the assay value distributions (MIC or disk zones), coloured by WT/NWT prediction, one for each drug.</p></dd>
-
-
-</dl></div>
+    <p>A named list with the following elements:</p><ul><li><p><code>obs_pred</code>: A copy of the <code>pheno_table</code> with the predictions from <code>pheno_pred_table</code> merged in.</p></li>
+<li><p><code>metrics</code>: A <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a> listing concordance metrics, comparing observed vs predicted R and/or NWT calls, for all drugs with matched samples in both input tables.</p></li>
+<li><p><code>drugs_R</code>: A long-form <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a> listing the number of samples with each combination of observed and predicted binary calls for R, for all drugs with matched samples in both input tables.</p></li>
+<li><p><code>drugs_NWT</code>: A long-form <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a> listing the number of samples with each combination of observed and predicted binary calls for NWT, for all drugs with matched samples in both input tables.</p></li>
+<li><p><code>plot_R</code>: A <a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> containing two-panel plots summarising observed vs predicted clinical categories, one for each drug.</p></li>
+<li><p><code>plot_NWT</code>: A <a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> containing two-panel plots summarising observed vs predicted WT/NWT categories, one for each drug.</p></li>
+<li><p><code>plot_R_dist</code>: A <a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> containing plots of the assay value distributions (MIC or disk zones), coloured by S/I/R prediction, one for each drug.</p></li>
+<li><p><code>plot_NWT_dist</code>: A <a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> containing plots of the assay value distributions (MIC or disk zones), coloured by WT/NWT prediction, one for each drug.</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

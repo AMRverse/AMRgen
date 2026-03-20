@@ -173,7 +173,7 @@ result <- amr_logistic(
   maf = 10
 )
 #> Generating geno-pheno binary matrix
-#>  Defining NWT in binary matrix using ecoff column provided: ecoff 
+#>  Defining NWT in binary matrix using ecoff column provided: ecoff
 #> ...Fitting logistic regression model to R using logistf
 #>    Filtered data contains 3629 samples (793 => 1, 2836 => 0) and 19 variables.
 #> Warning: logistf.fit: Maximum number of iterations for full model exceeded. Try to increase the number of iterations or alter step size by passing 'logistf.control(maxit=..., maxstep=...)' to parameter control

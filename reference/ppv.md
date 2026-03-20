@@ -146,13 +146,13 @@ ppv(
 
   A named vector of colours for the plot of PPV estimates. The names
   should be `"R"`, `"I"` and `"NWT"`, and the values should be valid
-  color names or hexadecimal color codes.
+  colour names or hexadecimal colour codes.
 
 - SIR_col:
 
   A named vector of colours for the percentage bar plot. The names
   should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and
-  the values should be valid color names or hexadecimal color codes.
+  the values should be valid colour names or hexadecimal colour codes.
   Default values are those used in the AMR package
   [`AMR::scale_colour_sir()`](https://amr-for-r.org/reference/plot.html).
 

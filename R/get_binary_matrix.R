@@ -85,7 +85,7 @@ get_binary_matrix <- function(geno_table,
       colnames() %>%
       first()
     if (!is.na(sir_col)) {
-      cat(paste("WARNING: `sir_col` not provided, using first column with prefix 'pheno':", sir_col, "\n"))
+      warning("`sir_col` not provided, using first column with prefix 'pheno': ", sir_col)
     } else {
       stop("`sir_col` not provided. Please specify a column with S/I/R phenotype values.")
     }
@@ -99,7 +99,7 @@ get_binary_matrix <- function(geno_table,
     stop(paste("input", deparse(substitute(pheno_table)), "must have a column labelled `drug_agent`"))
   }
   if (!is.ab(pheno_table$drug_agent)) {
-    cat(paste(" Converting", deparse(substitute(pheno_table)), "column `drug_agent` to class `ab` in binary matrix\n"))
+    message(" Converting ", deparse(substitute(pheno_table)), " column `drug_agent` to class `ab` in binary matrix")
     pheno_table <- pheno_table %>% mutate(drug_agent = as.ab(drug_agent))
   }
 
@@ -117,17 +117,17 @@ get_binary_matrix <- function(geno_table,
 
   # generate drug_class_list from antibiotic, if not provided
   if (is.null(drug_class_list)) {
-    cat(paste0(" Checking for drug classes for antibiotic: ", ab_name(antibiotic), "\n"))
+    message(" Checking for drug classes for antibiotic: ", ab_name(antibiotic))
     drug_class_candidates <- AMR::ab_group(antibiotic, all_groups = TRUE)
     if ("Carbapenems" %in% drug_class_candidates) { # ensure when testing carbapenems we include cephalosporin markers
       drug_class_candidates <- c(drug_class_candidates, "Cephalosporins (3rd gen.)", "Cephalosporins", "Beta-lactams")
     }
-    cat(paste0("  Associated classes: ", paste(drug_class_candidates, collapse = ", "), "\n"))
+    message("  Associated classes: ", toString(drug_class_candidates))
     drug_class_list <- drug_class_candidates[drug_class_candidates %in% geno_table$drug_class]
     if (length(drug_class_list) == 0) {
       stop(paste("  None of these classes were found in the drug_class column of genotype table. Please specify which markers to include via 'drug_class_list'."))
     } else {
-      cat(paste0("  Found markers mapped to: ", paste(drug_class_list, collapse = ", "), "\n"))
+      message("  Found markers mapped to: ", toString(drug_class_list))
     }
   }
 
@@ -147,7 +147,7 @@ get_binary_matrix <- function(geno_table,
         slice_head(n = 1) %>%
         ungroup()
       if (nrow(pheno_matched) < pheno_matched_rows_unfiltered) {
-        cat(" Some samples had multiple phenotype rows, taking the most resistant only for binary matrix\n")
+        message(" Some samples had multiple phenotype rows, taking the most resistant only for binary matrix")
       }
     } else if ("disk" %in% colnames(pheno_matched)) {
       pheno_matched <- pheno_matched %>%
@@ -156,7 +156,7 @@ get_binary_matrix <- function(geno_table,
         slice_head(n = 1) %>%
         ungroup()
       if (nrow(pheno_matched) < pheno_matched_rows_unfiltered) {
-        cat(" Some samples had multiple phenotype rows, taking the most resistant only for binary matrix\n")
+        message(" Some samples had multiple phenotype rows, taking the most resistant only for binary matrix")
       }
     }
   }
@@ -168,7 +168,7 @@ get_binary_matrix <- function(geno_table,
       slice_head(n = 1) %>%
       ungroup()
     if (nrow(pheno_matched) < pheno_matched_rows_unfiltered) {
-      cat("Some samples had multiple phenotype rows, taking the least resistant only\n")
+      message("Some samples had multiple phenotype rows, taking the least resistant only")
     }
   }
 
@@ -196,7 +196,7 @@ get_binary_matrix <- function(geno_table,
   # replace NWT with ecoff-based definition if available
   if (!is.null(ecoff_col)) {
     if (ecoff_col %in% colnames(pheno_binary)) {
-      cat(paste(" Defining NWT in binary matrix using ecoff column provided:", ecoff_col, "\n"))
+      message(" Defining NWT in binary matrix using ecoff column provided: ", ecoff_col)
       pheno_binary <- pheno_binary %>%
         mutate(NWT = case_when(
           as.sir(get(ecoff_col)) == "NWT" ~ 1,
@@ -207,7 +207,7 @@ get_binary_matrix <- function(geno_table,
           TRUE ~ NA
         ))
     } else {
-      cat(" Defining NWT in binary matrix as I/R vs S, as no ECOFF column defined\n")
+      message(" Defining NWT in binary matrix as I/R vs S, as no ECOFF column defined")
     }
   }
 
@@ -248,7 +248,7 @@ get_binary_matrix <- function(geno_table,
         select(id, any_of(keep_assay_values_from)) %>%
         full_join(geno_binary, by = "id")
     } else {
-      cat(paste(" No specified assay columns found to include in binary matrix:", keep_assay_values_from, "\n"))
+      message(" No specified assay columns found to include in binary matrix: ", toString(keep_assay_values_from))
     }
     if ("mic" %in% colnames(geno_binary)) {
       geno_binary <- geno_binary %>% mutate(mic = as.mic(mic))

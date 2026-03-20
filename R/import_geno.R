@@ -102,10 +102,10 @@ import_amrfp <- function(input_table,
     if (element_type_col %in% colnames(in_table)) {
       in_table <- in_table %>% filter(get(element_type_col) == "AMR")
     } else {
-      cat(paste0("Input file lacks the expected column: ", element_type_col, ", assuming all rows report AMR markers.\n"))
+      message("Input file lacks the expected column: ", element_type_col, ", assuming all rows report AMR markers.")
     }
   } else {
-    cat(paste0("Input file lacks the expected column: 'Type' (v4.0+) or 'Element type' (pre-v4), assuming all rows report AMR markers.\n"))
+    message("Input file lacks the expected column: 'Type' (v4.0+) or 'Element type' (pre-v4), assuming all rows report AMR markers.")
   }
 
   # detect variation type and process mutation
@@ -123,13 +123,13 @@ import_amrfp <- function(input_table,
       mutate(gene = if_else(startsWith(!!sym(method_col), "POINT"), gene, marker)) %>%
       mutate(mutation = if_else(startsWith(!!sym(method_col), "POINT"), convert_mutation(marker, !!sym(method_col)), mutation))
   } else if (element_subtype_col %in% colnames(in_table)) {
-    cat("Need method column:", method_col, "to assign variation type.\n")
+    message("Need method column: ", method_col, " to assign variation type.")
     in_table_mutation <- in_table %>%
       separate(!!sym(element_symbol_col), into = c("gene", "mutation"), sep = "_", remove = FALSE, fill = "right") %>%
       mutate(gene = if_else(startsWith(!!sym(element_subtype_col), "POINT"), gene, marker)) %>%
       mutate(mutation = if_else(startsWith(!!sym(element_subtype_col), "POINT"), purrr::map_chr(marker, convert_mutation, NULL), "-"))
   } else {
-    cat("Need method column:", method_col, "or element subtype column:", element_subtype_col, " columns to parse mutations.\n")
+    message("Need method column: ", method_col, " or element subtype column: ", element_subtype_col, " columns to parse mutations.")
     in_table_mutation <- in_table %>% mutate(gene = NA, mutation = NA)
   }
 
@@ -163,7 +163,7 @@ import_amrfp <- function(input_table,
         node
       ))
   } else {
-    cat(paste("WARNING:", element_subtype_col, "field not present in input file, guessing mutation markers.\n"))
+    warning(element_subtype_col, " field not present in input file, guessing mutation markers.")
     in_table_label <- in_table_label %>%
       mutate(marker.label = if_else(mutation != "-", paste0(node, ":", mutation), node))
   }
@@ -529,7 +529,7 @@ import_rgi <- function(input_table,
         TRUE ~ NA
       ))
   } else {
-    cat("Need method column: Model_type", "\n")
+    message("Need method column: Model_type")
   }
 
   # Check mutation column exists and reformat table to long form - one mutation per row
@@ -722,7 +722,7 @@ import_abricate <- function(input_table,
   if ("DATABASE" %in% colnames(in_table)) {
     db_value <- unique(in_table$DATABASE)
     if (db_value != db) {
-      message(paste0("Warning, 'db' parameter ", db, " does not match DATABASE field in input file: ", paste0(db_value, collapse = ", ")))
+      warning("'db' parameter ", db, " does not match DATABASE field in input file: ", toString(db_value))
     }
   }
 

@@ -139,10 +139,7 @@ download_ncbi_ast <- function(species,
     return(tibble())
   }
 
-  cat(paste(
-    "Identified", length(ids), " ", tolower(species),
-    " records from NCBI (https://www.ncbi.nlm.nih.gov/pathogens/ast/) \n"
-  ))
+  message("Identified ", length(ids), "  ", tolower(species), " records from NCBI (https://www.ncbi.nlm.nih.gov/pathogens/ast/)")
 
   # create empty data structures to store records
   all_ast_data <- NULL
@@ -158,10 +155,7 @@ download_ncbi_ast <- function(species,
         parsed = TRUE
       )
 
-      cat(paste(
-        "Downloading and processing records ", sample, " to ",
-        length(ids), "... \n"
-      ))
+      message("Downloading and processing records ", sample, " to ", length(ids), "...")
     } else {
       data_xml <- entrez_fetch(
         db = "biosample",
@@ -170,10 +164,7 @@ download_ncbi_ast <- function(species,
         parsed = TRUE
       )
 
-      cat(paste(
-        "Downloading and processing records ", sample, " to ",
-        (sample - 1 + batch_size), "... \n"
-      ))
+      message("Downloading and processing records ", sample, " to ", (sample - 1 + batch_size), "...")
     }
 
     # Flatten XML
@@ -234,11 +225,11 @@ download_ncbi_ast <- function(species,
 
     # pause between record pulls
     Sys.sleep(sleep_time)
-    cat(paste("Pausing download for ", sleep_time, "seconds to avoid overburdening the NCBI server... \n"))
+    message("Pausing download for ", sleep_time, " seconds to avoid overburdening the NCBI server...")
   }
 
   # name and rearrange cols
-  cat(paste("Ordering data... \n"))
+  message("Ordering data...")
 
   all_ast_data <- all_ast_data %>%
     select(id, BioProject, organism, everything()) %>%
@@ -250,7 +241,7 @@ download_ncbi_ast <- function(species,
       antibiotic <- na.omit(ab_name(as.ab(antibiotic), tolower = TRUE))
     }
 
-    cat(paste("...Filtering by antibiotic:", paste(antibiotic, collapse = ", "), "\n"))
+    message("...Filtering by antibiotic: ", toString(antibiotic))
 
     all_ast_data <- all_ast_data %>%
       filter(Antibiotic %in% antibiotic)
@@ -258,7 +249,7 @@ download_ncbi_ast <- function(species,
 
   # reformat as per AMRgen import functions
   if (reformat) {
-    cat(paste("Reformatting phenotype data for easy use with AMRgen functions \n"))
+    message("Reformatting phenotype data for easy use with AMRgen functions")
 
     all_ast_data <- import_ncbi_biosample(all_ast_data,
       interpret_eucast = interpret_eucast,

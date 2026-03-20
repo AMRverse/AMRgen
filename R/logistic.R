@@ -66,7 +66,7 @@ amr_logistic <- function(geno_table, pheno_table,
                          axis_label_size = 9) {
   # get binary matrix
   if (is.null(binary_matrix)) {
-    cat("Generating geno-pheno binary matrix\n")
+    message("Generating geno-pheno binary matrix")
     binary_matrix <- get_binary_matrix(
       geno_table = geno_table,
       pheno_table = pheno_table,
@@ -87,7 +87,7 @@ amr_logistic <- function(geno_table, pheno_table,
   modelNWT <- NULL
 
   if (fit_glm) {
-    cat("...Fitting logistic regression model to R using glm\n")
+    message("...Fitting logistic regression model to R using glm")
     if (sum(!is.na(binary_matrix$R)) > 0) {
       to_fit <- binary_matrix %>%
         select(-any_of(c("id", "pheno", "ecoff", "mic", "disk", "NWT"))) %>%
@@ -99,7 +99,7 @@ amr_logistic <- function(geno_table, pheno_table,
         dplyr::mutate(marker = gsub("\\.\\.", ":", marker)) %>%
         dplyr::mutate(marker = gsub("`", "", marker))
     }
-    cat("...Fitting logistic regression model to NWT using glm\n")
+    message("...Fitting logistic regression model to NWT using glm")
     if (sum(!is.na(binary_matrix$NWT)) > 0) {
       to_fit <- binary_matrix %>%
         select(-any_of(c("id", "pheno", "ecoff", "mic", "disk", "R"))) %>%
@@ -112,7 +112,7 @@ amr_logistic <- function(geno_table, pheno_table,
         dplyr::mutate(marker = gsub("`", "", marker))
     }
   } else {
-    cat("...Fitting logistic regression model to R using logistf\n")
+    message("...Fitting logistic regression model to R using logistf")
     if (sum(!is.na(binary_matrix$R)) > 0) {
       to_fit <- binary_matrix %>%
         filter(!is.na(R)) %>%
@@ -125,7 +125,7 @@ amr_logistic <- function(geno_table, pheno_table,
         dplyr::mutate(marker = gsub("\\.\\.", ":", marker)) %>%
         dplyr::mutate(marker = gsub("`", "", marker))
     }
-    cat("...Fitting logistic regression model to NWT using logistf\n")
+    message("...Fitting logistic regression model to NWT using logistf")
     if (sum(!is.na(binary_matrix$NWT)) > 0) {
       to_fit <- binary_matrix %>%
         filter(!is.na(NWT)) %>%
@@ -141,9 +141,9 @@ amr_logistic <- function(geno_table, pheno_table,
   }
 
 
-  cat("Generating plots\n")
+  message("Generating plots")
   if (!is.null(modelR) & !is.null(modelNWT)) {
-    cat("Plotting 2 models\n")
+    message("Plotting 2 models")
     plot <- compare_estimates(modelR, modelNWT,
       single_plot = single_plot,
       title1 = "R", title2 = "NWT",
@@ -166,10 +166,10 @@ amr_logistic <- function(geno_table, pheno_table,
       plot <- plot + ggtitle(label = label, subtitle = subtitle)
     }
   } else if (!is.null(modelR)) {
-    cat("Plotting R model only\n")
+    message("Plotting R model only")
     plot <- plot_estimates(modelR)
   } else if (!is.null(modelNWT)) {
-    cat("Plotting NWT model only\n")
+    message("Plotting NWT model only")
     plot <- plot_estimates(modelNWT)
   }
 
@@ -187,12 +187,12 @@ amr_logistic <- function(geno_table, pheno_table,
 
 
 summarise_model_input <- function(dat) {
-  cat(paste0(
+  message(
     "   Filtered data contains ",
     nrow(dat),
     " samples (",
     sum(dat[, 1] == 1, na.rm = T), " => 1, ",
     sum(dat[, 1] == 0, na.rm = T), " => 0) and ",
-    ncol(dat) - 1, " variables.\n"
-  ))
+    ncol(dat) - 1, " variables."
+  )
 }

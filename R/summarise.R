@@ -199,12 +199,12 @@ summarise_pheno <- function(pheno_table,
   if (is.null(mic_col) | !(mic_col %in% colnames(pheno_table))) {
     pheno_table <- pheno_table %>% mutate(mic = NA_character_)
     mic_col <- "mic"
-    cat("No MIC data colummn provided\n")
+    message("No MIC data colummn provided")
   }
   if (is.null(disk_col) | !(disk_col %in% colnames(pheno_table))) {
     pheno_table <- pheno_table %>% mutate(disk = NA_character_)
     disk_col <- "disk"
-    cat("No disk data colummn provided\n")
+    message("No disk data colummn provided")
   }
 
   pheno_table <- pheno_table %>%
@@ -239,9 +239,9 @@ summarise_pheno <- function(pheno_table,
     pheno_cols <- pheno_table %>%
       select(starts_with("pheno"), starts_with("ecoff")) %>%
       colnames()
-    cat("No phenotype column names provided via 'pheno_cols'\n")
-    cat("These are needed to summarise counts of phenotype category calls per drug.\n")
-    cat(paste0("Relevant columns detected in your input table are: c('", paste(pheno_cols, collapse = "','"), "'). Summarising these.\n"))
+    message("No phenotype column names provided via 'pheno_cols'")
+    message("These are needed to summarise counts of phenotype category calls per drug.")
+    message("Relevant columns detected in your input table are: c('", toString(pheno_cols, sep = "','"), "'). Summarising these.")
   }
   if (!is.null(pheno_cols)) {
     for (pheno_col in pheno_cols) {
@@ -358,7 +358,7 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
     stop(paste0("Column ", drug_col, " not found in input phenotype table"))
   }
   if (!(drug_col %in% colnames(geno_table))) {
-    message(paste0("Column ", drug_col, " not found in input genotype table"))
+    message("Column ", drug_col, " not found in input genotype table")
     geno_table <- geno_table %>% mutate(!!drug_col := NA)
   }
 

@@ -10,7 +10,7 @@ The [AMRgen website](https://amrgen.org) has full function [documentation](https
 
 ## Key Features
 
--   **Import Genotype and Phenotype Data**: Import from common formats (NCBI or EBI antibiogram format, VITEK, Sensititre, MicroScan, Phoenix, WHONet for phenotypes; AMRFinderPlus, Abricate, Kleborate, RGI and AMRrules for genotypes.
+-   **Import Genotype and Phenotype Data**: Import from common formats (NCBI or EBI antibiogram format, VITEK, Sensititre, MicroScan, Phoenix, WHONet for phenotypes; AMRFinderPlus, ABRicate, Kleborate, RGI and AMRrules for genotypes.
 -   **Genotype-Phenotype Integration**: Links AMR gene presence with phenotypic resistance profiles, enabling deeper insights into resistance mechanisms.
 -   **Automated EUCAST MIC Distribution Integration**: Fetch MIC distribution data directly from [EUCAST](https://mic.eucast.org) for seamless comparison with local susceptibility data.
 -   **Visualisation**: Generate powerful UpSet plots to identify intersections of AMR gene presence and phenotypic resistance, highlighting multidrug resistance patterns.

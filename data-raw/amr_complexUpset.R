@@ -27,7 +27,7 @@
 #' @param organism A character string specifying the organism, used when plotting breakpoints.
 #' @param break_guide A character string specifying the breakpoint guideline (e.g., `"EUCAST 2025"`). Default is `"EUCAST 2025"`.
 #' @param break_type A character string specifying the breakpoint type (e.g., `"ECOFF"`). Default is `"ECOFF"`.
-#' @param drug A character string specifying the antimicrobial agent to be analysed.
+#' @param drug A character string specifying the antimicrobial drug to be analysed.
 #' @param colour_values A named vector specifying colours for different resistance categories (`S`, `I`, `R`). Default is `c(S="#66c2a5", I="#fdae61", R="#d53e4f")`.
 #' @param sort_intersections_by A character string passed to `ComplexUpset::upset()` to control sorting of intersections (e.g., `"degree"` or `"cardinality"`).
 #' @param sort_intersections A character string specifying the order of intersections (`"ascending"` or `"descending"`).

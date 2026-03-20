@@ -2,7 +2,7 @@
 ecoli_cip_mic_data <- get_eucast_mic_distribution("cipro", "E. coli")
 usethis::use_data(ecoli_cip_mic_data, internal = FALSE, overwrite = TRUE)
 
-ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
+ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug == "CIP"]
 ecoli_cip_vs_ref <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
 usethis::use_data(ecoli_cip_vs_ref, internal = FALSE, overwrite = TRUE)
 

@@ -110,7 +110,7 @@ The phenotype data in `btESBL_AST` needs to be reformated to long format, and se
 # Convert the S/I/R phenotype data to long format for easy use with AMRgen functions
 DASSIM_pheno <- btESBL_AST %>%
   pivot_longer(
-    names_to = "drug_agent",
+    names_to = "drug",
     values_to = "pheno",
     cols = "amikacin":"meropenem"
   ) %>%
@@ -119,7 +119,7 @@ DASSIM_pheno <- btESBL_AST %>%
       tolower(pheno) %in% c("sensitive", "susceptible", "s") ~ "S",
       tolower(pheno) %in% c("intermediate", "i") ~ "I",
       tolower(pheno) %in% c("resistant", "r") ~ "R",
-      TRUE ~ NA_character_ # Any other unrecognized values become NA
+      TRUE ~ NA_character_ # Any other unrecognised values become NA
     )
   ) %>%
   mutate(pheno = AMR::as.sir(pheno))
@@ -442,4 +442,4 @@ CHL_logist$modelR
 ```
 This plot shows that both *catA1* and *cmlA1* have a strong positive association with phenotypic resistance whereas truncated *catB3* has a strong negative association with resistance (i.e. a stronger association with susceptibility to chloramphenicol). 
 
-Experimental evolution analysis by [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) suggested that these *catB3* silencing events are highly stable under antibiotic pressure, reinforcing the potential for chloramphenicol to be reintroduced as a targeted reserve agent for ESBL-E infections in low-resource settings.
+Experimental evolution analysis by [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) suggested that these *catB3* silencing events are highly stable under antibiotic pressure, reinforcing the potential for chloramphenicol to be reintroduced as a targeted reserve drug for ESBL-E infections in low-resource settings.

@@ -39,7 +39,7 @@ library(tidyr)
 
 
 ## Import data
-In this example, the data table was exported from the user's laboratory information management system as a single `.csv` file that includes both genotypic and phenotypic results for 115 *S.  enterica* isolates, with one line per isolate. There are columns for two categorical variables of interest: isolate source (human, animal, or other) and isolate serovar. Genotype data is stored in a single column, and where multiple quinolone resistance markers were identified, these are listed in a string with semicolon delimiters. Phenotype data is stored in separate columns for each antimicrobial agent that was tested (ciprofloxacin, levofloxacin, moxifloxacin).
+In this example, the data table was exported from the user's laboratory information management system as a single `.csv` file that includes both genotypic and phenotypic results for 115 *S.  enterica* isolates, with one line per isolate. There are columns for two categorical variables of interest: isolate source (human, animal, or other) and isolate serovar. Genotype data is stored in a single column, and where multiple quinolone resistance markers were identified, these are listed in a string with semicolon delimiters. Phenotype data is stored in separate columns for each antimicrobial drug that was tested (ciprofloxacin, levofloxacin, moxifloxacin).
 
 ```{r salm_raw, eval=F}
 # Raw data table
@@ -79,8 +79,8 @@ salm_geno <- salm_raw %>%
   select(-marker_no) %>%
   mutate(
     drug_class = "Quinolones",
-    drug_agent = NA_character_
-  ) ## the variable drug_agent appears essential for get_binary_matrix function to work...
+    drug = NA_character_
+  ) ## the variable drug appears essential for get_binary_matrix function to work...
 
 
 # Check the format of the processed genotype table
@@ -89,9 +89,9 @@ head(salm_geno)
 
 
 ## Phenotype table
-To use downstream `AMRgen` functions, a phenotype table must be in long form with a single column for all antimicrobial agents that were tested, rather than separate columns for each agent. It also needs to have at a minimum the following columns: `id` (unique sample name for each isolate), `spp_pheno` (species name formatted as per the AMR package `mo` class), `drug_agent` (antimicrobial agent name formatted as per the AMR package `ab` class), a S/I/R phenotype column (e.g. one or more of `pheno_eucast`, `pheno_clsi`, `pheno_provided`, `ecoff`). If raw assay data is to be included, it needs to be in a column called `mic` and/or `disk`.
+To use downstream `AMRgen` functions, a phenotype table must be in long form with a single column for all antimicrobial drugs that were tested, rather than separate columns for each drug. It also needs to have at a minimum the following columns: `id` (unique sample name for each isolate), `spp_pheno` (species name formatted as per the AMR package `mo` class), `drug` (antimicrobial drug name formatted as per the AMR package `ab` class), a S/I/R phenotype column (e.g. one or more of `pheno_eucast`, `pheno_clsi`, `pheno_provided`, `ecoff`). If raw assay data is to be included, it needs to be in a column called `mic` and/or `disk`.
 
-To convert out dataset to this format, we begin by extracting the columns with the unique isolate names (`Sample`) and those with the MIC results for the three antimicrobial agents that we tested (`Ciprofloxacin`, `Levofloxacin`, `Moxifloxacin`). We also keep the columns with additional metadata (`Source`, `Serovar`), as these are not in the genotype table. The antimicrobial columns need to be forced to character vectors to avoid issues caused by occasional presence of non-numeric prefixes (`>` or `<`). We then pivot the table to long form.
+To convert out dataset to this format, we begin by extracting the columns with the unique isolate names (`Sample`) and those with the MIC results for the three antimicrobial drugs that we tested (`Ciprofloxacin`, `Levofloxacin`, `Moxifloxacin`). We also keep the columns with additional metadata (`Source`, `Serovar`), as these are not in the genotype table. The antimicrobial columns need to be forced to character vectors to avoid issues caused by occasional presence of non-numeric prefixes (`>` or `<`). We then pivot the table to long form.
 
 
 ```{r wrangle pheno data}
@@ -171,7 +171,7 @@ assay_by_var(pheno_table = salm_ast, antibiotic = "Ciprofloxacin", measure = "mi
 
 
 ## Combine ciprofloxacin genotype and phenotype data
-Analysis of combined genotype-phenotype data must be carried out separately for each antimicrobial agent. The first step is to generate a combined dataframe for the specified agent from the genotype and phenotype tables, using the `get_binary_matrix()` function. As an example, we will do this for ciprofloxacin with our small *S. enterica* dataset, but this could also be done for levofloxacin and moxifloxacin.
+Analysis of combined genotype-phenotype data must be carried out separately for each antimicrobial drug. The first step is to generate a combined dataframe for the specified drug from the genotype and phenotype tables, using the `get_binary_matrix()` function. As an example, we will do this for ciprofloxacin with our small *S. enterica* dataset, but this could also be done for levofloxacin and moxifloxacin.
 
 
 ``` {r get_binary_matrix}

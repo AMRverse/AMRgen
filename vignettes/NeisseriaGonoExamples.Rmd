@@ -171,7 +171,7 @@ assay_by_var(
 
 # Extract MIC data from the pheno table
 azm_data <- eurogasp_double %>%
-  filter(drug_agent == "AZM") %>%
+  filter(drug == "AZM") %>%
   pull(mic)
 ```
 
@@ -213,7 +213,7 @@ assay_by_var(
 
 # Extract MIC data from the pheno table
 cip_data <- eurogasp_double %>%
-  filter(drug_agent == "CIP") %>%
+  filter(drug == "CIP") %>%
   pull(mic)
 ```
 
@@ -244,7 +244,7 @@ assay_by_var(
 )
 # Extract MIC data from the pheno table
 cro_data <- eurogasp_double %>%
-  filter(drug_agent == "CRO") %>%
+  filter(drug == "CRO") %>%
   pull(mic)
 ```
 
@@ -274,7 +274,7 @@ assay_by_var(
 )
 # Extract MIC data from the pheno table
 cfm_data <- eurogasp_double %>%
-  filter(drug_agent == "CFM") %>%
+  filter(drug == "CFM") %>%
   pull(mic)
 ```
 

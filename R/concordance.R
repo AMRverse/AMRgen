@@ -26,7 +26,7 @@
 #' user-defined field providing predictions).
 #' This genotypic prediction is then
 #' compared to the observed phenotypes using standard classification metrics
-#' (via the `yardstick` pkg) and AMR-specific error rates (major error, ME
+#' (via the `yardstick` package) and AMR-specific error rates (major error, ME
 #' and very major error, VME) per ISO 20776-2 (and see
 #' [FDA definitions](https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda)).
 #' Supports evaluating both R and NWT outcomes
@@ -93,7 +93,7 @@
 #' markers contributing to passing combinations are reported in `markers_used`.
 #'
 #' Standard metrics (sensitivity, specificity, PPV, NPV, accuracy, kappa,
-#' F-measure) are calculated using pkg `yardstick`. AMR-specific error rates are
+#' F-measure) are calculated using package `yardstick`. AMR-specific error rates are
 #' computed internally:
 #' - **VME** (Very Major Error): FN / (TP + FN) = 1 - sensitivity. Proportion of
 #'   truly resistant isolates not predicted as such from genotype.
@@ -572,7 +572,7 @@ print.amr_concordance <- function(x, ...) {
 #' @param pred_SIR Character. Name of the column containing S/I/R calls predicted from genotypes (default `"clinical category"`).
 #' @param pred_ecoff Character. Name of the column containing WT/NWT calls predicted from genotypes (default `"phenotype"`).
 #' @param sample_col Character. Name of the column containing sample identifiers. This must be the same in both tables (default `"id"`).
-#' @param drug_col Character. Name of the column containing drug agent identifiers. This must be the same in both tables (default `"drug_agent"`).
+#' @param drug_col Character. Name of the column containing drug identifiers. This must be the same in both tables (default `"drug"`).
 #' @param measure_col Character. Name of the column containing observed MIC or disk measurements for plotting. Valid options are `"mic"` or `"disk"` (default `"mic"`).
 #'
 #' @return A named list with the following elements:
@@ -600,7 +600,7 @@ concordance_from_tables <- function(pheno_table,
                                     pred_SIR = "clinical category",
                                     pred_ecoff = "phenotype",
                                     sample_col = "id",
-                                    drug_col = "drug_agent",
+                                    drug_col = "drug",
                                     measure_col = "mic") {
   # join observed & predicted pheno tables
   if (!(sample_col %in% colnames(pheno_table) & sample_col %in% colnames(pheno_pred_table))) {
@@ -689,8 +689,8 @@ concordance_from_tables <- function(pheno_table,
             truth = "R", prediction_col = "predR"
           )$metrics)
           if (!is.null(conR)) {
-            concordance_metrics <- bind_rows(concordance_metrics, conR %>% mutate(drug_agent = this_drug)) %>%
-              relocate(drug_agent)
+            concordance_metrics <- bind_rows(concordance_metrics, conR %>% mutate(drug = this_drug)) %>%
+              relocate(drug)
           }
         }
       } # finished with this drug
@@ -771,8 +771,8 @@ concordance_from_tables <- function(pheno_table,
             truth = "NWT", prediction_col = "predNWT"
           )$metrics)
           if (!is.null(conNWT)) {
-            concordance_metrics <- bind_rows(concordance_metrics, conNWT %>% mutate(drug_agent = this_drug)) %>%
-              relocate(drug_agent)
+            concordance_metrics <- bind_rows(concordance_metrics, conNWT %>% mutate(drug = this_drug)) %>%
+              relocate(drug)
           }
         }
       } # finished with this drug

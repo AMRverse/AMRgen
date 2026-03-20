@@ -28,12 +28,12 @@ template:
     code_font: {google: "Fira Code"}
     # (colours based on the AMRgen logo)
     primary:          "#7030A0" # deep purple (main text "AMRgen" and rightmost circle)
-    secondary:        "#C52574" # strong magenta/pink (leftmost circle and logo accents)
+    secondary:        "#C52574" # strong mdruga/pink (leftmost circle and logo accents)
     success:          "#25c475" # green contrast (not in logo, but for success messages in site)
     info:             "#8151A4" # medium lavender/purple (upper circles in logo)
     warning:          "#EBADC7" # pale pink highlight (lighter background circles/links)
-    danger:           "#D35691" # vivid pink-red (circle accent, darker magenta tone)
-    link-color:       "#C52574" # magenta link color (aligns with secondary)
+    danger:           "#D35691" # vivid pink-red (circle accent, darker mdruga tone)
+    link-color:       "#C52574" # mdruga link color (aligns with secondary)
     link-hover-color: "#7030A0" # hover state purple (aligns with primary)
 
 # Navbar configuration

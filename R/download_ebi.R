@@ -171,13 +171,13 @@ download_ebi <- function(data = "phenotype",
         }
       }
       if (!is.null(geno_class)) {
-        message("...Warning, not using classes provided, filtering on subclass instead")
+        warning("not using classes provided, filtering on subclass instead")
       }
       if (!is.null(antibiotic)) {
-        message("...Warning, not using antibiotic names provided, filtering on subclass instead")
+        warning("not using antibiotic names provided, filtering on subclass instead")
       }
     } else {
-      message("...Warning, not using subclasses provided as these are only relevant to genotype data")
+      warning("not using subclasses provided as these are only relevant to genotype data")
     }
   } else if (!is.null(geno_class)) {
     if (data == "genotype") {
@@ -190,10 +190,10 @@ download_ebi <- function(data = "phenotype",
         }
       }
       if (!is.null(antibiotic)) {
-        message("...Warning, not using antibiotic names provided, filtering on class instead")
+        warning("not using antibiotic names provided, filtering on class instead")
       }
     } else {
-      message("...Warning, not using classes provided as these are only relevant to genotype data")
+      warning("not using classes provided as these are only relevant to genotype data")
     }
   } else if (!is.null(antibiotic)) {
     if (!force_antibiotic) {

@@ -6,8 +6,8 @@ usethis::use_data(rgi_raw, internal = FALSE, overwrite = TRUE)
 rgi_short_name_table <- read_tsv("data-raw/rgi_modelid_shortname.tsv")
 usethis::use_data(rgi_short_name_table, internal = FALSE, overwrite = TRUE)
 
-# Load file mapping mapping CARD drug class / drug agents to standardised drug classes/names.
-rgi_drugs_table <- read_tsv("data-raw/rgi_drug_classes_agents.tsv")
+# Load file mapping mapping CARD drug class / drugs to standardised drug classes/names.
+rgi_drugs_table <- read_tsv("data-raw/rgi_drug_classes_drugs.tsv")
 usethis::use_data(rgi_drugs_table, internal = FALSE, overwrite = TRUE)
 
 # Load example RGI v6.0.6 results file using EuSCAPE (Klebsiella pneumoniae) data

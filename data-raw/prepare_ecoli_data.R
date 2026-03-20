@@ -8,7 +8,7 @@ ecoli_ast <- read_tsv("ecoli_pheno.tsv.gz") %>%
 # small dataframe that mimics a raw import of NCBI AST tab-delim file
 # provided for testing import_ncbi_ast, including re-interpreting (so only 10 rows)
 ecoli_ast_raw <- ecoli_ast %>%
-  select(-c(drug_agent:spp_pheno)) %>%
+  select(-c(drug:spp_pheno)) %>%
   rename(`#BioSample` = id) %>%
   head(n = 10)
 

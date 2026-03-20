@@ -5,7 +5,7 @@
 #' @param geno_table A tibble or data frame containing genotype data, in the format output by [import_amrfp].
 #' @param sample_col Character. Name of the column containing sample identifiers. Default is `"id"`.
 #' @param marker_col Character. Name of the column containing marker identifiers. Default is `"marker"`.
-#' @param drug_col Character. Name of the column containing drug agent identifiers. Default is `"drug_agent"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
+#' @param drug_col Character. Name of the column containing drug identifiers. Default is `"drug"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
 #' @param class_col Character. Name of the column containing drug class identifiers. Default is `"drug_class"`.
 #' @param gene_col Character. Name of the column containing gene identifiers. Default is `"gene"`.
 #' @param variation_col Character. Name of the column containing variation type identifiers. Default is `"variation type"`.
@@ -19,7 +19,7 @@
 #'
 #' @details
 #' The function automatically adapts to the presence or absence of columns in `geno_table`.
-#' The `force_ab` parameter allows the addition of full antibiotic names using the `ab_name()` function even when the first column is not recognized as an `"ab"` object.
+#' The `force_ab` parameter allows the addition of full antibiotic names using the `ab_name()` function even when the first column is not recognised as an `"ab"` object.
 #' @importFrom dplyr summarise across select group_by count rename full_join mutate n_distinct
 #' @importFrom tidyr pivot_longer
 #' @examples
@@ -30,7 +30,7 @@
 summarise_geno <- function(geno_table,
                            sample_col = "id",
                            marker_col = "marker",
-                           drug_col = "drug_agent",
+                           drug_col = "drug",
                            class_col = "drug_class",
                            gene_col = "gene",
                            variation_col = "variation type",
@@ -61,7 +61,7 @@ summarise_geno <- function(geno_table,
   drugs <- NULL
   if (drug_col %in% colnames(geno_table)) {
     if (class_col %in% colnames(geno_table)) {
-      # agents and classes
+      # drugs and classes
       drugs <- geno_table %>%
         count(!!sym(drug_col), !!sym(class_col)) %>%
         rename(hits = n)
@@ -80,7 +80,7 @@ summarise_geno <- function(geno_table,
           full_join(drugs, by = c(drug_col, class_col))
       }
     } else {
-      # only have agents, no classes
+      # only have drugs, no classes
       drugs <- geno_table %>%
         count(!!sym(drug_col))
       if (sample_col %in% colnames(geno_table)) {
@@ -149,7 +149,7 @@ summarise_geno <- function(geno_table,
 #'
 #' @param pheno_table A tibble or data frame containing phenotype data, in the format output by [import_ast].
 #' @param sample_col Character. Name of the column containing sample identifiers. Default is `"id"`.
-#' @param drug_col Character. Name of the column containing drug agent identifiers. Default is `"drug_agent"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
+#' @param drug_col Character. Name of the column containing drug identifiers. Default is `"drug"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
 #' @param mic_col Character. Name of the column containing MIC measurements Default is `"mic"`.
 #' @param disk_col Character. Name of the column containing disk diffusion zone measurements. Default is `"disk"`.
 #' @param spp_col Character. Name of the column containing species names. Default is `"spp_pheno"`.
@@ -165,7 +165,7 @@ summarise_geno <- function(geno_table,
 #'
 #' @details
 #' The function automatically adapts to the presence or absence of columns in `pheno_table`.
-#' The `force_ab` parameter allows the addition of full antibiotic names using the `ab_name()` function even when the first column is not recognized as an `"ab"` object.
+#' The `force_ab` parameter allows the addition of full antibiotic names using the `ab_name()` function even when the first column is not recognised as an `"ab"` object.
 #' @importFrom dplyr summarise across select count mutate n_distinct
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @examples
@@ -177,7 +177,7 @@ summarise_geno <- function(geno_table,
 #' @export
 summarise_pheno <- function(pheno_table,
                             sample_col = "id",
-                            drug_col = "drug_agent",
+                            drug_col = "drug",
                             mic_col = "mic",
                             disk_col = "disk",
                             spp_col = "spp_pheno",
@@ -300,8 +300,8 @@ summarise_pheno <- function(pheno_table,
 #' @param geno_sample_col Character. Name of the column in the genotype table containing sample identifiers. Default is `"Name"`.
 #' @param pheno_sample_col Character. Name of the column in the phenotype table containing sample identifiers. Default is `"id"`.
 #' @param pheno_cols Vector. Vector giving names of columns in the phenotype table containing categorical phenotype calls (S/I/R or NWT/WT). Default is any columns beginning with `"pheno"` or `"ecoff"`.
-#' @param drug_col Character. Name of the column in the phenotype table containing drug agent identifiers. Default is `"drug_agent"`. Entries will be annotated with their full antibiotic names, converted using [as.ab()]. If the genotype table contains a column indicating individual agents it should share this same name.
-#' @param class_col Character. Name of the column in the genotype table containing drug class identifiers. Default is `"drug_class"`. This should be antibiotic group names understood by the AMR pkg, as per `drug_col` columns generated by the [import_geno()] functions.
+#' @param drug_col Character. Name of the column in the phenotype table containing drug identifiers. Default is `"drug"`. Entries will be annotated with their full antibiotic names, converted using [as.ab()]. If the genotype table contains a column indicating individual drugs it should share this same name.
+#' @param class_col Character. Name of the column in the genotype table containing drug class identifiers. Default is `"drug_class"`. This should be antibiotic group names understood by the AMR package, as per `drug_col` columns generated by the [import_geno()] functions.
 #' @param marker_col Character. Name of the column in the genotype table containing marker identifiers. Default is `"marker"`.
 #' @param gene_col Character. Name of the column in the genotype table containing gene identifiers. Default is `"gene"`.
 #' @param variation_col Character. Name of the column in the genotype table containing variation type identifiers. Default is `"variation type"`.
@@ -318,7 +318,7 @@ summarise_pheno <- function(pheno_table,
 #'
 #' @details
 #' The function automatically adapts to the presence or absence of columns in `pheno_table`.
-#' The `force_ab` parameter allows the addition of full antibiotic names using the `ab_name()` function even when the first column is not recognized as an `"ab"` object.
+#' The `force_ab` parameter allows the addition of full antibiotic names using the `ab_name()` function even when the first column is not recognised as an `"ab"` object.
 #' @importFrom dplyr count mutate intersect bind_rows left_join rowwise
 #' @importFrom tidyr separate_longer_delim
 #' @importFrom purrr map
@@ -332,7 +332,7 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
                                  geno_sample_col = NULL,
                                  pheno_sample_col = NULL,
                                  pheno_cols,
-                                 drug_col = "drug_agent",
+                                 drug_col = "drug",
                                  class_col = "drug_class",
                                  marker_col = "marker",
                                  gene_col = "gene",

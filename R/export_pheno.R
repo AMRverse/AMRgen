@@ -22,7 +22,7 @@
 #'
 #' @param data A data frame in AMRgen long format (e.g. output of
 #'   [import_ast()] or [format_ast()]).
-#'   Expected columns: `id`, `drug_agent`, and at least one phenotype
+#'   Expected columns: `id`, `drug`, and at least one phenotype
 #'   column (see `pheno_col`). Optional columns: `mic`, `disk`,
 #'   `method`, `guideline`, `platform`.
 #' @param file File path for the output file (must end in `.txt` or
@@ -82,7 +82,7 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
     }
   }
 
-  required <- c("id", "drug_agent", pheno_col)
+  required <- c("id", "drug", pheno_col)
   missing_req <- setdiff(required, colnames(data))
   if (length(missing_req) > 0) {
     stop("Missing required column(s): ", paste(missing_req, collapse = ", "))
@@ -138,18 +138,18 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 
   # --- antibiotic name (lowercase, "-" for combos) ---
   antibiotic <- tryCatch(
-    gsub("/", "-", AMR::ab_name(data$drug_agent, tolower = TRUE), fixed = TRUE),
+    gsub("/", "-", AMR::ab_name(data$drug, tolower = TRUE), fixed = TRUE),
     error = function(e) {
-      warning("Could not convert some drug_agent values to antibiotic names: ", e$message)
-      as.character(data$drug_agent)
+      warning("Could not convert some drug values to antibiotic names: ", e$message)
+      as.character(data$drug)
     }
   )
 
-  na_ab <- is.na(antibiotic) & !is.na(data$drug_agent)
+  na_ab <- is.na(antibiotic) & !is.na(data$drug)
   if (any(na_ab)) {
     warning(
-      "AMR::ab_name() returned NA for some drug_agent values: ",
-      paste(unique(data$drug_agent[na_ab]), collapse = ", ")
+      "AMR::ab_name() returned NA for some drug values: ",
+      paste(unique(data$drug[na_ab]), collapse = ", ")
     )
   }
 
@@ -215,7 +215,7 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #'
 #' @param data A data frame in AMRgen long format (e.g. output of
 #'   [import_ast()] or [format_ast()]).
-#'   Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least
+#'   Expected columns: `id`, `drug`, `spp_pheno`, and at least
 #'   one phenotype column (see `pheno_col`). Optional columns: `mic`,
 #'   `disk`, `method`, `platform`.
 #' @param pheno_col Character string naming the column that contains
@@ -240,7 +240,7 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #'
 #' @details
 #' Antibiotic names are in Title Case with `"/"` separating
-#' combination agents (EBI convention, e.g.
+#' combination drugs (EBI convention, e.g.
 #' `"Amoxicillin/clavulanic acid"`).
 #'
 #' Species names are derived from the `spp_pheno` column via
@@ -274,7 +274,7 @@ export_ebi_ast <- function(data,
                            domain = "self.ExampleDomain",
                            output_dir = NULL) {
   # --- input validation ---
-  required <- c("id", "drug_agent", pheno_col, "spp_pheno")
+  required <- c("id", "drug", pheno_col, "spp_pheno")
   missing_req <- setdiff(required, colnames(data))
   if (length(missing_req) > 0) {
     stop("Missing required column(s): ", paste(missing_req, collapse = ", "))
@@ -339,18 +339,18 @@ export_ebi_ast <- function(data,
 
   # --- antibiotic name (Title Case, "/" for combos) ---
   antibiotic_name <- tryCatch(
-    AMR::ab_name(data$drug_agent),
+    AMR::ab_name(data$drug),
     error = function(e) {
-      warning("Could not convert some drug_agent values to antibiotic names: ", e$message)
-      as.character(data$drug_agent)
+      warning("Could not convert some drug values to antibiotic names: ", e$message)
+      as.character(data$drug)
     }
   )
 
-  na_ab <- is.na(antibiotic_name) & !is.na(data$drug_agent)
+  na_ab <- is.na(antibiotic_name) & !is.na(data$drug)
   if (any(na_ab)) {
     warning(
-      "AMR::ab_name() returned NA for some drug_agent values: ",
-      paste(unique(data$drug_agent[na_ab]), collapse = ", ")
+      "AMR::ab_name() returned NA for some drug values: ",
+      paste(unique(data$drug[na_ab]), collapse = ", ")
     )
   }
 

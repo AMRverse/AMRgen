@@ -520,8 +520,8 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' - `"ppv"`: order by the PPV estimated for each combination
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
 #' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_ast()]. Only used if `binary_matrix` not provided.
-#' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the `drug_agent` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.
-#' @param drug_class_list (Only relevant if `binary_matrix` not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
+#' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the `drug` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.
+#' @param drug_class_list (Only relevant if `binary_matrix` not provided) If not provided, the AMR package is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
@@ -536,7 +536,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' @param bp_S (optional) S breakpoint to add to plot (numerical).
 #' @param bp_R (optional) R breakpoint to add to plot (numerical).
 #' @param ecoff_bp (optional) ECOFF breakpoint to add to plot (numerical).
-#' @param antibiotic Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.
+#' @param antibiotic Optional. Antimicrobial name used to retrieve clinical breakpoints for annotation of the assay distribution plot.
 #' @param species Optional. Species name used for breakpoint lookup.
 #' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
@@ -680,8 +680,8 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' - `"ppv"` (default): order by the PPV estimated for each combination
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
 #' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_ast()]. Only used if `binary_matrix` not provided.
-#' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the `drug_agent` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.
-#' @param drug_class_list (Only relevant if `binary_matrix` not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
+#' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the `drug` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.
+#' @param drug_class_list (Only relevant if `binary_matrix` not provided) If not provided, the AMR package is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.

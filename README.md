@@ -134,7 +134,7 @@ mics <- rep(ecoli_cip_mic_data$mic, ecoli_cip_mic_data$count)
 ggplot2::autoplot(mics, ab = "cipro", mo = "E. coli", title = "E. coli cipro reference distribution")
 
 # Compare reference distribution to example E. coli data
-ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent=="CIP"]
+ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug=="CIP"]
 comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
 comparison
 ggplot2::autoplot(comparison)

@@ -69,7 +69,7 @@ The phenotype table has one row for each assay measurement, i.e. one per strain/
 
 * `spp_pheno`: species in the form of an AMR package `mo` class, in this vignette "B_ESCHR_COLI"
 
-* `drug_agent`: antibiotic name in the form of an AMR package `ab` class
+* `drug`: antibiotic name in the form of an AMR package `ab` class
 
 * a phenotype column: S/I/R phenotype calls in the form of an AMR package `sir` class. In this example, SIR phenotype calls are as provided in the EBI AMR portal (`pheno_provided`) as we did not re-interpret data based on CLSI/EUCAST breakpoints during download.
 

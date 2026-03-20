@@ -40,7 +40,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier, imported from the `#BioSample` column in the raw input.
-#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
+#' - `drug`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
 #' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`, used to interpret `ecoff` and `pheno` columns.
 #' - `disk`: Disk diffusion zone, formatted using `as.disk`, used to interpret `ecoff` and `pheno` columns.
 #' - `pheno_clsi`: S/I/R classification according to CLSI, interpreted using `as.sir`.
@@ -110,7 +110,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`: Antibiotic identifier, as class 'ab'.
+#' - `drug`: Antibiotic identifier, as class 'ab'.
 #' - `mic`: MIC data, as class 'mic'.
 #' - `disk`: Disk diffusion zone diameter data, as class 'disk'.
 #' - `pheno_provided`, `pheno_eucast`: S/I/R phenotypes as downloaded from NCBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.
@@ -167,7 +167,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`: Antibiotic identifier, as class 'ab'.
+#' - `drug`: Antibiotic identifier, as class 'ab'.
 #' - `mic`: MIC data, as class 'mic'.
 #' - `disk`: Disk diffusion zone diameter data, as class 'disk'.
 #' - `pheno_provided`, `pheno_eucast`, `pheno_clsi`, `ecoff`: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.
@@ -183,7 +183,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
+#' - `drug`, `drug_class`: Antibiotic drug and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
@@ -236,11 +236,11 @@
 #' E. coli AST data from Mills et al 2022
 #'
 #' Phenotyping data published in Mills et al, Genome Medicine (2022) 14:147, downloaded via EBI AMR portal, and imported to AMRgen phenotype table format. Corresponding genotype data is available in `geno_eco_2075`.
-#' @format `pheno_eco_2075` A data frame with 37350 rows and 37 columns representing MIC results for 2075 E. coli isolates tested against 18 drug agents, using BD Phoenix.
+#' @format `pheno_eco_2075` A data frame with 37350 rows and 37 columns representing MIC results for 2075 E. coli isolates tested against 18 drugs, using BD Phoenix.
 #'
 #' Columns include:
 #' - `id`: Sample identifier (BioSample).
-#' - `drug_agent`: Antibiotic identifier, as class 'ab'.
+#' - `drug`: Antibiotic identifier, as class 'ab'.
 #' - `mic`: MIC data, as class 'mic'.
 #' - `pheno_provided`: S/I/R phenotypes as downloaded from EBI.
 #' - ...: Additional data columns from EBI.
@@ -255,7 +255,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
+#' - `drug`, `drug_class`: Antibiotic drug and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
@@ -573,11 +573,11 @@
 
 #' Table mapping Kleborate drug class columns
 #'
-#' Table mapping Kleborate drug class columns to class names recognised by AMR pkg
+#' Table mapping Kleborate drug class columns to class names recognised by AMR package
 #'
 #' @format `kleborate_classes` A data frame with 21 rows and 2 columns:
 #' - `Kleborate_Class`: Column name in Kleborate output files
-#' - `drug_class`: Valid drug class name recognised by AMR pkg
+#' - `drug_class`: Valid drug class name recognised by AMR package
 "kleborate_classes"
 
 
@@ -620,7 +620,7 @@
 #'
 #' @format `ast_CLI_public` A data frame with 5914 rows and 34 columns:
 #' - `id`: Sample identifier, imported from the `#BioSample` column in the raw input.
-#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
+#' - `drug`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
 #' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`, used to interpret `ecoff` and `pheno` columns.
 #' - `disk`: Disk diffusion zone, formatted using `as.disk`, used to interpret `ecoff` and `pheno` columns.
 #' - `pheno_eucast`: S/I/R classification according to EUCAST, interpreted using `as.sir`.
@@ -716,7 +716,7 @@
 #' - `node`:  node.
 #' - `marker`:  marker.
 #' - `marker.label`:  marker.label.
-#' - `drug_agent`:  drug_agent.
+#' - `drug`:  drug.
 #' - `drug_class`:  drug_class.
 #' - `Protein id`:  Protein id.
 #' - `Contig id`:  Contig id.
@@ -752,7 +752,7 @@
 #'
 #' @format `NCBI_Ecoli_AST_chl` A data frame with 6,859 rows and 17 columns:
 #' - `id`: Sample identifier, imported from the `BioSample` column in the raw input.
-#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
+#' - `drug`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
 #' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`.
 #' - `disk`: Disk diffusion zone, formatted using `as.disk`.
 #' - `method`, `platform`, `guideline`: Test method and platform and interpretation guideline.
@@ -769,7 +769,7 @@
 #'
 #' @format `MICROBIGGE_Ecoli_CHLR` A data frame with 95,776 rows and 27 columns:
 #' - `id`:  BioSample.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
+#' - `drug`, `drug_class`: Antibiotic drug and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene identifiers.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `% Coverage of reference`:  % Coverage of reference.
@@ -791,12 +791,12 @@
 
 #' Table mapping CARD/RGI drug class and antibiotic columns
 #'
-#' Table mapping CARD/RGI drug class / antibiotic columns to class / antibiotic names recognised by AMR pkg
+#' Table mapping CARD/RGI drug class / antibiotic columns to class / antibiotic names recognised by AMR package
 #'
 #' @format `rgi_drugs_table` A data frame with 3 rows and 70 columns:
-#' - `RGI_DrugClassAgent`: RGI/CARD drug class / antibiotic that is not recognized by AMR pkg
-#' - `drug_class`: Valid drug class name recognised by AMR pkg
-#' - `drug_agent`: Valid antibiotic name recognised by AMR pkg
+#' - `RGI_DrugClassAgent`: RGI/CARD drug class / antibiotic that is not recognised by AMR package
+#' - `drug_class`: Valid drug class name recognised by AMR package
+#' - `drug`: Valid antibiotic name recognised by AMR package
 "rgi_drugs_table"
 
 #' Table mapping CARD/RGI Model ID and CARD Short Name

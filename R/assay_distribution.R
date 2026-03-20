@@ -22,7 +22,7 @@
 #' @param colour_by (optional) Field name containing a variable to colour bars by (default NULL, which will colour each bar to indicate whether the value is expressed as a range or not).
 #' @param bar_cols (optional) Manual colour scale to use for bar plot. If NULL, `colour_by` variable is of class 'sir', bars will by default be coloured using standard SIR colours.
 #' @param facet_var (optional) Column name containing a variable to facet on (default NULL).
-#' @param antibiotic (optional) Name of an antibiotic to filter the 'drug_agent' column, and to retrieve breakpoints for.
+#' @param antibiotic (optional) Name of an antibiotic to filter the 'drug' column, and to retrieve breakpoints for.
 #' @param species (optional) Name of species, so we can retrieve breakpoints to print at the top of the plot to help interpret it.
 #' @param bp_site (optional) Breakpoint site to retrieve (only relevant if also supplying `species` and `antibiotic` to retrieve breakpoints, and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff`).
 #' @param bp_S (optional) S breakpoint to plot.
@@ -81,13 +81,13 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
                          x_axis_label = "Measurement", y_axis_label = "Count",
                          colour_legend_label = NULL, plot_title = NULL) {
   if (!is.null(antibiotic)) {
-    if ("drug_agent" %in% colnames(pheno_table)) {
-      pheno_table <- pheno_table %>% filter(drug_agent == as.ab(antibiotic))
+    if ("drug" %in% colnames(pheno_table)) {
+      pheno_table <- pheno_table %>% filter(drug == as.ab(antibiotic))
       if (nrow(pheno_table) == 0) {
-        stop("Antibiotic '", antibiotic, "' not found in drug_agent column")
+        stop("Antibiotic '", antibiotic, "' not found in drug column")
       }
     } else {
-      warning("Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.\nEnsure your input table is already filtered to the antibiotic.")
+      warning("Column 'drug' not found in phenotype table, so can't input matrix to specified antibiotic.\nEnsure your input table is already filtered to the antibiotic.")
     }
   }
 
@@ -182,9 +182,13 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
       plot_title <- paste(antibiotic, plot_title)
     }
   }
+
+  pheno_table <- pheno_table %>%
+    count(across(c(measure, colour_by, facet_var)))
+
   if (nrow(pheno_table) > 0) {
     plot_all <- pheno_table %>%
-      ggplot(aes(x = factor(!!sym(measure)))) +
+      ggplot(aes(x = !!sym(measure))) +
       labs(
         x = x_axis_label, y = y_axis_label,
         fill = colour_legend_label, subtitle = subtitle,
@@ -193,17 +197,17 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
       theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1))
     if (is(pheno_table[[colour_by]], "sir")) {
       plot_all <- plot_all +
-        geom_bar(aes(fill = !!sym(colour_by))) # don't treat as factor, will colour automatically by SIR
+        geom_col(aes(y = n, fill = !!sym(colour_by))) # don't treat as factor, will colour automatically by SIR
     } else { # treat as factor and apply manual colours if provided
       plot_all <- plot_all +
-        geom_bar(aes(fill = factor(!!sym(colour_by))))
+        geom_col(aes(y = n, fill = factor(!!sym(colour_by))))
     }
     if (!is.null(bar_cols)) {
       plot_all <- plot_all + scale_fill_manual(values = bar_cols)
     }
     if (!is.null(facet_var)) {
       if (pheno_table %>% filter(!is.na(get(facet_var))) %>% nrow() > 0) {
-        plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = 1, scales = "free_y")
+        plot_all <- plot_all + facet_wrap(~get(facet_var), ncol = 1, scales = "free_y")
       }
     }
 

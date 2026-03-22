@@ -705,9 +705,9 @@
 "btESBL_AST"
 
 
-#' DASSIM genotype data (AMRfinderplus)
+#' DASSIM genotype data (AMRFinderPlus)
 #'
-#' The DASSIM dataset screened for Antimicrobial resistance genes (ARGs) using AMRfinderplus v4.0.23
+#' The DASSIM dataset screened for Antimicrobial resistance genes (ARGs) using AMRFinderPlus v4.0.23
 #'
 #' @format `DASSIM_geno` A data frame with 12414 rows and 31 columns:
 #' - `Name`:  Name.
@@ -758,6 +758,7 @@
 #' - `method`, `platform`, `guideline`: Test method and platform and interpretation guideline.
 #' - `pheno_provided`: S/I/R interpretation as provided in the raw input.
 #' - `spp_pheno`: Species identifier, interpreted from `Scientific name` using `as.mo`, used to interpret `ecoff` and `pheno` columns.
+#' - ...: Additional data columns from the NCBI AST Browser
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast#chloramphenicol%20AND%20Escherichia>
 "NCBI_Ecoli_AST_chl"
 
@@ -769,13 +770,15 @@
 #'
 #' @format `MICROBIGGE_Ecoli_CHLR` A data frame with 95,776 rows and 27 columns:
 #' - `id`:  BioSample.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRfinderplus `subclass` field in the downloaded file.
+#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene identifiers.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `% Coverage of reference`:  % Coverage of reference.
 #' - `% Identity to reference`:  % Identity to reference.
-#' - ...: Additional data columns from AMRfinderplus#' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#chloramphenicol%20AND%20Escherichia>
+#' - ...: Additional data columns from AMRFinderPlus
+#' #' @source <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#chloramphenicol%20AND%20Escherichia>
 "MICROBIGGE_Ecoli_CHLR"
+
 #' Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data
 #'
 #' Raw RGI v6.0.6 results file (run with `--include_loose`) for 12 genomes of multiple species, one AMR determinant per row.
@@ -823,3 +826,38 @@
 #' @source ENA BioProject [PRJEB10018](https://www.ebi.ac.uk/ena/browser/view/PRJEB10018).
 #' See David *et al.* (2019) <https://doi.org/10.1038/s41564-019-0492-8>.
 "rgi_EuSCAPE_raw"
+
+
+#' Example AMRFinderPlus Genotype Data from EuSCAPE project
+#'
+#' AMRFinderPlus results file for Klebsiella pneumoniae from EuSCAPE project, one AMR determinant per row, downloaded from the EBI AMR portal using [download_ebi()] and imported using [import_geno()].
+#'
+#' @format `kp_mero_amrfp` A data frame with 32,385 rows and 34 columns:
+#' - `id`:  BioSample.
+#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
+#' - `gene`, `node`, `marker`: gene identifiers.
+#' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
+#' - `% Coverage of reference`:  % Coverage of reference.
+#' - `% Identity to reference`:  % Identity to reference.
+#' - ...: Additional data columns from AMRFinderPlus
+#' @source [EBI AMR Portal](https://www.ebi.ac.uk/amr).
+#' See David *et al.* (2019) <https://doi.org/10.1038/s41564-019-0492-8>.
+"kp_mero_amrfp"
+
+
+#' Meropenem Phenotype Data from EuSCAPE project
+#'
+#' Meropenem phenotype data for Klebsiella pneumoniae from EuSCAPE project, one sample per row, downloaded from the EBI AMR portal using [download_ebi()] and imported using [import_pheno()].
+#'
+#' @format `kp_mero_euscape` A data frame with 1,490 rows and 43 columns:
+#' - `id`: Sample identifier, imported from the `BioSample` column in the raw input.
+#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
+#' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`.
+#' - `disk`: Disk diffusion zone, formatted using `as.disk`.
+#' - `method`, `platform`, `guideline`: Test method and platform and interpretation guideline.
+#' - `pheno_provided`: S/I/R interpretation as provided in the raw input.
+#' - `spp_pheno`: Species identifier, interpreted from `Scientific name` using `as.mo`, used to interpret `ecoff` and `pheno` columns.
+#' - ...: Additional data columns from EBI AMR Portal
+#' @source [EBI AMR Portal](https://www.ebi.ac.uk/amr).
+#' See David *et al.* (2019) <https://doi.org/10.1038/s41564-019-0492-8>.
+"kp_mero_euscape"

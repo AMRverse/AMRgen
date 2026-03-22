@@ -64,6 +64,8 @@ articles:
       - SalmonellaExamples
       - StaphAureusClindamycin
       - DeletionVariantsCatB3
+      - ComparingGenotypers
+      
 
 # Reference section grouping
 reference:
@@ -158,6 +160,8 @@ reference:
       - rgi_short_name_table
       - rgi_drugs_table
       - rgi_EuSCAPE_raw
+      - kp_mero_euscape
+      - kp_mero_amrfp
       - sirscan_codes
 
 # Footer configuration

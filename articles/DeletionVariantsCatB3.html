@@ -90,7 +90,7 @@ IS<em>5</em> have been identified as key drivers; IS<em>26</em> causes
 truncations in <em>catB3</em> (creating the non-functional variant
 <em>catB4</em>), while IS<em>5</em> can integrate into the promoter of
 <em>catA1</em>, effectively silencing its transcription.</p>
-<p>Here we use a matched phenotype/genotype dataset used in the (<a href="https://doi.org/10.1038/s41467-024-53391-2" class="external-link">Graf et al., 2024</a>)
+<p>Here we analyse a matched phenotype/genotype dataset used in the (<a href="https://doi.org/10.1038/s41467-024-53391-2" class="external-link">Graf et al., 2024</a>)
 study and publicly available datasets from NCBI to investigate these
 genotype-phenotype mismatches with the AMRgen package.</p>
 <div class="section level3">
@@ -98,7 +98,8 @@ genotype-phenotype mismatches with the AMRgen package.</p>
 </h3>
 <p>One of the datasets used to highlight genotype-phenotype mismatches
 in the <a href="https://doi.org/10.1038/s41467-024-53391-2" class="external-link">Graf et al.,
-2024</a> paper was the DASSIM dataset (<a href="https://doi.org/10.1038/s41564-022-01216-7" class="external-link">Lewis et
+2024</a> paper was the “Developing an antimicrobial strategy for sepsis
+in Malawi” (DASSIM) dataset (<a href="https://doi.org/10.1038/s41564-022-01216-7" class="external-link">Lewis et
 al. 2022</a>).</p>
 <p>The DASSIM study was an observational study of patients with sepsis
 admitted to Queen Elizabeth Central Hospital, Blantyre, Malawi. The aim
@@ -151,8 +152,8 @@ and <a href="https://www.ebi.ac.uk/ena/browser/view/PRJEB36486" class="external-
 <a href="https://doi.org/10.1038/s41467-024-53391-2" class="external-link">Graf et al.,
 2024</a>.</p>
 <p>Antimicrobial resistance genes (ARGs) were called with AMRFinderPlus
-v4.0.23 to produce the data frame [DASSIM_geno] which is included in the
-AMRgen package as a data object <code>DASSIM_geno</code>.</p>
+v4.0.23 to produce the data frame (DASSIM_geno), which is included in
+the AMRgen package as a data object <code>DASSIM_geno</code>.</p>
 <div class="section level4">
 <h4 id="b-dassim-phenotype-data">1.1b DASSIM Phenotype data<a class="anchor" aria-label="anchor" href="#b-dassim-phenotype-data"></a>
 </h4>
@@ -178,7 +179,7 @@ Feasey.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="analysis">2. Analysis<a class="anchor" aria-label="anchor" href="#analysis"></a>
+<h2 id="analysis-of-the-dassim-dataset">2. Analysis of the DASSIM dataset<a class="anchor" aria-label="anchor" href="#analysis-of-the-dassim-dataset"></a>
 </h2>
 <div class="section level3">
 <h3 id="setting-up-r">2.1 Setting up R<a class="anchor" aria-label="anchor" href="#setting-up-r"></a>
@@ -193,7 +194,7 @@ Feasey.</p>
 <div class="section level3">
 <h3 id="format-the-phenotype-data">2.2 Format the phenotype data<a class="anchor" aria-label="anchor" href="#format-the-phenotype-data"></a>
 </h3>
-<p>The phenotype data in <code>btESBL_AST</code> needs to be reformated
+<p>The phenotype data in <code>btESBL_AST</code> needs to be reformatted
 to long format, and sequence identifiers imported from
 <code>DASSIM_pheno_raw</code> so we can match the phenotype data to the
 genotypes.</p>
@@ -210,7 +211,7 @@ genotypes.</p>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sensitive"</span>, <span class="st">"susceptible"</span>, <span class="st">"s"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"S"</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"intermediate"</span>, <span class="st">"i"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"I"</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"resistant"</span>, <span class="st">"r"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"R"</span>,</span>
-<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="cn">NA_character_</span> <span class="co"># Any other unrecognized values become NA</span></span>
+<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="cn">NA_character_</span> <span class="co"># Any other unrecognised values become NA</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pheno <span class="op">=</span> <span class="fu">AMR</span><span class="fu">::</span><span class="fu"><a href="https://amr-for-r.org/reference/as.sir.html" class="external-link">as.sir</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span><span class="op">)</span></span>
@@ -273,35 +274,27 @@ the AST assays for the DASSIM study.</p>
 <p>For each of these first we create a binary matrix using
 <code><a href="../reference/get_binary_matrix.html">get_binary_matrix()</a></code> which takes our genotype (AMRfinderplus
 etc.) and phenotype (AST profile) datasets.</p>
-<p>We can then plot the PPV graphs using <code><a href="../reference/ppv.html">ppv()</a></code></p>
+<p>We can then plot the PPV graphs using <code><a href="../reference/ppv.html">ppv()</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get binary matrix</span></span>
 <span><span class="va">DASSIM_CHL_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, antibiotic <span class="op">=</span> <span class="st">"chloramphenicol"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
 <span><span class="co"># Plot ppv</span></span>
 <span><span class="va">DASSIM_CHL_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_CHL_bin_mat</span>, antibiotic <span class="op">=</span> <span class="st">"Chloramphenicol"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="100%"></p>
-<p>We can see that <em>oqx</em> genes on their own don’t impact
-resistance. As they are common, they obscure the impact of other genes,
-so we can remove them using <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select()</a></code> to focus on the genes
-of interest for chloramphenicol.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">DASSIM_CHL_nooqx_bin_mat</span> <span class="op">&lt;-</span> <span class="va">DASSIM_CHL_bin_mat</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"oqx"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">DASSIM_CHL_nooqx_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_CHL_nooqx_bin_mat</span>, antibiotic <span class="op">=</span> <span class="st">"Chloramphenicol"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%"></p>
 <p>This result clearly shows how the detection of <em>catB3</em> is not
-a good predictor of resistance, whereas detection of <em>catA2</em>
+a good predictor of resistance, whereas the detection of <em>catA2</em>
 is.</p>
 <p>Now let’s check how well aminoglycoside markers predict resistance to
 amikacin and gentamicin.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DASSIM_AMK_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, antibiotic <span class="op">=</span> <span class="st">"amikacin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
 <span><span class="va">DASSIM_AMK_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_AMK_bin_mat</span>, antibiotic <span class="op">=</span> <span class="st">"amikacin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">DASSIM_GEN_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, antibiotic <span class="op">=</span> <span class="st">"gentamicin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
 <span><span class="va">DASSIM_GEN_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_GEN_bin_mat</span>, antibiotic <span class="op">=</span> <span class="st">"gentamicin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-2.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-2.png" class="r-plt" alt="" width="100%"></p>
 <p>Here we see many of the aminoglycoside-associated resistance genes
 detected in these genomes are predictive of resistance to gentamicin,
 but none are associated with amikacin resistance. This is because
@@ -312,29 +305,29 @@ reaching the sites on the molecule where they would normally attach
 their deactivating tags.</p>
 <p>Now let’s check how well markers associated with trimethoprims or
 sulfonamides predict resistance to co-trimoxazole.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DASSIM_SXT_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, antibiotic <span class="op">=</span> <span class="st">"cotrimoxazole"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
 <span><span class="va">DASSIM_SXT_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_SXT_bin_mat</span>, antibiotic <span class="op">=</span> <span class="st">"cotrimoxazole"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Co-trimoxazole is a combination drug made of sulfamethoxazole and
 trimethoprim. It is prescribed prophylactically in Malawi for
 HIV-positive individuals (<a href="https://doi.org/10.1371/journal.pone.0017765" class="external-link">Everett et
 al. 2011</a>). Since it is a combination drug it requires both
 Sulfamethoxazole resistance genes (e.g., <em>sul</em>) and Trimethoprim
 resistance genes (e.g., <em>dfrA</em>).</p>
-<p>Meropenem is a last resort carbapenem antibiotic. ppv() by default
-returns all markers associated with beta-lactam resistance, for
-comparison with meropenem phenotypes. However while many beta-lactamases
-were detected, none are known carbapenemases (e.g.,
+<p>Meropenem is a last resort carbapenem antibiotic. <code><a href="../reference/ppv.html">ppv()</a></code>
+by default returns all markers associated with beta-lactam resistance,
+for comparison with meropenem phenotypes. However while many
+beta-lactamases were detected, none are known carbapenemases (e.g.,
 <em>bla<sub>NDM</sub></em>, <em>bla<sub>KPC</sub></em>,
 <em>bla<sub>VIM</sub></em>, <em>bla<sub>IMP</sub></em>,
 <em>bla<sub>OXA-48-like</sub></em>). Consistent with this only a single
 isolate, carrying multiple beta-lactamases, was phenotyped as resistant
 to meropenem.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DASSIM_MEM_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, antibiotic <span class="op">=</span> <span class="st">"meropenem"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
 <span><span class="va">DASSIM_MEM_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_MEM_bin_mat</span>, antibiotic <span class="op">=</span> <span class="st">"meropenem"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
 <p>This analysis highlights how AMRgen can be used to explore
 genotype/phenotype associations for specific genetic markers related to
 a variety of antibiotics.</p>
@@ -362,8 +355,9 @@ their phenotypic resistance profiles.</p>
 functions <code><a href="../reference/download_ncbi_ast.html">download_ncbi_ast()</a></code> (slow but does not require
 authorisation) or <code><a href="../reference/query_ncbi_bq_ast.html">query_ncbi_bq_ast()</a></code> (very fast, requires
 a Google Cloud account), or via the NCBI AST Browser. For more details
-see the [DownloadGenoPhenoData] vignette.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+see the <a href="https://amrgen.org/articles/AnalysingGenoPhenoData.html">Analysing
+Geno-Pheno Data</a> vignette.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download E. coli AST data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints</span></span>
 <span><span class="va">ecoli_ast_ncbi_via_biosample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ncbi_ast.html">download_ncbi_ast</a></span><span class="op">(</span></span>
 <span>  species <span class="op">=</span> <span class="st">"E. coli"</span>,</span>
@@ -371,7 +365,7 @@ see the [DownloadGenoPhenoData] vignette.</p>
 <span>  reformat <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download E. coli AST data from NCBI via Google Cloud, filtering for chloramphenicol, and re-interpret with CLSI breakpoints</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"bigrquery"</span><span class="op">)</span></span>
@@ -388,7 +382,7 @@ see the [DownloadGenoPhenoData] vignette.</p>
 <span><span class="va">ecoli_ast_ncbi_via_cloud_interpreted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_ncbi_ast.html">import_ncbi_ast</a></span><span class="op">(</span><span class="va">ecoli_ast_ncbi_via_cloud</span>,</span>
 <span>  interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Navigate to the <a href="https://www.ncbi.nlm.nih.gov/pathogens/ast" class="external-link"><em>NCBI Antibiotic
+<p>Alternatively, we can navigate to the <a href="https://www.ncbi.nlm.nih.gov/pathogens/ast" class="external-link"><em>NCBI Antibiotic
 Susceptibility Test (AST) Browser</em></a> in a web browser and search
 for</p>
 <blockquote>
@@ -400,12 +394,12 @@ for</p>
 <p>Save this as a <code>tsv</code> file:
 <code>CHL_Ecoli_asts.tsv</code>, and import it using the AMRgen function
 <code>import_pheno</code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># import phenotype data</span></span>
 <span><span class="va">NCBI_Ecoli_AST_chl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_pheno.html">import_pheno</a></span><span class="op">(</span><span class="st">"data-raw/CHL_Ecoli_asts.tsv"</span>, format <span class="op">=</span> <span class="st">"ncbi"</span><span class="op">)</span></span></code></pre></div>
 <p>A copy of this imported data (downloaded March 2026) is included in
 AMRgen as data frame <code>NCBI_Ecoli_AST_chl</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">NCBI_Ecoli_AST_chl</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 25</span></span></span>
 <span><span class="co">#&gt;   id           drug_agent    mic  disk guideline method  platform pheno_provided</span></span>
@@ -441,12 +435,12 @@ for:</p>
 <p>Save this as a <code>tsv</code> file:
 <code>CHL-R_Ecoli_microbigge.tsv</code>, and import it using the AMRgen
 function <code>import_gheno</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># import phenotype data</span></span>
 <span><span class="va">MICROBIGGE_Ecoli_CHLR</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_geno.html">import_geno</a></span><span class="op">(</span><span class="st">"data-raw/CHL-R_Ecoli_microbigge.tsv"</span>, format <span class="op">=</span> <span class="st">"amrfp"</span>, sample_col <span class="op">=</span> <span class="st">"BioSample"</span><span class="op">)</span></span></code></pre></div>
 <p>A copy of this imported data (downloaded March 2026) is included in
 AMRgen as data frame <code>MICROBIGGE_Ecoli_CHLR</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">MICROBIGGE_Ecoli_CHLR</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 27</span></span></span>
 <span><span class="co">#&gt;   id          marker gene  mutation drug_agent drug_class `variation type` node </span></span>
@@ -468,7 +462,7 @@ AMRgen as data frame <code>MICROBIGGE_Ecoli_CHLR</code>.</p>
 <h3 id="filter-data-to-samples-with-chloramphenicol-phenotype-data-and-chloramphenicol-genotypic-markers-detected">3.2 Filter data to samples with chloramphenicol phenotype data, and
 chloramphenicol genotypic markers detected<a class="anchor" aria-label="anchor" href="#filter-data-to-samples-with-chloramphenicol-phenotype-data-and-chloramphenicol-genotypic-markers-detected"></a>
 </h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># filter AST data, re-interpret using CLSI breakpoints</span></span>
 <span><span class="va">AST_pheno</span> <span class="op">&lt;-</span> <span class="va">NCBI_Ecoli_AST_chl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">MICROBIGGE_Ecoli_CHLR</span><span class="op">$</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -476,8 +470,8 @@ chloramphenicol genotypic markers detected<a class="anchor" aria-label="anchor" 
 <span><span class="co">#&gt; Warning: There was 1 warning in `mutate()`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `across(...)`.</span></span>
 <span><span class="co">#&gt; Caused by warning:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Some MICs were converted to the nearest higher log2 level, following the</span></span>
-<span><span class="co">#&gt; CLSI interpretation guideline.</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Some MICs were converted to the nearest higher log2 level, following the CLSI</span></span>
+<span><span class="co">#&gt; interpretation guideline.</span></span>
 <span><span class="va">MB_CHLR_geno</span> <span class="op">&lt;-</span> <span class="va">MICROBIGGE_Ecoli_CHLR</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">NCBI_Ecoli_AST_chl</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># check how many samples we have</span></span>
@@ -517,7 +511,7 @@ chloramphenicol genotypic markers detected<a class="anchor" aria-label="anchor" 
 the <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code> function.</p>
 <p>We visualise the MIC distribution with <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code> on
 all chloramphenicol AST data.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">AST_pheno</span> <span class="op">&lt;-</span> <span class="va">AST_pheno</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="st">"mic"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">AMR</span><span class="fu">::</span><span class="fu"><a href="https://amr-for-r.org/reference/as.mic.html" class="external-link">as.mic</a></span><span class="op">(</span><span class="va">.x</span>, round_to_next_log2 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -528,11 +522,11 @@ all chloramphenicol AST data.</p>
 <span>  colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Escherichia coli"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Next we can visualise the MIC distribution with
 <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code> on the AST data of isolates containing the
 <em>catB3</em> gene only</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># CATB3 specific</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
@@ -543,16 +537,17 @@ all chloramphenicol AST data.</p>
 <span>  species <span class="op">=</span> <span class="st">"Escherichia coli"</span></span>
 <span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Chloramphenicol MIC distribution for isolates with catB3 only"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="100%"></p>
 <p>The distribution shifts to the right and towards sensitive for
 isolates with the <em>catB3</em> gene only, when compared to those with
 any chloramphenicol-associated gene.</p>
-<p>We can then split the plot based on how truncated the <em>catB3</em>
-gene is as a percentage of coverage with 100% aligning across the entire
-length of the gene and &lt;100% showing a truncation or deletion (see <a href="https://doi.org/10.1038/s41467-024-53391-2" class="external-link">Graf et al., 2024</a>
+<p>We can then split the plot based on whether the the <em>catB3</em>
+gene is truncated or not. This is calculated as a percentage of
+coverage, with 100% aligning across the entire length of the gene and
+&lt;100% showing a truncation or deletion (see <a href="https://doi.org/10.1038/s41467-024-53391-2" class="external-link">Graf et al., 2024</a>
 for more about the IS<em>26</em> mediated truncation of
-<em>catB3</em>)</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<em>catB3</em>).</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># add genotype data to the phenotype table for isolates with catB3 alone</span></span>
 <span><span class="va">AST_CATB3_pheno_2</span> <span class="op">&lt;-</span> <span class="va">MB_CATB3_geno</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">gene</span>, <span class="va">`% Coverage of reference`</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -590,8 +585,8 @@ for more about the IS<em>26</em> mediated truncation of
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">MIC_dist_by_cov</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="100%"></p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># check counts and median MIC per group</span></span>
 <span><span class="va">AST_CATB3_pheno_3</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -618,7 +613,7 @@ phenotype tables as input with <code><a href="../reference/get_binary_matrix.htm
 <p>Then we can view it as an upset grid, with a upset plot, SIR stacked
 barplot and positive predictive value (ppv) using the <code><a href="../reference/ppv.html">ppv()</a></code>
 function.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">MB_CHLR_geno</span> <span class="op">&lt;-</span> <span class="va">MB_CHLR_geno</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>marker <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">marker</span> <span class="op">==</span> <span class="st">"catB3"</span> <span class="op">&amp;</span> <span class="va">`% Coverage of reference`</span> <span class="op">&lt;</span> <span class="fl">100</span>, <span class="st">"catB3 (truncated)"</span>, <span class="va">marker</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -639,8 +634,11 @@ function.</p>
 <span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="100%">
-## 3.5 Logistic regression</p>
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="logistic-regression">3.5 Logistic regression<a class="anchor" aria-label="anchor" href="#logistic-regression"></a>
+</h3>
 <p>We can plot a coefficient plot using the <code><a href="../reference/amr_logistic.html">amr_logistic()</a></code>
 function to show the statistical relationship between chloramphenicol
 resistance genes and phenotypic resistance to chloramphenicol.</p>
@@ -648,7 +646,7 @@ resistance genes and phenotypic resistance to chloramphenicol.</p>
 <code><a href="../reference/get_binary_matrix.html">get_binary_matrix()</a></code>) and we can define the antibiotic, the
 column containing the ecoff and a threshold for the number of samples a
 marker is present in.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">CHL_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">CHL_bin_mat</span>,</span>
 <span>  antibiotic <span class="op">=</span> <span class="st">"chloramphenicol"</span>,</span>
@@ -656,8 +654,8 @@ marker is present in.</p>
 <span>  maf <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  single_plot <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="100%"></p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># model coefficients</span></span>
 <span><span class="va">CHL_logist</span><span class="op">$</span><span class="va">modelR</span></span>

@@ -23,8 +23,8 @@ identified as key drivers; IS*26* causes truncations in *catB3*
 (creating the non-functional variant *catB4*), while IS*5* can integrate
 into the promoter of *catA1*, effectively silencing its transcription.
 
-Here we use a matched phenotype/genotype dataset used in the ([Graf et
-al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) study and
+Here we analyse a matched phenotype/genotype dataset used in the ([Graf
+et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) study and
 publicly available datasets from NCBI to investigate these
 genotype-phenotype mismatches with the AMRgen package.
 
@@ -32,7 +32,8 @@ genotype-phenotype mismatches with the AMRgen package.
 
 One of the datasets used to highlight genotype-phenotype mismatches in
 the [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)
-paper was the DASSIM dataset ([Lewis et
+paper was the “Developing an antimicrobial strategy for sepsis in
+Malawi” (DASSIM) dataset ([Lewis et
 al. 2022](https://doi.org/10.1038/s41564-022-01216-7)).
 
 The DASSIM study was an observational study of patients with sepsis
@@ -88,7 +89,7 @@ The fastq files were downloaded, processed with cutadapt, filtered to
 [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2).
 
 Antimicrobial resistance genes (ARGs) were called with AMRFinderPlus
-v4.0.23 to produce the data frame \[DASSIM_geno\] which is included in
+v4.0.23 to produce the data frame (DASSIM_geno), which is included in
 the AMRgen package as a data object `DASSIM_geno`.
 
 #### 1.1b DASSIM Phenotype data
@@ -117,7 +118,7 @@ of the following paper:
 This data is included in the AMRgen package as data object:
 `DASSIM_pheno_raw`.
 
-## 2. Analysis
+## 2. Analysis of the DASSIM dataset
 
 ### 2.1 Setting up R
 
@@ -132,7 +133,7 @@ library(ggplot2)
 
 ### 2.2 Format the phenotype data
 
-The phenotype data in `btESBL_AST` needs to be reformated to long
+The phenotype data in `btESBL_AST` needs to be reformatted to long
 format, and sequence identifiers imported from `DASSIM_pheno_raw` so we
 can match the phenotype data to the genotypes.
 
@@ -149,7 +150,7 @@ DASSIM_pheno <- btESBL_AST %>%
       tolower(pheno) %in% c("sensitive", "susceptible", "s") ~ "S",
       tolower(pheno) %in% c("intermediate", "i") ~ "I",
       tolower(pheno) %in% c("resistant", "r") ~ "R",
-      TRUE ~ NA_character_ # Any other unrecognized values become NA
+      TRUE ~ NA_character_ # Any other unrecognised values become NA
     )
   ) %>%
   mutate(pheno = AMR::as.sir(pheno))
@@ -216,7 +217,7 @@ which takes our genotype (AMRfinderplus etc.) and phenotype (AST
 profile) datasets.
 
 We can then plot the PPV graphs using
-[`ppv()`](https://amrgen.org/reference/ppv.md)
+[`ppv()`](https://amrgen.org/reference/ppv.md).
 
 ``` r
 # Get binary matrix
@@ -227,21 +228,8 @@ DASSIM_CHL_PPV <- ppv(DASSIM_CHL_bin_mat, antibiotic = "Chloramphenicol", sir_co
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-5-1.png)
 
-We can see that *oqx* genes on their own don’t impact resistance. As
-they are common, they obscure the impact of other genes, so we can
-remove them using
-[`select()`](https://dplyr.tidyverse.org/reference/select.html) to focus
-on the genes of interest for chloramphenicol.
-
-``` r
-DASSIM_CHL_nooqx_bin_mat <- DASSIM_CHL_bin_mat %>% select(!contains("oqx"))
-DASSIM_CHL_nooqx_PPV <- ppv(DASSIM_CHL_nooqx_bin_mat, antibiotic = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
-```
-
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-1.png)
-
 This result clearly shows how the detection of *catB3* is not a good
-predictor of resistance, whereas detection of *catA2* is.
+predictor of resistance, whereas the detection of *catA2* is.
 
 Now let’s check how well aminoglycoside markers predict resistance to
 amikacin and gentamicin.
@@ -251,7 +239,7 @@ DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = 
 DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, antibiotic = "amikacin", sir_col = "pheno", upset_grid = TRUE)
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-1.png)
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-1.png)
 
 ``` r
 
@@ -259,7 +247,7 @@ DASSIM_GEN_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = 
 DASSIM_GEN_PPV <- ppv(DASSIM_GEN_bin_mat, antibiotic = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-2.png)
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-2.png)
 
 Here we see many of the aminoglycoside-associated resistance genes
 detected in these genomes are predictive of resistance to gentamicin,
@@ -278,7 +266,7 @@ DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = 
 DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, antibiotic = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-8-1.png)
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-1.png)
 
 Co-trimoxazole is a combination drug made of sulfamethoxazole and
 trimethoprim. It is prescribed prophylactically in Malawi for
@@ -287,20 +275,21 @@ al. 2011](https://doi.org/10.1371/journal.pone.0017765)). Since it is a
 combination drug it requires both Sulfamethoxazole resistance genes
 (e.g., *sul*) and Trimethoprim resistance genes (e.g., *dfrA*).
 
-Meropenem is a last resort carbapenem antibiotic. ppv() by default
-returns all markers associated with beta-lactam resistance, for
-comparison with meropenem phenotypes. However while many beta-lactamases
-were detected, none are known carbapenemases (e.g., *bla_(NDM)*,
-*bla_(KPC)*, *bla_(VIM)*, *bla_(IMP)*, *bla_(OXA-48-like)*). Consistent
-with this only a single isolate, carrying multiple beta-lactamases, was
-phenotyped as resistant to meropenem.
+Meropenem is a last resort carbapenem antibiotic.
+[`ppv()`](https://amrgen.org/reference/ppv.md) by default returns all
+markers associated with beta-lactam resistance, for comparison with
+meropenem phenotypes. However while many beta-lactamases were detected,
+none are known carbapenemases (e.g., *bla_(NDM)*, *bla_(KPC)*,
+*bla_(VIM)*, *bla_(IMP)*, *bla_(OXA-48-like)*). Consistent with this
+only a single isolate, carrying multiple beta-lactamases, was phenotyped
+as resistant to meropenem.
 
 ``` r
 DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "meropenem", sir_col = "pheno")
 DASSIM_MEM_PPV <- ppv(DASSIM_MEM_bin_mat, antibiotic = "meropenem", sir_col = "pheno", upset_grid = TRUE)
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-9-1.png)
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-8-1.png)
 
 This analysis highlights how AMRgen can be used to explore
 genotype/phenotype associations for specific genetic markers related to
@@ -330,7 +319,8 @@ AST data can be retrieved directly from NCBI using the AMRgen functions
 (slow but does not require authorisation) or
 [`query_ncbi_bq_ast()`](https://amrgen.org/reference/query_ncbi_bq_ast.md)
 (very fast, requires a Google Cloud account), or via the NCBI AST
-Browser. For more details see the \[DownloadGenoPhenoData\] vignette.
+Browser. For more details see the [Analysing Geno-Pheno
+Data](https://amrgen.org/articles/AnalysingGenoPhenoData.html) vignette.
 
 ``` r
 # Download E. coli AST data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
@@ -361,9 +351,9 @@ ecoli_ast_ncbi_via_cloud_interpreted <- import_ncbi_ast(ecoli_ast_ncbi_via_cloud
 )
 ```
 
-Navigate to the [*NCBI Antibiotic Susceptibility Test (AST)
-Browser*](https://www.ncbi.nlm.nih.gov/pathogens/ast) in a web browser
-and search for
+Alternatively, we can navigate to the [*NCBI Antibiotic Susceptibility
+Test (AST) Browser*](https://www.ncbi.nlm.nih.gov/pathogens/ast) in a
+web browser and search for
 
 > `chloramphenicol AND Escherichia`
 
@@ -456,8 +446,8 @@ AST_pheno <- NCBI_Ecoli_AST_chl %>%
 #> Warning: There was 1 warning in `mutate()`.
 #> ℹ In argument: `across(...)`.
 #> Caused by warning:
-#> ! Some MICs were converted to the nearest higher log2 level, following the
-#> CLSI interpretation guideline.
+#> ! Some MICs were converted to the nearest higher log2 level, following the CLSI
+#> interpretation guideline.
 MB_CHLR_geno <- MICROBIGGE_Ecoli_CHLR %>% filter(id %in% NCBI_Ecoli_AST_chl$id)
 
 # check how many samples we have
@@ -513,7 +503,7 @@ assay_by_var(
 )
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-12-1.png)
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-11-1.png)
 
 Next we can visualise the MIC distribution with
 [`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) on the
@@ -532,17 +522,18 @@ assay_by_var(
   labs(title = "Chloramphenicol MIC distribution for isolates with catB3 only")
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-13-1.png)
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-12-1.png)
 
 The distribution shifts to the right and towards sensitive for isolates
 with the *catB3* gene only, when compared to those with any
 chloramphenicol-associated gene.
 
-We can then split the plot based on how truncated the *catB3* gene is as
-a percentage of coverage with 100% aligning across the entire length of
-the gene and \<100% showing a truncation or deletion (see [Graf et al.,
+We can then split the plot based on whether the the *catB3* gene is
+truncated or not. This is calculated as a percentage of coverage, with
+100% aligning across the entire length of the gene and \<100% showing a
+truncation or deletion (see [Graf et al.,
 2024](https://doi.org/10.1038/s41467-024-53391-2) for more about the
-IS*26* mediated truncation of *catB3*)
+IS*26* mediated truncation of *catB3*).
 
 ``` r
 # add genotype data to the phenotype table for isolates with catB3 alone
@@ -584,7 +575,7 @@ MIC_dist_by_cov <- assay_by_var(
 MIC_dist_by_cov
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-14-1.png)
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-13-1.png)
 
 ``` r
 
@@ -638,8 +629,9 @@ CHL_PPV <- ppv(CHL_bin_mat,
 )
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-15-1.png) \##
-3.5 Logistic regression
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-14-1.png)
+
+### 3.5 Logistic regression
 
 We can plot a coefficient plot using the
 [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md)
@@ -661,7 +653,7 @@ CHL_logist <- amr_logistic(
 )
 ```
 
-![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-16-1.png)
+![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-15-1.png)
 
 ``` r
 

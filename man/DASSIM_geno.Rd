@@ -3,7 +3,7 @@
 \docType{data}
 \name{DASSIM_geno}
 \alias{DASSIM_geno}
-\title{DASSIM genotype data (AMRfinderplus)}
+\title{DASSIM genotype data (AMRFinderPlus)}
 \format{
 \code{DASSIM_geno} A data frame with 12414 rows and 31 columns:
 \itemize{
@@ -49,6 +49,6 @@
 DASSIM_geno
 }
 \description{
-The DASSIM dataset screened for Antimicrobial resistance genes (ARGs) using AMRfinderplus v4.0.23
+The DASSIM dataset screened for Antimicrobial resistance genes (ARGs) using AMRFinderPlus v4.0.23
 }
 \keyword{datasets}

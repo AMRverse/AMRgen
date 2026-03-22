@@ -38,11 +38,11 @@ In Malawi, first-line treatment for sepsis shifted from chloramphenicol (CHL) to
 
 A recent study ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) revealed that this "resensitisation" is frequently driven by the stable degradation of resistance genes rather than their total loss from the population. Specifically, insertion sequences like IS*26* and IS*5* have been identified as key drivers; IS*26* causes truncations in *catB3* (creating the non-functional variant *catB4*), while IS*5* can integrate into the promoter of *catA1*, effectively silencing its transcription. 
 
-Here we use a matched phenotype/genotype dataset used in the ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) study and publicly available datasets from NCBI to investigate these genotype-phenotype mismatches with the AMRgen package. 
+Here we analyse a matched phenotype/genotype dataset used in the ([Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2)) study and publicly available datasets from NCBI to investigate these genotype-phenotype mismatches with the AMRgen package. 
 
 ## 1.1 Sourcing data from the DASSIM study 
 
-One of the datasets used to highlight genotype-phenotype mismatches in the [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) paper was the DASSIM dataset ([Lewis et al. 2022](https://doi.org/10.1038/s41564-022-01216-7)).
+One of the datasets used to highlight genotype-phenotype mismatches in the [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) paper was the "Developing an antimicrobial strategy for sepsis in Malawi" (DASSIM) dataset ([Lewis et al. 2022](https://doi.org/10.1038/s41564-022-01216-7)).
 
 The DASSIM study was an observational study of patients with sepsis admitted to Queen Elizabeth Central Hospital, Blantyre, Malawi. The aim was to understand the drivers of acquisition and long term carriage of ESBL-E in sepsis survivors. The DASSIM dataset contains faecal samples from community patients, inpatients and sepsis patients.
 
@@ -72,7 +72,7 @@ The genomes are deposited in the European Nucleotide Archive (ENA) under the pro
 
 The fastq files were downloaded, processed with cutadapt, filtered to >Q20 with FASTQC, and assembled with SPAdes v3.11.1 as described in [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2). 
 
-Antimicrobial resistance genes (ARGs) were called with AMRFinderPlus v4.0.23 to produce the data frame [DASSIM_geno] which is included in the AMRgen package as a data object `DASSIM_geno`.
+Antimicrobial resistance genes (ARGs) were called with AMRFinderPlus v4.0.23 to produce the data frame (DASSIM_geno), which is included in the AMRgen package as a data object `DASSIM_geno`.
 
 ### 1.1b DASSIM Phenotype data 
 
@@ -88,7 +88,7 @@ Fabrice E Graf, Richard N Goodman, Sarah Gallichan, Sally Forrest, Esther Picton
 
 This data is included in the AMRgen package as data object: `DASSIM_pheno_raw`.
 
-# 2. Analysis 
+# 2. Analysis of the DASSIM dataset
 
 
 ## 2.1 Setting up R 
@@ -104,7 +104,7 @@ library(ggplot2)
 
 ## 2.2 Format the phenotype data
 
-The phenotype data in `btESBL_AST` needs to be reformated to long format, and sequence identifiers imported from `DASSIM_pheno_raw` so we can match the phenotype data to the genotypes.
+The phenotype data in `btESBL_AST` needs to be reformatted to long format, and sequence identifiers imported from `DASSIM_pheno_raw` so we can match the phenotype data to the genotypes.
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE}
 # Convert the S/I/R phenotype data to long format for easy use with AMRgen functions
@@ -119,7 +119,7 @@ DASSIM_pheno <- btESBL_AST %>%
       tolower(pheno) %in% c("sensitive", "susceptible", "s") ~ "S",
       tolower(pheno) %in% c("intermediate", "i") ~ "I",
       tolower(pheno) %in% c("resistant", "r") ~ "R",
-      TRUE ~ NA_character_ # Any other unrecognized values become NA
+      TRUE ~ NA_character_ # Any other unrecognised values become NA
     )
   ) %>%
   mutate(pheno = AMR::as.sir(pheno))
@@ -155,7 +155,7 @@ We will look at the markers associated with the antibiotics used in the AST assa
 
 For each of these first we create a binary matrix using `get_binary_matrix()` which takes our genotype (AMRfinderplus etc.) and phenotype (AST profile) datasets. 
 
-We can then plot the PPV graphs using `ppv()` 
+We can then plot the PPV graphs using `ppv()`.
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 # Get binary matrix
@@ -164,17 +164,12 @@ DASSIM_CHL_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = 
 DASSIM_CHL_PPV <- ppv(DASSIM_CHL_bin_mat, antibiotic = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
 ```
 
-We can see that *oqx* genes on their own don't impact resistance. As they are common, they obscure the impact of other genes, so we can remove them using `select()` to focus on the genes of interest for chloramphenicol.
-
-```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-DASSIM_CHL_nooqx_bin_mat <- DASSIM_CHL_bin_mat %>% select(!contains("oqx"))
-DASSIM_CHL_nooqx_PPV <- ppv(DASSIM_CHL_nooqx_bin_mat, antibiotic = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
-```
-
-This result clearly shows how the detection of *catB3* is not a good predictor of resistance, whereas detection of *catA2* is. 
+This result clearly shows how the detection of *catB3* is not a good predictor of resistance, whereas the detection of *catA2* is. 
 
 
 Now let's check how well aminoglycoside markers predict resistance to amikacin and gentamicin.
+
+
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "amikacin", sir_col = "pheno")
 DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, antibiotic = "amikacin", sir_col = "pheno", upset_grid = TRUE)
@@ -187,6 +182,7 @@ Here we see many of the aminoglycoside-associated resistance genes detected in t
 
 
 Now let's check how well markers associated with trimethoprims or sulfonamides predict resistance to co-trimoxazole.
+
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "cotrimoxazole", sir_col = "pheno")
 DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, antibiotic = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
@@ -194,7 +190,8 @@ DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, antibiotic = "cotrimoxazole", sir_col 
 
 Co-trimoxazole is a combination drug made of sulfamethoxazole and trimethoprim. It is prescribed prophylactically in Malawi for HIV-positive individuals ([Everett et al. 2011](https://doi.org/10.1371/journal.pone.0017765)). Since it is a combination drug it requires both Sulfamethoxazole resistance genes (e.g., *sul*) and Trimethoprim resistance genes (e.g., *dfrA*).
 
-Meropenem is a last resort carbapenem antibiotic. ppv() by default returns all markers associated with beta-lactam resistance, for comparison with meropenem phenotypes. However while many beta-lactamases were detected, none are known carbapenemases (e.g., *bla~NDM~*, *bla~KPC~*, *bla~VIM~*, *bla~IMP~*, *bla~OXA-48-like~*). Consistent with this only a single isolate, carrying multiple beta-lactamases, was phenotyped as resistant to meropenem.
+Meropenem is a last resort carbapenem antibiotic. `ppv()` by default returns all markers associated with beta-lactam resistance, for comparison with meropenem phenotypes. However while many beta-lactamases were detected, none are known carbapenemases (e.g., *bla~NDM~*, *bla~KPC~*, *bla~VIM~*, *bla~IMP~*, *bla~OXA-48-like~*). Consistent with this only a single isolate, carrying multiple beta-lactamases, was phenotyped as resistant to meropenem.
+
 ```{r, fig.width=13, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "meropenem", sir_col = "pheno")
 DASSIM_MEM_PPV <- ppv(DASSIM_MEM_bin_mat, antibiotic = "meropenem", sir_col = "pheno", upset_grid = TRUE)
@@ -214,7 +211,7 @@ The National Center for Biotechnology Information (NCBI) provides tools for anal
 
 The Antibiotic Susceptibility Test (AST) Browser serves as a centralised resource for viewing and filtering phenotypic susceptibility data, allowing researchers to correlate specific bacterial isolates with their phenotypic resistance profiles.
 
-AST data can be retrieved directly from NCBI using the AMRgen functions `download_ncbi_ast()` (slow but does not require authorisation) or `query_ncbi_bq_ast()` (very fast, requires a Google Cloud account), or via the NCBI AST Browser. For more details see the [DownloadGenoPhenoData] vignette.
+AST data can be retrieved directly from NCBI using the AMRgen functions `download_ncbi_ast()` (slow but does not require authorisation) or `query_ncbi_bq_ast()` (very fast, requires a Google Cloud account), or via the NCBI AST Browser. For more details see the [Analysing Geno-Pheno Data](https://amrgen.org/articles/AnalysingGenoPhenoData.html) vignette.
 
 ``` {r download_ncbi_ast_notrun, eval=F}
 # Download E. coli AST data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
@@ -245,7 +242,7 @@ ecoli_ast_ncbi_via_cloud_interpreted <- import_ncbi_ast(ecoli_ast_ncbi_via_cloud
 )
 ```
 
-Navigate to the [*NCBI  Antibiotic Susceptibility Test (AST) Browser*](https://www.ncbi.nlm.nih.gov/pathogens/ast) in a web browser and search for 
+Alternatively, we can navigate to the [*NCBI  Antibiotic Susceptibility Test (AST) Browser*](https://www.ncbi.nlm.nih.gov/pathogens/ast) in a web browser and search for 
 
 > `chloramphenicol AND Escherichia`
 
@@ -352,7 +349,7 @@ assay_by_var(
 
 The distribution shifts to the right and towards sensitive for isolates with the *catB3* gene only, when compared to those with any chloramphenicol-associated gene. 
 
-We can then split the plot based on how truncated the *catB3* gene is as a percentage of coverage with 100% aligning across the entire length of the gene and <100% showing a truncation or deletion (see [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) for more about the IS*26* mediated truncation of *catB3*)
+We can then split the plot based on whether the the *catB3* gene is truncated or not. This is calculated as a percentage of coverage, with 100% aligning across the entire length of the gene and <100% showing a truncation or deletion (see [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) for more about the IS*26* mediated truncation of *catB3*).
 
 ```{r, fig.width=8, fig.height=10, error=FALSE, warning=FALSE, message=FALSE}
 # add genotype data to the phenotype table for isolates with catB3 alone
@@ -422,6 +419,7 @@ CHL_PPV <- ppv(CHL_bin_mat,
   order = "value"
 )
 ```
+
 ## 3.5 Logistic regression
 
 We can plot a coefficient plot using the `amr_logistic()` function to show the statistical relationship between chloramphenicol resistance genes and phenotypic resistance to chloramphenicol. 

@@ -1,7 +1,7 @@
-# DASSIM genotype data (AMRfinderplus)
+# DASSIM genotype data (AMRFinderPlus)
 
 The DASSIM dataset screened for Antimicrobial resistance genes (ARGs)
-using AMRfinderplus v4.0.23
+using AMRFinderPlus v4.0.23
 
 ## Usage
 

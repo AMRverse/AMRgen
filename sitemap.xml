@@ -2,6 +2,7 @@
 <url><loc>https://amrgen.org/404.html</loc></url>
 <url><loc>https://amrgen.org/LICENSE-text.html</loc></url>
 <url><loc>https://amrgen.org/articles/AnalysingGenoPhenoData.html</loc></url>
+<url><loc>https://amrgen.org/articles/ComparingGenotypers.html</loc></url>
 <url><loc>https://amrgen.org/articles/Concordance.html</loc></url>
 <url><loc>https://amrgen.org/articles/DeletionVariantsCatB3.html</loc></url>
 <url><loc>https://amrgen.org/articles/DownloadGenoPhenoData.html</loc></url>
@@ -82,6 +83,8 @@
 <url><loc>https://amrgen.org/reference/kleborate_classes.html</loc></url>
 <url><loc>https://amrgen.org/reference/kleborate_raw.html</loc></url>
 <url><loc>https://amrgen.org/reference/kleborate_raw_v313.html</loc></url>
+<url><loc>https://amrgen.org/reference/kp_mero_amrfp.html</loc></url>
+<url><loc>https://amrgen.org/reference/kp_mero_euscape.html</loc></url>
 <url><loc>https://amrgen.org/reference/logistf_details.html</loc></url>
 <url><loc>https://amrgen.org/reference/merge_logreg_soloppv.html</loc></url>
 <url><loc>https://amrgen.org/reference/ngono_cro_geno_raw.html</loc></url>

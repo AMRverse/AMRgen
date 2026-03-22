@@ -1,17 +1,20 @@
-# NCBI AST for Escherichia coli tested against chloramphenicol
+# Meropenem Phenotype Data from EuSCAPE project
 
-NCBI Antibiotic Susceptibility Test (AST) Browser data for Escherichia
-coli tested against chloramphenicol.
+Meropenem phenotype data for Klebsiella pneumoniae from EuSCAPE project,
+one sample per row, downloaded from the EBI AMR portal using
+[`download_ebi()`](https://amrgen.org/reference/download_ebi.md) and
+imported using
+[`import_pheno()`](https://amrgen.org/reference/import_pheno.md).
 
 ## Usage
 
 ``` r
-NCBI_Ecoli_AST_chl
+kp_mero_euscape
 ```
 
 ## Format
 
-`NCBI_Ecoli_AST_chl` A data frame with 6,859 rows and 17 columns:
+`kp_mero_euscape` A data frame with 1,490 rows and 43 columns:
 
 - `id`: Sample identifier, imported from the `BioSample` column in the
   raw input.
@@ -31,8 +34,9 @@ NCBI_Ecoli_AST_chl
 - `spp_pheno`: Species identifier, interpreted from `Scientific name`
   using `as.mo`, used to interpret `ecoff` and `pheno` columns.
 
-- ...: Additional data columns from the NCBI AST Browser
+- ...: Additional data columns from EBI AMR Portal
 
 ## Source
 
-<https://www.ncbi.nlm.nih.gov/pathogens/ast#chloramphenicol%20AND%20Escherichia>
+[EBI AMR Portal](https://www.ebi.ac.uk/amr). See David *et al.* (2019)
+<https://doi.org/10.1038/s41564-019-0492-8>.

@@ -19,7 +19,7 @@ MICROBIGGE_Ecoli_CHLR
 - `id`: BioSample.
 
 - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by
-  parsing AMRfinderplus `subclass` field in the downloaded file.
+  parsing AMRFinderPlus `subclass` field in the downloaded file.
 
 - `gene`, `node`, `marker`: gene identifiers.
 
@@ -30,5 +30,5 @@ MICROBIGGE_Ecoli_CHLR
 
 - `% Identity to reference`: % Identity to reference.
 
-- ...: Additional data columns from AMRfinderplus#' @source
+- ...: Additional data columns from AMRFinderPlus \#' @source
   <https://www.ncbi.nlm.nih.gov/pathogens/microbigge/#chloramphenicol%20AND%20Escherichia>

@@ -270,7 +270,7 @@ Example datasets for demonstration and reproducible analysis.
   blantyreESBL AST data
 
 - [`DASSIM_geno`](https://amrgen.org/reference/DASSIM_geno.md) : DASSIM
-  genotype data (AMRfinderplus)
+  genotype data (AMRFinderPlus)
 
 - [`NCBI_Ecoli_AST_chl`](https://amrgen.org/reference/NCBI_Ecoli_AST_chl.md)
   : NCBI AST for Escherichia coli tested against chloramphenicol
@@ -291,6 +291,12 @@ Example datasets for demonstration and reproducible analysis.
 - [`rgi_EuSCAPE_raw`](https://amrgen.org/reference/rgi_EuSCAPE_raw.md) :
   Example Resistance Gene Identifier (RGI) v6.0.6 Genotype Data from
   EuSCAPE project
+
+- [`kp_mero_euscape`](https://amrgen.org/reference/kp_mero_euscape.md) :
+  Meropenem Phenotype Data from EuSCAPE project
+
+- [`kp_mero_amrfp`](https://amrgen.org/reference/kp_mero_amrfp.md) :
+  Example AMRFinderPlus Genotype Data from EuSCAPE project
 
 - [`sirscan_codes`](https://amrgen.org/reference/sirscan_codes.md) :
   SIRscan antibiotic code mapping

@@ -107,7 +107,8 @@ assay_by_var(
   species = "Klebsiella pneumoniae"
 )
 ```
-# Kleborate 
+
+# Genotypes from Kleborate
 
 [Kleborate](https://github.com/klebgenomics/Kleborate) screens *Klebsiella pneumoniae* species complex (KpSC) genome assemblies to identify sequence types (MLST), species, antimicrobial resistance (AMR) genes, virulence loci (e.g., yersiniabactin, aerobactin), and capsule/LPS serotypes (K and O antigens),  published [here]( https://doi.org/10.1038/s41467-021-24448-3). It can be run on the [command line](https://github.com/klebgenomics/Kleborate) or via [Pathogenwatch](https://pathogen.watch/).
 
@@ -145,6 +146,9 @@ summarise_geno_pheno(kleborate_dev, kp_mero_euscape,
   pheno_cols = c("pheno_eucast", "ecoff")
 )
 ```
+
+# Phenotypes vs Kleborate Genotypes
+
 ## Generate Binary Matrix for Kleborate AMR Markers
 
 Most AMRgen analysis functions require a binary matrix with one sample per row, and columns indicating the phenotype and genotype data in columns, where a `1` indicates the presence and `0` indicates the absence of the phenotype or genotypic marker in that sample. This is produced using the `get_binary_matrix` function:
@@ -163,6 +167,7 @@ kleborate_binary_matrix <- get_binary_matrix(
 
 head(kleborate_binary_matrix, n = 10)
 ```
+
 ## Solo PPV Analysis for Kleborate AMR Markers
 
 To understand the individual contribution of an AMR marker found "solo" (i.e., in the absence of another carbapenem resistance determinant), we use the `solo_ppv_analysis()` function. 
@@ -174,6 +179,7 @@ soloPPV_kleborate_mero <- solo_ppv_analysis(binary_matrix = kleborate_binary_mat
 
 soloPPV_kleborate_mero$solo_stats
 ```
+
 ## Combinatorial PPV Analysis for Kleborate AMR Markers
 
 To understand the contribution of AMR markers found in combination with one another, we use the `ppv()` function. 
@@ -207,6 +213,7 @@ kleborate_binary_matrix_plotting <- kleborate_binary_matrix %>%
 kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix_plotting, assay = "mic", bp_R = "8", bp_S = "2", ecoff_bp = "0.125", min_set_size = 1)
 kp_mic_upset_kleborate$summary
 ```
+
 ## Group Kleborate AMR Markers
 
 Since there are a number of carbapenem resistance gene alleles, we want to group them by their respective gene families (e.g., KPC, VIM, OXA, etc.) to simplify. In addition, we want to generalize porin defects, so any OmpK35 or OmpK36 mutation detected with a `Ter` or `del` in the HGVS nomenclature, we will group together as `OmpK35-\u0394` or `OmpK35-\u0394` representing a loss/truncation of the protein. 
@@ -570,7 +577,7 @@ ggsave("Figure5_Kp_EuSCAPE.png",
 )
 ```
 
-# Kleborate (<= v3.1.3)
+# Genotypes from Kleborate v3.1.3
 
 ## Import Kleborate (<= v3.1.3) Genotype Data
 
@@ -668,7 +675,7 @@ Up until this point, we have only explored using different versions of Kleborate
 
 First up, we have AMRFinderPlus!
 
-# AMRFinderPlus
+# Genotypes from AMRFinderPlus
 
 NCBI has developed [AMRFinderPlus](https://github.com/ncbi/amr/wiki), a tool that identifies AMR genes, resistance-associated point mutations, and select other classes of genes using protein annotations and/or assembled nucleotide sequence, published [here](https://doi.org/10.1038/s41598-021-91456-0). It can only be used via command line and also has [organism-specific options](https://github.com/ncbi/amr/wiki/Running-AMRFinderPlus#--organism-option).
 
@@ -831,7 +838,7 @@ We will not continue to investigate what is missing in the Kleborate development
 
 Next up, we have the Resistance Gene Identifier (RGI)!
 
-# Resistance Gene Identifier (RGI) 
+# Genotypes from Resistance Gene Identifier (RGI) 
 
 [RGI](https://github.com/arpcard/rgi) identifies resistance determinants from protein or nucleotide data using homology and mutation models, published [here](https://doi.org/10.1093/nar/gkac920). The software uses reference data from the [Comprehensive Antibiotic Resistance Database](https://card.mcmaster.ca/). It can be run via the  [website](https://card.mcmaster.ca/analyze/rgi) or on the [command line](https://github.com/arpcard/rgi).
 

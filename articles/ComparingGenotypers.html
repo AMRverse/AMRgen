@@ -232,8 +232,12 @@ ECOFF.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span></code></pre></div>
-<p><img src="ComparingGenotypers_files/figure-html/phenotype_summary-2.png" class="r-plt" alt="" width="100%">
-# Kleborate</p>
+<p><img src="ComparingGenotypers_files/figure-html/phenotype_summary-2.png" class="r-plt" alt="" width="100%"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="genotypes-from-kleborate">Genotypes from Kleborate<a class="anchor" aria-label="anchor" href="#genotypes-from-kleborate"></a>
+</h2>
 <p><a href="https://github.com/klebgenomics/Kleborate" class="external-link">Kleborate</a>
 screens <em>Klebsiella pneumoniae</em> species complex (KpSC) genome
 assemblies to identify sequence types (MLST), species, antimicrobial
@@ -241,7 +245,6 @@ resistance (AMR) genes, virulence loci (e.g., yersiniabactin,
 aerobactin), and capsule/LPS serotypes (K and O antigens), published <a href="https://doi.org/10.1038/s41467-021-24448-3" class="external-link">here</a>. It can be
 run on the <a href="https://github.com/klebgenomics/Kleborate" class="external-link">command
 line</a> or via <a href="https://pathogen.watch/" class="external-link">Pathogenwatch</a>.</p>
-</div>
 <div class="section level3">
 <h3 id="import-kleborate-genotype-data">Import Kleborate Genotype Data<a class="anchor" aria-label="anchor" href="#import-kleborate-genotype-data"></a>
 </h3>
@@ -408,6 +411,10 @@ level.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM        Meropenem Klebsiella pneumoniae   973   126   391</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="phenotypes-vs-kleborate-genotypes">Phenotypes vs Kleborate Genotypes<a class="anchor" aria-label="anchor" href="#phenotypes-vs-kleborate-genotypes"></a>
+</h2>
 <div class="section level3">
 <h3 id="generate-binary-matrix-for-kleborate-amr-markers">Generate Binary Matrix for Kleborate AMR Markers<a class="anchor" aria-label="anchor" href="#generate-binary-matrix-for-kleborate-amr-markers"></a>
 </h3>
@@ -970,7 +977,7 @@ well as the <code>png</code> packages.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="kleborate-v3-1-3">Kleborate (&lt;= v3.1.3)<a class="anchor" aria-label="anchor" href="#kleborate-v3-1-3"></a>
+<h2 id="genotypes-from-kleborate-v3-1-3">Genotypes from Kleborate v3.1.3<a class="anchor" aria-label="anchor" href="#genotypes-from-kleborate-v3-1-3"></a>
 </h2>
 <div class="section level3">
 <h3 id="import-kleborate-v3-1-3-genotype-data">Import Kleborate (&lt;= v3.1.3) Genotype Data<a class="anchor" aria-label="anchor" href="#import-kleborate-v3-1-3-genotype-data"></a>
@@ -1164,7 +1171,7 @@ using different AMR genotypers and comparing their results.</p>
 <p>First up, we have AMRFinderPlus!</p>
 </div>
 <div class="section level2">
-<h2 id="amrfinderplus">AMRFinderPlus<a class="anchor" aria-label="anchor" href="#amrfinderplus"></a>
+<h2 id="genotypes-from-amrfinderplus">Genotypes from AMRFinderPlus<a class="anchor" aria-label="anchor" href="#genotypes-from-amrfinderplus"></a>
 </h2>
 <p>NCBI has developed <a href="https://github.com/ncbi/amr/wiki" class="external-link">AMRFinderPlus</a>, a tool that
 identifies AMR genes, resistance-associated point mutations, and select
@@ -1525,7 +1532,7 @@ AMR genotype-phenotype relationships.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="resistance-gene-identifier-rgi">Resistance Gene Identifier (RGI)<a class="anchor" aria-label="anchor" href="#resistance-gene-identifier-rgi"></a>
+<h2 id="genotypes-from-resistance-gene-identifier-rgi">Genotypes from Resistance Gene Identifier (RGI)<a class="anchor" aria-label="anchor" href="#genotypes-from-resistance-gene-identifier-rgi"></a>
 </h2>
 <p><a href="https://github.com/arpcard/rgi" class="external-link">RGI</a> identifies
 resistance determinants from protein or nucleotide data using homology

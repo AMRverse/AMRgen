@@ -180,8 +180,9 @@ assay_by_var(
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
 ```
 
-![](ComparingGenotypers_files/figure-html/phenotype_summary-2.png) \#
-Kleborate
+![](ComparingGenotypers_files/figure-html/phenotype_summary-2.png)
+
+## Genotypes from Kleborate
 
 [Kleborate](https://github.com/klebgenomics/Kleborate) screens
 *Klebsiella pneumoniae* species complex (KpSC) genome assemblies to
@@ -364,6 +365,8 @@ summarise_geno_pheno(kleborate_dev, kp_mero_euscape,
 #>   <ab>       <chr>     <chr>                 <int> <int> <int>
 #> 1 MEM        Meropenem Klebsiella pneumoniae   973   126   391
 ```
+
+## Phenotypes vs Kleborate Genotypes
 
 ### Generate Binary Matrix for Kleborate AMR Markers
 
@@ -952,7 +955,7 @@ ggsave("Figure5_Kp_EuSCAPE.png",
 )
 ```
 
-## Kleborate (\<= v3.1.3)
+## Genotypes from Kleborate v3.1.3
 
 ### Import Kleborate (\<= v3.1.3) Genotype Data
 
@@ -1150,7 +1153,7 @@ different AMR genotypers and comparing their results.
 
 First up, we have AMRFinderPlus!
 
-## AMRFinderPlus
+## Genotypes from AMRFinderPlus
 
 NCBI has developed [AMRFinderPlus](https://github.com/ncbi/amr/wiki), a
 tool that identifies AMR genes, resistance-associated point mutations,
@@ -1521,7 +1524,7 @@ AMR genotype-phenotype relationships.
 
 Next up, we have the Resistance Gene Identifier (RGI)!
 
-## Resistance Gene Identifier (RGI)
+## Genotypes from Resistance Gene Identifier (RGI)
 
 [RGI](https://github.com/arpcard/rgi) identifies resistance determinants
 from protein or nucleotide data using homology and mutation models,

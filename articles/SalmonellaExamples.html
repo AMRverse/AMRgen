@@ -80,14 +80,6 @@ results for quinolone resistance markers.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://amrgen.org">AMRgen</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     filter, lag</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -104,9 +96,13 @@ and where multiple quinolone resistance markers were identified, these
 are listed in a string with semicolon delimiters. Phenotype data is
 stored in separate columns for each antimicrobial agent that was tested
 (ciprofloxacin, levofloxacin, moxifloxacin).</p>
+<p>Data in this format can be read into R using <code>read_csv()</code>
+and then formatted for use with <code>AMRgen</code>. Here, the object
+<code>salm_raw</code> is already pre-loaded with the package so there is
+no need to read in the <code>.csv</code> file.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Raw data table</span></span>
-<span><span class="va">salm_raw</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu">here</span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"Salmonella_pheno_geno_data.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Importing raw data from .csv file (not needed to run vignette)</span></span>
+<span><span class="va">salm_raw</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"Salmonella_pheno_geno_data.csv"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">salm_raw</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
@@ -125,6 +121,9 @@ separate and wrangle these data into the required formats.</p>
 <div class="section level3">
 <h3 id="genotype-table">Genotype table<a class="anchor" aria-label="anchor" href="#genotype-table"></a>
 </h3>
+<div class="section level4">
+<h4 id="format-raw-genotype-data-for-amrgen">Format raw genotype data for AMRgen<a class="anchor" aria-label="anchor" href="#format-raw-genotype-data-for-amrgen"></a>
+</h4>
 <p>To use downstream <code>AMRgen</code> functions, a genotype table
 must have at a minimum the following columns: <code>Name</code> (unique
 sample name for each isolate), <code>marker</code> (name of the
@@ -134,18 +133,25 @@ with a row for each isolate/marker combination. In our dataset, the
 genotype information is found in a single column alongside the metadata
 and phenotypic information, and we can have multiple markers per row (up
 to four). Here, we carry out the following steps to generate a genotype
-table that is compatible with <code>AMRgen</code> functions: * Select
-only the genotype column (called <code>CpL_Genotype</code> in this
-dataset) and the column specifying the individual isolate names (called
-<code>Sample</code> in this dataset) * Rename the column
-<code>Sample</code> to <code>Name</code>, which is the default column
-heading used by <code>AMRgen</code> for identifying individual isolates
-* Separate the genotype column <code>CpL_Genotype</code> into individual
-columns for each marker (up to four per isolate in these data),
-specifying the delimiter <code>;</code> * Convert this wide-form data
-(one row per isolate) to a long-form table (one row per isolate/marker
-combination) using <code>pivot_longer</code> * Add a column specifying
-that all these markers are associated with resistance to quinolones</p>
+table that is compatible with <code>AMRgen</code> functions:</p>
+<ul>
+<li>Select only the genotype column (called <code>CpL_Genotype</code> in
+this dataset) and the column specifying the individual isolate names
+(called <code>Sample</code> in this dataset)</li>
+<li>Rename the column <code>Sample</code> to <code>Name</code>, which is
+the default column heading used by <code>AMRgen</code> for identifying
+individual isolates</li>
+<li>Separate the genotype column <code>CpL_Genotype</code> into
+individual columns for each marker (up to four per isolate in these
+data), specifying the delimiter <code>;</code>
+</li>
+<li>Convert this wide-form data (one row per isolate) to a long-form
+table (one row per isolate/marker combination) using
+<code>pivot_longer</code>
+</li>
+<li>Add a column specifying that all these markers are associated with
+resistance to quinolones</li>
+</ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract geno data, separate by delimiter, pivot longer, and add drug_class column</span></span>
 <span><span class="va">salm_geno</span> <span class="op">&lt;-</span> <span class="va">salm_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -167,7 +173,6 @@ that all these markers are associated with resistance to quinolones</p>
 <span>    drug_agent <span class="op">=</span> <span class="cn">NA_character_</span></span>
 <span>  <span class="op">)</span> <span class="co">## the variable drug_agent appears essential for get_binary_matrix function to work...</span></span>
 <span></span>
-<span></span>
 <span><span class="co"># Check the format of the processed genotype table</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">salm_geno</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
@@ -180,9 +185,54 @@ that all these markers are associated with resistance to quinolones</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAL003 parC_T57S Quinolones <span style="color: #BB0000;">NA</span>        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAL003 qnrB19    Quinolones <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 </div>
+<div class="section level4">
+<h4 id="summarise-genotype-data">Summarise genotype data<a class="anchor" aria-label="anchor" href="#summarise-genotype-data"></a>
+</h4>
+<p>The <code><a href="../reference/summarise_geno.html">summarise_geno()</a></code> function can provide various
+summaries of the genotype table, including the total number of unique
+markers and a table showing each marker’s prevalence in the dataset.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Create geno_summary object</span></span>
+<span><span class="va">salm_geno_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_geno.html">summarise_geno</a></span><span class="op">(</span><span class="va">salm_geno</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Total number of markers, drugs, and drug classes</span></span>
+<span><span class="va">salm_geno_summary</span><span class="op">$</span><span class="va">uniques</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">#&gt;   column     n_unique</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> marker           26</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> drug_agent        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug_class        1</span></span>
+<span></span>
+<span><span class="co"># Prevalence of each detected marker, in decreasing abundance</span></span>
+<span><span class="va">salm_geno_summary</span><span class="op">$</span><span class="va">markers</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 26 × 4</span></span></span>
+<span><span class="co">#&gt;    marker    drug_agent drug_class     n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> parC_T57S <span style="color: #BB0000;">NA</span>         Quinolones    49</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> gyrA_S83F <span style="color: #BB0000;">NA</span>         Quinolones    18</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> gyrA_S83Y <span style="color: #BB0000;">NA</span>         Quinolones    18</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> qnrS1     <span style="color: #BB0000;">NA</span>         Quinolones    18</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> qnrB19    <span style="color: #BB0000;">NA</span>         Quinolones    16</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> gyrA_D87Y <span style="color: #BB0000;">NA</span>         Quinolones    14</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> gyrA_D87N <span style="color: #BB0000;">NA</span>         Quinolones    12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> gyrA_D87G <span style="color: #BB0000;">NA</span>         Quinolones    11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> parC_S80I <span style="color: #BB0000;">NA</span>         Quinolones     9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> qnrA1     <span style="color: #BB0000;">NA</span>         Quinolones     5</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more rows</span></span></span></code></pre></div>
+<p>These summaries show that there are 26 distinct genotypic markers for
+quinolone resistance in this dataset. The most common one is parC_T57S,
+found in 49 of 115 isolates, followed by gyrA_S83F, gyrA_S83Y, and
+qnrS1, each found in 18 of 115 isolates. Eleven markers are found only
+once across all isolates.</p>
+</div>
+</div>
 <div class="section level3">
 <h3 id="phenotype-table">Phenotype table<a class="anchor" aria-label="anchor" href="#phenotype-table"></a>
 </h3>
+<div class="section level4">
+<h4 id="format-raw-phenotype-data-for-amrgen">Format raw phenotype data for AMRgen<a class="anchor" aria-label="anchor" href="#format-raw-phenotype-data-for-amrgen"></a>
+</h4>
 <p>To use downstream <code>AMRgen</code> functions, a phenotype table
 must be in long form with a single column for all antimicrobial agents
 that were tested, rather than separate columns for each agent. It also
@@ -205,8 +255,9 @@ in the genotype table. The antimicrobial columns need to be forced to
 character vectors to avoid issues caused by occasional presence of
 non-numeric prefixes (<code>&gt;</code> or <code>&lt;</code>). We then
 pivot the table to long form.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Pheno table: select columns with sample ID, metadata, and antimicrobials tested, then pivot to long form</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Pheno table: select columns with sample ID, metadata, and antimicrobials tested, </span></span>
+<span><span class="co"># then pivot to long form</span></span>
 <span><span class="va">salm_pheno</span> <span class="op">&lt;-</span> <span class="va">salm_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sample</span>, <span class="va">Source</span>, <span class="va">Serovar</span>, <span class="va">Ciprofloxacin</span>, <span class="va">Levofloxacin</span>, <span class="va">Moxifloxacin</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ciprofloxacin</span>, <span class="va">Levofloxacin</span>, <span class="va">Moxifloxacin</span><span class="op">)</span>, <span class="va">as.character</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -224,7 +275,7 @@ interpreting our Salmonella MIC data against EUCAST breakpoints. We
 apply these breakpoints across our human/animal/other isolates, as our
 interest is in resistance phenotypes that are potentially problematic in
 human infections, including zoonotic ones.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">salm_ast</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/format_ast.html">format_ast</a></span><span class="op">(</span></span>
 <span>  input <span class="op">=</span> <span class="va">salm_pheno</span>,</span>
 <span>  sample_col <span class="op">=</span> <span class="st">"Sample"</span>,</span>
@@ -233,22 +284,6 @@ human infections, including zoonotic ones.</p>
 <span>  mic_col <span class="op">=</span> <span class="st">"MIC.values"</span>,</span>
 <span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Salmonella enterica</span></span>
-<span><span class="co">#&gt; Parsing column spp_pheno as micro-organism (class 'mo')</span></span>
-<span><span class="co">#&gt; Parsing column antibiotic as antibiotic (class 'ab')</span></span>
-<span><span class="co">#&gt; Renaming column antibiotic to standard name 'drug_agent'</span></span>
-<span><span class="co">#&gt; Parsing column MIC.values as class 'mic'</span></span>
-<span><span class="co">#&gt; Renaming column MIC.values to standard name 'mic'</span></span>
-<span><span class="co">#&gt; Could not find disk_col disk in input table</span></span>
-<span><span class="co">#&gt; Could not find pheno_col ecoff in input table</span></span>
-<span><span class="co">#&gt; Could not find pheno_col pheno_eucast in input table</span></span>
-<span><span class="co">#&gt; Could not find pheno_col pheno_clsi in input table</span></span>
-<span><span class="co">#&gt; Could not find pheno_col pheno_provided in input table</span></span>
-<span><span class="co">#&gt; Could not find method_col method in input table</span></span>
-<span><span class="co">#&gt; Could not find platform_col platform in input table</span></span>
-<span><span class="co">#&gt; Could not find guideline_col guideline in input table</span></span>
-<span><span class="co">#&gt; Could not find source_col source in input table</span></span>
-<span><span class="co">#&gt; Interpreting all data as species: Salmonella enterica</span></span>
 <span></span>
 <span><span class="co"># Check the format of the processed phenotype table</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">salm_ast</span><span class="op">)</span></span>
@@ -261,6 +296,45 @@ human infections, including zoonotic ones.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAL002 CIP         0.38 <span style="color: #080808; background-color: #FF5F5F;">  R  </span>        <span style="color: #949494;">B_</span>SLMNL<span style="color: #949494;">_</span>ENTR Human  S. Enteritidis</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAL002 LVX         1.5<span style="color: #555555;">0</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>        <span style="color: #949494;">B_</span>SLMNL<span style="color: #949494;">_</span>ENTR Human  S. Enteritidis</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAL002 MFX         1.5<span style="color: #555555;">0</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>        <span style="color: #949494;">B_</span>SLMNL<span style="color: #949494;">_</span>ENTR Human  S. Enteritidis</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="summarise-phenotype-data">Summarise phenotype data<a class="anchor" aria-label="anchor" href="#summarise-phenotype-data"></a>
+</h4>
+<p>The <code>summarise_pheno</code> function can be used to generate
+various summaries of the phenotype table, including the total number of
+samples, drugs, and species, and table of S/I/R counts for each drug in
+the dataset. Our dataset is limited to a single species with data from
+only one method (E-test MIC), and we are looking only at the EUCAST
+breakpoints, but the vignette “Analysing Geno-Pheno Data” shows how the
+<code>summarise_pheno</code> function can be used for datasets with
+multiple species, methods, drug classes, and interpretation
+guidelines.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">salm_pheno_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_pheno.html">summarise_pheno</a></span><span class="op">(</span><span class="va">salm_ast</span>, pheno_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pheno_eucast"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; No disk data colummn provided</span></span>
+<span></span>
+<span><span class="co"># Number of samples, drugs, species, and methods included in phenotype table</span></span>
+<span><span class="va">salm_pheno_summary</span><span class="op">$</span><span class="va">uniques</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">#&gt;   column     n_unique</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> id              115</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> drug_agent        3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> spp_pheno         1</span></span>
+<span></span>
+<span><span class="co"># SIR summary table for each drug in the phenotype table</span></span>
+<span><span class="va">salm_pheno_summary</span><span class="op">$</span><span class="va">pheno_counts_list</span></span>
+<span><span class="co">#&gt; $pheno_eucast</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
+<span><span class="co">#&gt;   drug_agent drug_name     spp_pheno               S     R     I</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> CIP        Ciprofloxacin Salmonella enterica    23    92    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> LVX        Levofloxacin  Salmonella enterica    63    25    27</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> MFX        Moxifloxacin  Salmonella enterica    20    95    <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<p>These summaries show that there are 115 isolates of one species in
+this dataset, with results for three drugs. Similar proportions were
+resistant to ciprofloxacin and moxifloxacin, whereas a lower proportion
+was resistant to levofloxacin (using the EUCAST breakpoints).</p>
 <p>Now that we have formatted our data into a genotype table
 (<code>salm_geno</code>) and a phenotype table (<code>salm_ast</code>)
 that are compatible with <code>AMRgen</code>, we can use its downstream
@@ -270,6 +344,7 @@ genetic markers, and comparing how combinations of markers influence
 resistance phenotype. Other vignettes outline these workflows in more
 detail, so here we show only a basic workflow, focusing on how
 additional metadata can be included.</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="plot-phenotype-data-distributions">Plot phenotype data distributions<a class="anchor" aria-label="anchor" href="#plot-phenotype-data-distributions"></a>
@@ -281,15 +356,15 @@ additional metadata can be included.</p>
 dataset for the three antimicrobials that we tested. If desired, these
 plots could then be combined into a multipanel figure using packages
 like <code>patchwork</code> or <code>ggpubr</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot MIC distributions coloured by S/I/R call</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">salm_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/plot_mic-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">salm_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Levofloxacin"</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/plot_mic-2.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">salm_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Moxifloxacin"</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/plot_mic-3.png" class="r-plt" alt="" width="100%"></p>
@@ -304,9 +379,9 @@ variable.</p>
 </h4>
 <p>The <code>assay_by_var</code> function can separate plots by an
 additional categorical variable by specifying <code>facet_var</code>
-within the function. For example, we can split the Ciprofloxacin plot by
+within the function. For example, we can split the ciprofloxacin plot by
 isolation source like this:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">salm_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span>, facet_var <span class="op">=</span> <span class="st">"Source"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/facet_var-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Alternatively, because <code>assay_by_var</code> is a
@@ -314,7 +389,7 @@ isolation source like this:</p>
 <code>ggplot2</code> layers, including <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code> for a
 single faceting variable (to allow more control over how the facets are
 displayed) or <code><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid()</a></code> to facet on two variables.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">salm_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">Source</span> <span class="op">~</span> <span class="va">Serovar</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/facet%20alternatives-1.png" class="r-plt" alt="" width="100%"></p>
@@ -324,7 +399,7 @@ vertical lines using the <code>guideline</code> and <code>species</code>
 calls within <code>assay_by_var</code>. If desired, you can also modify
 other aspects of the plot using standard ggplot2 extensions (e.g. using
 <code>viridis</code> to change the colour palette).</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Specify species and guideline to show breakpoints, but colour bars by isolation source</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">salm_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"Source"</span>, species <span class="op">=</span> <span class="st">"Salmonella enterica"</span>, guideline <span class="op">=</span> <span class="st">"EUCAST 2025"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_d</a></span><span class="op">(</span>end <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
@@ -342,7 +417,7 @@ phenotype tables, using the <code><a href="../reference/get_binary_matrix.html">
 As an example, we will do this for ciprofloxacin with our small <em>S.
 enterica</em> dataset, but this could also be done for levofloxacin and
 moxifloxacin.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">### get_binary_matrix throws an error unless the variable drug_class is in salm_geno, even if it's empty</span></span>
 <span><span class="va">cip_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  <span class="va">salm_geno</span>,</span>
@@ -354,7 +429,6 @@ moxifloxacin.</p>
 <span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix as I/R vs S, as no ECOFF column defined</span></span>
-<span></span>
 <span></span>
 <span><span class="co"># check format</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cip_bin</span><span class="op">)</span></span>
@@ -394,7 +468,7 @@ first extract them from <code>salm_pheno</code> and then join to
 used in plotting functions (warning: statistical model functions may not
 work correctly with these additional metadata so <code>cip_bin</code>
 should be used in those instead of <code>cip_bin_meta</code>).</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">salm_metadata</span> <span class="op">&lt;-</span> <span class="va">salm_pheno</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sample</span>, <span class="va">Source</span>, <span class="va">Serovar</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">Sample</span><span class="op">)</span></span>
@@ -411,7 +485,7 @@ facet by <code>Serovar</code>, highlighting that all S. Infantis
 isolates had one <em>gyrA</em> mutation and all S. Kentucky isolates had
 two <em>gyrA</em> mutations, whereas other serovars had variable numbers
 of mutations.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># count the number of gyrA mutations per genome</span></span>
 <span><span class="va">gyrA_mut</span> <span class="op">&lt;-</span> <span class="va">cip_bin_meta</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>gyrA_mut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"gyrA_"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -424,14 +498,14 @@ of mutations.</p>
 <p><img src="SalmonellaExamples_files/figure-html/assay_by_genotype_Serovar-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Similarly, we can plot the total number of markers per isolate and
 facet by <code>Source</code>.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># count the number of genetic determinants per genome</span></span>
 <span><span class="va">marker_count</span> <span class="op">&lt;-</span> <span class="va">cip_bin_meta</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>marker_count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">any_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"NWT"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">mic</span>, <span class="va">marker_count</span>, <span class="va">Source</span>, <span class="va">Serovar</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot the MIC distribution, coloured by count of associated genetic markers</span></span>
-<span><span class="va">mic_by_marker_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">marker_count</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"marker_count"</span>, colour_legend_label <span class="op">=</span> <span class="st">"No. markers detected"</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, bar_cols <span class="op">=</span> <span class="fu">viridisLite</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">marker_count</span><span class="op">$</span><span class="va">marker_count</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="va">mic_by_marker_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">marker_count</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"marker_count"</span>, colour_legend_label <span class="op">=</span> <span class="st">"Total number\nof markers"</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, bar_cols <span class="op">=</span> <span class="fu">viridisLite</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">marker_count</span><span class="op">$</span><span class="va">marker_count</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Source</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mic_by_marker_count</span></span></code></pre></div>
@@ -447,7 +521,7 @@ metadata columns so we use <code>cip_bin</code> instead of
 <code>cip_bin_meta</code> here. As our dataset is quite small, we keep
 all the combinations, including those with a single isolate
 (<code>min_set_size = 1</code>).</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare ciprofloxacin MIC data with quinolone marker combinations,</span></span>
 <span><span class="co">#    using the binary matrix we constructed earlier via get_binary_matrix()</span></span>
 <span><span class="va">cipro_mic_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
@@ -457,22 +531,22 @@ all the combinations, including those with a single isolate
 <span>  order <span class="op">=</span> <span class="st">"value"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/amr_upset-1.png" class="r-plt" alt="" width="100%"></p>
-<p>We can generate UpSet plots a subset of isolates by filtering on one
-of our additional metadata variables and then running
-<code><a href="../reference/amr_upset.html">amr_upset()</a></code>. For example, we can focus on the human
+<p>We can generate UpSet plots of a subset of isolates by filtering on
+one of our additional metadata variables and then running
+<code><a href="../reference/amr_upset.html">amr_upset()</a></code>. For example, we can focus on the animal
 isolates only:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cip_bin_human</span> <span class="op">&lt;-</span> <span class="va">cip_bin_meta</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Source</span> <span class="op">==</span> <span class="st">"Human"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cip_bin_animal</span> <span class="op">&lt;-</span> <span class="va">cip_bin_meta</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Source</span> <span class="op">==</span> <span class="st">"Animal"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Source</span>, <span class="op">-</span><span class="va">Serovar</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">cipro_mic_upset_human</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
-<span>  <span class="va">cip_bin_human</span>,</span>
-<span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span><span class="va">cipro_mic_upset_animal</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  <span class="va">cip_bin_animal</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="SalmonellaExamples_files/figure-html/amr_upset_human_only-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="SalmonellaExamples_files/figure-html/amr_upset_animal_only-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 </div>
 </div>

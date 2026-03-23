@@ -200,8 +200,8 @@ staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi
 #> Warning: There was 1 warning in `mutate()`.
 #> ℹ In argument: `pheno_provided = as.sir(`Resistance phenotype`)`.
 #> Caused by warning:
-#> ! in `as.sir()` (`?AMR::as.sir()`): 8 results in column 'pheno_provided'
-#> truncated (6%) that were invalid antimicrobial interpretations: "intermediate"
+#> ! in `?as.sir()`: 8 results in column 'pheno_provided' truncated (6%) that were
+#> invalid antimicrobial interpretations: "intermediate"
 #> Manually setting `pheno_provided` to "I" where `Resistance phenotype` was "intermediate"
 ```
 

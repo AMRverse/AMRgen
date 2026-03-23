@@ -16,14 +16,6 @@ Start by loading the package:
 ``` r
 library(AMRgen)
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 library(ggplot2)
 library(tidyr)
 ```
@@ -41,9 +33,14 @@ semicolon delimiters. Phenotype data is stored in separate columns for
 each antimicrobial agent that was tested (ciprofloxacin, levofloxacin,
 moxifloxacin).
 
+Data in this format can be read into R using `read_csv()` and then
+formatted for use with `AMRgen`. Here, the object `salm_raw` is already
+pre-loaded with the package so there is no need to read in the `.csv`
+file.
+
 ``` r
-# Raw data table
-salm_raw <- read_csv(here::here("data", "Salmonella_pheno_geno_data.csv"))
+# Importing raw data from .csv file (not needed to run vignette)
+salm_raw <- read_csv("Salmonella_pheno_geno_data.csv")
 ```
 
 ``` r
@@ -65,6 +62,8 @@ wrangle these data into the required formats.
 
 ### Genotype table
 
+#### Format raw genotype data for AMRgen
+
 To use downstream `AMRgen` functions, a genotype table must have at a
 minimum the following columns: `Name` (unique sample name for each
 isolate), `marker` (name of the resistance marker detected), and
@@ -74,17 +73,20 @@ combination. In our dataset, the genotype information is found in a
 single column alongside the metadata and phenotypic information, and we
 can have multiple markers per row (up to four). Here, we carry out the
 following steps to generate a genotype table that is compatible with
-`AMRgen` functions: \* Select only the genotype column (called
-`CpL_Genotype` in this dataset) and the column specifying the individual
-isolate names (called `Sample` in this dataset) \* Rename the column
-`Sample` to `Name`, which is the default column heading used by `AMRgen`
-for identifying individual isolates \* Separate the genotype column
-`CpL_Genotype` into individual columns for each marker (up to four per
-isolate in these data), specifying the delimiter `;` \* Convert this
-wide-form data (one row per isolate) to a long-form table (one row per
-isolate/marker combination) using `pivot_longer` \* Add a column
-specifying that all these markers are associated with resistance to
-quinolones
+`AMRgen` functions:
+
+- Select only the genotype column (called `CpL_Genotype` in this
+  dataset) and the column specifying the individual isolate names
+  (called `Sample` in this dataset)
+- Rename the column `Sample` to `Name`, which is the default column
+  heading used by `AMRgen` for identifying individual isolates
+- Separate the genotype column `CpL_Genotype` into individual columns
+  for each marker (up to four per isolate in these data), specifying the
+  delimiter `;`
+- Convert this wide-form data (one row per isolate) to a long-form table
+  (one row per isolate/marker combination) using `pivot_longer`
+- Add a column specifying that all these markers are associated with
+  resistance to quinolones
 
 ``` r
 # Extract geno data, separate by delimiter, pivot longer, and add drug_class column
@@ -107,7 +109,6 @@ salm_geno <- salm_raw %>%
     drug_agent = NA_character_
   ) ## the variable drug_agent appears essential for get_binary_matrix function to work...
 
-
 # Check the format of the processed genotype table
 head(salm_geno)
 #> # A tibble: 6 × 4
@@ -121,7 +122,53 @@ head(salm_geno)
 #> 6 SAL003 qnrB19    Quinolones NA
 ```
 
+#### Summarise genotype data
+
+The [`summarise_geno()`](https://amrgen.org/reference/summarise_geno.md)
+function can provide various summaries of the genotype table, including
+the total number of unique markers and a table showing each marker’s
+prevalence in the dataset.
+
+``` r
+# Create geno_summary object
+salm_geno_summary <- summarise_geno(salm_geno)
+
+# Total number of markers, drugs, and drug classes
+salm_geno_summary$uniques
+#> # A tibble: 3 × 2
+#>   column     n_unique
+#>   <chr>         <int>
+#> 1 marker           26
+#> 2 drug_agent        1
+#> 3 drug_class        1
+
+# Prevalence of each detected marker, in decreasing abundance
+salm_geno_summary$markers %>% arrange(-n)
+#> # A tibble: 26 × 4
+#>    marker    drug_agent drug_class     n
+#>    <chr>     <chr>      <chr>      <int>
+#>  1 parC_T57S NA         Quinolones    49
+#>  2 gyrA_S83F NA         Quinolones    18
+#>  3 gyrA_S83Y NA         Quinolones    18
+#>  4 qnrS1     NA         Quinolones    18
+#>  5 qnrB19    NA         Quinolones    16
+#>  6 gyrA_D87Y NA         Quinolones    14
+#>  7 gyrA_D87N NA         Quinolones    12
+#>  8 gyrA_D87G NA         Quinolones    11
+#>  9 parC_S80I NA         Quinolones     9
+#> 10 qnrA1     NA         Quinolones     5
+#> # ℹ 16 more rows
+```
+
+These summaries show that there are 26 distinct genotypic markers for
+quinolone resistance in this dataset. The most common one is parC_T57S,
+found in 49 of 115 isolates, followed by gyrA_S83F, gyrA_S83Y, and
+qnrS1, each found in 18 of 115 isolates. Eleven markers are found only
+once across all isolates.
+
 ### Phenotype table
+
+#### Format raw phenotype data for AMRgen
 
 To use downstream `AMRgen` functions, a phenotype table must be in long
 form with a single column for all antimicrobial agents that were tested,
@@ -144,7 +191,8 @@ character vectors to avoid issues caused by occasional presence of
 non-numeric prefixes (`>` or `<`). We then pivot the table to long form.
 
 ``` r
-# Pheno table: select columns with sample ID, metadata, and antimicrobials tested, then pivot to long form
+# Pheno table: select columns with sample ID, metadata, and antimicrobials tested, 
+# then pivot to long form
 salm_pheno <- salm_raw %>%
   select(Sample, Source, Serovar, Ciprofloxacin, Levofloxacin, Moxifloxacin) %>%
   mutate(across(c(Ciprofloxacin, Levofloxacin, Moxifloxacin), as.character)) %>%
@@ -174,22 +222,6 @@ salm_ast <- format_ast(
   mic_col = "MIC.values",
   interpret_eucast = TRUE
 )
-#> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Salmonella enterica
-#> Parsing column spp_pheno as micro-organism (class 'mo')
-#> Parsing column antibiotic as antibiotic (class 'ab')
-#> Renaming column antibiotic to standard name 'drug_agent'
-#> Parsing column MIC.values as class 'mic'
-#> Renaming column MIC.values to standard name 'mic'
-#> Could not find disk_col disk in input table
-#> Could not find pheno_col ecoff in input table
-#> Could not find pheno_col pheno_eucast in input table
-#> Could not find pheno_col pheno_clsi in input table
-#> Could not find pheno_col pheno_provided in input table
-#> Could not find method_col method in input table
-#> Could not find platform_col platform in input table
-#> Could not find guideline_col guideline in input table
-#> Could not find source_col source in input table
-#> Interpreting all data as species: Salmonella enterica
 
 # Check the format of the processed phenotype table
 head(salm_ast)
@@ -203,6 +235,46 @@ head(salm_ast)
 #> 5 SAL002 LVX         1.50   R          B_SLMNL_ENTR Human  S. Enteritidis
 #> 6 SAL002 MFX         1.50   R          B_SLMNL_ENTR Human  S. Enteritidis
 ```
+
+#### Summarise phenotype data
+
+The `summarise_pheno` function can be used to generate various summaries
+of the phenotype table, including the total number of samples, drugs,
+and species, and table of S/I/R counts for each drug in the dataset. Our
+dataset is limited to a single species with data from only one method
+(E-test MIC), and we are looking only at the EUCAST breakpoints, but the
+vignette “Analysing Geno-Pheno Data” shows how the `summarise_pheno`
+function can be used for datasets with multiple species, methods, drug
+classes, and interpretation guidelines.
+
+``` r
+salm_pheno_summary <- summarise_pheno(salm_ast, pheno_cols = c("pheno_eucast"))
+#> No disk data colummn provided
+
+# Number of samples, drugs, species, and methods included in phenotype table
+salm_pheno_summary$uniques
+#> # A tibble: 3 × 2
+#>   column     n_unique
+#>   <chr>         <int>
+#> 1 id              115
+#> 2 drug_agent        3
+#> 3 spp_pheno         1
+
+# SIR summary table for each drug in the phenotype table
+salm_pheno_summary$pheno_counts_list
+#> $pheno_eucast
+#> # A tibble: 3 × 6
+#>   drug_agent drug_name     spp_pheno               S     R     I
+#>   <ab>       <chr>         <chr>               <int> <int> <int>
+#> 1 CIP        Ciprofloxacin Salmonella enterica    23    92    NA
+#> 2 LVX        Levofloxacin  Salmonella enterica    63    25    27
+#> 3 MFX        Moxifloxacin  Salmonella enterica    20    95    NA
+```
+
+These summaries show that there are 115 isolates of one species in this
+dataset, with results for three drugs. Similar proportions were
+resistant to ciprofloxacin and moxifloxacin, whereas a lower proportion
+was resistant to levofloxacin (using the EUCAST breakpoints).
 
 Now that we have formatted our data into a genotype table (`salm_geno`)
 and a phenotype table (`salm_ast`) that are compatible with `AMRgen`, we
@@ -253,7 +325,7 @@ variable.
 
 The `assay_by_var` function can separate plots by an additional
 categorical variable by specifying `facet_var` within the function. For
-example, we can split the Ciprofloxacin plot by isolation source like
+example, we can split the ciprofloxacin plot by isolation source like
 this:
 
 ``` r
@@ -315,7 +387,6 @@ cip_bin <- get_binary_matrix(
   keep_assay_values_from = "mic"
 )
 #>  Defining NWT in binary matrix as I/R vs S, as no ECOFF column defined
-
 
 # check format
 head(cip_bin)
@@ -401,7 +472,7 @@ marker_count <- cip_bin_meta %>%
   select(mic, marker_count, Source, Serovar)
 
 # plot the MIC distribution, coloured by count of associated genetic markers
-mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1)) +
+mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1)) +
   facet_wrap(~Source, ncol = 1)
 
 mic_by_marker_count
@@ -431,22 +502,22 @@ cipro_mic_upset <- amr_upset(
 
 ![](SalmonellaExamples_files/figure-html/amr_upset-1.png)
 
-We can generate UpSet plots a subset of isolates by filtering on one of
-our additional metadata variables and then running
+We can generate UpSet plots of a subset of isolates by filtering on one
+of our additional metadata variables and then running
 [`amr_upset()`](https://amrgen.org/reference/amr_upset.md). For example,
-we can focus on the human isolates only:
+we can focus on the animal isolates only:
 
 ``` r
-cip_bin_human <- cip_bin_meta %>%
-  filter(Source == "Human") %>%
+cip_bin_animal <- cip_bin_meta %>%
+  filter(Source == "Animal") %>%
   select(-Source, -Serovar)
 
-cipro_mic_upset_human <- amr_upset(
-  cip_bin_human,
-  min_set_size = 2,
+cipro_mic_upset_animal <- amr_upset(
+  cip_bin_animal,
+  min_set_size = 1,
   assay = "mic",
   order = "value"
 )
 ```
 
-![](SalmonellaExamples_files/figure-html/amr_upset_human_only-1.png)
+![](SalmonellaExamples_files/figure-html/amr_upset_animal_only-1.png)

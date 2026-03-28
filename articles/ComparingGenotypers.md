@@ -1185,7 +1185,7 @@ amrfp <- download_ebi(
 )
 
 # Filter for isolates in EuSCAPE paper with meropenem phenotypes and remove contaminated samples
-kp_mero_amrfp <- kp_mero_amrfp %>% 
+kp_mero_amrfp <- kp_mero_amrfp %>%
   filter(id %in% kp_mero_euscape$id) %>%
   filter(!id %in% contaminated_assemblies)
 ```

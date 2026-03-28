@@ -47,7 +47,10 @@ submission file.</p>
 <span>  <span class="va">data</span>,</span>
 <span>  file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  pheno_col <span class="op">=</span> <span class="st">"pheno_provided"</span></span>
+<span>  pheno_col <span class="op">=</span> <span class="st">"pheno_provided"</span>,</span>
+<span>  guideline <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  vendor <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  version <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -76,6 +79,18 @@ formatted data frame is returned visibly.</p></dd>
 <dt id="arg-pheno-col">pheno_col<a class="anchor" aria-label="anchor" href="#arg-pheno-col"></a></dt>
 <dd><p>Character string naming the column that contains
 SIR interpretations (class <code>sir</code>). Default <code>"pheno_provided"</code>.</p></dd>
+
+
+<dt id="arg-guideline">guideline<a class="anchor" aria-label="anchor" href="#arg-guideline"></a></dt>
+<dd><p>Optional single value to record in <code>testing_standard</code> field in the output (default <code>NULL</code>, in which case <code>testing_standard</code> will be populated from the <code>guideline</code> field in the input file).</p></dd>
+
+
+<dt id="arg-vendor">vendor<a class="anchor" aria-label="anchor" href="#arg-vendor"></a></dt>
+<dd><p>Optional single value to record in <code>vendor</code> field in the output (default <code>NULL</code>).</p></dd>
+
+
+<dt id="arg-version">version<a class="anchor" aria-label="anchor" href="#arg-version"></a></dt>
+<dd><p>Optional single value to record in <code>laboratory_typing_method_version_or_reagent</code> field in the output (default <code>NULL</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -11,7 +11,8 @@ for submission to EBI, and optionally generate JSON submission files
 export_ebi_ast(
   data,
   pheno_col = "pheno_provided",
-  breakpoint_version,
+  guideline = NULL,
+  breakpoint_version = NULL,
   submission_account,
   domain = "self.ExampleDomain",
   output_dir = NULL
@@ -34,10 +35,16 @@ export_ebi_ast(
   Character string naming the column that contains SIR interpretations
   (class `sir`). Default `"pheno_provided"`.
 
+- guideline:
+
+  Optional character string to record in `ast_standard` field in the
+  output (default `NULL`, in which case `ast_standard` will be populated
+  from the `guideline` field in the input file).
+
 - breakpoint_version:
 
   Character string specifying the breakpoint version used for
-  interpretation (e.g. `"EUCAST 2024"`).
+  interpretation (e.g. `"EUCAST 2024"`). Default `NULL`.
 
 - submission_account:
 
@@ -84,7 +91,6 @@ Species names are derived from the `spp_pheno` column via
 ``` r
 # Return formatted data frame without writing files
 ebi_df <- export_ebi_ast(staph_ast_ebi)
-#> Error in export_ebi_ast(staph_ast_ebi): argument "breakpoint_version" is missing, with no default
 if (FALSE) { # \dontrun{
 # Write out data for each BioSample to an individual JSON file for submission
 ebi_df <- export_ebi_ast(staph_ast_ebi,

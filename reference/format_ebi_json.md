@@ -11,7 +11,6 @@ dataset is converted into JSON records and printed to file.
 ``` r
 format_ebi_json(
   ebi_antibiogram_table,
-  breakpoint_version,
   submission_account,
   output_dir,
   domain = NULL
@@ -24,11 +23,6 @@ format_ebi_json(
 
   A data frame in the format output by
   [`export_ebi_ast()`](https://amrgen.org/reference/export_ebi_ast.md).
-
-- breakpoint_version:
-
-  Character string specifying the breakpoint version used for
-  interpretation (e.g. `"EUCAST 2024"`).
 
 - submission_account:
 
@@ -67,7 +61,6 @@ with `pretty = TRUE` and `auto_unbox = TRUE` .
 if (FALSE) { # \dontrun{
 format_ebi_json(
   ast_dataset,
-  breakpoint_version = "EUCAST 2015",
   submission_account = "Webin-###",
   output_dir = "/path/to/output/"
 )

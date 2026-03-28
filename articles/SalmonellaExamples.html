@@ -256,7 +256,7 @@ character vectors to avoid issues caused by occasional presence of
 non-numeric prefixes (<code>&gt;</code> or <code>&lt;</code>). We then
 pivot the table to long form.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Pheno table: select columns with sample ID, metadata, and antimicrobials tested, </span></span>
+<code class="sourceCode R"><span><span class="co"># Pheno table: select columns with sample ID, metadata, and antimicrobials tested,</span></span>
 <span><span class="co"># then pivot to long form</span></span>
 <span><span class="va">salm_pheno</span> <span class="op">&lt;-</span> <span class="va">salm_raw</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Sample</span>, <span class="va">Source</span>, <span class="va">Serovar</span>, <span class="va">Ciprofloxacin</span>, <span class="va">Levofloxacin</span>, <span class="va">Moxifloxacin</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>

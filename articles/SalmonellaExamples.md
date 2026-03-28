@@ -191,7 +191,7 @@ character vectors to avoid issues caused by occasional presence of
 non-numeric prefixes (`>` or `<`). We then pivot the table to long form.
 
 ``` r
-# Pheno table: select columns with sample ID, metadata, and antimicrobials tested, 
+# Pheno table: select columns with sample ID, metadata, and antimicrobials tested,
 # then pivot to long form
 salm_pheno <- salm_raw %>%
   select(Sample, Source, Serovar, Ciprofloxacin, Levofloxacin, Moxifloxacin) %>%

@@ -11,7 +11,10 @@ export_ncbi_ast(
   data,
   file = NULL,
   overwrite = FALSE,
-  pheno_col = "pheno_provided"
+  pheno_col = "pheno_provided",
+  guideline = NULL,
+  vendor = NULL,
+  version = NULL
 )
 ```
 
@@ -40,6 +43,23 @@ export_ncbi_ast(
 
   Character string naming the column that contains SIR interpretations
   (class `sir`). Default `"pheno_provided"`.
+
+- guideline:
+
+  Optional single value to record in `testing_standard` field in the
+  output (default `NULL`, in which case `testing_standard` will be
+  populated from the `guideline` field in the input file).
+
+- vendor:
+
+  Optional single value to record in `vendor` field in the output
+  (default `NULL`).
+
+- version:
+
+  Optional single value to record in
+  `laboratory_typing_method_version_or_reagent` field in the output
+  (default `NULL`).
 
 ## Value
 

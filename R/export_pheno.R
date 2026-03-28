@@ -31,6 +31,9 @@
 #' @param overwrite Logical; overwrite an existing file? Default `FALSE`.
 #' @param pheno_col Character string naming the column that contains
 #'   SIR interpretations (class `sir`). Default `"pheno_provided"`.
+#' @param guideline Optional single value to record in `testing_standard` field in the output (default `NULL`, in which case `testing_standard` will be populated from the `guideline` field in the input file).
+#' @param vendor Optional single value to record in `vendor` field in the output (default `NULL`).
+#' @param version Optional single value to record in `laboratory_typing_method_version_or_reagent` field in the output (default `NULL`).
 #'
 #' @details
 #' When both `mic` and `disk` columns are present, MIC values are
@@ -71,7 +74,8 @@
 #' export_ncbi_ast(ebi_kq, "Kq_NCBI.tsv")
 #' }
 export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
-                            pheno_col = "pheno_provided") {
+                            pheno_col = "pheno_provided", guideline = NULL,
+                            vendor = NULL, version = NULL) {
   # --- input validation ---
   if (!is.null(file)) {
     if (file.exists(file) && !overwrite) {
@@ -172,7 +176,9 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
     measurement = m_value,
     measurement_units = m_units,
     laboratory_typing_method = ncbi_method,
-    testing_standard = if ("guideline" %in% colnames(data)) {
+    testing_standard = if (!is.null(guideline)) {
+      as.character(guideline)
+    } else if ("guideline" %in% colnames(data)) {
       as.character(data$guideline)
     } else {
       NA_character_
@@ -182,8 +188,14 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
     } else {
       NA_character_
     },
-    vendor = NA_character_,
-    laboratory_typing_method_version_or_reagent = NA_character_,
+    vendor = if (!is.null(vendor)) {
+      as.character(vendor)
+    } else {NA_character_
+    },
+    laboratory_typing_method_version_or_reagent = if (!is.null(version)) {
+      as.character(version)
+    } else {NA_character_
+    },
     stringsAsFactors = FALSE
   )
 
@@ -220,8 +232,11 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #'   `disk`, `method`, `platform`.
 #' @param pheno_col Character string naming the column that contains
 #'   SIR interpretations (class `sir`). Default `"pheno_provided"`.
-#' @param breakpoint_version Character string specifying the breakpoint
-#' version used for interpretation (e.g. `"EUCAST 2024"`).
+#' @param guideline Optional character string to record in `ast_standard` 
+#'    field in the output (default `NULL`, in which case `ast_standard` will be 
+#' populated from the `guideline` field in the input file).
+#' @param breakpoint_version Character string specifying the breakpoint version used for 
+#'    interpretation (e.g. `"EUCAST 2024"`).
 #' @param submission_account Character string specifying the EBI Webin
 #' submission account identifier (e.g. `"Webin-###"`). If not provided,
 #' JSON output files will not be generated and the function will return
@@ -269,6 +284,7 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #' }
 export_ebi_ast <- function(data,
                            pheno_col = "pheno_provided",
+                           guideline = NULL, 
                            breakpoint_version,
                            submission_account,
                            domain = "self.ExampleDomain",
@@ -370,12 +386,16 @@ export_ebi_ast <- function(data,
     biosample_id = data$id,
     species = species,
     antibiotic_name = antibiotic_name,
-    ast_standard = if ("guideline" %in% colnames(data)) {
+    ast_standard = if (!is.null(guideline)) {
+      as.character(guideline)
+    } else if ("guideline" %in% colnames(data)) {
       as.character(data$guideline)
     } else {
       NA_character_
     },
-    breakpoint_version = NA_character_,
+    breakpoint_version = if (!is.null(breakpoint_version)) {
+      as.character(breakpoint_version)
+    } else {NA_character_},
     laboratory_typing_method = ebi_method,
     measurement = m_value,
     measurement_units = m_units,
@@ -393,7 +413,6 @@ export_ebi_ast <- function(data,
   if (!is.null(output_dir)) {
     safe_execute(format_ebi_json(out_df,
       output_dir = output_dir,
-      breakpoint_version = breakpoint_version,
       submission_account = submission_account,
       domain = domain
     ))
@@ -413,8 +432,6 @@ export_ebi_ast <- function(data,
 #'
 #' @param ebi_antibiogram_table A data frame in the format output by
 #' [export_ebi_ast()].
-#' @param breakpoint_version Character string specifying the
-#' breakpoint version used for interpretation (e.g. `"EUCAST 2024"`).
 #' @param submission_account Character string specifying the Webin
 #' submission account identifier (e.g. `"Webin-###"`).
 #' @param output_dir Character string specifying the directory where JSON
@@ -438,7 +455,6 @@ export_ebi_ast <- function(data,
 #' \dontrun{
 #' format_ebi_json(
 #'   ast_dataset,
-#'   breakpoint_version = "EUCAST 2015",
 #'   submission_account = "Webin-###",
 #'   output_dir = "/path/to/output/"
 #' )
@@ -447,7 +463,6 @@ export_ebi_ast <- function(data,
 #' @importFrom jsonlite write_json
 #' @export
 format_ebi_json <- function(ebi_antibiogram_table,
-                            breakpoint_version,
                             submission_account,
                             output_dir,
                             domain = NULL) {
@@ -472,7 +487,7 @@ format_ebi_json <- function(ebi_antibiogram_table,
           iri = NULL
         ),
         "breakpointVersion" = list(
-          value = breakpoint_version,
+          value = records_by_sample[[biosample]]$breakpoint_version[entry],
           iri = NULL
         ),
         "laboratoryTypingMethod" = list(

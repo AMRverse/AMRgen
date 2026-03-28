@@ -90,7 +90,7 @@ result <- import_whonet_ast(AMR::WHONET)
 #> The first warning was:
 #> ℹ In argument: `mic = as.mic(...)`.
 #> Caused by warning:
-#> ! in `as.mic()`: 1311 results in column 'mic' truncated (9%) that were invalid
+#> ! in `as.mic()`: 1311 results in column mic truncated (9%) that were invalid
 #> MICs: "S", "I", and "R"
 #> ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.
 head(result)

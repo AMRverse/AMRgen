@@ -108,7 +108,7 @@ To use downstream `AMRgen` functions, a phenotype table must be in long form wit
 To convert out dataset to this format, we begin by extracting the columns with the unique isolate names (`Sample`) and those with the MIC results for the three antimicrobial agents that we tested (`Ciprofloxacin`, `Levofloxacin`, `Moxifloxacin`). We also keep the columns with additional metadata (`Source`, `Serovar`), as these are not in the genotype table. The antimicrobial columns need to be forced to character vectors to avoid issues caused by occasional presence of non-numeric prefixes (`>` or `<`). We then pivot the table to long form.
 
 ```{r wrangle pheno data}
-# Pheno table: select columns with sample ID, metadata, and antimicrobials tested, 
+# Pheno table: select columns with sample ID, metadata, and antimicrobials tested,
 # then pivot to long form
 salm_pheno <- salm_raw %>%
   select(Sample, Source, Serovar, Ciprofloxacin, Levofloxacin, Moxifloxacin) %>%

@@ -190,11 +190,13 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
     },
     vendor = if (!is.null(vendor)) {
       as.character(vendor)
-    } else {NA_character_
+    } else {
+      NA_character_
     },
     laboratory_typing_method_version_or_reagent = if (!is.null(version)) {
       as.character(version)
-    } else {NA_character_
+    } else {
+      NA_character_
     },
     stringsAsFactors = FALSE
   )
@@ -232,11 +234,11 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #'   `disk`, `method`, `platform`.
 #' @param pheno_col Character string naming the column that contains
 #'   SIR interpretations (class `sir`). Default `"pheno_provided"`.
-#' @param guideline Optional character string to record in `ast_standard` 
-#'    field in the output (default `NULL`, in which case `ast_standard` will be 
+#' @param guideline Optional character string to record in `ast_standard`
+#'    field in the output (default `NULL`, in which case `ast_standard` will be
 #' populated from the `guideline` field in the input file).
-#' @param breakpoint_version Character string specifying the breakpoint version used for 
-#'    interpretation (e.g. `"EUCAST 2024"`).
+#' @param breakpoint_version Character string specifying the breakpoint version used for
+#'    interpretation (e.g. `"EUCAST 2024"`). Default `NULL`.
 #' @param submission_account Character string specifying the EBI Webin
 #' submission account identifier (e.g. `"Webin-###"`). If not provided,
 #' JSON output files will not be generated and the function will return
@@ -284,8 +286,8 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #' }
 export_ebi_ast <- function(data,
                            pheno_col = "pheno_provided",
-                           guideline = NULL, 
-                           breakpoint_version,
+                           guideline = NULL,
+                           breakpoint_version = NULL,
                            submission_account,
                            domain = "self.ExampleDomain",
                            output_dir = NULL) {
@@ -395,7 +397,9 @@ export_ebi_ast <- function(data,
     },
     breakpoint_version = if (!is.null(breakpoint_version)) {
       as.character(breakpoint_version)
-    } else {NA_character_},
+    } else {
+      NA_character_
+    },
     laboratory_typing_method = ebi_method,
     measurement = m_value,
     measurement_units = m_units,

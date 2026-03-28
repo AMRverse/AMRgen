@@ -8,7 +8,10 @@ export_ncbi_ast(
   data,
   file = NULL,
   overwrite = FALSE,
-  pheno_col = "pheno_provided"
+  pheno_col = "pheno_provided",
+  guideline = NULL,
+  vendor = NULL,
+  version = NULL
 )
 }
 \arguments{
@@ -26,6 +29,12 @@ formatted data frame is returned visibly.}
 
 \item{pheno_col}{Character string naming the column that contains
 SIR interpretations (class \code{sir}). Default \code{"pheno_provided"}.}
+
+\item{guideline}{Optional single value to record in \code{testing_standard} field in the output (default \code{NULL}, in which case \code{testing_standard} will be populated from the \code{guideline} field in the input file).}
+
+\item{vendor}{Optional single value to record in \code{vendor} field in the output (default \code{NULL}).}
+
+\item{version}{Optional single value to record in \code{laboratory_typing_method_version_or_reagent} field in the output (default \code{NULL}).}
 }
 \value{
 When \code{file} is provided, the formatted data frame is

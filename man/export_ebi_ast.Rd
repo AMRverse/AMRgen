@@ -7,7 +7,8 @@
 export_ebi_ast(
   data,
   pheno_col = "pheno_provided",
-  breakpoint_version,
+  guideline = NULL,
+  breakpoint_version = NULL,
   submission_account,
   domain = "self.ExampleDomain",
   output_dir = NULL
@@ -23,8 +24,12 @@ one phenotype column (see \code{pheno_col}). Optional columns: \code{mic},
 \item{pheno_col}{Character string naming the column that contains
 SIR interpretations (class \code{sir}). Default \code{"pheno_provided"}.}
 
-\item{breakpoint_version}{Character string specifying the breakpoint
-version used for interpretation (e.g. \code{"EUCAST 2024"}).}
+\item{guideline}{Optional character string to record in \code{ast_standard}
+field in the output (default \code{NULL}, in which case \code{ast_standard} will be
+populated from the \code{guideline} field in the input file).}
+
+\item{breakpoint_version}{Character string specifying the breakpoint version used for
+interpretation (e.g. \code{"EUCAST 2024"}). Default \code{NULL}.}
 
 \item{submission_account}{Character string specifying the EBI Webin
 submission account identifier (e.g. \code{"Webin-###"}). If not provided,

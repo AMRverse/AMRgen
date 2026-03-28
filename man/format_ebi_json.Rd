@@ -6,7 +6,6 @@
 \usage{
 format_ebi_json(
   ebi_antibiogram_table,
-  breakpoint_version,
   submission_account,
   output_dir,
   domain = NULL
@@ -15,9 +14,6 @@ format_ebi_json(
 \arguments{
 \item{ebi_antibiogram_table}{A data frame in the format output by
 \code{\link[=export_ebi_ast]{export_ebi_ast()}}.}
-
-\item{breakpoint_version}{Character string specifying the
-breakpoint version used for interpretation (e.g. \code{"EUCAST 2024"}).}
 
 \item{submission_account}{Character string specifying the Webin
 submission account identifier (e.g. \code{"Webin-###"}).}
@@ -52,7 +48,6 @@ JSON formatting is performed using \code{jsonlite::toJSON()} with
 \dontrun{
 format_ebi_json(
   ast_dataset,
-  breakpoint_version = "EUCAST 2015",
   submission_account = "Webin-###",
   output_dir = "/path/to/output/"
 )

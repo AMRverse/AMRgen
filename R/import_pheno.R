@@ -2017,25 +2017,34 @@ import_phoenix_ast <- function(input,
   #     e.g. "AM (MIC)", "AM (Interp)", "AM (Expert)"
   # -------------------------------------------------------------------
   mic_cols_wide <- grep("\\((?:MIC|MOC)\\)$", colnames(ast),
-                        ignore.case = TRUE, perl = TRUE, value = TRUE)
+    ignore.case = TRUE, perl = TRUE, value = TRUE
+  )
   if (length(mic_cols_wide) > 1) {
     drug_triplet_pat <- "\\s*\\((?:MIC|MOC|Interp|Expert)\\)\\s*$"
     meta_cols <- colnames(ast)[!grepl(drug_triplet_pat, colnames(ast),
-                                      ignore.case = TRUE, perl = TRUE)]
+      ignore.case = TRUE, perl = TRUE
+    )]
     drug_abbrevs <- trimws(gsub("\\s*\\((?:MIC|MOC)\\)$", "", mic_cols_wide,
-                                ignore.case = TRUE, perl = TRUE))
+      ignore.case = TRUE, perl = TRUE
+    ))
     wide_ast <- ast
     ast <- do.call(rbind, lapply(drug_abbrevs, function(drug) {
       drug_esc <- gsub("([\\(\\)\\[\\].+*?^${}|])", "\\\\\\1", drug, perl = TRUE)
-      mic_c    <- grep(paste0("^", drug_esc, "\\s*\\((?:MIC|MOC)\\)$"),
-                       colnames(wide_ast), ignore.case = TRUE, perl = TRUE, value = TRUE)[1]
+      mic_c <- grep(paste0("^", drug_esc, "\\s*\\((?:MIC|MOC)\\)$"),
+        colnames(wide_ast),
+        ignore.case = TRUE, perl = TRUE, value = TRUE
+      )[1]
       interp_c <- grep(paste0("^", drug_esc, "\\s*\\(Interp\\)$"),
-                       colnames(wide_ast), ignore.case = TRUE, perl = TRUE, value = TRUE)[1]
+        colnames(wide_ast),
+        ignore.case = TRUE, perl = TRUE, value = TRUE
+      )[1]
       expert_c <- grep(paste0("^", drug_esc, "\\s*\\(Expert\\)$"),
-                       colnames(wide_ast), ignore.case = TRUE, perl = TRUE, value = TRUE)[1]
+        colnames(wide_ast),
+        ignore.case = TRUE, perl = TRUE, value = TRUE
+      )[1]
       row <- wide_ast[, meta_cols, drop = FALSE]
       row[["drug"]] <- drug
-      row[["mic"]]  <- if (!is.na(mic_c)) as.character(wide_ast[[mic_c]]) else NA_character_
+      row[["mic"]] <- if (!is.na(mic_c)) as.character(wide_ast[[mic_c]]) else NA_character_
       if (use_expertized && !is.na(expert_c)) {
         sir_raw <- as.character(wide_ast[[expert_c]])
         if (!is.na(interp_c)) {

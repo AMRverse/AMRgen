@@ -2012,6 +2012,50 @@ import_phoenix_ast <- function(input,
   }
 
   # -------------------------------------------------------------------
+  # 1b. Detect and pivot wide-format Phoenix exports
+  #     Wide format: one row per sample, drugs stored as column triplets
+  #     e.g. "AM (MIC)", "AM (Interp)", "AM (Expert)"
+  # -------------------------------------------------------------------
+  mic_cols_wide <- grep("\\((?:MIC|MOC)\\)$", colnames(ast),
+                        ignore.case = TRUE, perl = TRUE, value = TRUE)
+  if (length(mic_cols_wide) > 1) {
+    drug_triplet_pat <- "\\s*\\((?:MIC|MOC|Interp|Expert)\\)\\s*$"
+    meta_cols <- colnames(ast)[!grepl(drug_triplet_pat, colnames(ast),
+                                      ignore.case = TRUE, perl = TRUE)]
+    drug_abbrevs <- trimws(gsub("\\s*\\((?:MIC|MOC)\\)$", "", mic_cols_wide,
+                                ignore.case = TRUE, perl = TRUE))
+    wide_ast <- ast
+    ast <- do.call(rbind, lapply(drug_abbrevs, function(drug) {
+      drug_esc <- gsub("([\\(\\)\\[\\].+*?^${}|])", "\\\\\\1", drug, perl = TRUE)
+      mic_c    <- grep(paste0("^", drug_esc, "\\s*\\((?:MIC|MOC)\\)$"),
+                       colnames(wide_ast), ignore.case = TRUE, perl = TRUE, value = TRUE)[1]
+      interp_c <- grep(paste0("^", drug_esc, "\\s*\\(Interp\\)$"),
+                       colnames(wide_ast), ignore.case = TRUE, perl = TRUE, value = TRUE)[1]
+      expert_c <- grep(paste0("^", drug_esc, "\\s*\\(Expert\\)$"),
+                       colnames(wide_ast), ignore.case = TRUE, perl = TRUE, value = TRUE)[1]
+      row <- wide_ast[, meta_cols, drop = FALSE]
+      row[["drug"]] <- drug
+      row[["mic"]]  <- if (!is.na(mic_c)) as.character(wide_ast[[mic_c]]) else NA_character_
+      if (use_expertized && !is.na(expert_c)) {
+        sir_raw <- as.character(wide_ast[[expert_c]])
+        if (!is.na(interp_c)) {
+          interp_raw <- as.character(wide_ast[[interp_c]])
+          sir_raw[is.na(sir_raw) | sir_raw == ""] <-
+            interp_raw[is.na(sir_raw) | sir_raw == ""]
+        }
+      } else if (!is.na(interp_c)) {
+        sir_raw <- as.character(wide_ast[[interp_c]])
+      } else {
+        sir_raw <- NA_character_
+      }
+      row[["Interp"]] <- sir_raw
+      row
+    }))
+    # Drop rows where both MIC and SIR are absent (drug not tested for that sample)
+    ast <- ast[!(is.na(ast[["mic"]]) & (is.na(ast[["Interp"]]) | ast[["Interp"]] == "")), ]
+  }
+
+  # -------------------------------------------------------------------
   # 2. Resolve column names
   # -------------------------------------------------------------------
 
@@ -2043,7 +2087,7 @@ import_phoenix_ast <- function(input,
     }
   }
   if (is.null(r_sample)) {
-    r_sample <- .find_col(ast, c("^sample$", "^id$", "^isolate$", "sample_id", "patient_id"))
+    r_sample <- .find_col(ast, c("^sample$", "^id$", "accession", "sample_id", "patient_id", "^isolate$"))
   }
   if (is.null(r_species) && is.null(species)) {
     r_species <- .find_col(ast, c("^organism$", "^species$", "^spp$", "^pathogen$"))
@@ -2154,12 +2198,13 @@ import_phoenix_ast <- function(input,
     species = species, ab = ab
   )
 
-  ast %>% relocate(any_of(c(
-    "id", "drug_agent", "mic", "disk",
-    "pheno_eucast", "pheno_clsi", "ecoff",
-    "guideline", "method", "platform", "source",
-    "pheno_provided", "spp_pheno"
-  )))
+  ast %>%
+    select(any_of(c(
+      "id", "drug_agent", "mic", "disk",
+      "pheno_eucast", "pheno_clsi", "ecoff",
+      "guideline", "method", "platform", "source",
+      "pheno_provided", "spp_pheno"
+    )))
 }
 
 

@@ -124,6 +124,7 @@ combination agents (EBI convention, e.g.
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Return formatted data frame without writing files</span></span></span>
 <span class="r-in"><span><span class="va">ebi_df</span> <span class="op">&lt;-</span> <span class="fu">export_ebi_ast</span><span class="op">(</span><span class="va">staph_ast_ebi</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in export_ebi_ast(staph_ast_ebi):</span> argument "breakpoint_version" is missing, with no default</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># Write out data for each BioSample to an individual JSON file for submission</span></span></span>
 <span class="r-in"><span><span class="va">ebi_df</span> <span class="op">&lt;-</span> <span class="fu">export_ebi_ast</span><span class="op">(</span><span class="va">staph_ast_ebi</span>,</span></span>

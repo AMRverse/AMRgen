@@ -84,6 +84,7 @@ Species names are derived from the `spp_pheno` column via
 ``` r
 # Return formatted data frame without writing files
 ebi_df <- export_ebi_ast(staph_ast_ebi)
+#> Error in export_ebi_ast(staph_ast_ebi): argument "breakpoint_version" is missing, with no default
 if (FALSE) { # \dontrun{
 # Write out data for each BioSample to an individual JSON file for submission
 ebi_df <- export_ebi_ast(staph_ast_ebi,

@@ -32,7 +32,7 @@ Note that files downloaded from the NCBI AST web browser \url{https://www.ncbi.n
 # Download Klebsiella quasipneumoniae data, filter to amikacin
 ast <- download_ncbi_pheno(
   "Klebsiella quasipneumoniae",
-  antibiotic = "amikacin"
+  pheno_drug = "amikacin"
 )
 
 # Reformat to simplify use with AMRgen functions

@@ -2,7 +2,7 @@
 % Please edit documentation in R/download_ncbi_ast.R
 \name{download_ncbi_pheno}
 \alias{download_ncbi_pheno}
-\title{Download NCBI antimicrobial phenotype data}
+\title{Download NCBI antimicrobial susceptibility testing (AST) data}
 \usage{
 download_ncbi_pheno(
   species,
@@ -10,7 +10,7 @@ download_ncbi_pheno(
   max_records = 15000,
   batch_size = 200,
   sleep_time = 0.34,
-  force_pheno_drug = FALSE,
+  force_drug_name = FALSE,
   reformat = FALSE,
   interpret_eucast = FALSE,
   interpret_clsi = FALSE,
@@ -21,11 +21,11 @@ download_ncbi_pheno(
 \item{species}{Character. Organism name for the search query
 (e.g., \code{"Salmonella enterica"}). Required.}
 
-\item{pheno_drug}{Character or vector. Optional phenotype drug name/s to filter
+\item{pheno_drug}{Character or vector. Optional drug name/s to filter
 the returned data. Strings will be processed using the \pkg{AMR} package
 to standardize names before matching, so e.g. \code{"amikacin"} or \code{"Amikacin"}
 or \code{"ami"} will be parsed to "amikacin" before matching. This can be turned
-off by setting \code{force_pheno_drug=TRUE}. Full list of allowed drug
+off by setting \code{force_drug_name=TRUE}. Full list of allowed drug
 names in NCBI: \url{https://www.ncbi.nlm.nih.gov/biosample/docs/antibiogram/}.}
 
 \item{max_records}{Integer. Maximum number of BioSample records to
@@ -37,27 +37,24 @@ Default is \code{200} which is recommended by NCBI.}
 \item{sleep_time}{Numeric. Seconds to pause between batch requests to
 avoid overloading NCBI servers. Default is \code{0.34}.}
 
-\item{force_pheno_drug}{Logical. If \code{TRUE}, turns off standardizing the
-phenotype drug name using the \pkg{AMR} package before filtering, so that
+\item{force_drug_name}{Logical. If \code{TRUE}, turns off standardizing the
+drug name using the \pkg{AMR} package before filtering, so that
 matching is done exactly on the input string/s. Default is \code{FALSE}.}
 
 \item{reformat}{Logical. If \code{TRUE}, reformats the output using
-\link{import_ncbi_pheno} for compatibility with AMR analysis workflows.
+\code{\link[=import_ncbi_biosample]{import_ncbi_biosample()}} for compatibility with AMR analysis workflows.
 Default is \code{FALSE}. When set to \code{TRUE}, the data can also be interpreted
 against breakpoints/ECOFF by setting the \verb{interpret_*=TRUE}.}
 
-\item{interpret_eucast}{Logical. Passed to \link{interpret_pheno} via
-\link{import_ncbi_pheno}.
+\item{interpret_eucast}{Logical. Passed to \code{\link[=import_ncbi_biosample]{import_ncbi_biosample()}}.
 If \code{TRUE}, interprets MIC values using EUCAST breakpoints. Default is
 \code{FALSE}. Only used if \code{reformat}=\code{TRUE}.}
 
-\item{interpret_clsi}{Logical. Passed to \link{interpret_pheno} via
-\link{import_ncbi_pheno}.
+\item{interpret_clsi}{Logical. Passed to \code{\link[=import_ncbi_biosample]{import_ncbi_biosample()}}.
 If \code{TRUE}, interprets MIC values using CLSI breakpoints. Default is
 \code{FALSE}. Only used if \code{reformat}=\code{TRUE}.}
 
-\item{interpret_ecoff}{Logical. Passed to \link{interpret_pheno} via
-\link{import_ncbi_pheno}.
+\item{interpret_ecoff}{Logical. Passed to \code{\link[=import_ncbi_biosample]{import_ncbi_biosample()}}.
 If \code{TRUE}, interprets MIC values using ECOFF cutoffs. Default is \code{FALSE}.
 Only used if \code{reformat}=\code{TRUE}.}
 }
@@ -65,7 +62,7 @@ Only used if \code{reformat}=\code{TRUE}.}
 A tibble with one row per phenotype measure, with corresponding BioSample metadata.
 }
 \description{
-This function downloads antimicrobial phenotype data
+This function downloads antimicrobial susceptibility phenotype data
 from the NCBI Pathogen Detection database via the BioSample API. Data are
 retrieved in batches, parsed from XML, and returned as a tidy tibble with
 metadata including BioSample ID, Bioproject ID, and organism name.
@@ -83,10 +80,10 @@ contains phenotype test results and associated metadata including:
 \code{Manufacturer}, \code{Panel}, \code{Standard}: phenotype data columns
 }
 
-The function can optionally filter by one or more phenotype drugs. It can
+The function can optionally filter by one or more drugs. It can
 also optionally reformat data for compatibility with AMRgen functions via
-\link{import_ncbi_pheno}, and interpret the raw data measures against breakpoints or
-ECOFF. See \link{import_ncbi_pheno} for details of output formats when these options
+\code{\link[=import_ncbi_biosample]{import_ncbi_biosample()}}, and interpret the raw data measures against breakpoints or
+ECOFF. See \code{\link[=import_ncbi_biosample]{import_ncbi_biosample()}} for details of output formats when these options
 are used.
 }
 \section{NCBI API usage}{

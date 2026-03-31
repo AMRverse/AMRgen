@@ -90,7 +90,7 @@ reference:
       - starts_with("compare")
       - matches("eucast")
       - merge_logreg_soloppv
-      - interpret_ast
+      - interpret_pheno
 
   - title: "Modelling and analysis"
     desc: >
@@ -106,7 +106,6 @@ reference:
       - checkBreakpoints
       - concordance
       - concordance_from_tables
-      - cooccuring_ppv_analysis
       - print.amr_concordance
 
   - title: "Visualisation & Reporting"
@@ -120,16 +119,16 @@ reference:
     desc: >
       Example datasets for demonstration and reproducible analysis.
     contents:
-      - ecoli_ast
-      - ecoli_ast_raw
+      - ecoli_pheno
+      - ecoli_pheno_raw
       - ecoli_geno_raw
       - ecoli_cip_vs_ref
       - ecoli_cip_mic_data
-      - staph_ast_ncbi
-      - staph_ast_ncbi_raw
-      - staph_ast_ncbi_cloud_raw
+      - staph_pheno_ncbi
+      - staph_pheno_ncbi_raw
+      - staph_pheno_ncbi_cloud_raw
       - staph_geno_ncbi_cloud_raw
-      - staph_ast_ebi
+      - staph_pheno_ebi
       - staph_geno_ebi
       - amrfp_drugs_table
       - pheno_eco_2075
@@ -148,13 +147,13 @@ reference:
       - kleborate_raw
       - kleborate_raw_v313
       - kleborate_classes
-      - ast_CLI_public
+      - pheno_CLI_public
       - afp_CLI_public
       - ST_data_CLI
       - DASSIM_pheno_raw
-      - btESBL_AST
+      - btESBL_pheno
       - DASSIM_geno
-      - NCBI_Ecoli_AST_chl
+      - NCBI_Ecoli_pheno_chl
       - MICROBIGGE_Ecoli_CHLR
       - rgi_raw
       - rgi_short_name_table

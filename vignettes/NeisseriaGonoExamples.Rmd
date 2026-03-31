@@ -160,7 +160,7 @@ For each antibiotic, we visualise the MIC distribution with `assay_by_var()` and
 #### **Azithromycin**
 
 ```{r pheno_azm, warning=FALSE}
-# Plot the distribution of MIC data in the study 
+# Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
   pheno_drug = "Azithromycin",

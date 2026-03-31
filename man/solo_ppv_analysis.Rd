@@ -31,11 +31,11 @@ solo_ppv_analysis(
 
 \item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_pheno]{import_pheno()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{pheno_drug}{(Required if \code{binary_matrix} not provided) A character string specifying the phenotype drug of interest to filter phenotype data. The value must match one of the entries in the \code{drug} column of \code{pheno_table}.}
+\item{pheno_drug}{(Required if \code{binary_matrix} not provided) A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the \code{drug} column of \code{pheno_table} or be coercible to a match using \link[AMR:as.ab]{AMR::as.ab}.}
 
-\item{geno_class}{(Optional if \code{binary_matrix} not provided) A character vector of genotype drug classes used to filter markers in \code{geno_table}.}
+\item{geno_class}{(Optional if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype markers. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with \code{pheno_drug} and uses those (these are printed to screen so the user can see what is being filtered).}
 
-\item{geno_drug}{(Optional if \code{binary_matrix} not provided) A character vector of genotype drug identifiers used to filter \code{geno_table} by its \code{drug} column.}
+\item{geno_drug}{(Optional if \code{binary_matrix} not provided) A character vector of drug names whose relevant genotype markers should be included.}
 
 \item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
 
@@ -77,7 +77,7 @@ A list containing the following elements:
 }
 }
 \description{
-This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given phenotype drug and genotype filter. It calculates the PPV for solo markers and visualises the results using various plots.
+This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given drug and genotype marker filter. It calculates the PPV for solo markers and visualises the results using various plots.
 }
 \details{
 The function analyses the predictive power of individual AMR markers when they are found 'solo' in the genome with no other markers associated with the same class. The phenotype data are matched with genotype presence/absence and then stratified to compute PPV for resistance and non-wild-type interpretations. The function also generates plots to aid in interpretation.

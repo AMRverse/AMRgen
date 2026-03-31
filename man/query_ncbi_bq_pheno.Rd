@@ -7,7 +7,7 @@
 query_ncbi_bq_pheno(
   taxgroup,
   pheno_drug = NULL,
-  force_pheno_drug = FALSE,
+  force_drug_name = FALSE,
   project_id = NULL
 )
 }
@@ -17,11 +17,11 @@ query_ncbi_bq_pheno(
 for a list. Required.}
 
 \item{pheno_drug}{(Optional) String (or vector of strings) specifying the
-phenotype drug name/s to filter on (default NULL). Uses the AMR package to try
+drug name/s to filter on (default NULL). Uses the AMR package to try
 to fix typos, and format to lower-case.}
 
-\item{force_pheno_drug}{(Optional) Logical indicating whether to turn off
-parsing of phenotype drug names and match exactly on the input strings (default
+\item{force_drug_name}{(Optional) Logical indicating whether to turn off
+parsing of drug names and match exactly on the input strings (default
 \code{FALSE}).}
 
 \item{project_id}{(Optional) Google Cloud Project ID to use for billing. If

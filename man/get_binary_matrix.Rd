@@ -28,9 +28,9 @@ get_binary_matrix(
 
 \item{pheno_drug}{A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the \code{drug} column of \code{pheno_table} or be coercible to a match using \link[AMR:as.ab]{AMR::as.ab}.}
 
-\item{geno_class}{A character vector (optional) of drug classes to filter genotype data for markers related to the specified drug. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with \code{pheno_drug} and uses those (these are printed to screen so the user can see what is being filtered).}
+\item{geno_class}{(Optional) A character vector of drug classes to filter genotype markers. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with \code{pheno_drug} and uses those (these are printed to screen so the user can see what is being filtered).}
 
-\item{geno_drug}{A character vector (optional) of genotype drug names to filter genotype data on the \code{drug} column.}
+\item{geno_drug}{(Optional) A character vector of drug names whose relevant genotype markers should be included.}
 
 \item{keep_SIR}{A logical indicating whether to retain the full S/I/R phenotype column in the output. Defaults to \code{TRUE}.}
 
@@ -38,9 +38,9 @@ get_binary_matrix(
 
 \item{keep_assay_values_from}{A character vector specifying which assay values (e.g., \code{"mic"}, \code{"disk"}) to retain if \code{keep_assay_values} is \code{TRUE}. Defaults to \code{c("mic", "disk")}.}
 
-\item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers.}
+\item{geno_sample_col}{(Optional) A character string specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers.}
 
-\item{pheno_sample_col}{A character string (optional) specifying the column name in \code{pheno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers.}
+\item{pheno_sample_col}{(Optional) A character string specifying the column name in \code{pheno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers.}
 
 \item{sir_col}{A character string specifying the column name in \code{pheno_table} that contains the resistance interpretation (SIR) data. The values should be \code{"S"}, \code{"I"}, \code{"R"} or otherwise interpretable by \code{\link[AMR:as.sir]{AMR::as.sir()}}. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if \code{binary_matrix} not provided.}
 
@@ -54,7 +54,7 @@ get_binary_matrix(
 A data frame where each row represents a sample, and each column represents a genetic marker related to the specified drug's genotype class or drug mapping. The binary values in the matrix indicate the presence (\code{1}) or absence (\code{0}) of each marker for each sample, along with resistance status columns for the specified drug: \code{R} for resistant (defined from \code{sir_col}, 1=R, 0=I/S) and \code{NWT} for nonwildtype (defined by \code{ecoff_col} if provided: 1=NWT, 0=WT; otherwise defined from \code{sir_col}: 1=I/R, 0=S).
 }
 \description{
-This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given phenotype drug, and presence or absence of genetic markers related to one or more specified genotype drug classes or drugs. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified phenotype and genotype drug criteria before creating a binary matrix. Suitable input files can be generated using \code{\link[=import_pheno]{import_pheno()}} to import phenotype data, and \code{\link[=import_amrfp]{import_amrfp()}} to import genotype data from AMRFinderPlus.
+This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given drug, and presence or absence of genetic markers related to one or more specified drugs or classes. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified phenotype and genotype drug criteria before creating a binary matrix. Suitable input files can be generated using \code{\link[=import_pheno]{import_pheno()}} to import phenotype data, and \code{\link[=import_geno]{import_geno()}} to import genotype data from AMRFinderPlus and other genotypers.
 }
 \details{
 This function performs several steps:
@@ -84,7 +84,7 @@ geno_pheno_cip <- get_binary_matrix(
   ecoli_pheno,
   pheno_drug = "Ciprofloxacin",
   geno_class = c("Quinolones"),
-  sir_col = "Resistance phenotype",
+  sir_col = "pheno_provided",
   keep_assay_values = TRUE
 )
 }

@@ -74,8 +74,8 @@
 #' export_ncbi_pheno(ebi_kq, "Kq_NCBI.tsv")
 #' }
 export_ncbi_pheno <- function(data, file = NULL, overwrite = FALSE,
-                            pheno_col = "pheno_provided", guideline = NULL,
-                            vendor = NULL, version = NULL) {
+                              pheno_col = "pheno_provided", guideline = NULL,
+                              vendor = NULL, version = NULL) {
   # --- input validation ---
   if (!is.null(file)) {
     if (file.exists(file) && !overwrite) {
@@ -285,12 +285,12 @@ export_ncbi_pheno <- function(data, file = NULL, overwrite = FALSE,
 #' )
 #' }
 export_ebi_pheno <- function(data,
-                           pheno_col = "pheno_provided",
-                           guideline = NULL,
-                           breakpoint_version = NULL,
-                           submission_account,
-                           domain = "self.ExampleDomain",
-                           output_dir = NULL) {
+                             pheno_col = "pheno_provided",
+                             guideline = NULL,
+                             breakpoint_version = NULL,
+                             submission_account,
+                             domain = "self.ExampleDomain",
+                             output_dir = NULL) {
   # --- input validation ---
   required <- c("id", "drug", pheno_col, "spp_pheno")
   missing_req <- setdiff(required, colnames(data))

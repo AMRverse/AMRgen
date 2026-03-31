@@ -59,22 +59,22 @@
 #' )
 #' }
 format_pheno <- function(input,
-                       sample_col = "id",
-                       species = NULL, # convert with as.mo
-                       species_col = "spp_pheno", # convert with as.mo
-                       ab = NULL, # convert with as.ab
-                       ab_col = "drug", # convert with as.ab
-                       mic_col = "mic", # convert with as.mic
-                       disk_col = "disk", # convert with as.disk
-                       pheno_cols = c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided"), # convert with as.sir
-                       method_col = "method",
-                       platform_col = "platform",
-                       source_col = "source",
-                       guideline_col = "guideline",
-                       interpret_eucast = FALSE,
-                       interpret_clsi = FALSE,
-                       interpret_ecoff = FALSE,
-                       rename_cols = TRUE) {
+                         sample_col = "id",
+                         species = NULL, # convert with as.mo
+                         species_col = "spp_pheno", # convert with as.mo
+                         ab = NULL, # convert with as.ab
+                         ab_col = "drug", # convert with as.ab
+                         mic_col = "mic", # convert with as.mic
+                         disk_col = "disk", # convert with as.disk
+                         pheno_cols = c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided"), # convert with as.sir
+                         method_col = "method",
+                         platform_col = "platform",
+                         source_col = "source",
+                         guideline_col = "guideline",
+                         interpret_eucast = FALSE,
+                         interpret_clsi = FALSE,
+                         interpret_ecoff = FALSE,
+                         rename_cols = TRUE) {
   ast <- process_input(input)
 
   if (!is.null(species)) {
@@ -453,7 +453,7 @@ interpret_pheno <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE
 #' pheno <- import_ncbi_pheno(ecoli_pheno_raw, interpret_eucast = TRUE, interpret_ecoff = TRUE)
 #' head(pheno)
 import_ncbi_pheno <- function(input, sample_col = "BioSample", source = NULL, species = NULL, ab = NULL,
-                            interpret_eucast = FALSE, interpret_clsi = FALSE, interpret_ecoff = FALSE) {
+                              interpret_eucast = FALSE, interpret_clsi = FALSE, interpret_ecoff = FALSE) {
   ast <- process_input(input)
 
   # find id column
@@ -702,7 +702,7 @@ import_ncbi_biosample <- function(input,
 #' head(pheno)
 #' }
 import_ebi_pheno <- function(input, sample_col = "phenotype-BioSample_ID", source = NULL, species = NULL, ab = NULL,
-                           interpret_eucast = FALSE, interpret_clsi = FALSE, interpret_ecoff = FALSE) {
+                             interpret_eucast = FALSE, interpret_clsi = FALSE, interpret_ecoff = FALSE) {
   ast <- process_input(input)
 
   # find id column
@@ -817,9 +817,9 @@ import_ebi_pheno <- function(input, sample_col = "phenotype-BioSample_ID", sourc
 #' pheno_salmonella <- import_ebi_pheno_ftp(pheno_salmonella)
 #' }
 import_ebi_pheno_ftp <- function(input,
-                               interpret_eucast = FALSE,
-                               interpret_clsi = FALSE,
-                               interpret_ecoff = FALSE) {
+                                 interpret_eucast = FALSE,
+                                 interpret_clsi = FALSE,
+                                 interpret_ecoff = FALSE) {
   ast <- process_input(input)
 
   ast <- ast %>%
@@ -877,16 +877,16 @@ import_ebi_pheno_ftp <- function(input,
 #' @return Standardised AST data frame
 #' @export
 import_vitek_pheno <- function(input,
-                             sample_col = "Lab ID",
-                             source = NULL,
-                             species = NULL,
-                             ab = NULL,
-                             instrument_guideline = NULL,
-                             use_expertized = TRUE,
-                             interpret_eucast = FALSE,
-                             interpret_clsi = FALSE,
-                             interpret_ecoff = FALSE,
-                             include_dates = TRUE) {
+                               sample_col = "Lab ID",
+                               source = NULL,
+                               species = NULL,
+                               ab = NULL,
+                               instrument_guideline = NULL,
+                               use_expertized = TRUE,
+                               interpret_eucast = FALSE,
+                               interpret_clsi = FALSE,
+                               interpret_ecoff = FALSE,
+                               include_dates = TRUE) {
   ast <- process_input(input)
 
   # Validate sample column exists
@@ -1092,14 +1092,14 @@ import_vitek_pheno <- function(input,
 #' @return Standardised AST data frame
 #' @export
 import_microscan_pheno <- function(input,
-                                 sample_col = NULL,
-                                 source = NULL,
-                                 species = NULL,
-                                 ab = NULL,
-                                 instrument_guideline = NULL,
-                                 interpret_eucast = FALSE,
-                                 interpret_clsi = FALSE,
-                                 interpret_ecoff = FALSE) {
+                                   sample_col = NULL,
+                                   source = NULL,
+                                   species = NULL,
+                                   ab = NULL,
+                                   instrument_guideline = NULL,
+                                   interpret_eucast = FALSE,
+                                   interpret_clsi = FALSE,
+                                   interpret_ecoff = FALSE) {
   # MicroScan files may have .txt extension but be comma-separated
   # Try process_input first, fall back to read_csv if only 1 column detected
   ast <- process_input(input)
@@ -1344,14 +1344,14 @@ import_microscan_pheno <- function(input,
 #' @return Standardised AST data frame
 #' @export
 import_sensititre_pheno <- function(input,
-                                  source = NULL,
-                                  species = NULL,
-                                  ab = NULL,
-                                  instrument_guideline = NULL,
-                                  id_col = 7,
-                                  interpret_eucast = FALSE,
-                                  interpret_clsi = FALSE,
-                                  interpret_ecoff = FALSE) {
+                                    source = NULL,
+                                    species = NULL,
+                                    ab = NULL,
+                                    instrument_guideline = NULL,
+                                    id_col = 7,
+                                    interpret_eucast = FALSE,
+                                    interpret_clsi = FALSE,
+                                    interpret_ecoff = FALSE) {
   # Sensititre files may be UTF-16LE encoded; tab- or comma-separated; no header row
   # Cannot use process_input() - needs custom reading
   if (!is.character(input) || !file.exists(input)) {
@@ -1588,14 +1588,14 @@ import_sensititre_pheno <- function(input,
 #' }
 #' @export
 import_whonet_pheno <- function(input,
-                              sample_col = NULL,
-                              source = NULL,
-                              species = NULL,
-                              ab = NULL,
-                              interpret_eucast = FALSE,
-                              interpret_clsi = FALSE,
-                              interpret_ecoff = FALSE,
-                              include_patient_info = FALSE) {
+                                sample_col = NULL,
+                                source = NULL,
+                                species = NULL,
+                                ab = NULL,
+                                interpret_eucast = FALSE,
+                                interpret_clsi = FALSE,
+                                interpret_ecoff = FALSE,
+                                include_patient_info = FALSE) {
   ast <- process_input(input)
 
   # Auto-detect or validate sample column
@@ -1908,19 +1908,19 @@ import_whonet_pheno <- function(input,
 #' )
 #' }
 import_phoenix_pheno <- function(input,
-                               sample_col = NULL,
-                               drug_col = NULL,
-                               mic_col = NULL,
-                               sir_col = NULL,
-                               species_col = NULL,
-                               species = NULL,
-                               ab = NULL,
-                               use_expertized = TRUE,
-                               source = NULL,
-                               instrument_guideline = NULL,
-                               interpret_eucast = FALSE,
-                               interpret_clsi = FALSE,
-                               interpret_ecoff = FALSE) {
+                                 sample_col = NULL,
+                                 drug_col = NULL,
+                                 mic_col = NULL,
+                                 sir_col = NULL,
+                                 species_col = NULL,
+                                 species = NULL,
+                                 ab = NULL,
+                                 use_expertized = TRUE,
+                                 source = NULL,
+                                 instrument_guideline = NULL,
+                                 interpret_eucast = FALSE,
+                                 interpret_clsi = FALSE,
+                                 interpret_ecoff = FALSE) {
   is_file <- is.character(input) && file.exists(input)
   ext <- if (is_file) tolower(tools::file_ext(input)) else NULL
 

@@ -105,15 +105,15 @@
 #' @importFrom stringr str_trim
 #' @export
 download_ncbi_pheno <- function(species,
-                              pheno_drug = NULL,
-                              max_records = 15000,
-                              batch_size = 200,
-                              sleep_time = 0.34,
-                              force_drug_name = FALSE,
-                              reformat = FALSE,
-                              interpret_eucast = FALSE,
-                              interpret_clsi = FALSE,
-                              interpret_ecoff = FALSE) {
+                                pheno_drug = NULL,
+                                max_records = 15000,
+                                batch_size = 200,
+                                sleep_time = 0.34,
+                                force_drug_name = FALSE,
+                                reformat = FALSE,
+                                interpret_eucast = FALSE,
+                                interpret_clsi = FALSE,
+                                interpret_ecoff = FALSE) {
   if (is.null(species)) {
     stop("`species` must be provided.")
   }

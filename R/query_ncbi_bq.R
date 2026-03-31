@@ -54,9 +54,9 @@
 #' pheno <- import_ncbi_pheno(pheno_raw, interpret_clsi = TRUE)
 #' }
 query_ncbi_bq_pheno <- function(taxgroup,
-                              pheno_drug = NULL,
-                              force_drug_name = FALSE,
-                              project_id = NULL) {
+                                pheno_drug = NULL,
+                                force_drug_name = FALSE,
+                                project_id = NULL) {
   if (missing(taxgroup)) stop("Argument 'taxgroup' is required.")
 
   project_id <- get_bq_project_id(project_id)

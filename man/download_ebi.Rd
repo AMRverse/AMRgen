@@ -7,7 +7,7 @@
 download_ebi(
   data = "phenotype",
   pheno_drug = NULL,
-  force_pheno_drug = FALSE,
+  force_drug_name = FALSE,
   genus = NULL,
   species = NULL,
   geno_subclass = NULL,
@@ -24,19 +24,19 @@ download_ebi(
 \arguments{
 \item{data}{String specifying the type of data to download, either "phenotype" or "genotype" (default "phenotype").}
 
-\item{pheno_drug}{(Optional) String (or vector of strings) specifying the phenotype drug name/s to filter on (default \code{NULL}). Uses the AMR package to try to fix typos, and format to lower-case for EBI files. Only used if \code{data} = \code{"phenotype"}.}
+\item{pheno_drug}{(Optional) String (or vector of strings) specifying the drug name/s to filter phenotype data (default \code{NULL}). Uses the AMR package to try to fix typos, and format to lower-case for EBI files. Only used if \code{data} = \code{"phenotype"}.}
 
-\item{force_pheno_drug}{(Optional) Logical indicating whether to turn off parsing of phenotype drug names and match exactly on the input strings (default \code{FALSE}).}
+\item{force_drug_name}{(Optional) Logical indicating whether to turn off parsing of drug names and match exactly on the input strings (default \code{FALSE}).}
 
 \item{genus}{(Optional) String specifying a bacterial genus to filter on (default NULL, will pull all taxa).}
 
 \item{species}{(Optional) String specifying a bacterial species to filter on (default NULL, will pull all taxa). Not used if genus is specified.}
 
-\item{geno_subclass}{(Optional) String specifying an antibiotic subclass to filter genotype data on (default NULL). Filter is based on string match, not identity, so e.g. subclass="TRIMETHOPRIM" will return all rows where the string "TRIMETHOPRIM" is included in the subclass field. Only used if \code{data}="genotype". Check \href{https://github.com/ncbi/amr/wiki/class-subclass}{NCBI AMR Class-Subclass Reference} for valid terms.}
+\item{geno_subclass}{(Optional) String specifying an antibiotic subclass to filter genotype data on (default \code{NULL}). Filter is based on string match, not identity, so e.g. subclass="TRIMETHOPRIM" will return all rows where the string "TRIMETHOPRIM" is included in the subclass field. Only used if \code{data}="genotype". Check \href{https://github.com/ncbi/amr/wiki/class-subclass}{NCBI AMR Class-Subclass Reference} for valid terms.}
 
-\item{geno_class}{(Optional) String specifying an antibiotic subclass to filter genotype data on (default NULL). Filter is based on string match, not identity, so e.g. class="TRIMETHOPRIM" will return all rows where the string "TRIMETHOPRIM" is included in the class field. Only used if \code{data}="genotype" and subclass is not specified. Check \href{https://github.com/ncbi/amr/wiki/class-subclass}{NCBI AMR Class-Subclass Reference} for valid terms.}
+\item{geno_class}{(Optional) String specifying an antibiotic subclass to filter genotype data on (default \verb{NULL``). Filter is based on string match, not identity, so e.g. class="TRIMETHOPRIM" will return all rows where the string "TRIMETHOPRIM" is included in the class field. Only used if }data`="genotype" and subclass is not specified. Check \href{https://github.com/ncbi/amr/wiki/class-subclass}{NCBI AMR Class-Subclass Reference} for valid terms.}
 
-\item{geno_drug}{(Optional) String (or vector of strings) specifying the genotype drug name/s to filter on (default \code{NULL}). Filter is based on the EBI \code{antibiotic_name} field and is only used if \code{data} = \code{"genotype"} and neither \code{geno_subclass} nor \code{geno_class} is specified.}
+\item{geno_drug}{(Optional) String (or vector of strings) specifying the drug name/s to filter on (default \code{NULL}). Filter is based on valid CARD terms in the EBI \code{antibiotic_name} field and is only used if \code{data} = \code{"genotype"} and neither \code{geno_subclass} nor \code{geno_class} is specified.}
 
 \item{remove_dup}{(Optional) Logical specifying whether to clean up genotype data by removing duplicates for the same hit (default FALSE). Where a detected gene is associated with a subclass value that is actually a list of multiple drugs/classes, e.g. subclass="GENTAMICIN/TOBRAMYCIN", the EBI data table will have duplicate rows for the same gene hit, but with different values for the \code{antibiotic_name} and associated \code{antibiotic_ontology} and \code{antibiotic_ontology_link} annotation fields (e.g. one row each for gentamicin and tobramycin). To remove these duplicate rows (and the drug-specific annotation fields) and return only one row per hit (i.e. restoring AMRFinderPlus output format), set this to \code{TRUE}.}
 

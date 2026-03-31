@@ -16,7 +16,7 @@
 
 #' Perform Solo PPV Analysis for AMR Markers
 #'
-#' This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given phenotype drug and genotype marker filter. It calculates the PPV for solo markers and visualises the results using various plots.
+#' This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given drug and genotype marker filter. It calculates the PPV for solo markers and visualises the results using various plots.
 #' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `pheno_drug`, and optionally `geno_class`, `geno_drug`, `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
 #' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_pheno()]. Only used if `binary_matrix` not provided.

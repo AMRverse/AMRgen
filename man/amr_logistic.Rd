@@ -28,11 +28,11 @@ amr_logistic(
 
 \item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_pheno]{import_pheno()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{pheno_drug}{(Required if \code{binary_matrix} not provided) A character string specifying the phenotype drug of interest to filter phenotype data. The value must match one of the entries in the \code{drug} column of \code{pheno_table}. Only used if \code{binary_matrix} not provided.}
+\item{pheno_drug}{(Required if \code{binary_matrix} not provided) A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the \code{drug} column of \code{pheno_table} or be coercible to a match using \link[AMR:as.ab]{AMR::as.ab}.}
 
-\item{geno_class}{(Optional if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype data for related markers. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. Use \code{geno_drug} instead if you want to filter genotype rows directly by their \code{drug} field.}
+\item{geno_class}{(Optional if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype markers. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with \code{pheno_drug} and uses those (these are printed to screen so the user can see what is being filtered).}
 
-\item{geno_drug}{(Optional if \code{binary_matrix} not provided) A character vector of drug identifiers to filter genotype data by the \code{drug} column.}
+\item{geno_drug}{(Optional if \code{binary_matrix} not provided) A character vector of drug names whose relevant genotype markers should be included.}
 
 \item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
 
@@ -68,7 +68,7 @@ A list with the following components:
 }
 }
 \description{
-Performs logistic regression to analyse the relationship between genetic markers and phenotype (R, and NWT) for a specified phenotype drug.
+Performs logistic regression to analyse the relationship between genetic markers and phenotype (R, and NWT) for a specified drug.
 }
 \examples{
 # Example usage of the amr_logistic function

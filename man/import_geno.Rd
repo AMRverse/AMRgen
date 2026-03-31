@@ -30,7 +30,7 @@ A data frame with the processed genotype data, with harmonised gene names, mappe
 \item \code{mutation}: The mutation detected within the gene, converted to \href{https://hgvs-nomenclature.org/stable/}{HGVS nomenclature} syntax (e.g. \code{Ser83Phe}) (\code{character}).
 \item \code{node}: (for AMRFinderPlus input only) The node in the NCBI reference gene hierarchy corresponding to the gene (\code{character}).
 \item \code{drug_class}: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (\code{character}).
-\item \code{drug_agent}: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
+\item \code{drug}: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
 \item \verb{variation type}: (for AMRFinderPlus, ABRicate, or Kleborate results) Type of variation, e.g. \verb{Gene presence detected}, \verb{Protein variant detected}, \verb{Nucleotide variant detected}, \verb{Inactivating mutation detected}, \verb{Promoter variant detected}.
 ... Other fields specific to the input file
 }

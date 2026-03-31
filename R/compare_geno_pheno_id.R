@@ -32,9 +32,9 @@
 #' @export
 #' @examples
 #' geno_table <- import_amrfp(ecoli_geno_raw)
-#' head(ecoli_ast)
+#' head(ecoli_pheno)
 #' result <- compare_geno_pheno_id(geno_table,
-#'   ecoli_ast,
+#'   ecoli_pheno,
 #'   geno_sample_col = "id",
 #'   pheno_sample_col = "id"
 #' )

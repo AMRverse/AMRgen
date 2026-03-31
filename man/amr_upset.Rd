@@ -11,8 +11,9 @@ amr_upset(
   order = "value",
   geno_table,
   pheno_table,
-  antibiotic = NULL,
-  drug_class_list = NULL,
+  pheno_drug = NULL,
+  geno_class = NULL,
+  geno_drug = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = NULL,
@@ -33,7 +34,7 @@ amr_upset(
 )
 }
 \arguments{
-\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{antibiotic}, \code{drug_class_list} and optionally \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
+\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{pheno_drug}, and optionally \code{geno_class}, \code{geno_drug}, \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
 
 \item{assay}{A character string indicating whether to plot MIC or disk diffusion data. Must be one of:
 \itemize{
@@ -53,11 +54,13 @@ amr_upset(
 
 \item{geno_table}{(Required if \code{binary_matrix} not provided) A data frame containing genotype data, formatted with \code{\link[=import_amrfp]{import_amrfp()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_ast]{import_ast()}}. Only used if \code{binary_matrix} not provided.}
+\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_pheno]{import_pheno()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{antibiotic}{Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.}
+\item{pheno_drug}{Optional. Phenotype drug used to retrieve clinical breakpoints for annotation of the assay distribution plot.}
 
-\item{drug_class_list}{(Only relevant if \code{binary_matrix} not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).}
+\item{geno_class}{(Optional if \code{binary_matrix} not provided) A character vector of genotype drug classes used to filter markers in \code{geno_table}.}
+
+\item{geno_drug}{(Optional if \code{binary_matrix} not provided) A character vector of genotype drug identifiers used to filter \code{geno_table} by its \code{drug} column.}
 
 \item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
 
@@ -111,9 +114,9 @@ ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 # Generate binary matrix
 binary_matrix <- get_binary_matrix(
   geno_table = ecoli_geno,
-  pheno_table = ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  pheno_table = ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   sir_col = "pheno_clsi",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -126,8 +129,8 @@ cip_mic_upset <- amr_upset(binary_matrix, assay = "mic")
 cip_mic_upset <- amr_upset(
   assay = "mic",
   geno_table = ecoli_geno,
-  pheno_table = ecoli_ast,
-  antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
   sir_col = "pheno_clsi"
 )
 }

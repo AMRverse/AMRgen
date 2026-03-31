@@ -34,15 +34,15 @@ library(dplyr)
 ## Option 1: Download data from NCBI
 
 ### Option 1a: Download AST data from NCBI via rentrez
-The `download_ncbi_ast()` function lets you download antibiogram data from NCBI via their 'EUtils' API using the rentrez R pacakge. You must specify a species, and can optionally limit the download to one or more specific drugs. The function can also re-format the data into an AMRgen phenotype table, and re-interpret phenotypes against clinical breakpoints from EUCAST or CLSI. 
+The `download_ncbi_pheno()` function lets you download antibiogram data from NCBI via their 'EUtils' API using the rentrez R pacakge. You must specify a species, and can optionally limit the download to one or more specific drugs. The function can also re-format the data into an AMRgen phenotype table, and re-interpret phenotypes against clinical breakpoints from EUCAST or CLSI. 
 
 This function is quite slow, especially for organisms with many BioSamples to search through, but it is free and requires no authentication to use. Alternatively, you may prefer to try the BigQuery functions below (Option 1b), which provide more efficient and complete access to NCBI data but require authentication via a Google Cloud account.
 
 ``` {r download_ncbi_data_realnotrun, eval=F}
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline, and re-interpret with EUCAST breakpoints
-staph_ast_ncbi <- download_ncbi_ast(
+staph_pheno_ncbi <- download_ncbi_pheno(
   species = "Staphylococcus aureus",
-  antibiotic = c("amikacin", "DOX"), # antibiotics can be listed in short or long form
+  pheno_drug = c("amikacin", "DOX"), # antibiotics can be listed in short or long form
   reformat = TRUE,
   interpret_eucast = TRUE
 ) # reformat must be true to use interpret_* argument
@@ -50,34 +50,34 @@ staph_ast_ncbi <- download_ncbi_ast(
 
 ``` {r download_ncbi_data_dummy}
 # check how many samples retrieved
-nrow(staph_ast_ncbi)
+nrow(staph_pheno_ncbi)
 
 # check the output
-head(staph_ast_ncbi)
+head(staph_pheno_ncbi)
 ```
 
 ``` {r download_ncbi_dataraw_realnotrun, eval=F}
 # This is the same as downloading the data then re-interpreting it separately:
-staph_ast_ncbi_raw <- download_ncbi_ast(
+staph_pheno_ncbi_raw <- download_ncbi_pheno(
   species = "Staphylococcus aureus",
-  antibiotic = c("amikacin", "DOX"),
+  pheno_drug = c("amikacin", "DOX"),
   reformat = FALSE,
   interpret_eucast = FALSE
 )
 ```
 
 ``` {r download_ncbi_dataraw_dummy}
-head(staph_ast_ncbi_raw)
+head(staph_pheno_ncbi_raw)
 
-# Then reformat and re-interpret using EUCAST and CLSI breakpoints, and ECOFFs using the import_ncbi_biosample() function
-staph_ast_ncbi2 <- import_ncbi_biosample(
-  input = staph_ast_ncbi_raw,
+# Then reformat and re-interpret using EUCAST and CLSI breakpoints, and ECOFFs using the import_ncbi_pheno() function
+staph_pheno_ncbi2 <- import_ncbi_biosample(
+  input = staph_pheno_ncbi_raw,
   interpret_clsi = TRUE,
   interpret_eucast = TRUE,
   interpret_ecoff = TRUE
 )
 
-head(staph_ast_ncbi2)
+head(staph_pheno_ncbi2)
 
 # Note that when there is a mix of MIC and disk data, a separate _disk and _mic interpretation column, as well as an overall phenotype column, is produced for each interpretation.
 ```
@@ -88,7 +88,7 @@ Consider altering the `max_records`, `batch_size`  or `sleep_time` options if yo
 ### Option 1b: Download AST and genotype data from NCBI via bigrquery
 NCBI data can be accessed via Google Cloud BigQuery. This requires a Google Cloud account. For more information about using BigQuery to explore NCBI Pathogen Detection data see [https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/](https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/). 
 
-The `query_ncbi_bq_ast()` function lets you download antibiogram data from NCBI via Google Cloud BigQuery using the bigrquery R pacakge. You must specify a species, and can optionally limit the download to one or more specific drugs. The function can also re-format the data into an AMRgen phenotype table, and re-interpret phenotypes against clinical breakpoints from EUCAST or CLSI. 
+The `query_ncbi_bq_pheno()` function lets you download antibiogram data from NCBI via Google Cloud BigQuery using the bigrquery R pacakge. You must specify a species, and can optionally limit the download to one or more specific drugs. The function can also re-format the data into an AMRgen phenotype table, and re-interpret phenotypes against clinical breakpoints from EUCAST or CLSI. 
 
 This function is fast but requires authentication via a [Google Cloud account](https://docs.cloud.google.com/docs/get-started) and may require payment. Free trial accounts can be set up, but require credit card authorisation. Google currently provides enough free tier usage for >150 different queries for genotype data per month. To use this you will also need to install the `bigrquery` package and authorize it to use your Google cloud account.
 
@@ -102,16 +102,16 @@ bigrquery::bq_auth()
 ``` {r download_ncbi_ast_bigquery, eval=F}
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline
 # NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
-staph_ast_ncbi_cloud_raw <- query_ncbi_bq_ast(
+staph_pheno_ncbi_cloud_raw <- query_ncbi_bq_pheno(
   taxgroup = "Staphylococcus aureus",
-  antibiotic = c("amikacin", "DOX")
+  pheno_drug = c("amikacin", "DOX")
 )
 ```
 
 ``` {r download_ncbi_ast_bigquery_dummy}
 # Import and reinterpret using CLSI breakpoints
 # NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
-staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi = TRUE)
+staph_pheno_ncbi_cloud <- import_ncbi_pheno(staph_pheno_ncbi_cloud_raw, interpret_clsi = TRUE)
 ```
 
 #### To download genotype data
@@ -127,7 +127,7 @@ Not all NCBI genotype results are updated with each new release of AMRFinderPlus
 staph_geno_ncbi_cloud_raw <- query_ncbi_bq_geno(
   taxgroup = "Staphylococcus aureus",
   geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE")
-) %>% filter(biosample_acc %in% staph_ast_ncbi_cloud_raw$BioSample)
+) %>% filter(biosample_acc %in% staph_pheno_ncbi_cloud_raw$BioSample)
 ```
 
 ``` {r download_ncbi_geno_bigquery_dummy}
@@ -147,8 +147,8 @@ staph_geno_ncbi_cloud
 
 # Doxycycline
 staph_dox_mic_plot <- assay_by_var(
-  pheno_table = staph_ast_ncbi,
-  antibiotic = c("DOX"),
+  pheno_table = staph_pheno_ncbi,
+  pheno_drug = c("DOX"),
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Staphylococcus aureus",
@@ -161,8 +161,8 @@ staph_dox_mic_plot
 ``` {r assay_by_var_staph_ami}
 # Amikacin
 staph_ami_mic_plot <- assay_by_var(
-  pheno_table = staph_ast_ncbi,
-  antibiotic = c("amikacin"),
+  pheno_table = staph_pheno_ncbi,
+  pheno_drug = c("amikacin"),
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Staphylococcus aureus",
@@ -181,9 +181,9 @@ Note that while NCBI and EBI AST databases have a lot of overlapping content, th
 
 ``` {r download_ebi_ast_realnotrun, eval=F}
 # Download EBI phenotype data for all Staphylococcus, using the same example drugs as above. Reformat and re-interpret using EUCAST breakpoints
-staph_ast_ebi <- download_ebi(
+staph_pheno_ebi <- download_ebi(
   genus = "Staphylococcus",
-  antibiotic = c("amikacin", "DOX"),
+  pheno_drug = c("amikacin", "DOX"),
   reformat = TRUE,
   interpret_eucast = TRUE,
   interpret_clsi = TRUE,
@@ -193,11 +193,11 @@ staph_ast_ebi <- download_ebi(
 
 ``` {r download_ebi_ast_dummy}
 # check output
-nrow(staph_ast_ebi)
+nrow(staph_pheno_ebi)
 
-length(unique(staph_ast_ebi$id))
+length(unique(staph_pheno_ebi$id))
 
-head(staph_ast_ebi)
+head(staph_pheno_ebi)
 ```
 
 Genotype data can be retrieved from EBI using the same function. Currently, not all samples in the EBI AMR portal have both AST and genotype data.
@@ -227,7 +227,7 @@ The downloaded phenotype and genotype data for a specified antibiotic can then b
 ```{r get_binary_matrix}
 # first filter both EBI pheno and geno dataframes for Staph aureus only
 # filter pheno data
-staph_ast_ebi_filtered <- staph_ast_ebi %>%
+staph_pheno_ebi_filtered <- staph_pheno_ebi %>%
   filter(organism == "Staphylococcus aureus")
 
 # filter geno data
@@ -237,9 +237,9 @@ staph_geno_ebi_filtered <- staph_geno_ebi %>%
 # Make binary geno-pheno matrix for doxycycline phenotype (re-interpreted with EUCAST), and genotypes associated with the associated drug class (Tetracyclines)
 tet_bin <- get_binary_matrix(
   geno_table = staph_geno_ebi_filtered,
-  pheno_table = staph_ast_ebi_filtered,
-  antibiotic = "DOX",
-  drug_class_list = "Tetracyclines", # matches drug_class in geno_table
+  pheno_table = staph_pheno_ebi_filtered,
+  pheno_drug = "DOX",
+  geno_class = "Tetracyclines", # matches drug_class in geno_table
   sir_col = "pheno_eucast", # phenotype column in pheno_table
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -256,7 +256,7 @@ tet_ppv <- ppv(tet_bin)
 
 tet_ppv$plot
 ```
-This produces a binary matrix with 1 row per BioSample, for all BioSamples that had both phenotype data for doxycycline in `staph_ast_ebi_filtered` AND any genotype data (associated with any marker, not just Tetracyclines) in `staph_geno_ebi_filtered`. This ensures that we include samples for which genotyping was performed but returned no hits associated with Tetracyclines, not just those samples that had tetracycline associated markers detected (note that such samples would be missing if we had only downloaded genotype data associated with Tetracyclines).
+This produces a binary matrix with 1 row per BioSample, for all BioSamples that had both phenotype data for doxycycline in `staph_pheno_ebi_filtered` AND any genotype data (associated with any marker, not just Tetracyclines) in `staph_geno_ebi_filtered`. This ensures that we include samples for which genotyping was performed but returned no hits associated with Tetracyclines, not just those samples that had tetracycline associated markers detected (note that such samples would be missing if we had only downloaded genotype data associated with Tetracyclines).
 
 Columns indicate the input phenotype columns for doxycycline (renamed to standard fields `pheno`, `ecoff`, `mic`), and binary indicators (1=present, 0=absent) for doxycycline phenotypes (`R`, `NWT`) and each genotype marker associated with tetracyclines (in this case `tet(38)`, `tet(K)`, `tet(M)`,`tet(L)`).
 

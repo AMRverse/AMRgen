@@ -33,7 +33,7 @@ A data frame with the processed genotype data, with harmonised gene names, mappe
 \item \code{marker}: The name of the genotype marker, as it appears in the \code{GENE} column of the input file (\code{character}).
 \item \code{gene}: The name of the gene product, as it appears in the \code{PRODUCT} column of the input file (\code{character}).
 \item \code{drug_class}: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, parsed from the \code{RESISTANCE} column of the input file which depends on the database that ABRicate was run with (\code{character}).
-\item \code{drug_agent}: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg, parsed from the \code{RESISTANCE} column of the input file (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
+\item \code{drug}: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg, parsed from the \code{RESISTANCE} column of the input file (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
 \item \verb{variation type}: Type of variation, i.e. \verb{Gene presence detected}, as ABRicate only detects presence/absence of genes in the query database.
 ... Other fields specific to the input file
 }

@@ -37,7 +37,7 @@
 #' @param bp_S (optional) S breakpoint to add to plot (numerical).
 #' @param bp_R (optional) R breakpoint to add to plot (numerical).
 #' @param ecoff_bp (optional) ECOFF breakpoint to add to plot (numerical).
-#' @param antibiotic Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.
+#' @param pheno_drug Optional. Drug name used to retrieve clinical breakpoints for annotation of the assay distribution plot.
 #' @param species Optional. Species name used for breakpoint lookup.
 #' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
@@ -69,9 +69,9 @@
 #'
 #' binary_matrix <- get_binary_matrix(
 #'   geno_table = ecoli_geno,
-#'   pheno_table = ecoli_ast,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
+#'   pheno_table = ecoli_pheno,
+#'   pheno_drug = "Ciprofloxacin",
+#'   geno_class = c("Quinolones"),
 #'   sir_col = "pheno_clsi",
 #'   keep_assay_values = TRUE,
 #'   keep_assay_values_from = "mic"
@@ -86,7 +86,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
                         SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
                         boxplot_col = "grey",
                         colours_ppv = c("R" = "maroon", "NWT" = "navy"),
-                        antibiotic = NULL, species = NULL, bp_site = NULL,
+                        pheno_drug = NULL, species = NULL, bp_site = NULL,
                         guideline = "EUCAST 2025",
                         bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
                         pd = position_dodge(width = 0.8)) {
@@ -397,15 +397,15 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
     }
 
     # if species and antibiotic are provided, but breakpoints aren't, check breakpoints to annotate plot
-    if (!is.null(species) & !is.null(antibiotic) & (is.null(bp_S) | is.null(bp_R) | is.null(ecoff_bp))) {
+    if (!is.null(species) & !is.null(pheno_drug) & (is.null(bp_S) | is.null(bp_R) | is.null(ecoff_bp))) {
       if (is.null(ecoff_bp)) {
-        ecoff_bp <- safe_execute(getBreakpoints(species = as.mo(species), guide = "EUCAST 2025", antibiotic = as.ab(antibiotic), "ECOFF") %>% filter(method == toupper(assay)) %>% pull(breakpoint_S))
+        ecoff_bp <- safe_execute(getBreakpoints(species = as.mo(species), guide = "EUCAST 2025", antibiotic = as.ab(pheno_drug), "ECOFF") %>% filter(method == toupper(assay)) %>% pull(breakpoint_S))
       }
       if (is.null(bp_S)) {
-        bp_S <- safe_execute(unlist(checkBreakpoints(species = as.mo(species), guide = guideline, antibiotic = as.ab(antibiotic), bp_site = bp_site, assay = toupper(assay))[1]))
+        bp_S <- safe_execute(unlist(checkBreakpoints(species = as.mo(species), guide = guideline, antibiotic = as.ab(pheno_drug), bp_site = bp_site, assay = toupper(assay))[1]))
       }
       if (is.null(bp_R)) {
-        bp_R <- safe_execute(unlist(checkBreakpoints(species = as.mo(species), guide = guideline, antibiotic = as.ab(antibiotic), bp_site = bp_site, assay = toupper(assay))[2]))
+        bp_R <- safe_execute(unlist(checkBreakpoints(species = as.mo(species), guide = guideline, antibiotic = as.ab(pheno_drug), bp_site = bp_site, assay = toupper(assay))[2]))
       }
     }
 
@@ -508,7 +508,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' Generate Upset Plot
 #'
 #' This function generates an upset plot showing summaries of phenotype results (assay distributions, phenotype category percentages, and/or predictive value for phenotype) for each combination of markers observed in the data.
-#' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
+#' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `pheno_drug`, and optionally `geno_class`, `geno_drug`, `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
 #' @param assay A character string indicating whether to plot MIC or disk diffusion data. Must be one of:
 #' - `"mic"`: plot MIC data stored in column `mic`
 #' - `"disk"`: plot disk diffusion data stored in column `disk`
@@ -519,11 +519,12 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' - `"value" (default)`: order by the median assay value (MIC or disk zone) for each combination
 #' - `"ppv"`: order by the PPV estimated for each combination
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
-#' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_ast()]. Only used if `binary_matrix` not provided.
-#' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the `drug_agent` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.
-#' @param drug_class_list (Only relevant if `binary_matrix` not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
-#' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
-#' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
+#' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_pheno()]. Only used if `binary_matrix` not provided.
+#' @param pheno_drug (Required if `binary_matrix` not provided) A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the `drug` column of `pheno_table` or be coercible to a match using [as.ab].
+#' @param geno_class (Optional if `binary_matrix` not provided) A character vector of drug classes to filter genotype markers. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with `pheno_drug` and uses those (these are printed to screen so the user can see what is being filtered).
+#' @param geno_drug (Optional if `binary_matrix` not provided) A character vector of drug names whose relevant genotype markers should be included.
+#' @param geno_sample_col (Optional) A character string specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
+#' @param pheno_sample_col (Optional) A character string specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
 #' @param ecoff_col A character string specifying the column name in `pheno_table` that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Default `"marker"`. Only used if `binary_matrix` not provided.
@@ -533,10 +534,9 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' @param print_category_counts Logical indicating whether, if `plot_category=TRUE`, to print the number of strains in each resistance category for each marker combination in the plot. Default is `FALSE`.
 #' @param boxplot_col Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is `"grey"`.
 #' @param SIR_col A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., `"R"`, `"I"`, `"S"`), and the values should be valid colour names or hexadecimal colour codes. Default values are those used in the AMR package [scale_colour_sir()].
-#' @param bp_S (optional) S breakpoint to add to plot (numerical).
-#' @param bp_R (optional) R breakpoint to add to plot (numerical).
-#' @param ecoff_bp (optional) ECOFF breakpoint to add to plot (numerical).
-#' @param antibiotic Optional. Antibiotic name used to retrieve clinical breakpoints for annotation of the assay distribution plot.
+#' @param bp_S (Optional) S breakpoint to add to plot (numerical).
+#' @param bp_R (Optional) R breakpoint to add to plot (numerical).
+#' @param ecoff_bp (Optional) ECOFF breakpoint to add to plot (numerical).
 #' @param species Optional. Species name used for breakpoint lookup.
 #' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
@@ -554,9 +554,9 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' # Generate binary matrix
 #' binary_matrix <- get_binary_matrix(
 #'   geno_table = ecoli_geno,
-#'   pheno_table = ecoli_ast,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
+#'   pheno_table = ecoli_pheno,
+#'   pheno_drug = "Ciprofloxacin",
+#'   geno_class = c("Quinolones"),
 #'   sir_col = "pheno_clsi",
 #'   keep_assay_values = TRUE,
 #'   keep_assay_values_from = "mic"
@@ -569,16 +569,17 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' cip_mic_upset <- amr_upset(
 #'   assay = "mic",
 #'   geno_table = ecoli_geno,
-#'   pheno_table = ecoli_ast,
-#'   antibiotic = "Ciprofloxacin",
+#'   pheno_table = ecoli_pheno,
+#'   pheno_drug = "Ciprofloxacin",
 #'   sir_col = "pheno_clsi"
 #' )
 #' }
 amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       min_set_size = 2, order = "value",
                       geno_table, pheno_table,
-                      antibiotic = NULL,
-                      drug_class_list = NULL,
+                      pheno_drug = NULL,
+                      geno_class = NULL,
+                      geno_drug = NULL,
                       geno_sample_col = NULL, pheno_sample_col = NULL,
                       sir_col = NULL, ecoff_col = "ecoff",
                       marker_col = "marker",
@@ -601,8 +602,9 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
     binary_matrix <- get_binary_matrix(
       geno_table = geno_table,
       pheno_table = pheno_table,
-      antibiotic = antibiotic,
-      drug_class_list = drug_class_list,
+      pheno_drug = pheno_drug,
+      geno_class = geno_class,
+      geno_drug = geno_drug,
       geno_sample_col = geno_sample_col,
       pheno_sample_col = pheno_sample_col,
       sir_col = sir_col,
@@ -621,7 +623,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
     print_set_size = print_set_size,
     print_category_counts = print_category_counts,
     SIR_col = SIR_col,
-    antibiotic = antibiotic,
+    pheno_drug = pheno_drug,
     species = species,
     bp_site = bp_site,
     guideline = guideline,
@@ -671,7 +673,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' Generate PPV Plot
 #'
 #' This function generates a plot showing summaries of phenotype results (assay distributions, phenotype category percentages, and/or predictive value for phenotype) for each combination of markers observed in the data.
-#' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
+#' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `pheno_drug`, and optionally `geno_class`, `geno_drug`, `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
 #' @param min_set_size An integer specifying the minimum size for a gene set to be included in the analysis and plots. Default is 2. Only marker combinations with at least this number of occurrences are included in the plots.
 #' @param order A character string indicating the order of the combinations on the x-axis. Options are:
 #' - `""`: decreasing frequency of combinations
@@ -679,11 +681,12 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' - `"value"`: order by the median assay value (MIC or disk zone) for each combination.
 #' - `"ppv"` (default): order by the PPV estimated for each combination
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
-#' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_ast()]. Only used if `binary_matrix` not provided.
-#' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the `drug_agent` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.
-#' @param drug_class_list (Only relevant if `binary_matrix` not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
-#' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
-#' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
+#' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_pheno()]. Only used if `binary_matrix` not provided.
+#' @param pheno_drug (Required if `binary_matrix` not provided) A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the `drug` column of `pheno_table` or be coercible to a match using [as.ab].
+#' @param geno_class (Optional if `binary_matrix` not provided) A character vector of drug classes to filter genotype markers. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with `pheno_drug` and uses those (these are printed to screen so the user can see what is being filtered).
+#' @param geno_drug (Optional if `binary_matrix` not provided) A character vector of drug names whose relevant genotype markers should be included.
+#' @param geno_sample_col (Optional) A character string specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
+#' @param pheno_sample_col (Optional) A character string specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
 #' @param ecoff_col A character string specifying the column name in `pheno_table` that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Default `"marker"`. Only used if `binary_matrix` not provided.
@@ -700,12 +703,12 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' - `"mic"`: plot MIC data stored in column `mic`
 #' - `"disk"`: plot disk diffusion data stored in column `disk`
 #' @param boxplot_col Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is `"grey"`.
-#' @param species Optional. Species name used to retrieve clinical breakpoints for annotation of the assay distribution plot.
-#' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
+#' @param species (Optional) Species name used to retrieve clinical breakpoints for annotation of the assay distribution plot.
+#' @param bp_site (Optional) Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
-#' @param bp_S (optional) S breakpoint to add to assay distribution plot (numerical).
-#' @param bp_R (optional) R breakpoint to add to assay distribution plot (numerical).
-#' @param ecoff_bp (optional) ECOFF breakpoint to add to assay distribution plot (numerical).
+#' @param bp_S (Optional) S breakpoint to add to assay distribution plot (numerical).
+#' @param bp_R (Optional) R breakpoint to add to assay distribution plot (numerical).
+#' @param ecoff_bp (Optional) ECOFF breakpoint to add to assay distribution plot (numerical).
 #' @param pd A `ggplot2::position_dodge()` object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default is `position_dodge(width = 0.8)`.
 #' @importFrom dplyr distinct filter group_by if_else left_join mutate n pull relocate row_number select summarise ungroup starts_with
 #' @importFrom ggplot2 aes after_stat coord_flip element_blank geom_bar geom_boxplot geom_col geom_point geom_segment geom_text ggplot labs position_fill scale_size_continuous scale_x_discrete scale_y_discrete scale_y_reverse theme theme_bw theme_light ylab scale_x_continuous theme_void guides margin coord_cartesian
@@ -724,9 +727,9 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' # Generate binary matrix
 #' binary_matrix <- get_binary_matrix(
 #'   geno_table = ecoli_geno,
-#'   pheno_table = ecoli_ast,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
+#'   pheno_table = ecoli_pheno,
+#'   pheno_drug = "Ciprofloxacin",
+#'   geno_class = c("Quinolones"),
 #'   sir_col = "pheno_clsi",
 #'   keep_assay_values = TRUE,
 #'   keep_assay_values_from = "mic"
@@ -738,16 +741,16 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' # Alternatively, generate binary matrix and run ppv() in one step
 #' ppv <- ppv(
 #'   geno_table = ecoli_geno,
-#'   pheno_table = ecoli_ast,
-#'   antibiotic = "Ciprofloxacin",
+#'   pheno_table = ecoli_pheno,
+#'   pheno_drug = "Ciprofloxacin",
 #'   sir_col = "pheno_clsi"
 #' )
 #' }
 ppv <- function(binary_matrix = NULL,
                 min_set_size = 2,
                 order = "ppv",
-                geno_table, pheno_table, antibiotic = NULL,
-                drug_class_list = NULL,
+                geno_table, pheno_table, pheno_drug = NULL,
+                geno_class = NULL, geno_drug = NULL,
                 geno_sample_col = NULL, pheno_sample_col = NULL,
                 sir_col = NULL, ecoff_col = "ecoff",
                 marker_col = "marker",
@@ -770,8 +773,9 @@ ppv <- function(binary_matrix = NULL,
     binary_matrix <- get_binary_matrix(
       geno_table = geno_table,
       pheno_table = pheno_table,
-      antibiotic = antibiotic,
-      drug_class_list = drug_class_list,
+      pheno_drug = pheno_drug,
+      geno_class = geno_class,
+      geno_drug = geno_drug,
       geno_sample_col = geno_sample_col,
       pheno_sample_col = pheno_sample_col,
       sir_col = sir_col,
@@ -790,7 +794,7 @@ ppv <- function(binary_matrix = NULL,
     boxplot_col = boxplot_col,
     print_category_counts = print_category_counts,
     SIR_col = SIR_col,
-    antibiotic = antibiotic,
+    pheno_drug = pheno_drug,
     species = species,
     bp_site = bp_site,
     guideline = guideline,

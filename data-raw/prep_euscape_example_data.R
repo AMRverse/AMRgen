@@ -1,5 +1,5 @@
 kp_mero <- download_ebi(
-  antibiotic = "meropenem",
+  pheno_drug = "meropenem",
   species = "Klebsiella pneumoniae",
   reformat = TRUE,
   interpret_eucast = TRUE,

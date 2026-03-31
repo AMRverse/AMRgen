@@ -15,18 +15,18 @@
 # ===================================================================== #
 #' Download NCBI antimicrobial susceptibility testing (AST) data
 #'
-#' This function downloads antimicrobial susceptibility testing (AST) data
+#' This function downloads antimicrobial susceptibility phenotype data
 #' from the NCBI Pathogen Detection database via the BioSample API. Data are
 #' retrieved in batches, parsed from XML, and returned as a tidy tibble with
 #' metadata including BioSample ID, Bioproject ID, and organism name.
 #'
 #' @param species Character. Organism name for the search query
 #'   (e.g., `"Salmonella enterica"`). Required.
-#' @param antibiotic Character or vector. Optional antibiotic name/s to filter
+#' @param pheno_drug Character or vector. Optional drug name/s to filter
 #'   the returned data. Strings will be processed using the \pkg{AMR} package
 #'   to standardize names before matching, so e.g. `"amikacin"` or `"Amikacin"`
 #'   or `"ami"` will be parsed to "amikacin" before matching. This can be turned
-#'   off by setting `force_antibiotic=TRUE`. Full list of allowed antibiotic
+#'   off by setting `force_drug_name=TRUE`. Full list of allowed drug
 #'   names in NCBI: <https://www.ncbi.nlm.nih.gov/biosample/docs/antibiogram/>.
 #' @param max_records Integer. Maximum number of BioSample records to
 #'   retrieve. Default is `15000`.
@@ -34,23 +34,23 @@
 #'   Default is `200` which is recommended by NCBI.
 #' @param sleep_time Numeric. Seconds to pause between batch requests to
 #'   avoid overloading NCBI servers. Default is `0.34`.
-#' @param force_antibiotic Logical. If `TRUE`, turns off standardizing the
-#'   antibiotic name using the \pkg{AMR} package before filtering, so that
+#' @param force_drug_name Logical. If `TRUE`, turns off standardizing the
+#'   drug name using the \pkg{AMR} package before filtering, so that
 #'   matching is done exactly on the input string/s. Default is `FALSE`.
 #' @param reformat Logical. If `TRUE`, reformats the output using
-#'   [import_ncbi_biosample] for compatibility with AMR analysis workflows.
+#'   [import_ncbi_pheno] for compatibility with AMR analysis workflows.
 #'   Default is `FALSE`. When set to `TRUE`, the data can also be interpreted
 #'   against breakpoints/ECOFF by setting the `interpret_*=TRUE`.
-#' @param interpret_eucast Logical. Passed to [interpret_ast] via
-#'   [import_ncbi_biosample].
+#' @param interpret_eucast Logical. Passed to [interpret_pheno] via
+#'   [import_ncbi_pheno].
 #'   If `TRUE`, interprets MIC values using EUCAST breakpoints. Default is
 #'   `FALSE`. Only used if `reformat`=`TRUE`.
-#' @param interpret_clsi Logical. Passed to [interpret_ast] via
-#'   [import_ncbi_biosample].
+#' @param interpret_clsi Logical. Passed to [interpret_pheno] via
+#'   [import_ncbi_pheno].
 #'   If `TRUE`, interprets MIC values using CLSI breakpoints. Default is
 #'   `FALSE`. Only used if `reformat`=`TRUE`.
-#' @param interpret_ecoff Logical. Passed to [interpret_ast] via
-#'   [import_ncbi_biosample].
+#' @param interpret_ecoff Logical. Passed to [interpret_pheno] via
+#'   [import_ncbi_pheno].
 #'   If `TRUE`, interprets MIC values using ECOFF cutoffs. Default is `FALSE`.
 #'   Only used if `reformat`=`TRUE`.
 #'
@@ -58,22 +58,22 @@
 #' The function constructs an Entrez query of the form:
 #' `"<organism> AND antibiogram[filter]"`. XML records are downloaded
 #' in batches, parsed, and combined into a single table. The resulting tibble
-#' contains AST test results and associated metadata including:
+#' contains phenotype test results and associated metadata including:
 #'
 #' - `id`: BioSample identifier
 #' - `BioProject`: BioProject accession ID
 #' - `organism`: Organism name
 #' - `Antibiotic`, `Phenotype`, `Measurement`, `Units`, `Method`, `System`,
-#'   `Manufacturer`, `Panel`, `Standard`: AST data columns
+#'   `Manufacturer`, `Panel`, `Standard`: phenotype data columns
 #'
-#' The function can optionally filter by a one or more antibiotics. It can
+#' The function can optionally filter by one or more drugs. It can
 #' also optionally reformat data for compatibility with AMRgen functions via
-#' [import_ncbi_ast], and interpret the raw data measures against breakpoints or
-#' ECOFF. See [import_ncbi_ast] for details of output formats when these options
+#' [import_ncbi_pheno], and interpret the raw data measures against breakpoints or
+#' ECOFF. See [import_ncbi_pheno] for details of output formats when these options
 #' are used.
 #'
 #' @return
-#' A tibble with one row per AST measure, with corresponding BioSample metadata.
+#' A tibble with one row per phenotype measure, with corresponding BioSample metadata.
 #'
 #' @section NCBI API usage:
 #' Users are encouraged to set an NCBI API key via
@@ -82,17 +82,17 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Download AST data for Klebsiella quasipneumoniae
-#' ast <- download_ncbi_ast("Klebsiella quasipneumoniae")
+#' # Download phenotype data for Klebsiella quasipneumoniae
+#' pheno <- download_ncbi_pheno("Klebsiella quasipneumoniae")
 #'
 #' # Download Klebsiella quasipneumoniae data, filter to amikacin and ampicillin
-#' ast <- download_ncbi_ast(
+#' pheno <- download_ncbi_pheno(
 #'   "Klebsiella quasipneumoniae",
-#'   antibiotic = c("amikacin", "Amp")
+#'   pheno_drug = c("amikacin", "Amp")
 #' )
 #'
 #' # Download and reformat for AMRgen workflow with EUCAST interpretation
-#' ast <- download_ncbi_ast(
+#' pheno <- download_ncbi_pheno(
 #'   "Klebsiella quasipneumoniae",
 #'   reformat = TRUE,
 #'   interpret_eucast = TRUE
@@ -107,12 +107,12 @@
 #' @importFrom dplyr bind_rows select filter mutate
 #' @importFrom stringr str_trim
 #' @export
-download_ncbi_ast <- function(species,
-                              antibiotic = NULL,
+download_ncbi_pheno <- function(species,
+                              pheno_drug = NULL,
                               max_records = 15000,
                               batch_size = 200,
                               sleep_time = 0.34,
-                              force_antibiotic = FALSE,
+                              force_drug_name = FALSE,
                               reformat = FALSE,
                               interpret_eucast = FALSE,
                               interpret_clsi = FALSE,
@@ -124,7 +124,7 @@ download_ncbi_ast <- function(species,
   # Build query term for entrez
   entrez_term <- paste0(str_trim(tolower(species)), "[orgn] AND antibiogram[filter]")
 
-  # Search for AST entries by pathogen
+  # Search for phenotype entries by pathogen
   search <- entrez_search(
     db = "biosample",
     term = entrez_term,
@@ -236,15 +236,15 @@ download_ncbi_ast <- function(species,
     as_tibble()
 
   # filter data by drug where specified by user
-  if (!is.null(antibiotic)) {
-    if (!force_antibiotic) {
-      antibiotic <- na.omit(ab_name(as.ab(antibiotic), tolower = TRUE))
+  if (!is.null(pheno_drug)) {
+    if (!force_drug_name) {
+      pheno_drug <- na.omit(ab_name(as.ab(pheno_drug), tolower = TRUE))
     }
 
-    message("...Filtering by antibiotic: ", toString(antibiotic))
+    message("...Filtering by drug: ", toString(pheno_drug))
 
     all_ast_data <- all_ast_data %>%
-      filter(Antibiotic %in% antibiotic)
+      filter(Antibiotic %in% pheno_drug)
   }
 
   # reformat as per AMRgen import functions

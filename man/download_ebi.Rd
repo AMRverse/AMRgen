@@ -6,12 +6,13 @@
 \usage{
 download_ebi(
   data = "phenotype",
-  antibiotic = NULL,
-  force_antibiotic = FALSE,
+  pheno_drug = NULL,
+  force_pheno_drug = FALSE,
   genus = NULL,
   species = NULL,
   geno_subclass = NULL,
   geno_class = NULL,
+  geno_drug = NULL,
   remove_dup = FALSE,
   release = NULL,
   reformat = FALSE,
@@ -23,9 +24,9 @@ download_ebi(
 \arguments{
 \item{data}{String specifying the type of data to download, either "phenotype" or "genotype" (default "phenotype").}
 
-\item{antibiotic}{(Optional) String (or vector of strings) specifying the antibiotic name/s to filter on (default NULL). Uses the AMR package to try to fix typos, and format to lower-case for EBI files. Not used if \code{data}="genotype" and \code{class} or \code{subclass} is specified.}
+\item{pheno_drug}{(Optional) String (or vector of strings) specifying the phenotype drug name/s to filter on (default \code{NULL}). Uses the AMR package to try to fix typos, and format to lower-case for EBI files. Only used if \code{data} = \code{"phenotype"}.}
 
-\item{force_antibiotic}{(Optional) Logical indicating whether to turn off parsing of antibiotic names and match exactly on the input strings (default \code{FALSE}).}
+\item{force_pheno_drug}{(Optional) Logical indicating whether to turn off parsing of phenotype drug names and match exactly on the input strings (default \code{FALSE}).}
 
 \item{genus}{(Optional) String specifying a bacterial genus to filter on (default NULL, will pull all taxa).}
 
@@ -35,11 +36,13 @@ download_ebi(
 
 \item{geno_class}{(Optional) String specifying an antibiotic subclass to filter genotype data on (default NULL). Filter is based on string match, not identity, so e.g. class="TRIMETHOPRIM" will return all rows where the string "TRIMETHOPRIM" is included in the class field. Only used if \code{data}="genotype" and subclass is not specified. Check \href{https://github.com/ncbi/amr/wiki/class-subclass}{NCBI AMR Class-Subclass Reference} for valid terms.}
 
+\item{geno_drug}{(Optional) String (or vector of strings) specifying the genotype drug name/s to filter on (default \code{NULL}). Filter is based on the EBI \code{antibiotic_name} field and is only used if \code{data} = \code{"genotype"} and neither \code{geno_subclass} nor \code{geno_class} is specified.}
+
 \item{remove_dup}{(Optional) Logical specifying whether to clean up genotype data by removing duplicates for the same hit (default FALSE). Where a detected gene is associated with a subclass value that is actually a list of multiple drugs/classes, e.g. subclass="GENTAMICIN/TOBRAMYCIN", the EBI data table will have duplicate rows for the same gene hit, but with different values for the \code{antibiotic_name} and associated \code{antibiotic_ontology} and \code{antibiotic_ontology_link} annotation fields (e.g. one row each for gentamicin and tobramycin). To remove these duplicate rows (and the drug-specific annotation fields) and return only one row per hit (i.e. restoring AMRFinderPlus output format), set this to \code{TRUE}.}
 
 \item{release}{(Optional) String specifying the data release to download (default NULL, will pull latest release).}
 
-\item{reformat}{(Optional) Logical specifying whether to reformat the downloaded data for easy use with downstream AMRgen functions, using \link{import_ebi_ast_ftp} (phenotypes) or \link{import_amrfp_ebi_ftp}. Default \code{FALSE}. This does things like format the antibiotic, measurement, and phenotype columns to AMR package classes. If set to \code{TRUE} you can also turn on re-interpreting MIC/disk data using latest EUCAST/CLSI breakpoints (when \code{data}="phenotype"). No columns are removed from the downloaded data frame, but key fields are renamed, see documentation for \link{format_ast} and \link{import_amrfp_ebi_ftp}.}
+\item{reformat}{(Optional) Logical specifying whether to reformat the downloaded data for easy use with downstream AMRgen functions, using \link{import_ebi_pheno_ftp} (phenotypes) or \link{import_amrfp_ebi_ftp}. Default \code{FALSE}. This does things like format the antibiotic, measurement, and phenotype columns to AMR package classes. If set to \code{TRUE} you can also turn on re-interpreting MIC/disk data using latest EUCAST/CLSI breakpoints (when \code{data}="phenotype"). No columns are removed from the downloaded data frame, but key fields are renamed, see documentation for \link{format_pheno} and \link{import_amrfp_ebi_ftp}.}
 
 \item{interpret_eucast}{(Optional) Logical specifying whether to re-interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column \code{pheno_eucast}, of class \code{sir}. Only used when downloading phenotype data, with reformat set to \code{TRUE}.}
 
@@ -52,12 +55,12 @@ A data frame containing the phenotype or genotype data retrieved from EBI, optio
 }
 \description{
 This function will retrieve genotype or phenotype data from the EBI AMR Portal FTP site. The portal uses AMRFinderPlus to identify AMR-associated genotypes, but the results are processed and not all fields returned by AMRFinderPlus are included.
-Optionally, the function can also reformat the phenotype data for easy use with AMRgen functions (using \code{\link[=import_ebi_ast_ftp]{import_ebi_ast_ftp()}}) and re-interpret assay measures using the latest breakpoints/ECOFF.
+Optionally, the function can also reformat the phenotype data for easy use with AMRgen functions (using \code{\link[=import_ebi_pheno_ftp]{import_ebi_pheno_ftp()}}) and re-interpret assay measures using the latest breakpoints/ECOFF.
 }
 \details{
 See \url{https://www.ebi.ac.uk/amr/about/} for more information on what is available in the portal, and \url{https://github.com/ncbi/amr/wiki/class-subclass} for valid class and subclass terms.
 
-Note the function downloads the full genotype or phenotype data table before filtering on the provided parameters, so if you are having trouble with drug/class names not matching then just run without specifying any genus/species/antibiotic/class filters, to get the full unfiltered table and explore the field values to filter manually to get what you want.
+Note the function downloads the full genotype or phenotype data table before filtering on the provided parameters, so if you are having trouble with drug/class names not matching then just run without specifying any genus/species/drug/class filters, to get the full unfiltered table and explore the field values to filter manually to get what you want.
 }
 \examples{
 \dontrun{
@@ -71,13 +74,13 @@ pheno_salmonella <- download_ebi(
 )
 
 # reformat downloaded phenotype data to simplify use with AMRgen functions
-pheno_salmonella <- import_ebi_ast_ftp(pheno_salmonella)
+pheno_salmonella <- import_ebi_pheno_ftp(pheno_salmonella)
 
 
 # download phenotype data for Salmonella, filter to ampicillin and ciprofloxacin
 pheno_salmonella <- download_ebi(
   genus = "Salmonella",
-  antibiotic = c("ampicillin", "Cipro")
+  pheno_drug = c("ampicillin", "Cipro")
 )
 
 # download phenotype data for Staphylococcus aureus and reformat
@@ -121,7 +124,7 @@ geno_kpn_tmp <- download_ebi(
 geno_kpn_tmp <- download_ebi(
   data = "genotype",
   species = "Klebsiella pneumoniae",
-  antibiotic = "trimethoprim"
+  geno_drug = "trimethoprim"
 )
 }
 }

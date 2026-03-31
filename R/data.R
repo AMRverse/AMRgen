@@ -30,27 +30,27 @@
 #' - `Resistance phenotype`: Resistance call (SIR) as submitted.
 #' - ...: Additional metadata columns from the NCBI AST export.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
-"ecoli_ast_raw"
+"ecoli_pheno_raw"
 
 
 #' E. coli NCBI AST Example Data, Re-interpreted with AMR Package
 #'
 #' A subset of E. coli phenotype data from the NCBI AST browser.
-#' @format A data frame with 4168 rows and 11 columns representing data from the NCBI AST browser, formatted and re-interpreted using [import_ast].
+#' @format A data frame with 4168 rows and 11 columns representing data from the NCBI AST browser, formatted and re-interpreted using [import_pheno].
 #'
 #' Columns include:
 #' - `id`: Sample identifier, imported from the `#BioSample` column in the raw input.
-#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
+#' - `drug`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
 #' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`, used to interpret `ecoff` and `pheno` columns.
 #' - `disk`: Disk diffusion zone, formatted using `as.disk`, used to interpret `ecoff` and `pheno` columns.
 #' - `pheno_clsi`: S/I/R classification according to CLSI, interpreted using `as.sir`.
 #' - `ecoff`: WT/NWT classification, interpreted using `as.sir`.
 #' - `guideline`: Interpretation guidelines used to interpret `ecoff` and `pheno` columns.
-#' - `method`: Test method, one of: `r toString(paste0('"', stats::na.omit(sort(unique(ecoli_ast$method))), "'"))`.
+#' - `method`: Test method, one of: `r toString(paste0('"', stats::na.omit(sort(unique(ecoli_pheno$method))), "'"))`.
 #' - `pheno_provided`: ??
 #' - `spp_pheno`: Species identifier, interpreted from `Scientific name` using `as.mo`, used to interpret `ecoff` and `pheno` columns.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
-"ecoli_ast"
+"ecoli_pheno"
 
 
 #' E. coli Genotype Example Data
@@ -78,12 +78,12 @@
 #'
 #' @format An object of class `compare_eucast` with 32 rows and
 #' 3 columns. It provides MIC distributions
-#' from EUCAST and public AST data extracted from [ecoli_ast]
+#' from EUCAST and public AST data extracted from [ecoli_pheno]
 #' in the form of counts per value.
 #'
 #' Columns include:
 #' - `value`: MIC value.
-#' - `user`: Count of samples with this MIC value, from the example data [ecoli_ast].
+#' - `user`: Count of samples with this MIC value, from the example data [ecoli_pheno].
 #' - `eucast`: Count of samples with this MIC value, downloaded from EUCAST (Feb 2026).
 #' @source <https://mic.eucast.org/>
 "ecoli_cip_vs_ref"
@@ -105,24 +105,24 @@
 
 #' S. aureus Example of Imported NCBI Phenotype Data
 #'
-#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function and imported to AMRgen phenotype table format.
-#' @format `staph_ast_ncbi` A data frame with 143 rows and 19 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline downloaded from NCBI using [download_ncbi_ast], imported into AMRgen format using [import_ast].
+#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_pheno] function and imported to AMRgen phenotype table format.
+#' @format `staph_pheno_ncbi` A data frame with 143 rows and 19 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline downloaded from NCBI using [download_ncbi_pheno], imported into AMRgen format using [import_pheno].
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`: Antibiotic identifier, as class 'ab'.
+#' - `drug`: Antibiotic identifier, as class 'ab'.
 #' - `mic`: MIC data, as class 'mic'.
 #' - `disk`: Disk diffusion zone diameter data, as class 'disk'.
 #' - `pheno_provided`, `pheno_eucast`: S/I/R phenotypes as downloaded from NCBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.
 #' - ...: Additional data columns from NCBI.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
-"staph_ast_ncbi"
+"staph_pheno_ncbi"
 
 
 #' S. aureus Example of Raw Phenotype Data Downloaded from NCBI BioSamples via Entrez API
 #'
-#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_ast] function without reformatting.
-#' @format `staph_ast_ncbi_raw` A data frame with 143 rows and 13 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
+#' Phenotypes sourced from NCBI Biosamples using the [download_ncbi_pheno] function without reformatting.
+#' @format `staph_pheno_ncbi_raw` A data frame with 143 rows and 13 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
@@ -130,13 +130,13 @@
 #' - `Resistance phenotype`: S/I/R phenotypes as downloaded from NCBI.
 #' - ...: Additional data columns from NCBI.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
-"staph_ast_ncbi_raw"
+"staph_pheno_ncbi_raw"
 
 
 #' S. aureus Example of Raw Phenotype Data Downloaded from NCBI via Google Cloud BigQuery
 #'
-#' Phenotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformatting.
-#' @format `staph_ast_ncbi_cloud_raw` A data frame with 142 rows and 11 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
+#' Phenotypes sourced from NCBI via [query_ncbi_bq_pheno] function, without reformatting.
+#' @format `staph_pheno_ncbi_cloud_raw` A data frame with 142 rows and 11 columns representing all Staphylococcus aureus phenotyping results for amikacin and doxycycline.
 #'
 #' Columns include:
 #' - `BioSample`: Sample identifier.
@@ -144,12 +144,12 @@
 #' - `Resistance phenotype`: S/I/R phenotypes as downloaded from NCBI.
 #' - ...: Additional data columns from NCBI.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
-"staph_ast_ncbi_cloud_raw"
+"staph_pheno_ncbi_cloud_raw"
 
 
 #' S. aureus Example of Raw Genotype Data Downloaded from NCBI via Google Cloud BigQuery
 #'
-#' AMRFinderPlus genotypes sourced from NCBI via [query_ncbi_bq_ast] function, without reformatting.
+#' AMRFinderPlus genotypes sourced from NCBI via [query_ncbi_bq_pheno] function, without reformatting.
 #' @format `staph_geno_ncbi_cloud_raw` A data frame with 4064 rows and 9 columns representing all Staphylococcus aureus genotyping results for markers associated with class aminoglycoside or tetracycline.
 #'
 #' Columns include:
@@ -163,17 +163,17 @@
 #' S. aureus Example of Imported EBI Phenotype Data
 #'
 #' Phenotypes sourced from EBI AMR Portal using the [download_ebi] function and imported to AMRgen phenotype table format.
-#' @format `staph_ast_ebi` A data frame with 218 rows and 46 columns representing all Staphylococcus phenotyping results for amikacin and doxycycline downloaded from EBI using [download_ebi], and imported into AMRgen format using [import_ast].
+#' @format `staph_pheno_ebi` A data frame with 218 rows and 46 columns representing all Staphylococcus phenotyping results for amikacin and doxycycline downloaded from EBI using [download_ebi], and imported into AMRgen format using [import_pheno].
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`: Antibiotic identifier, as class 'ab'.
+#' - `drug`: Antibiotic identifier, as class 'ab'.
 #' - `mic`: MIC data, as class 'mic'.
 #' - `disk`: Disk diffusion zone diameter data, as class 'disk'.
 #' - `pheno_provided`, `pheno_eucast`, `pheno_clsi`, `ecoff`: S/I/R phenotypes as downloaded from EBI, and as re-interpreted from mic/disk measures against EUCAST 2024 breakpoints.
 #' - ...: Additional data columns from EBI.
 #' @source <https://www.ebi.ac.uk/amr>
-"staph_ast_ebi"
+"staph_pheno_ebi"
 
 
 #' S. aureus Example of Imported EBI Genotype Data
@@ -183,7 +183,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
+#' - `drug`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
@@ -207,7 +207,7 @@
 #'
 #' Reference table mapping Bio-Rad SIRscan antibiotic codes to antibiotic names
 #' recognised by [AMR::as.ab()]. Used as the default lookup in
-#' [import_sirscan_ast()] to translate codes that the AMR package does not
+#' [import_sirscan_pheno()] to translate codes that the AMR package does not
 #' recognise directly. Users can supply their own table via the `sirscan_codes`
 #' argument if their SIRscan configuration uses different code meanings.
 #'
@@ -240,7 +240,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier (BioSample).
-#' - `drug_agent`: Antibiotic identifier, as class 'ab'.
+#' - `drug`: Antibiotic identifier, as class 'ab'.
 #' - `mic`: MIC data, as class 'mic'.
 #' - `pheno_provided`: S/I/R phenotypes as downloaded from EBI.
 #' - ...: Additional data columns from EBI.
@@ -255,7 +255,7 @@
 #'
 #' Columns include:
 #' - `id`: Sample identifier.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
+#' - `drug`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene symbol, parsed from `amr_element_symbol` field in the downloaded file.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `marker.label`: label for genotype marker, combining `gene` and `mutation` information (deletion variants represented as `"gene:-"`).
@@ -618,21 +618,21 @@
 #' Used to investigate genetic determinants of clindamycin resistance.
 #' Downloaded from NCBI and EBI.
 #'
-#' @format `ast_CLI_public` A data frame with 5914 rows and 34 columns:
+#' @format `pheno_CLI_public` A data frame with 5914 rows and 34 columns:
 #' - `id`: Sample identifier, imported from the `#BioSample` column in the raw input.
-#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
+#' - `drug`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`, used to interpret `ecoff` and `pheno` columns.
 #' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`, used to interpret `ecoff` and `pheno` columns.
 #' - `disk`: Disk diffusion zone, formatted using `as.disk`, used to interpret `ecoff` and `pheno` columns.
 #' - `pheno_eucast`: S/I/R classification according to EUCAST, interpreted using `as.sir`.
 #' - `ecoff`: WT/NWT classification, interpreted using `as.sir`.
 #' - `guideline`: Interpretation guidelines used to interpret `ecoff` and `pheno` columns.
-#' - `method`: Test method, one of: `r toString(paste0('"', stats::na.omit(sort(unique(ast_CLI_public$method))), "'"))`.
-#' - `platform`: Testing platform, one of `r toString(paste0('"', stats::na.omit(sort(unique(ast_CLI_public$platform))), "'"))`.
+#' - `method`: Test method, one of: `r toString(paste0('"', stats::na.omit(sort(unique(pheno_CLI_public$method))), "'"))`.
+#' - `platform`: Testing platform, one of `r toString(paste0('"', stats::na.omit(sort(unique(pheno_CLI_public$platform))), "'"))`.
 #' - `pheno_provided`: S/I/R interpretation as provided in the raw input.
 #' - `spp_pheno`: Species identifier, interpreted from `Scientific name` using `as.mo`, used to interpret `ecoff` and `pheno` columns.
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast>
 #' @source <https://www.ebi.ac.uk/amr>
-"ast_CLI_public"
+"pheno_CLI_public"
 
 
 #' ST data for *Staphylococcus aureus* genomes for clindamycin vignette
@@ -691,7 +691,7 @@
 #' AST was carried out for meropenem, amikacin, chloramphenicol, ciprofloxacin, co-trimoxazole and gentamicin.
 #' However this dataset only contains the raw phenotype data (S/R).
 #'
-#' @format `btESBL_AST` A data frame with 609 rows and 9 columns:
+#' @format `btESBL_pheno` A data frame with 609 rows and 9 columns:
 #' - `...1`:  Row count.
 #' - `supplier_name`:  Strain ID.
 #' - `organism`:  organism.
@@ -701,8 +701,8 @@
 #' - `cotrimoxazole`:  cotrimoxazole antimicrobial susceptibility phenotype (S/R)
 #' - `gentamicin`:  gentamicin antimicrobial susceptibility phenotype (S/R)
 #' - `meropenem`:  meropenem antimicrobial susceptibility phenotype (S/R)
-#' @source <https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_AST.rda>
-"btESBL_AST"
+#' @source <https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_pheno.rda>
+"btESBL_pheno"
 
 
 #' DASSIM genotype data (AMRFinderPlus)
@@ -716,7 +716,7 @@
 #' - `node`:  node.
 #' - `marker`:  marker.
 #' - `marker.label`:  marker.label.
-#' - `drug_agent`:  drug_agent.
+#' - `drug`:  drug.
 #' - `drug_class`:  drug_class.
 #' - `Protein id`:  Protein id.
 #' - `Contig id`:  Contig id.
@@ -750,9 +750,9 @@
 #'
 #' NCBI Antibiotic Susceptibility Test (AST) Browser data for Escherichia coli tested against chloramphenicol.
 #'
-#' @format `NCBI_Ecoli_AST_chl` A data frame with 6,859 rows and 17 columns:
+#' @format `NCBI_Ecoli_pheno_chl` A data frame with 6,859 rows and 17 columns:
 #' - `id`: Sample identifier, imported from the `BioSample` column in the raw input.
-#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
+#' - `drug`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
 #' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`.
 #' - `disk`: Disk diffusion zone, formatted using `as.disk`.
 #' - `method`, `platform`, `guideline`: Test method and platform and interpretation guideline.
@@ -760,7 +760,7 @@
 #' - `spp_pheno`: Species identifier, interpreted from `Scientific name` using `as.mo`, used to interpret `ecoff` and `pheno` columns.
 #' - ...: Additional data columns from the NCBI AST Browser
 #' @source <https://www.ncbi.nlm.nih.gov/pathogens/ast#chloramphenicol%20AND%20Escherichia>
-"NCBI_Ecoli_AST_chl"
+"NCBI_Ecoli_pheno_chl"
 
 
 #' MicroBIGG-E for E.coli containing all chloramphenicol resistance genes
@@ -770,7 +770,7 @@
 #'
 #' @format `MICROBIGGE_Ecoli_CHLR` A data frame with 95,776 rows and 27 columns:
 #' - `id`:  BioSample.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
+#' - `drug`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene identifiers.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `% Coverage of reference`:  % Coverage of reference.
@@ -799,7 +799,7 @@
 #' @format `rgi_drugs_table` A data frame with 3 rows and 70 columns:
 #' - `RGI_DrugClassAgent`: RGI/CARD drug class / antibiotic that is not recognized by AMR pkg
 #' - `drug_class`: Valid drug class name recognised by AMR pkg
-#' - `drug_agent`: Valid antibiotic name recognised by AMR pkg
+#' - `drug`: Valid antibiotic name recognised by AMR pkg
 "rgi_drugs_table"
 
 #' Table mapping CARD/RGI Model ID and CARD Short Name
@@ -834,7 +834,7 @@
 #'
 #' @format `kp_mero_amrfp` A data frame with 32,385 rows and 34 columns:
 #' - `id`:  BioSample.
-#' - `drug_agent`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
+#' - `drug`, `drug_class`: Antibiotic agent and class, determined by parsing AMRFinderPlus `subclass` field in the downloaded file.
 #' - `gene`, `node`, `marker`: gene identifiers.
 #' - `mutation`: mutation within gene, parsed into HGVS nomenclature format from `amr_element_symbol` field in the downloaded file.
 #' - `% Coverage of reference`:  % Coverage of reference.
@@ -851,7 +851,7 @@
 #'
 #' @format `kp_mero_euscape` A data frame with 1,490 rows and 43 columns:
 #' - `id`: Sample identifier, imported from the `BioSample` column in the raw input.
-#' - `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
+#' - `drug`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
 #' - `mic`: Minimum inhibitory concentration, formatted using `as.mic`.
 #' - `disk`: Disk diffusion zone, formatted using `as.disk`.
 #' - `method`, `platform`, `guideline`: Test method and platform and interpretation guideline.

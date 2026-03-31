@@ -75,7 +75,7 @@ utils::globalVariables(c(
   "disk_dose",
   "disk_potency",
   "disk_raw",
-  "drug_agent",
+  "drug",
   "drug_agent_code",
   "drug_agent_name",
   "drug_class",

@@ -12,7 +12,7 @@ concordance_from_tables(
   pred_SIR = "clinical category",
   pred_ecoff = "phenotype",
   sample_col = "id",
-  drug_col = "drug_agent",
+  drug_col = "drug",
   measure_col = "mic"
 )
 }
@@ -31,7 +31,7 @@ concordance_from_tables(
 
 \item{sample_col}{Character. Name of the column containing sample identifiers. This must be the same in both tables (default \code{"id"}).}
 
-\item{drug_col}{Character. Name of the column containing drug agent identifiers. This must be the same in both tables (default \code{"drug_agent"}).}
+\item{drug_col}{Character. Name of the column containing drug agent identifiers. This must be the same in both tables (default \code{"drug"}).}
 
 \item{measure_col}{Character. Name of the column containing observed MIC or disk measurements for plotting. Valid options are \code{"mic"} or \code{"disk"} (default \code{"mic"}).}
 }

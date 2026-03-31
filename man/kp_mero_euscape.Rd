@@ -8,7 +8,7 @@
 \code{kp_mero_euscape} A data frame with 1,490 rows and 43 columns:
 \itemize{
 \item \code{id}: Sample identifier, imported from the \code{BioSample} column in the raw input.
-\item \code{drug_agent}: Antibiotic code, interpreted from \code{Antibiotic} using \code{as.ab}.
+\item \code{drug}: Antibiotic code, interpreted from \code{Antibiotic} using \code{as.ab}.
 \item \code{mic}: Minimum inhibitory concentration, formatted using \code{as.mic}.
 \item \code{disk}: Disk diffusion zone, formatted using \code{as.disk}.
 \item \code{method}, \code{platform}, \code{guideline}: Test method and platform and interpretation guideline.

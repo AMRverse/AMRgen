@@ -10,7 +10,7 @@
 Columns include:
 \itemize{
 \item \code{id}: Sample identifier.
-\item \code{drug_agent}, \code{drug_class}: Antibiotic agent and class, determined by parsing AMRFinderPlus \code{subclass} field in the downloaded file.
+\item \code{drug}, \code{drug_class}: Antibiotic agent and class, determined by parsing AMRFinderPlus \code{subclass} field in the downloaded file.
 \item \code{gene}, \code{node}, \code{marker}: gene symbol, parsed from \code{amr_element_symbol} field in the downloaded file.
 \item \code{mutation}: mutation within gene, parsed into HGVS nomenclature format from \code{amr_element_symbol} field in the downloaded file.
 \item \code{marker.label}: label for genotype marker, combining \code{gene} and \code{mutation} information (deletion variants represented as \code{"gene:-"}).

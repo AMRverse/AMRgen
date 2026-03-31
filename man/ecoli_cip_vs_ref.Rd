@@ -7,13 +7,13 @@
 \format{
 An object of class \code{compare_eucast} with 32 rows and
 3 columns. It provides MIC distributions
-from EUCAST and public AST data extracted from \link{ecoli_ast}
+from EUCAST and public AST data extracted from \link{ecoli_pheno}
 in the form of counts per value.
 
 Columns include:
 \itemize{
 \item \code{value}: MIC value.
-\item \code{user}: Count of samples with this MIC value, from the example data \link{ecoli_ast}.
+\item \code{user}: Count of samples with this MIC value, from the example data \link{ecoli_pheno}.
 \item \code{eucast}: Count of samples with this MIC value, downloaded from EUCAST (Feb 2026).
 }
 }

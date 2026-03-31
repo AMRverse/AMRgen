@@ -11,9 +11,9 @@
 DASSIM_pheno_raw <- read_tsv("data-raw/DASSIM_BSI_metadata.tsv")
 usethis::use_data(DASSIM_pheno_raw, internal = FALSE, overwrite = TRUE)
 
-# Read in the AST data from blantyre ESBL
-btESBL_AST <- readr::read_csv("data-raw/DASSIM_btESBL_AST.csv") %>% select(-row)
-usethis::use_data(btESBL_AST, internal = FALSE, overwrite = TRUE)
+# Read in the phenotype data from blantyre ESBL
+btESBL_pheno <- readr::read_csv("data-raw/DASSIM_btESBL_AST.csv") %>% select(-row)
+usethis::use_data(btESBL_pheno, internal = FALSE, overwrite = TRUE)
 
 
 ## 2.6 Importing genotype data
@@ -29,8 +29,8 @@ usethis::use_data(DASSIM_geno, internal = FALSE, overwrite = TRUE)
 # 3.2  Reading in genotype and phenotype data
 
 # import phenotype data
-NCBI_Ecoli_AST_chl <- import_pheno("data-raw/CHL_Ecoli_asts.tsv", format = "ncbi")
-usethis::use_data(NCBI_Ecoli_AST_chl, internal = FALSE, overwrite = TRUE)
+NCBI_Ecoli_pheno_chl <- import_pheno("data-raw/CHL_Ecoli_asts.tsv", format = "ncbi")
+usethis::use_data(NCBI_Ecoli_pheno_chl, internal = FALSE, overwrite = TRUE)
 
 
 # import genotype

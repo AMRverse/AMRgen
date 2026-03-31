@@ -16,17 +16,18 @@
 
 #' AMR Logistic Regression Analysis
 #'
-#' Performs logistic regression to analyse the relationship between genetic markers and phenotype (R, and NWT) for a specified antibiotic.
+#' Performs logistic regression to analyse the relationship between genetic markers and phenotype (R, and NWT) for a specified phenotype drug.
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
-#' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_ast()]. Only used if `binary_matrix` not provided.
-#' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the `drug_agent` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.
-#' @param drug_class_list (Required if `binary_matrix` not provided) A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list. Only used if `binary_matrix` not provided.
+#' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_pheno()]. Only used if `binary_matrix` not provided.
+#' @param pheno_drug (Required if `binary_matrix` not provided) A character string specifying the phenotype drug of interest to filter phenotype data. The value must match one of the entries in the `drug` column of `pheno_table`. Only used if `binary_matrix` not provided.
+#' @param geno_class (Optional if `binary_matrix` not provided) A character vector of drug classes to filter genotype data for related markers. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list. Use `geno_drug` instead if you want to filter genotype rows directly by their `drug` field.
+#' @param geno_drug (Optional if `binary_matrix` not provided) A character vector of drug identifiers to filter genotype data by the `drug` column.
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
 #' @param ecoff_col A character string specifying the column name in `pheno_table` that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
 #' @param marker_col (Optional) Name of the column containing the marker identifiers, whose unique values will be treated as predictors in the regression. Defaults to `"marker"`.
-#' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
+#' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `pheno_drug`, and optionally `geno_class`, `geno_drug`, `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
 #' @param maf (Optional) An integer specifying the minimum allele frequency (MAF) threshold. Markers with a MAF lower than this value will be excluded. Defaults to `10`.
 #' @param fit_glm (Optional) Change to `TRUE` to fit model with glm. Otherwise fit model with logistf (default `FALSE`).
 #' @param single_plot (Optional) A logical value. If `TRUE`, a single plot is produced comparing the estimates for resistance (`R`) and non-resistance (`NWT`). Otherwise, two plots are printed side-by-side. Defaults to `TRUE`.
@@ -48,16 +49,16 @@
 #' # Example usage of the amr_logistic function
 #' result <- amr_logistic(
 #'   geno_table = import_amrfp(ecoli_geno_raw, "Name"),
-#'   pheno_table = ecoli_ast,
+#'   pheno_table = ecoli_pheno,
 #'   sir_col = "pheno_clsi",
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
+#'   pheno_drug = "Ciprofloxacin",
+#'   geno_class = c("Quinolones"),
 #'   maf = 10
 #' )
 #' # To access the plot:
 #' print(result$plot)
 amr_logistic <- function(geno_table, pheno_table,
-                         antibiotic = NULL, drug_class_list = NULL,
+                         pheno_drug = NULL, geno_class = NULL, geno_drug = NULL,
                          geno_sample_col = NULL, pheno_sample_col = NULL,
                          sir_col = "pheno", ecoff_col = "ecoff",
                          marker_col = "marker.label", binary_matrix = NULL,
@@ -70,8 +71,9 @@ amr_logistic <- function(geno_table, pheno_table,
     binary_matrix <- get_binary_matrix(
       geno_table = geno_table,
       pheno_table = pheno_table,
-      antibiotic = antibiotic,
-      drug_class_list = drug_class_list,
+      pheno_drug = pheno_drug,
+      geno_class = geno_class,
+      geno_drug = geno_drug,
       geno_sample_col = geno_sample_col,
       pheno_sample_col = pheno_sample_col,
       sir_col = sir_col,
@@ -152,12 +154,12 @@ amr_logistic <- function(geno_table, pheno_table,
     )
     if (single_plot) {
       label <- "Effect estimates for R and NWT"
-      if (!is.null(antibiotic)) {
-        label <- paste(label, "for", antibiotic)
+      if (!is.null(pheno_drug)) {
+        label <- paste(label, "for", pheno_drug)
       }
-      if (!is.null(drug_class_list)) {
+      if (!is.null(geno_class)) {
         subtitle <- paste(
-          "for", paste(drug_class_list, collapse = ","),
+          "for", paste(geno_class, collapse = ","),
           "markers present in at least", maf, "samples"
         )
       } else {

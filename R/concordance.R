@@ -122,9 +122,9 @@
 #'
 #' binary_matrix <- get_binary_matrix(
 #'   geno_table = geno_table,
-#'   pheno_table = ecoli_ast,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
+#'   pheno_table = ecoli_pheno,
+#'   pheno_drug = "Ciprofloxacin",
+#'   geno_class = c("Quinolones"),
 #'   sir_col = "pheno_clsi"
 #' )
 #'
@@ -572,7 +572,7 @@ print.amr_concordance <- function(x, ...) {
 #' @param pred_SIR Character. Name of the column containing S/I/R calls predicted from genotypes (default `"clinical category"`).
 #' @param pred_ecoff Character. Name of the column containing WT/NWT calls predicted from genotypes (default `"phenotype"`).
 #' @param sample_col Character. Name of the column containing sample identifiers. This must be the same in both tables (default `"id"`).
-#' @param drug_col Character. Name of the column containing drug agent identifiers. This must be the same in both tables (default `"drug_agent"`).
+#' @param drug_col Character. Name of the column containing drug agent identifiers. This must be the same in both tables (default `"drug"`).
 #' @param measure_col Character. Name of the column containing observed MIC or disk measurements for plotting. Valid options are `"mic"` or `"disk"` (default `"mic"`).
 #'
 #' @return A named list with the following elements:
@@ -600,7 +600,7 @@ concordance_from_tables <- function(pheno_table,
                                     pred_SIR = "clinical category",
                                     pred_ecoff = "phenotype",
                                     sample_col = "id",
-                                    drug_col = "drug_agent",
+                                    drug_col = "drug",
                                     measure_col = "mic") {
   # join observed & predicted pheno tables
   if (!(sample_col %in% colnames(pheno_table) & sample_col %in% colnames(pheno_pred_table))) {
@@ -675,7 +675,7 @@ concordance_from_tables <- function(pheno_table,
         if (measure_col %in% colnames(obs_pred)) {
           dist_plot_R[[this_drug]] <- obs_pred %>%
             assay_by_var(
-              antibiotic = this_drug, colour_by = pred_SIR, measure = measure_col,
+              pheno_drug = this_drug, colour_by = pred_SIR, measure = measure_col,
               plot_title = paste(
                 ab_name(as.ab(this_drug)), measure_col,
                 "distribution vs predicted clinical phenotype"
@@ -689,8 +689,8 @@ concordance_from_tables <- function(pheno_table,
             truth = "R", prediction_col = "predR"
           )$metrics)
           if (!is.null(conR)) {
-            concordance_metrics <- bind_rows(concordance_metrics, conR %>% mutate(drug_agent = this_drug)) %>%
-              relocate(drug_agent)
+            concordance_metrics <- bind_rows(concordance_metrics, conR %>% mutate(drug = this_drug)) %>%
+              relocate(drug)
           }
         }
       } # finished with this drug
@@ -757,7 +757,7 @@ concordance_from_tables <- function(pheno_table,
         if (measure_col %in% colnames(obs_pred)) {
           dist_plot_NWT[[this_drug]] <- obs_pred %>%
             assay_by_var(
-              antibiotic = this_drug, colour_by = pred_ecoff, measure = measure_col,
+              pheno_drug = this_drug, colour_by = pred_ecoff, measure = measure_col,
               plot_title = paste(
                 ab_name(as.ab(this_drug)),
                 measure_col, "distribution vs predicted WT/NWT phenotype"
@@ -771,8 +771,8 @@ concordance_from_tables <- function(pheno_table,
             truth = "NWT", prediction_col = "predNWT"
           )$metrics)
           if (!is.null(conNWT)) {
-            concordance_metrics <- bind_rows(concordance_metrics, conNWT %>% mutate(drug_agent = this_drug)) %>%
-              relocate(drug_agent)
+            concordance_metrics <- bind_rows(concordance_metrics, conNWT %>% mutate(drug = this_drug)) %>%
+              relocate(drug)
           }
         }
       } # finished with this drug

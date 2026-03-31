@@ -19,7 +19,7 @@ A data frame with the processed genotype data, with harmonised gene names, mappe
 \item \code{gene}: The gene identifier (\code{character}).
 \item \code{mutation}: The mutation detected within the gene, converted to \href{https://hgvs-nomenclature.org/stable/}{HGVS nomenclature} syntax (e.g. \code{Ser83Phe}) (\code{character}).
 \item \code{drug_class}: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (\code{character}).
-\item \code{drug_agent}: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
+\item \code{drug}: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg (\code{ab}). Value \code{NA} is assigned when the markers are annotated with a class only and not a specific antibiotic.
 ... Other fields specific to the input file
 }
 }
@@ -27,7 +27,7 @@ A data frame with the processed genotype data, with harmonised gene names, mappe
 This function imports EBI-processed AMRFinderPlus genotyping results. The expected input is genotype data downloaded from the \href{https://www.ebi.ac.uk/amr/data/?view=predictions}{EBI AMR Portal web browser}, or the \href{https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}{EBI AMR Portal FTP site} either directly or via the function \code{\link[=download_ebi]{download_ebi()}}.
 }
 \details{
-These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate \code{drug_agent} and \code{drug_class} fields consistent with the \code{\link[=import_amrfp]{import_amrfp()}} function (the EBI fields \verb{antibiotic*} are also retained).
+These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate \code{drug} and \code{drug_class} fields consistent with the \code{\link[=import_amrfp]{import_amrfp()}} function (the EBI fields \verb{antibiotic*} are also retained).
 Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the \code{\link[=import_amrfp]{import_amrfp()}} function, this function cannot assign \verb{variation type} or \code{node}.
 
 The function performs the following steps:

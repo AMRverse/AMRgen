@@ -13,7 +13,7 @@
 \item \code{node}:  node.
 \item \code{marker}:  marker.
 \item \code{marker.label}:  marker.label.
-\item \code{drug_agent}:  drug_agent.
+\item \code{drug}:  drug.
 \item \code{drug_class}:  drug_class.
 \item \verb{Protein id}:  Protein id.
 \item \verb{Contig id}:  Contig id.

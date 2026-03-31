@@ -28,7 +28,7 @@ A data frame with the processed genotype data, with harmonised gene names, mappe
 \item \code{gene}: The gene identifier (\code{character}).
 \item \code{mutation}: The mutation detected within the gene, converted to \href{https://hgvs-nomenclature.org/stable/}{HGVS nomenclature} syntax (e.g. \code{Ser83Phe}) (\code{character}).
 \item \code{drug_class}: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, drawn from the Kleborate column in which the marker was reported (\code{character}).
-\item \code{drug_agent}: Values are recorded as \code{NA} as Kleborate doesn't report markers assigned to individual drug level.
+\item \code{drug}: Values are recorded as \code{NA} as Kleborate doesn't report markers assigned to individual drug level.
 \item \verb{variation type}: Type of variation, e.g. \verb{Gene presence detected}, \verb{Protein variant detected}, \verb{Nucleotide variant detected}, \verb{Inactivating mutation detected}.
 ... Other fields specific to the input file
 }

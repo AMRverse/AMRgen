@@ -41,7 +41,7 @@
 #' - `mutation`: The mutation detected within the gene, converted to [HGVS nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g. `Ser83Phe`) (`character`).
 #' - `node`: The node in the NCBI reference gene hierarchy corresponding to the gene (`character`).
 #' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (`character`).
-#' - `drug_agent`: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
+#' - `drug`: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
 #' - `variation type`: Type of variation, e.g. `Gene presence detected`, `Protein variant detected`, `Nucleotide variant detected`, `Inactivating mutation detected`, `Promoter variant detected`.
 #' ... Other fields specific to the input file
 #' @details
@@ -181,7 +181,7 @@ import_amrfp <- function(input_table,
     in_table_label <- in_table_label %>% separate_longer_delim(!!sym(subclass_col), "/")
   }
 
-  # make two new columns - drug_class and drug_agent, where we control the vocab for the AMRFinderPlus Subclass column
+  # make two new columns - drug_class and drug, where we control the vocab for the AMRFinderPlus Subclass column
   # into something that is comparable with the drugs and groups in the AMR package
 
   # first, identify any subclasses we _know_ aren't in the AMR package, using the internal data
@@ -193,11 +193,11 @@ import_amrfp <- function(input_table,
   # then for the columns which are NA, we want to use the Subclass col and convert to ab using AMR pkg
   in_table_ab <- in_table_ab %>%
     mutate(subclass_to_parse = if_else(!is.na(drug_class_internal), NA, !!sym(subclass_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
-    mutate(drug_agent = AMR::as.ab(subclass_to_parse)) %>%
+    mutate(drug = AMR::as.ab(subclass_to_parse)) %>%
     mutate(drug_class_from_agent = AMR::ab_group(subclass_to_parse)) %>%
     mutate(drug_class = coalesce(drug_class_internal, drug_class_from_agent)) %>%
     select(-drug_class_from_agent, -drug_class_internal) %>%
-    dplyr::relocate(any_of(c("id", "marker", "gene", "mutation", "drug_agent", "drug_class", "variation type", "node", "marker.label")), .before = dplyr::everything())
+    dplyr::relocate(any_of(c("id", "marker", "gene", "mutation", "drug", "drug_class", "variation type", "node", "marker.label")), .before = dplyr::everything())
 
   return(in_table_ab)
 }
@@ -208,7 +208,7 @@ import_amrfp <- function(input_table,
 #' This function imports processed EBI-processed AMRFinderPlus genotyping results. The expected input is genotype data retrieved from the [EBI AMR Portal FTP site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either directly or via the function [download_ebi()].
 #' Note that files downloaded from the [EBI AMR Portal web browser](https://www.ebi.ac.uk/amr/data/?view=predictions) are formatted differently and can be imported using [import_amrfp_ebi_web].
 #'
-#' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug_agent` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
+#' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
 #' Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
 #' @param input_table R object or file path for the input EBI genotype table (R object, or file path to a TSV or CSV file).
 #' @return A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables:
@@ -217,7 +217,7 @@ import_amrfp <- function(input_table,
 #' - `gene`: The gene identifier (`character`).
 #' - `mutation`: The mutation detected within the gene, converted to [HGVS nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g. `Ser83Phe`) (`character`).
 #' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (`character`).
-#' - `drug_agent`: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
+#' - `drug`: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
 #' ... Other fields specific to the input file
 #' @details
 #' The function performs the following steps:
@@ -262,7 +262,7 @@ import_amrfp_ebi_ftp <- function(input_table) {
 #' This function imports EBI-processed AMRFinderPlus genotyping results. The expected input is genotype data downloaded from the [EBI AMR Portal web browser](https://www.ebi.ac.uk/amr/data/?view=predictions).
 #' Note that files downloaded from the [EBI AMR Portal FTP site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), either directly or via the function [download_ebi()], are formatted differently and can be imported using [import_amrfp_ebi_ftp].
 #'
-#' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug_agent` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
+#' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
 #' Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
 #' @param input_table R object or file path for the input EBI genotype table (R object, or file path to a TSV or CSV file).
 #' @return A data frame with the processed genotype data, with harmonised gene names, mapped drug agents, and drug classes which can be used for other functions of the ARMgen package. The output retains the original columns from the AMRFinderPlus table along with the newly mapped variables:
@@ -271,7 +271,7 @@ import_amrfp_ebi_ftp <- function(input_table) {
 #' - `gene`: The gene identifier (`character`).
 #' - `mutation`: The mutation detected within the gene, converted to [HGVS nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g. `Ser83Phe`) (`character`).
 #' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (`character`).
-#' - `drug_agent`: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
+#' - `drug`: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
 #' ... Other fields specific to the input file
 #' @details
 #' The function performs the following steps:
@@ -310,7 +310,7 @@ import_amrfp_ebi_web <- function(input_table) {
 #'
 #' This function imports EBI-processed AMRFinderPlus genotyping results. The expected input is genotype data downloaded from the [EBI AMR Portal web browser](https://www.ebi.ac.uk/amr/data/?view=predictions), or the [EBI AMR Portal FTP site](https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either directly or via the function [download_ebi()].
 #'
-#' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug_agent` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
+#' These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate `drug` and `drug_class` fields consistent with the [import_amrfp()] function (the EBI fields `antibiotic*` are also retained).
 #' Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the [import_amrfp()] function, this function cannot assign `variation type` or `node`.
 #' @param input_table R object or file path for the input EBI genotype table (R object, or file path to a TSV or CSV file).
 #' @param web Logical indicating whether the data is from the web portal (default `FALSE`). If `FALSE` input is assumed to be from FTP or [download_ebi].
@@ -320,7 +320,7 @@ import_amrfp_ebi_web <- function(input_table) {
 #' - `gene`: The gene identifier (`character`).
 #' - `mutation`: The mutation detected within the gene, converted to [HGVS nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g. `Ser83Phe`) (`character`).
 #' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (`character`).
-#' - `drug_agent`: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
+#' - `drug`: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
 #' ... Other fields specific to the input file
 #' @details
 #' The function performs the following steps:
@@ -371,7 +371,7 @@ import_amrfp_ebi <- function(input_table, web = FALSE) {
 #' - `gene`: The gene identifier (`character`).
 #' - `mutation`: The mutation detected within the gene, converted to [HGVS nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g. `Ser83Phe`) (`character`).
 #' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, drawn from the Kleborate column in which the marker was reported (`character`).
-#' - `drug_agent`: Values are recorded as `NA` as Kleborate doesn't report markers assigned to individual drug level.
+#' - `drug`: Values are recorded as `NA` as Kleborate doesn't report markers assigned to individual drug level.
 #' - `variation type`: Type of variation, e.g. `Gene presence detected`, `Protein variant detected`, `Nucleotide variant detected`, `Inactivating mutation detected`.
 #' ... Other fields specific to the input file
 #' @details
@@ -424,7 +424,7 @@ import_kleborate <- function(input_table,
         marker
       )) %>%
       relocate(Kleborate_Class, .after = "variation type") %>%
-      mutate(drug_agent = NA)
+      mutate(drug = NA)
   } else { # older versions use informal nomenclature (e.g. [gene]-[mutation], [gene]-X%, OmpK36GD)
     geno_table <- geno_table %>%
       mutate(`variation type` = case_when(
@@ -443,7 +443,7 @@ import_kleborate <- function(input_table,
         marker
       )) %>%
       relocate(Kleborate_Class, .after = "variation type") %>%
-      mutate(drug_agent = NA)
+      mutate(drug = NA)
   }
 
   return(geno_table)
@@ -575,17 +575,17 @@ import_rgi <- function(input_table,
       filter(!is.na(!!sym(antibiotic_col)) & !!sym(antibiotic_col) != "") %>%
       separate_longer_delim(!!sym(antibiotic_col), delim = "; ") %>%
       left_join(rgi_drugs, by = setNames("RGI_DrugClassAgent", antibiotic_col)) %>%
-      rename(drug_internal = drug_agent) %>%
+      rename(drug_internal = drug) %>%
       rename(drug_class_internal = drug_class) %>%
       mutate(
         drug_to_parse = if_else(!is.na(drug_internal), NA, !!sym(antibiotic_col))
       ) %>%
       mutate(
-        drug_agent = AMR::as.ab(drug_to_parse),
+        drug = AMR::as.ab(drug_to_parse),
         drug_class_agent = AMR::ab_group(drug_to_parse)
       ) %>%
       mutate(
-        drug_agent = coalesce(drug_internal, as.character(drug_agent)),
+        drug = coalesce(drug_internal, as.character(drug)),
         drug_class = coalesce(drug_class_internal, as.character(drug_class_agent))
       )
 
@@ -610,7 +610,7 @@ import_rgi <- function(input_table,
     # Recombine df_antibiotic and df_drugclass
     geno_table_label_ab <- bind_rows(df_antibiotic, df_drugclass) %>%
       select(-drug_internal, -drug_class_internal, -drug_to_parse, -drug_class_agent) %>%
-      dplyr::relocate(any_of(c("id", "marker", "mutation", "drug_agent", "drug_class", "variation type", "marker.label")), .before = dplyr::everything())
+      dplyr::relocate(any_of(c("id", "marker", "mutation", "drug", "drug_class", "variation type", "marker.label")), .before = dplyr::everything())
   } else {
     stop(paste("Input file lacks the expected column: Antibiotic OR `Drug Class` OR `Resistance Mechanism`\n"))
   }
@@ -674,7 +674,7 @@ import_rgi <- function(input_table,
 #' - `marker`: The name of the genotype marker, as it appears in the `GENE` column of the input file (`character`).
 #' - `gene`: The name of the gene product, as it appears in the `PRODUCT` column of the input file (`character`).
 #' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg, parsed from the `RESISTANCE` column of the input file which depends on the database that ABRicate was run with (`character`).
-#' - `drug_agent`: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg, parsed from the `RESISTANCE` column of the input file (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
+#' - `drug`: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg, parsed from the `RESISTANCE` column of the input file (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
 #' - `variation type`: Type of variation, i.e. `Gene presence detected`, as ABRicate only detects presence/absence of genes in the query database.
 #' ... Other fields specific to the input file
 #' @details
@@ -738,18 +738,18 @@ import_abricate <- function(input_table,
     # then for the columns which are NA, we want to use the Subclass col and convert to ab using AMR pkg
     in_table <- in_table %>%
       mutate(subclass_to_parse = if_else(!is.na(drug_class_internal), NA, !!sym(ab_col))) %>% # create clean vector of only those subclasses we want to parse with AMR pkg functions
-      mutate(drug_agent = AMR::as.ab(subclass_to_parse)) %>%
+      mutate(drug = AMR::as.ab(subclass_to_parse)) %>%
       mutate(drug_class_from_agent = AMR::ab_group(subclass_to_parse)) %>%
       mutate(drug_class = coalesce(drug_class_internal, drug_class_from_agent))
   } else { # parse drugs directly with AMR package; this works for resfinder
     in_table <- in_table %>%
-      mutate(drug_agent = AMR::as.ab(!!sym(ab_col))) %>%
-      mutate(drug_class = AMR::ab_group(drug_agent))
+      mutate(drug = AMR::as.ab(!!sym(ab_col))) %>%
+      mutate(drug_class = AMR::ab_group(drug))
 
     # Harmonise outliers match how we parse NCBI subclass
     in_table <- in_table %>%
       mutate(drug_class = case_when(
-        drug_agent %in% c("Sulfamethoxazole", "Sulfathiazole") ~ "Sulfonamides",
+        drug %in% c("Sulfamethoxazole", "Sulfathiazole") ~ "Sulfonamides",
         drug_class %in% c("Penicillins", "Aminopenicillins", "Ureidopenicillins", "Monobactams") ~ "Beta-lactams",
         drug_class == "Fluoroquinolones" ~ "Quinolones",
         TRUE ~ drug_class
@@ -763,7 +763,7 @@ import_abricate <- function(input_table,
       "marker",
       "gene",
       "mutation",
-      "drug_agent",
+      "drug",
       "drug_class",
       "variation type"
     )), .before = dplyr::everything())
@@ -931,7 +931,7 @@ convert_aa_code <- function(input_code) {
 #' - `mutation`: The mutation detected within the gene, converted to [HGVS nomenclature](https://hgvs-nomenclature.org/stable/) syntax (e.g. `Ser83Phe`) (`character`).
 #' - `node`: (for AMRFinderPlus input only) The node in the NCBI reference gene hierarchy corresponding to the gene (`character`).
 #' - `drug_class`: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (`character`).
-#' - `drug_agent`: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
+#' - `drug`: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when the markers are annotated with a class only and not a specific antibiotic.
 #' - `variation type`: (for AMRFinderPlus, ABRicate, or Kleborate results) Type of variation, e.g. `Gene presence detected`, `Protein variant detected`, `Nucleotide variant detected`, `Inactivating mutation detected`, `Promoter variant detected`.
 #' ... Other fields specific to the input file
 #' @export

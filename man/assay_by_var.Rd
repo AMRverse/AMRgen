@@ -6,7 +6,7 @@
 \usage{
 assay_by_var(
   pheno_table,
-  antibiotic = NULL,
+  pheno_drug = NULL,
   measure = "mic",
   colour_by = NULL,
   bar_cols = NULL,
@@ -25,9 +25,9 @@ assay_by_var(
 )
 }
 \arguments{
-\item{pheno_table}{Phenotype table in standard format as per import_ast().}
+\item{pheno_table}{Phenotype table in standard format as per import_pheno().}
 
-\item{antibiotic}{(optional) Name of an antibiotic to filter the 'drug_agent' column, and to retrieve breakpoints for.}
+\item{pheno_drug}{(optional) Name of a drug to filter the \code{drug} column, and to retrieve breakpoints for.}
 
 \item{measure}{Name of the column with assay measurements to plot (default "mic").}
 
@@ -68,33 +68,33 @@ This function creates a stacked bar plot using \code{ggplot2}, where the x-axis 
 \examples{
 # plot MIC distribution, highlighting values expressed as ranges
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic"
 )
 
 # colour by SIR interpretation recorded in column 'pheno_clsi'
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi"
 )
 
 # manually specify colours for the barplot
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
   bar_cols = c(S = "skyblue", I = "orange", R = "maroon")
 )
 
 # look up ECOFF and CLSI breakpoints and annotate these on the plot
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
   species = "E. coli", guideline = "CLSI 2025"
 )
 
 # facet by method
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
   species = "E. coli", guideline = "CLSI 2025",
   facet_var = "method"

@@ -9,7 +9,7 @@
 \itemize{
 \item \code{RGI_DrugClassAgent}: RGI/CARD drug class / antibiotic that is not recognized by AMR pkg
 \item \code{drug_class}: Valid drug class name recognised by AMR pkg
-\item \code{drug_agent}: Valid antibiotic name recognised by AMR pkg
+\item \code{drug}: Valid antibiotic name recognised by AMR pkg
 }
 }
 \usage{

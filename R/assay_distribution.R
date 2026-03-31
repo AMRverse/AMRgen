@@ -17,12 +17,12 @@
 #' Generate a Stacked Bar Plot of Assay Values Colored by a Variable
 #'
 #' This function creates a stacked bar plot using `ggplot2`, where the x-axis represents MIC (Minimum Inhibitory Concentration) or disk values, the y-axis indicates their frequency, and the bars are colored by a variable (by default, colours indicate whether the assay value is expressed as a range or not). Plots can optionally be faceted on an additional categorical variable. If breakpoints are provided, or species and drug are provided so we can extract EUCAST breakpoints, vertical lines indicating the S/R breakpoints and ECOFF will be added to the plot.
-#' @param pheno_table Phenotype table in standard format as per import_ast().
+#' @param pheno_table Phenotype table in standard format as per import_pheno().
 #' @param measure Name of the column with assay measurements to plot (default "mic").
 #' @param colour_by (optional) Field name containing a variable to colour bars by (default NULL, which will colour each bar to indicate whether the value is expressed as a range or not).
 #' @param bar_cols (optional) Manual colour scale to use for bar plot. If NULL, `colour_by` variable is of class 'sir', bars will by default be coloured using standard SIR colours.
 #' @param facet_var (optional) Column name containing a variable to facet on (default NULL).
-#' @param antibiotic (optional) Name of an antibiotic to filter the 'drug_agent' column, and to retrieve breakpoints for.
+#' @param pheno_drug (optional) Name of a drug to filter the `drug` column, and to retrieve breakpoints for.
 #' @param species (optional) Name of species, so we can retrieve breakpoints to print at the top of the plot to help interpret it.
 #' @param bp_site (optional) Breakpoint site to retrieve (only relevant if also supplying `species` and `antibiotic` to retrieve breakpoints, and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff`).
 #' @param bp_S (optional) S breakpoint to plot.
@@ -40,54 +40,54 @@
 #' @examples
 #' # plot MIC distribution, highlighting values expressed as ranges
 #' assay_by_var(
-#'   pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+#'   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
 #'   measure = "mic"
 #' )
 #'
 #' # colour by SIR interpretation recorded in column 'pheno_clsi'
 #' assay_by_var(
-#'   pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+#'   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
 #'   measure = "mic", colour_by = "pheno_clsi"
 #' )
 #'
 #' # manually specify colours for the barplot
 #' assay_by_var(
-#'   pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+#'   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
 #'   measure = "mic", colour_by = "pheno_clsi",
 #'   bar_cols = c(S = "skyblue", I = "orange", R = "maroon")
 #' )
 #'
 #' # look up ECOFF and CLSI breakpoints and annotate these on the plot
 #' assay_by_var(
-#'   pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+#'   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
 #'   measure = "mic", colour_by = "pheno_clsi",
 #'   species = "E. coli", guideline = "CLSI 2025"
 #' )
 #'
 #' # facet by method
 #' assay_by_var(
-#'   pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+#'   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
 #'   measure = "mic", colour_by = "pheno_clsi",
 #'   species = "E. coli", guideline = "CLSI 2025",
 #'   facet_var = "method"
 #' )
 #'
 #' @export
-assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
+assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
                          colour_by = NULL, bar_cols = NULL, facet_var = NULL,
                          bp_site = NULL, bp_S = NULL, bp_R = NULL, bp_ecoff = NULL,
                          species = NULL, guideline = "EUCAST 2025",
                          bp_cols = c(S = "#3CAEA3", R = "#ED553B", E = "grey"),
                          x_axis_label = "Measurement", y_axis_label = "Count",
                          colour_legend_label = NULL, plot_title = NULL) {
-  if (!is.null(antibiotic)) {
-    if ("drug_agent" %in% colnames(pheno_table)) {
-      pheno_table <- pheno_table %>% filter(drug_agent == as.ab(antibiotic))
+  if (!is.null(pheno_drug)) {
+    if ("drug" %in% colnames(pheno_table)) {
+      pheno_table <- pheno_table %>% filter(drug == as.ab(pheno_drug))
       if (nrow(pheno_table) == 0) {
-        stop("Antibiotic '", antibiotic, "' not found in drug_agent column")
+        stop("Drug '", pheno_drug, "' not found in drug column")
       }
     } else {
-      warning("Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.\nEnsure your input table is already filtered to the antibiotic.")
+      warning("Column 'drug' not found in phenotype table, so can't filter to the specified pheno_drug.\nEnsure your input table is already filtered to the relevant drug.")
     }
   }
 
@@ -122,10 +122,10 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
     bar_cols <- c(range = "maroon", value = "navy", `NA` = "grey")
   }
 
-  # if species and antibiotic are provided, but breakpoints aren't, check breakpoints to annotate plot
-  if (measure %in% c("mic", "disk") & !is.null(species) & !is.null(antibiotic)) {
+  # if species and pheno_drug are provided, but breakpoints aren't, check breakpoints to annotate plot
+  if (measure %in% c("mic", "disk") & !is.null(species) & !is.null(pheno_drug)) {
     if (is.null(bp_S) | is.null(bp_R)) {
-      breakpoints <- safe_execute(checkBreakpoints(species = species, guide = guideline, antibiotic = antibiotic, bp_site = bp_site, assay = toupper(measure)))
+      breakpoints <- safe_execute(checkBreakpoints(species = species, guide = guideline, antibiotic = pheno_drug, bp_site = bp_site, assay = toupper(measure)))
       if (is.null(bp_R)) {
         bp_R <- breakpoints$breakpoint_R
       }
@@ -134,7 +134,7 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
       }
     }
     if (is.null(bp_ecoff)) {
-      bp_ecoff <- safe_execute(getBreakpoints(species = species, guide = "EUCAST 2025", antibiotic = antibiotic, "ECOFF") %>%
+      bp_ecoff <- safe_execute(getBreakpoints(species = species, guide = "EUCAST 2025", antibiotic = pheno_drug, "ECOFF") %>%
         filter(method == toupper(measure)) %>% pull(breakpoint_S))
     }
   }
@@ -178,8 +178,8 @@ assay_by_var <- function(pheno_table, antibiotic = NULL, measure = "mic",
     } else if (measure == "disk") {
       plot_title <- paste("Disk distribution")
     }
-    if (!is.null(antibiotic)) {
-      plot_title <- paste(antibiotic, plot_title)
+    if (!is.null(pheno_drug)) {
+      plot_title <- paste(pheno_drug, plot_title)
     }
   }
   if (nrow(pheno_table) > 0) {

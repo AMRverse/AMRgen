@@ -76,9 +76,9 @@ Antimicrobial resistance genes (ARGs) were called with AMRFinderPlus v4.0.23 to 
 
 ### 1.1b DASSIM Phenotype data 
 
-We downloaded the AST data from the [blantyreESBL Github](https://joelewis101.github.io/blantyreESBL/) from Dr. Joe Lewis at <https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_AST.rda>.
+We downloaded the AST data from the [blantyreESBL Github](https://joelewis101.github.io/blantyreESBL/) from Dr. Joe Lewis at <https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_pheno.rda>.
 
-This is included in the AMRgen package as a data object: `btESBL_AST`.
+This is included in the AMRgen package as a data object: `btESBL_pheno`.
 
 Additional metadata relating to the isolates can be found in [Supplementary Data 1](https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-024-53391-2/MediaObjects/41467_2024_53391_MOESM4_ESM.xls) of the following paper:
 
@@ -104,13 +104,13 @@ library(ggplot2)
 
 ## 2.2 Format the phenotype data
 
-The phenotype data in `btESBL_AST` needs to be reformatted to long format, and sequence identifiers imported from `DASSIM_pheno_raw` so we can match the phenotype data to the genotypes.
+The phenotype data in `btESBL_pheno` needs to be reformatted to long format, and sequence identifiers imported from `DASSIM_pheno_raw` so we can match the phenotype data to the genotypes.
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE}
 # Convert the S/I/R phenotype data to long format for easy use with AMRgen functions
-DASSIM_pheno <- btESBL_AST %>%
+DASSIM_pheno <- btESBL_pheno %>%
   pivot_longer(
-    names_to = "drug_agent",
+    names_to = "drug",
     values_to = "pheno",
     cols = "amikacin":"meropenem"
   ) %>%
@@ -159,9 +159,9 @@ We can then plot the PPV graphs using `ppv()`.
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 # Get binary matrix
-DASSIM_CHL_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "chloramphenicol", sir_col = "pheno")
+DASSIM_CHL_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "chloramphenicol", sir_col = "pheno")
 # Plot ppv
-DASSIM_CHL_PPV <- ppv(DASSIM_CHL_bin_mat, antibiotic = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
+DASSIM_CHL_PPV <- ppv(DASSIM_CHL_bin_mat, pheno_drug = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
 ```
 
 This result clearly shows how the detection of *catB3* is not a good predictor of resistance, whereas the detection of *catA2* is. 
@@ -171,11 +171,11 @@ Now let's check how well aminoglycoside markers predict resistance to amikacin a
 
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "amikacin", sir_col = "pheno")
-DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, antibiotic = "amikacin", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "amikacin", sir_col = "pheno")
+DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col = "pheno", upset_grid = TRUE)
 
-DASSIM_GEN_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "gentamicin", sir_col = "pheno")
-DASSIM_GEN_PPV <- ppv(DASSIM_GEN_bin_mat, antibiotic = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_GEN_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "gentamicin", sir_col = "pheno")
+DASSIM_GEN_PPV <- ppv(DASSIM_GEN_bin_mat, pheno_drug = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 Here we see many of the aminoglycoside-associated resistance genes detected in these genomes are predictive of resistance to gentamicin, but none are associated with amikacin resistance. This is because amikacin is a semi-synthetic drug with an addition of a specific side chain, called the L-hydroxyaminobutyryl amide (HABA) group. This HABA side chain blocks the Aminoglycoside-Modifying Enzymes (AMEs) from reaching the sites on the molecule where they would normally attach their deactivating tags.
@@ -184,8 +184,8 @@ Here we see many of the aminoglycoside-associated resistance genes detected in t
 Now let's check how well markers associated with trimethoprims or sulfonamides predict resistance to co-trimoxazole.
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "cotrimoxazole", sir_col = "pheno")
-DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, antibiotic = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "cotrimoxazole", sir_col = "pheno")
+DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, pheno_drug = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 Co-trimoxazole is a combination drug made of sulfamethoxazole and trimethoprim. It is prescribed prophylactically in Malawi for HIV-positive individuals ([Everett et al. 2011](https://doi.org/10.1371/journal.pone.0017765)). Since it is a combination drug it requires both Sulfamethoxazole resistance genes (e.g., *sul*) and Trimethoprim resistance genes (e.g., *dfrA*).
@@ -193,13 +193,13 @@ Co-trimoxazole is a combination drug made of sulfamethoxazole and trimethoprim. 
 Meropenem is a last resort carbapenem antibiotic. `ppv()` by default returns all markers associated with beta-lactam resistance, for comparison with meropenem phenotypes. However while many beta-lactamases were detected, none are known carbapenemases (e.g., *bla~NDM~*, *bla~KPC~*, *bla~VIM~*, *bla~IMP~*, *bla~OXA-48-like~*). Consistent with this only a single isolate, carrying multiple beta-lactamases, was phenotyped as resistant to meropenem.
 
 ```{r, fig.width=13, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
-DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "meropenem", sir_col = "pheno")
-DASSIM_MEM_PPV <- ppv(DASSIM_MEM_bin_mat, antibiotic = "meropenem", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "meropenem", sir_col = "pheno")
+DASSIM_MEM_PPV <- ppv(DASSIM_MEM_bin_mat, pheno_drug = "meropenem", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 This analysis highlights how AMRgen can be used to explore genotype/phenotype associations for specific genetic markers related to a variety of antibiotics. 
 
-Next we'll explore the chloramphenicol susceptibility associated with the *catB3* gene with more functions of the AMRgen package. For this we need raw AST data (e.g., MIC or disc diffusion), so we will go to NCBI to download public datasets. 
+Next we'll explore the chloramphenicol susceptibility associated with the *catB3* gene with more functions of the AMRgen package. For this we need raw phenotype data (e.g., MIC or disc diffusion), so we will go to NCBI to download public datasets. 
 
 # 3. Analysis of publicly available phenotype and genotype data for chloramphenicol
 
@@ -211,13 +211,13 @@ The National Center for Biotechnology Information (NCBI) provides tools for anal
 
 The Antibiotic Susceptibility Test (AST) Browser serves as a centralised resource for viewing and filtering phenotypic susceptibility data, allowing researchers to correlate specific bacterial isolates with their phenotypic resistance profiles.
 
-AST data can be retrieved directly from NCBI using the AMRgen functions `download_ncbi_ast()` (slow but does not require authorisation) or `query_ncbi_bq_ast()` (very fast, requires a Google Cloud account), or via the NCBI AST Browser. For more details see the [Analysing Geno-Pheno Data](https://amrgen.org/articles/AnalysingGenoPhenoData.html) vignette.
+AST data can be retrieved directly from NCBI using the AMRgen functions `download_ncbi_pheno()` (slow but does not require authorisation) or `query_ncbi_bq_pheno()` (very fast, requires a Google Cloud account), or via the NCBI AST Browser. For more details see the [Analysing Geno-Pheno Data](https://amrgen.org/articles/AnalysingGenoPhenoData.html) vignette.
 
 ``` {r download_ncbi_ast_notrun, eval=F}
-# Download E. coli AST data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
-ecoli_ast_ncbi_via_biosample <- download_ncbi_ast(
+# Download E. coli phenotype data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
+ecoli_pheno_ncbi_via_biosample <- download_ncbi_pheno(
   species = "E. coli",
-  antibiotic = "chloramphenicol",
+  pheno_drug = "chloramphenicol",
   reformat = TRUE,
   interpret_clsi = TRUE
 )
@@ -231,13 +231,13 @@ library(bigrquery)
 bigrquery::bq_auth()
 
 # replace xxx with your project id
-ecoli_ast_ncbi_via_cloud <- query_ncbi_bq_ast(
+ecoli_pheno_ncbi_via_cloud <- query_ncbi_bq_pheno(
   taxgroup = "E.coli and Shigella",
-  antibiotic = "chloramphenicol",
+  pheno_drug = "chloramphenicol",
   project_id = "xxx"
 )
 
-ecoli_ast_ncbi_via_cloud_interpreted <- import_ncbi_ast(ecoli_ast_ncbi_via_cloud,
+ecoli_pheno_ncbi_via_cloud_interpreted <- import_ncbi_pheno(ecoli_pheno_ncbi_via_cloud,
   interpret_clsi = TRUE
 )
 ```
@@ -252,13 +252,13 @@ Save this as a `tsv` file: `CHL_Ecoli_asts.tsv`, and import it using the AMRgen 
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE, eval=FALSE}
 # import phenotype data
-NCBI_Ecoli_AST_chl <- import_pheno("data-raw/CHL_Ecoli_asts.tsv", format = "ncbi")
+NCBI_Ecoli_pheno_chl <- import_pheno("data-raw/CHL_Ecoli_asts.tsv", format = "ncbi")
 ```
 
-A copy of this imported data (downloaded March 2026) is included in AMRgen as data frame `NCBI_Ecoli_AST_chl`.
+A copy of this imported data (downloaded March 2026) is included in AMRgen as data frame `NCBI_Ecoli_pheno_chl`.
 
-```{r NCBI_Ecoli_AST_chl}
-head(NCBI_Ecoli_AST_chl)
+```{r NCBI_Ecoli_pheno_chl}
+head(NCBI_Ecoli_pheno_chl)
 ```
 
 **Genotypes: MicroBIGG-E**
@@ -289,10 +289,10 @@ head(MICROBIGGE_Ecoli_CHLR)
 
 ``` {r filter}
 # filter AST data, re-interpret using CLSI breakpoints
-AST_pheno <- NCBI_Ecoli_AST_chl %>%
+AST_pheno <- NCBI_Ecoli_pheno_chl %>%
   filter(id %in% MICROBIGGE_Ecoli_CHLR$id) %>%
-  interpret_ast(interpret_clsi = TRUE)
-MB_CHLR_geno <- MICROBIGGE_Ecoli_CHLR %>% filter(id %in% NCBI_Ecoli_AST_chl$id)
+  interpret_pheno(interpret_clsi = TRUE)
+MB_CHLR_geno <- MICROBIGGE_Ecoli_CHLR %>% filter(id %in% NCBI_Ecoli_pheno_chl$id)
 
 # check how many samples we have
 length(unique(AST_pheno$id))
@@ -325,7 +325,7 @@ AST_pheno <- AST_pheno %>%
 
 assay_by_var(
   pheno_table = AST_pheno,
-  antibiotic = "chloramphenicol",
+  pheno_drug = "chloramphenicol",
   measure = "mic",
   colour_by = "pheno_clsi",
   species = "Escherichia coli"
@@ -339,7 +339,7 @@ Next we can visualise the MIC distribution with `assay_by_var()` on the AST data
 
 assay_by_var(
   pheno_table = AST_CATB3_pheno,
-  antibiotic = "CHL",
+  pheno_drug = "CHL",
   measure = "mic",
   colour_by = "pheno_clsi",
   species = "Escherichia coli"
@@ -368,7 +368,7 @@ AST_CATB3_pheno_3 <- AST_CATB3_pheno_2 %>%
 # plot the MIC distribution for these 2 groups
 MIC_dist_by_cov <- assay_by_var(
   pheno_table = AST_CATB3_pheno_3,
-  antibiotic = "CHL",
+  pheno_drug = "CHL",
   measure = "mic",
   colour_by = "pheno_clsi",
   species = "Escherichia coli",
@@ -403,15 +403,15 @@ MB_CHLR_geno <- MB_CHLR_geno %>%
 
 CHL_bin_mat <- get_binary_matrix(MB_CHLR_geno,
   AST_pheno,
-  antibiotic = "CHL",
-  drug_class_list = c("Phenicols"),
+  pheno_drug = "CHL",
+  geno_class = c("Phenicols"),
   sir_col = "pheno_clsi",
   keep_assay_values = TRUE
 )
 
 CHL_PPV <- ppv(CHL_bin_mat,
-  antibiotic = "Chloramphenicol",
-  drug_class_list = c("Phenicols"),
+  pheno_drug = "Chloramphenicol",
+  geno_class = c("Phenicols"),
   sir_col = "pheno_clsi",
   upset_grid = TRUE,
   assay = "mic",
@@ -429,7 +429,7 @@ We just need the binary matrix as input (from `get_binary_matrix()`) and we can 
 ```{r, error=FALSE, warning=FALSE, message=FALSE}
 CHL_logist <- amr_logistic(
   binary_matrix = CHL_bin_mat,
-  antibiotic = "chloramphenicol",
+  pheno_drug = "chloramphenicol",
   ecoff_col = "ecoff",
   maf = 10,
   single_plot = TRUE

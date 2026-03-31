@@ -14,7 +14,7 @@ import_pheno(
 )
 }
 \arguments{
-\item{input}{A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the \href{https://www.ebi.ac.uk/amr/data/?view=experiments}{EBI AMR web browser}, \href{ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}{EBI FTP site}, or \href{https://www.ncbi.nlm.nih.gov/pathogens/ast}{NCBI browser}, or using the functions \code{\link[=download_ebi]{download_ebi()}}, \code{\link[=download_ncbi_ast]{download_ncbi_ast()}}, or \code{\link[=query_ncbi_bq_geno]{query_ncbi_bq_geno()}}; or the files may be exported from supported AST instruments.}
+\item{input}{A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the \href{https://www.ebi.ac.uk/amr/data/?view=experiments}{EBI AMR web browser}, \href{ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/}{EBI FTP site}, or \href{https://www.ncbi.nlm.nih.gov/pathogens/ast}{NCBI browser}, or using the functions \code{\link[=download_ebi]{download_ebi()}}, \code{\link[=download_ncbi_pheno]{download_ncbi_pheno()}}, or \code{\link[=query_ncbi_bq_geno]{query_ncbi_bq_geno()}}; or the files may be exported from supported AST instruments.}
 
 \item{format}{A string indicating the format of the data: \code{"ebi"} (default), \code{"ebi_web"}, \code{"ebi_ftp"}, \code{"ncbi"}, \code{"ncbi_biosample"}, \code{"vitek"}, \code{"microscan"}, \code{"phoenix"}, \code{"sensititre"}, or \code{"whonet"}. This determines which importer function the data is passed on to for processing (see below).}
 
@@ -26,16 +26,16 @@ import_pheno(
 
 \item{...}{Format-specific arguments. See
 \itemize{
-\item \code{"ebi"} : \code{\link[=import_ebi_ast]{import_ebi_ast()}}
-\item \code{"ebi_web"} : \code{\link[=import_ebi_ast]{import_ebi_ast()}}
-\item \code{"ebi_ftp"} :\code{\link[=import_ebi_ast_ftp]{import_ebi_ast_ftp()}}
-\item \code{"ncbi"} : \code{\link[=import_ncbi_ast]{import_ncbi_ast()}}
+\item \code{"ebi"} : \code{\link[=import_ebi_pheno]{import_ebi_pheno()}}
+\item \code{"ebi_web"} : \code{\link[=import_ebi_pheno]{import_ebi_pheno()}}
+\item \code{"ebi_ftp"} :\code{\link[=import_ebi_pheno_ftp]{import_ebi_pheno_ftp()}}
+\item \code{"ncbi"} : \code{\link[=import_ncbi_pheno]{import_ncbi_pheno()}}
 \item \code{"ncbi_biosample"} : \code{\link[=import_ncbi_biosample]{import_ncbi_biosample()}}
-\item \code{"vitek"} : \code{\link[=import_vitek_ast]{import_vitek_ast()}}
-\item \code{"microscan"} : \code{\link[=import_microscan_ast]{import_microscan_ast()}}
-\item \code{"sensititre"} : \code{\link[=import_sensititre_ast]{import_sensititre_ast()}}
-\item \code{"phoenix"} : \code{\link[=import_phoenix_ast]{import_phoenix_ast()}}
-\item \code{"whonet"} : \code{\link[=import_whonet_ast]{import_whonet_ast()}}
+\item \code{"vitek"} : \code{\link[=import_vitek_pheno]{import_vitek_pheno()}}
+\item \code{"microscan"} : \code{\link[=import_microscan_pheno]{import_microscan_pheno()}}
+\item \code{"sensititre"} : \code{\link[=import_sensititre_pheno]{import_sensititre_pheno()}}
+\item \code{"phoenix"} : \code{\link[=import_phoenix_pheno]{import_phoenix_pheno()}}
+\item \code{"whonet"} : \code{\link[=import_whonet_pheno]{import_whonet_pheno()}}
 }}
 }
 \value{
@@ -43,7 +43,7 @@ A data frame with the processed AST data, including additional columns:
 \itemize{
 \item \code{id}: The sample identifier (\code{character}).
 \item \code{spp_pheno}: The species phenotype, formatted using the \code{\link[AMR:as.mo]{AMR::as.mo()}} function (class \code{mo}).
-\item \code{drug_agent}: The antibiotic used in the test, formatted using the \code{\link[AMR:as.ab]{AMR::as.ab()}} function (class \code{ab}).
+\item \code{drug}: The antibiotic used in the test, formatted using the \code{\link[AMR:as.ab]{AMR::as.ab()}} function (class \code{ab}).
 \item \code{mic}: The minimum inhibitory concentration (MIC) value, formatted using the \code{\link[AMR:as.mic]{AMR::as.mic()}} function (class \code{mic}).
 \item \code{disk}: The disk diffusion measurement (in mm), formatted using the \code{\link[AMR:as.disk]{AMR::as.disk()}} function (class \code{disk}).
 \item \code{method}: The AST method (e.g., \code{"broth dilution"}, \code{"disk diffusion"}, \code{"Etest"}, \code{"agar dilution"}). Expected values are based on the NCBI/EBI antibiogram specification (\code{character}).
@@ -62,22 +62,22 @@ This function imports an antibiotic susceptibility testing datasets in formats e
 \examples{
 \dontrun{
 # import NCBI data retrieved from Google Cloud, without re-interpreting resistance
-head(staph_ast_ncbi_cloud_raw)
-pheno <- import_pheno(staph_ast_ncbi_cloud_raw, format = "ncbi")
+head(staph_pheno_ncbi_cloud_raw)
+pheno <- import_pheno(staph_pheno_ncbi_cloud_raw, format = "ncbi")
 
 # import NCBI data where biosample column has been renamed to 'id'
-head(staph_ast_ncbi_raw)
-import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col = "id")
+head(staph_pheno_ncbi_raw)
+import_pheno(staph_pheno_ncbi_raw, "ncbi", sample_col = "id")
 
 # import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
-head(ecoli_ast_raw)
-pheno <- import_pheno(ecoli_ast_raw,
+head(ecoli_pheno_raw)
+pheno <- import_pheno(ecoli_pheno_raw,
   format = "ncbi",
   interpret_eucast = TRUE, interpret_ecoff = TRUE
 )
 
 # download Klebsiella quasipneumoniae phenotype data from NCBI BioSample
-kquasi_raw_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
+kquasi_raw_ncbi <- download_ncbi_pheno("Klebsiella quasipneumoniae")
 head(kquasi_raw_ncbi)
 # import the data and interpret against EUCAST breakpoints
 pheno <- import_pheno(kquasi_raw_ncbi,

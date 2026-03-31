@@ -7,8 +7,9 @@
 solo_ppv_analysis(
   geno_table,
   pheno_table,
-  antibiotic = NULL,
-  drug_class_list = NULL,
+  pheno_drug = NULL,
+  geno_class = NULL,
+  geno_drug = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = NULL,
@@ -28,11 +29,13 @@ solo_ppv_analysis(
 \arguments{
 \item{geno_table}{(Required if \code{binary_matrix} not provided) A data frame containing genotype data, formatted with \code{\link[=import_amrfp]{import_amrfp()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_ast]{import_ast()}}. Only used if \code{binary_matrix} not provided.}
+\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_pheno]{import_pheno()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{antibiotic}{(Required if \code{binary_matrix} not provided) A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the \code{drug_agent} column of \code{pheno_table}. Only used if \code{binary_matrix} not provided or if breakpoints required.}
+\item{pheno_drug}{(Required if \code{binary_matrix} not provided) A character string specifying the phenotype drug of interest to filter phenotype data. The value must match one of the entries in the \code{drug} column of \code{pheno_table}.}
 
-\item{drug_class_list}{(Only relevant if \code{binary_matrix} not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).}
+\item{geno_class}{(Optional if \code{binary_matrix} not provided) A character vector of genotype drug classes used to filter markers in \code{geno_table}.}
+
+\item{geno_drug}{(Optional if \code{binary_matrix} not provided) A character vector of genotype drug identifiers used to filter \code{geno_table} by its \code{drug} column.}
 
 \item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
 
@@ -48,7 +51,7 @@ solo_ppv_analysis(
 
 \item{reverse_order}{A logical indicating whether to reverse the order of rows in the plot, so that markers are ordered from lowest R PPV to highest (default \code{FALSE}, i.e. markers are ordered from highest to lowest PPV).}
 
-\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{antibiotic}, \code{drug_class_list} and optionally \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
+\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{pheno_drug}, and optionally \code{geno_class}, \code{geno_drug}, \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
 
 \item{min}{Minimum number of genomes with the solo marker, to include the marker in the plot (default \code{1}).}
 
@@ -74,7 +77,7 @@ A list containing the following elements:
 }
 }
 \description{
-This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given antibiotic and drug class. It calculates the PPV for solo markers and visualises the results using various plots.
+This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given phenotype drug and genotype filter. It calculates the PPV for solo markers and visualises the results using various plots.
 }
 \details{
 The function analyses the predictive power of individual AMR markers when they are found 'solo' in the genome with no other markers associated with the same class. The phenotype data are matched with genotype presence/absence and then stratified to compute PPV for resistance and non-wild-type interpretations. The function also generates plots to aid in interpretation.
@@ -87,16 +90,16 @@ head(geno_table)
 # Generate binary matrix
 binary_matrix <- get_binary_matrix(
   geno_table = geno_table,
-  pheno_table = ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  pheno_table = ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   sir_col = "pheno_clsi",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
 )
 
 # Run solo PPV analysis plot analysis using this binary_matrix
-# (note antibiotic and drug_class list are optional here, and only used
+# (note pheno_drug / geno_class are optional here, and only used
 # for titling the plot)
 soloPPV_cipro <- solo_ppv_analysis(binary_matrix = binary_matrix)
 

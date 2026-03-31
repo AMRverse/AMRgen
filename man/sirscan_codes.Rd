@@ -19,7 +19,7 @@ sirscan_codes
 \description{
 Reference table mapping Bio-Rad SIRscan antibiotic codes to antibiotic names
 recognised by \code{\link[AMR:as.ab]{AMR::as.ab()}}. Used as the default lookup in
-\code{\link[=import_sirscan_ast]{import_sirscan_ast()}} to translate codes that the AMR package does not
+\code{\link[=import_sirscan_pheno]{import_sirscan_pheno()}} to translate codes that the AMR package does not
 recognise directly. Users can supply their own table via the \code{sirscan_codes}
 argument if their SIRscan configuration uses different code meanings.
 }

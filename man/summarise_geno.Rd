@@ -8,7 +8,7 @@ summarise_geno(
   geno_table,
   sample_col = "id",
   marker_col = "marker",
-  drug_col = "drug_agent",
+  drug_col = "drug",
   class_col = "drug_class",
   gene_col = "gene",
   variation_col = "variation type",
@@ -22,7 +22,7 @@ summarise_geno(
 
 \item{marker_col}{Character. Name of the column containing marker identifiers. Default is \code{"marker"}.}
 
-\item{drug_col}{Character. Name of the column containing drug agent identifiers. Default is \code{"drug_agent"}. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using \link[AMR:as.ab]{AMR::as.ab}. If this is desired behaviour but the class is not 'ab', set \code{force_ab=TRUE}.}
+\item{drug_col}{Character. Name of the column containing drug agent identifiers. Default is \code{"drug"}. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using \link[AMR:as.ab]{AMR::as.ab}. If this is desired behaviour but the class is not 'ab', set \code{force_ab=TRUE}.}
 
 \item{class_col}{Character. Name of the column containing drug class identifiers. Default is \code{"drug_class"}.}
 

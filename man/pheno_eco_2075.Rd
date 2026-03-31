@@ -10,7 +10,7 @@
 Columns include:
 \itemize{
 \item \code{id}: Sample identifier (BioSample).
-\item \code{drug_agent}: Antibiotic identifier, as class 'ab'.
+\item \code{drug}: Antibiotic identifier, as class 'ab'.
 \item \code{mic}: MIC data, as class 'mic'.
 \item \code{pheno_provided}: S/I/R phenotypes as downloaded from EBI.
 \item ...: Additional data columns from EBI.

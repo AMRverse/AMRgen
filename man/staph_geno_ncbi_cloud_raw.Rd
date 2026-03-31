@@ -21,6 +21,6 @@ Columns include:
 staph_geno_ncbi_cloud_raw
 }
 \description{
-AMRFinderPlus genotypes sourced from NCBI via \link{query_ncbi_bq_ast} function, without reformatting.
+AMRFinderPlus genotypes sourced from NCBI via \link{query_ncbi_bq_pheno} function, without reformatting.
 }
 \keyword{datasets}

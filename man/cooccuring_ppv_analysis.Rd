@@ -7,8 +7,9 @@
 cooccuring_ppv_analysis(
   geno_table,
   pheno_table,
-  antibiotic,
-  drug_class_list,
+  pheno_drug,
+  geno_class = NULL,
+  geno_drug = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = NULL,
@@ -25,9 +26,11 @@ cooccuring_ppv_analysis(
 
 \item{pheno_table}{A data frame containing phenotype data.}
 
-\item{antibiotic}{String. The specific antibiotic to analyze (e.g., "Ceftazidime").}
+\item{pheno_drug}{String. The phenotype drug to analyze (e.g., "Ceftazidime").}
 
-\item{drug_class_list}{Vector of strings. The drug classes to filter for (e.g., c("Cephalosporins")).}
+\item{geno_class}{Vector of strings. The genotype drug classes to filter for (e.g., c("Cephalosporins")).}
+
+\item{geno_drug}{Vector of strings. Optional genotype drug identifiers to filter for directly.}
 
 \item{geno_sample_col}{String. Column name for sample IDs in genotype table.}
 
@@ -56,17 +59,17 @@ A list containing:
 }
 }
 \description{
-This function performs a Positive Predictive Value (PPV) analysis for single or multiple AMR markers associated with a given antibiotic and drug class. It calculates the PPV for single and co-occurring markers and visualizes the results using UpSet-style matrix plot.
+This function performs a Positive Predictive Value (PPV) analysis for single or multiple AMR markers associated with a given phenotype drug and genotype filter. It calculates the PPV for single and co-occurring markers and visualizes the results using UpSet-style matrix plot.
 }
 \examples{
 \dontrun{
 geno_table <- import_amrfp(ecoli_geno_raw, "Name")
-head(ecoli_ast)
+head(ecoli_pheno)
 cooccuringPPV_cipro <- cooccuring_ppv_analysis(
   geno_table = geno_table,
-  pheno_table = ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  pheno_table = ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   sir_col = "pheno_provided"
 )
 }

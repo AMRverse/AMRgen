@@ -5,7 +5,7 @@
 #' @param geno_table A tibble or data frame containing genotype data, in the format output by [import_amrfp].
 #' @param sample_col Character. Name of the column containing sample identifiers. Default is `"id"`.
 #' @param marker_col Character. Name of the column containing marker identifiers. Default is `"marker"`.
-#' @param drug_col Character. Name of the column containing drug agent identifiers. Default is `"drug_agent"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
+#' @param drug_col Character. Name of the column containing drug agent identifiers. Default is `"drug"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
 #' @param class_col Character. Name of the column containing drug class identifiers. Default is `"drug_class"`.
 #' @param gene_col Character. Name of the column containing gene identifiers. Default is `"gene"`.
 #' @param variation_col Character. Name of the column containing variation type identifiers. Default is `"variation type"`.
@@ -30,7 +30,7 @@
 summarise_geno <- function(geno_table,
                            sample_col = "id",
                            marker_col = "marker",
-                           drug_col = "drug_agent",
+                           drug_col = "drug",
                            class_col = "drug_class",
                            gene_col = "gene",
                            variation_col = "variation type",
@@ -147,9 +147,9 @@ summarise_geno <- function(geno_table,
 #'
 #' `summarise_pheno()` computes summary information for a phenotype table.
 #'
-#' @param pheno_table A tibble or data frame containing phenotype data, in the format output by [import_ast].
+#' @param pheno_table A tibble or data frame containing phenotype data, in the format output by [import_pheno].
 #' @param sample_col Character. Name of the column containing sample identifiers. Default is `"id"`.
-#' @param drug_col Character. Name of the column containing drug agent identifiers. Default is `"drug_agent"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
+#' @param drug_col Character. Name of the column containing drug agent identifiers. Default is `"drug"`. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using [as.ab]. If this is desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
 #' @param mic_col Character. Name of the column containing MIC measurements Default is `"mic"`.
 #' @param disk_col Character. Name of the column containing disk diffusion zone measurements. Default is `"disk"`.
 #' @param spp_col Character. Name of the column containing species names. Default is `"spp_pheno"`.
@@ -170,14 +170,14 @@ summarise_geno <- function(geno_table,
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @examples
 #'
-#' summarise_pheno(staph_ast_ebi)
+#' summarise_pheno(staph_pheno_ebi)
 #'
-#' summarise_pheno(staph_ast_ebi, pheno_cols = c("pheno_provided", "pheno_clsi", "ecoff"))
+#' summarise_pheno(staph_pheno_ebi, pheno_cols = c("pheno_provided", "pheno_clsi", "ecoff"))
 #'
 #' @export
 summarise_pheno <- function(pheno_table,
                             sample_col = "id",
-                            drug_col = "drug_agent",
+                            drug_col = "drug",
                             mic_col = "mic",
                             disk_col = "disk",
                             spp_col = "spp_pheno",
@@ -296,11 +296,11 @@ summarise_pheno <- function(pheno_table,
 #' Compares a genotype table and phenotype table, to summarise the number of samples present in both tables. For each drug in the phenotype table, summarise the number of phenotype observations, and details of genotype markers detected for the associated drug class/es.
 #'
 #' @param geno_table A tibble or data frame containing genotype data, in the format output by [import_amrfp].
-#' @param pheno_table A tibble or data frame containing phenotype data, in the format output by [import_ast].
+#' @param pheno_table A tibble or data frame containing phenotype data, in the format output by [import_pheno].
 #' @param geno_sample_col Character. Name of the column in the genotype table containing sample identifiers. Default is `"Name"`.
 #' @param pheno_sample_col Character. Name of the column in the phenotype table containing sample identifiers. Default is `"id"`.
 #' @param pheno_cols Vector. Vector giving names of columns in the phenotype table containing categorical phenotype calls (S/I/R or NWT/WT). Default is any columns beginning with `"pheno"` or `"ecoff"`.
-#' @param drug_col Character. Name of the column in the phenotype table containing drug agent identifiers. Default is `"drug_agent"`. Entries will be annotated with their full antibiotic names, converted using [as.ab()]. If the genotype table contains a column indicating individual agents it should share this same name.
+#' @param drug_col Character. Name of the column in the phenotype table containing drug agent identifiers. Default is `"drug"`. Entries will be annotated with their full antibiotic names, converted using [as.ab()]. If the genotype table contains a column indicating individual agents it should share this same name.
 #' @param class_col Character. Name of the column in the genotype table containing drug class identifiers. Default is `"drug_class"`. This should be antibiotic group names understood by the AMR pkg, as per `drug_col` columns generated by the [import_geno()] functions.
 #' @param marker_col Character. Name of the column in the genotype table containing marker identifiers. Default is `"marker"`.
 #' @param gene_col Character. Name of the column in the genotype table containing gene identifiers. Default is `"gene"`.
@@ -323,7 +323,7 @@ summarise_pheno <- function(pheno_table,
 #' @importFrom tidyr separate_longer_delim
 #' @importFrom purrr map
 #' @examples
-#' staph_geno_pheno <- summarise_geno_pheno(staph_geno_ebi, staph_ast_ebi,
+#' staph_geno_pheno <- summarise_geno_pheno(staph_geno_ebi, staph_pheno_ebi,
 #'   pheno_cols = c("pheno_clsi", "pheno_provided")
 #' )
 #' staph_geno_pheno
@@ -332,7 +332,7 @@ summarise_geno_pheno <- function(geno_table, pheno_table,
                                  geno_sample_col = NULL,
                                  pheno_sample_col = NULL,
                                  pheno_cols,
-                                 drug_col = "drug_agent",
+                                 drug_col = "drug",
                                  class_col = "drug_class",
                                  marker_col = "marker",
                                  gene_col = "gene",

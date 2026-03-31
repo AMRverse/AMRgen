@@ -7,8 +7,9 @@
 get_binary_matrix(
   geno_table,
   pheno_table,
-  antibiotic,
-  drug_class_list = NULL,
+  pheno_drug = NULL,
+  geno_class = NULL,
+  geno_drug = NULL,
   keep_SIR = TRUE,
   keep_assay_values = FALSE,
   keep_assay_values_from = c("mic", "disk"),
@@ -23,11 +24,13 @@ get_binary_matrix(
 \arguments{
 \item{geno_table}{A data frame containing genotype data, in long form with one row per sample and genetic marker. Expected format is that output by \code{\link[=import_amrfp]{import_amrfp()}} and must include a column labeled \code{drug_class} (indicating the antibiotic class associated with each marker), in addition to a column indicating the marker (column name specified via \code{marker_col}) and a column for sample identifiers (specified via \code{geno_sample_col}, otherwise it is assumed the first column contains identifiers).}
 
-\item{pheno_table}{A data frame containing phenotype data, in long form with one row per sample, drug and assay result. Expected format is that output by \code{\link[=import_ast]{import_ast()}} and must include a column \code{drug_agent} (indicating the drug agent, interpretable as AMR pkg class \code{ab}), in addition to a column for sample identifiers (specified via \code{pheno_sample_col}, otherwise it is assumed the first column contains identifiers), a column with the resistance interpretation (S/I/R, specified via \code{sir_col}), and optionally a column with the ECOFF interpretation (WT/NWT or S/R, specified via \code{ecoff_col}).}
+\item{pheno_table}{A data frame containing phenotype data, in long form with one row per sample, drug and assay result. Expected format is that output by \code{\link[=import_pheno]{import_pheno()}} and must include a column \code{drug} (indicating the drug, interpretable as AMR pkg class \code{ab}), in addition to a column for sample identifiers (specified via \code{pheno_sample_col}, otherwise it is assumed the first column contains identifiers), a column with the resistance interpretation (S/I/R, specified via \code{sir_col}), and optionally a column with the ECOFF interpretation (WT/NWT or S/R, specified via \code{ecoff_col}).}
 
-\item{antibiotic}{A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the \code{drug_agent} column of \code{pheno_table} or be coercible to a match using \link[AMR:as.ab]{AMR::as.ab}.}
+\item{pheno_drug}{A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the \code{drug} column of \code{pheno_table} or be coercible to a match using \link[AMR:as.ab]{AMR::as.ab}.}
 
-\item{drug_class_list}{A character vector (optional) of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).}
+\item{geno_class}{A character vector (optional) of drug classes to filter genotype data for markers related to the specified drug. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with \code{pheno_drug} and uses those (these are printed to screen so the user can see what is being filtered).}
+
+\item{geno_drug}{A character vector (optional) of genotype drug names to filter genotype data on the \code{drug} column.}
 
 \item{keep_SIR}{A logical indicating whether to retain the full S/I/R phenotype column in the output. Defaults to \code{TRUE}.}
 
@@ -48,17 +51,17 @@ get_binary_matrix(
 \item{most_resistant}{A logical indicating whether, when multiple phenotype entries are present for the same sample and drug, the most resistant should be kept (otherwise the least resistant is kept). Default is \code{TRUE}.}
 }
 \value{
-A data frame where each row represents a sample, and each column represents a genetic marker related to the specified antibiotic's drug class. The binary values in the matrix indicate the presence (\code{1}) or absence (\code{0}) of each marker for each sample, along with resistance status columns for the specified antibiotic: \code{R} for resistant (defined from \code{sir_col}, 1=R, 0=I/S) and \code{NWT} for nonwildtype (defined by \code{ecoff_col} if provided: 1=NWT, 0=WT; otherwise defined from \code{sir_col}: 1=I/R, 0=S).
+A data frame where each row represents a sample, and each column represents a genetic marker related to the specified drug's genotype class or drug mapping. The binary values in the matrix indicate the presence (\code{1}) or absence (\code{0}) of each marker for each sample, along with resistance status columns for the specified drug: \code{R} for resistant (defined from \code{sir_col}, 1=R, 0=I/S) and \code{NWT} for nonwildtype (defined by \code{ecoff_col} if provided: 1=NWT, 0=WT; otherwise defined from \code{sir_col}: 1=I/R, 0=S).
 }
 \description{
-This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given antibiotic, and presence or absence of genetic markers related to one or more specified drug classes. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified antibiotic and drug class criteria before creating a binary matrix. Suitable input files can be generated using \code{\link[=import_ast]{import_ast()}} to import phenotype data, and \code{\link[=import_amrfp]{import_amrfp()}} to import genotype data from AMRFinderPlus.
+This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given phenotype drug, and presence or absence of genetic markers related to one or more specified genotype drug classes or drugs. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified phenotype and genotype drug criteria before creating a binary matrix. Suitable input files can be generated using \code{\link[=import_pheno]{import_pheno()}} to import phenotype data, and \code{\link[=import_amrfp]{import_amrfp()}} to import genotype data from AMRFinderPlus.
 }
 \details{
 This function performs several steps:
 \itemize{
-\item Verifies that the \code{pheno_table} contains a \code{drug_agent} column and converts it to class \code{ab} if necessary.
-\item Filters the \code{pheno_table} to retain data related to the specified antibiotic.
-\item Checks that the \code{geno_table} contains markers associated with the specified drug class(es).
+\item Verifies that the \code{pheno_table} contains a \code{drug} column and converts it to class \code{ab} if necessary.
+\item Filters the \code{pheno_table} to retain data related to the specified phenotype drug.
+\item Checks that the \code{geno_table} contains markers associated with the specified genotype class(es) and/or drug(s).
 \item Matches sample identifiers between \code{geno_table} and \code{pheno_table}.
 \item Extracts and transforms the phenotype data into a binary format indicating resistance and NWT status.
 \item Constructs a binary matrix for genotype data, with each column representing a genetic marker.
@@ -71,16 +74,16 @@ This function performs several steps:
 ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 geno_pheno_cip <- get_binary_matrix(
   ecoli_geno,
-  ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   sir_col = "pheno_clsi"
 )
 geno_pheno_cip <- get_binary_matrix(
   ecoli_geno,
-  ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   sir_col = "Resistance phenotype",
   keep_assay_values = TRUE
 )

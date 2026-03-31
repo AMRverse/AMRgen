@@ -7,7 +7,7 @@
 summarise_pheno(
   pheno_table,
   sample_col = "id",
-  drug_col = "drug_agent",
+  drug_col = "drug",
   mic_col = "mic",
   disk_col = "disk",
   spp_col = "spp_pheno",
@@ -17,11 +17,11 @@ summarise_pheno(
 )
 }
 \arguments{
-\item{pheno_table}{A tibble or data frame containing phenotype data, in the format output by \link{import_ast}.}
+\item{pheno_table}{A tibble or data frame containing phenotype data, in the format output by \link{import_pheno}.}
 
 \item{sample_col}{Character. Name of the column containing sample identifiers. Default is \code{"id"}.}
 
-\item{drug_col}{Character. Name of the column containing drug agent identifiers. Default is \code{"drug_agent"}. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using \link[AMR:as.ab]{AMR::as.ab}. If this is desired behaviour but the class is not 'ab', set \code{force_ab=TRUE}.}
+\item{drug_col}{Character. Name of the column containing drug agent identifiers. Default is \code{"drug"}. If this is of class 'ab' the entries will be annotated with their full antibiotic names, converted using \link[AMR:as.ab]{AMR::as.ab}. If this is desired behaviour but the class is not 'ab', set \code{force_ab=TRUE}.}
 
 \item{mic_col}{Character. Name of the column containing MIC measurements Default is \code{"mic"}.}
 
@@ -53,8 +53,8 @@ The \code{force_ab} parameter allows the addition of full antibiotic names using
 }
 \examples{
 
-summarise_pheno(staph_ast_ebi)
+summarise_pheno(staph_pheno_ebi)
 
-summarise_pheno(staph_ast_ebi, pheno_cols = c("pheno_provided", "pheno_clsi", "ecoff"))
+summarise_pheno(staph_pheno_ebi, pheno_cols = c("pheno_provided", "pheno_clsi", "ecoff"))
 
 }

@@ -8,7 +8,7 @@
 \code{kp_mero_amrfp} A data frame with 32,385 rows and 34 columns:
 \itemize{
 \item \code{id}:  BioSample.
-\item \code{drug_agent}, \code{drug_class}: Antibiotic agent and class, determined by parsing AMRFinderPlus \code{subclass} field in the downloaded file.
+\item \code{drug}, \code{drug_class}: Antibiotic agent and class, determined by parsing AMRFinderPlus \code{subclass} field in the downloaded file.
 \item \code{gene}, \code{node}, \code{marker}: gene identifiers.
 \item \code{mutation}: mutation within gene, parsed into HGVS nomenclature format from \code{amr_element_symbol} field in the downloaded file.
 \item \verb{\% Coverage of reference}:  \% Coverage of reference.

@@ -14,10 +14,10 @@
 #  the Free Software Foundation.                                        #
 # ===================================================================== #
 
-#' Query antimicrobial phenotype (AST) data from NCBI Pathogen Detection BigQuery
+#' Query antimicrobial phenotype data from NCBI Pathogen Detection BigQuery
 #'
 #' This function queries the `ncbi-pathogen-detect.pdbrowser.ast` BigQuery table to retrieve
-#' antimicrobial susceptibility testing (AST) data from NCBI Pathogen Detection.
+#' antimicrobial phenotype data from NCBI Pathogen Detection.
 #'
 #' @details
 #' Requires Google Cloud authentication. Run `bigrquery::bq_auth()` before
@@ -27,35 +27,35 @@
 #' @param taxgroup String specifying the organism group to filter on (e.g.,
 #' "Pseudomonas aeruginosa"). See <https://www.ncbi.nlm.nih.gov/pathogens/organisms/>
 #' for a list. Required.
-#' @param antibiotic (Optional) String (or vector of strings) specifying the
-#' antibiotic name/s to filter on (default NULL). Uses the AMR package to try
+#' @param pheno_drug (Optional) String (or vector of strings) specifying the
+#' phenotype drug name/s to filter on (default NULL). Uses the AMR package to try
 #' to fix typos, and format to lower-case.
-#' @param force_antibiotic (Optional) Logical indicating whether to turn off
-#' parsing of antibiotic names and match exactly on the input strings (default
-#' FALSE).
+#' @param force_pheno_drug (Optional) Logical indicating whether to turn off
+#' parsing of phenotype drug names and match exactly on the input strings (default
+#' `FALSE`).
 #'
 #' @param project_id (Optional) Google Cloud Project ID to use for billing. If
 #'  NULL (default), looks for `GOOGLE_CLOUD_PROJECT` environment variable.
 #'
-#' @return A tibble containing AST data with columns renamed to match
-#' `import_ncbi_ast()` expectations.
+#' @return A tibble containing phenotype data with columns renamed to match
+#' `import_ncbi_pheno()` expectations.
 #' @importFrom bigrquery bq_project_query bq_table_download
 #' @importFrom dplyr rename mutate
 #' @export
 #' @examples
 #' \dontrun{
-#' # Query AST data for Klebsiella pneumoniae, filtered to meropenem
-#' ast_raw <- query_ncbi_bq_ast(
+#' # Query phenotype data for Klebsiella pneumoniae, filtered to meropenem
+#' pheno_raw <- query_ncbi_bq_pheno(
 #'   taxgroup = "Klebsiella pneumoniae",
-#'   antibiotic = "meropenem"
+#'   pheno_drug = "meropenem"
 #' )
 #'
 #' # Import and reinterpret using CLSI breakpoints
-#' ast <- import_ncbi_ast(ast_raw, interpret_clsi = TRUE)
+#' pheno <- import_ncbi_pheno(pheno_raw, interpret_clsi = TRUE)
 #' }
-query_ncbi_bq_ast <- function(taxgroup,
-                              antibiotic = NULL,
-                              force_antibiotic = FALSE,
+query_ncbi_bq_pheno <- function(taxgroup,
+                              pheno_drug = NULL,
+                              force_pheno_drug = FALSE,
                               project_id = NULL) {
   if (missing(taxgroup)) stop("Argument 'taxgroup' is required.")
 
@@ -83,28 +83,28 @@ query_ncbi_bq_ast <- function(taxgroup,
 
 
   # Add antibiotic filter
-  if (!is.null(antibiotic)) {
-    if (!force_antibiotic) {
+  if (!is.null(pheno_drug)) {
+    if (!force_pheno_drug) {
       if (requireNamespace("AMR", quietly = TRUE)) {
-        antibiotic <- unique(tolower(AMR::ab_name(AMR::as.ab(antibiotic))))
+        pheno_drug <- unique(tolower(AMR::ab_name(AMR::as.ab(pheno_drug))))
       } else {
-        warning("AMR package not installed. Using provided antibiotic names without parsing.")
-        antibiotic <- tolower(antibiotic)
+        warning("AMR package not installed. Using provided phenotype drug names without parsing.")
+        pheno_drug <- tolower(pheno_drug)
       }
     } else {
-      antibiotic <- tolower(antibiotic)
+      pheno_drug <- tolower(pheno_drug)
     }
 
-    if (length(antibiotic) == 1) {
+    if (length(pheno_drug) == 1) {
       query <- paste0(query, " AND antibiotic = @antibiotic")
     } else {
       query <- paste0(query, " AND antibiotic IN UNNEST(@antibiotic)")
     }
-    params$antibiotic <- antibiotic
+    params$antibiotic <- pheno_drug
   }
   # Execute query
   res <- bq_query_with_auth_check(project_id, query, params)
-  # Rename columns to match import_ncbi_ast expectations
+  # Rename columns to match import_ncbi_pheno expectations
   res <- res %>%
     dplyr::rename(
       "BioSample" = biosample_acc,
@@ -123,12 +123,13 @@ query_ncbi_bq_ast <- function(taxgroup,
   return(res)
 }
 
+
 #' Query antimicrobial genotype (MicroBIGG-E) data from NCBI Pathogen Detection BigQuery
 #'
 #' This function queries the `ncbi-pathogen-detect.pdbrowser.microbigge` BigQuery table to retrieve
 #' genotype data. **Note:** This function only returns genotypes for BioSamples that also have AST data.
 #'
-#' @inheritParams query_ncbi_bq_ast
+#' @inheritParams query_ncbi_bq_pheno
 #' @param geno_subclass (Optional) String or vector of strings specifying AMR
 #' subclasses to filter on (e.g., "CARBAPENEM").
 #' @param geno_class (Optional) String or vector of strings specifying AMR

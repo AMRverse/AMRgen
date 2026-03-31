@@ -69,7 +69,7 @@ The phenotype table has one row for each assay measurement, i.e. one per strain/
 
 * `spp_pheno`: species in the form of an AMR package `mo` class, in this vignette "B_ESCHR_COLI"
 
-* `drug_agent`: antibiotic name in the form of an AMR package `ab` class
+* `drug`: antibiotic name in the form of an AMR package `ab` class
 
 * a phenotype column: S/I/R phenotype calls in the form of an AMR package `sir` class. In this example, SIR phenotype calls are as provided in the EBI AMR portal (`pheno_provided`) as we did not re-interpret data based on CLSI/EUCAST breakpoints during download.
 
@@ -115,8 +115,8 @@ The function `get_binary_matrix()` is used to extract phenotype data for a speci
 eco_cip_matrix <- get_binary_matrix(
   geno_eco_2075,
   pheno_eco_2075,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = "Quinolones",
+  pheno_drug = "Ciprofloxacin",
+  geno_class = "Quinolones",
   sir_col = "pheno_provided",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -138,7 +138,7 @@ The function `assay_by_var()` can be used to plot the distribution of MIC values
 # The breakpoints are provided manually.
 assay_by_var(
   pheno_table = pheno_eco_2075,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   measure = "mic",
   colour_by = "pheno_provided",
   species = "Escherichia coli",
@@ -150,7 +150,7 @@ assay_by_var(
 # The breakpoints are provided by passing the option "guideline"
 assay_by_var(
   pheno_table = pheno_eco_2075,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   measure = "mic",
   colour_by = "pheno_provided",
   species = "Escherichia coli",

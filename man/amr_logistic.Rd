@@ -7,8 +7,9 @@
 amr_logistic(
   geno_table,
   pheno_table,
-  antibiotic = NULL,
-  drug_class_list = NULL,
+  pheno_drug = NULL,
+  geno_class = NULL,
+  geno_drug = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = "pheno",
@@ -25,11 +26,13 @@ amr_logistic(
 \arguments{
 \item{geno_table}{(Required if \code{binary_matrix} not provided) A data frame containing genotype data, formatted with \code{\link[=import_amrfp]{import_amrfp()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_ast]{import_ast()}}. Only used if \code{binary_matrix} not provided.}
+\item{pheno_table}{(Required if \code{binary_matrix} not provided) A data frame containing phenotype data, formatted with \code{\link[=import_pheno]{import_pheno()}}. Only used if \code{binary_matrix} not provided.}
 
-\item{antibiotic}{(Required if \code{binary_matrix} not provided) A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the \code{drug_agent} column of \code{pheno_table}. Only used if \code{binary_matrix} not provided or if breakpoints required.}
+\item{pheno_drug}{(Required if \code{binary_matrix} not provided) A character string specifying the phenotype drug of interest to filter phenotype data. The value must match one of the entries in the \code{drug} column of \code{pheno_table}. Only used if \code{binary_matrix} not provided.}
 
-\item{drug_class_list}{(Required if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype data for markers related to the specified antibiotic. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. Only used if \code{binary_matrix} not provided.}
+\item{geno_class}{(Optional if \code{binary_matrix} not provided) A character vector of drug classes to filter genotype data for related markers. Markers in \code{geno_table} will be filtered based on whether their \code{drug_class} matches any value in this list. Use \code{geno_drug} instead if you want to filter genotype rows directly by their \code{drug} field.}
+
+\item{geno_drug}{(Optional if \code{binary_matrix} not provided) A character vector of drug identifiers to filter genotype data by the \code{drug} column.}
 
 \item{geno_sample_col}{A character string (optional) specifying the column name in \code{geno_table} containing sample identifiers. Defaults to \code{NULL}, in which case it is assumed the first column contains identifiers. Only used if \code{binary_matrix} not provided.}
 
@@ -41,7 +44,7 @@ amr_logistic(
 
 \item{marker_col}{(Optional) Name of the column containing the marker identifiers, whose unique values will be treated as predictors in the regression. Defaults to \code{"marker"}.}
 
-\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{antibiotic}, \code{drug_class_list} and optionally \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
+\item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{pheno_drug}, and optionally \code{geno_class}, \code{geno_drug}, \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
 
 \item{maf}{(Optional) An integer specifying the minimum allele frequency (MAF) threshold. Markers with a MAF lower than this value will be excluded. Defaults to \code{10}.}
 
@@ -65,16 +68,16 @@ A list with the following components:
 }
 }
 \description{
-Performs logistic regression to analyse the relationship between genetic markers and phenotype (R, and NWT) for a specified antibiotic.
+Performs logistic regression to analyse the relationship between genetic markers and phenotype (R, and NWT) for a specified phenotype drug.
 }
 \examples{
 # Example usage of the amr_logistic function
 result <- amr_logistic(
   geno_table = import_amrfp(ecoli_geno_raw, "Name"),
-  pheno_table = ecoli_ast,
+  pheno_table = ecoli_pheno,
   sir_col = "pheno_clsi",
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   maf = 10
 )
 # To access the plot:

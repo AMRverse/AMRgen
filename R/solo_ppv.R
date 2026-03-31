@@ -16,12 +16,13 @@
 
 #' Perform Solo PPV Analysis for AMR Markers
 #'
-#' This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given antibiotic and drug class. It calculates the PPV for solo markers and visualises the results using various plots.
-#' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
+#' This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given phenotype drug and genotype filter. It calculates the PPV for solo markers and visualises the results using various plots.
+#' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `pheno_drug`, and optionally `geno_class`, `geno_drug`, `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
-#' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_ast()]. Only used if `binary_matrix` not provided.
-#' @param antibiotic (Required if `binary_matrix` not provided) A character string specifying the antibiotic of interest to filter phenotype data. The value must match one of the entries in the `drug_agent` column of `pheno_table`. Only used if `binary_matrix` not provided or if breakpoints required.
-#' @param drug_class_list (Only relevant if `binary_matrix` not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).
+#' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_pheno()]. Only used if `binary_matrix` not provided.
+#' @param pheno_drug (Required if `binary_matrix` not provided) A character string specifying the phenotype drug of interest to filter phenotype data. The value must match one of the entries in the `drug` column of `pheno_table`.
+#' @param geno_class (Optional if `binary_matrix` not provided) A character vector of genotype drug classes used to filter markers in `geno_table`.
+#' @param geno_drug (Optional if `binary_matrix` not provided) A character vector of genotype drug identifiers used to filter `geno_table` by its `drug` column.
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
@@ -58,16 +59,16 @@
 #' # Generate binary matrix
 #' binary_matrix <- get_binary_matrix(
 #'   geno_table = geno_table,
-#'   pheno_table = ecoli_ast,
-#'   antibiotic = "Ciprofloxacin",
-#'   drug_class_list = c("Quinolones"),
+#'   pheno_table = ecoli_pheno,
+#'   pheno_drug = "Ciprofloxacin",
+#'   geno_class = c("Quinolones"),
 #'   sir_col = "pheno_clsi",
 #'   keep_assay_values = TRUE,
 #'   keep_assay_values_from = "mic"
 #' )
 #'
 #' # Run solo PPV analysis plot analysis using this binary_matrix
-#' # (note antibiotic and drug_class list are optional here, and only used
+#' # (note pheno_drug / geno_class are optional here, and only used
 #' # for titling the plot)
 #' soloPPV_cipro <- solo_ppv_analysis(binary_matrix = binary_matrix)
 #'
@@ -75,7 +76,7 @@
 #' soloPPV_cipro$combined_plot
 #' }
 solo_ppv_analysis <- function(geno_table, pheno_table,
-                              antibiotic = NULL, drug_class_list = NULL,
+                              pheno_drug = NULL, geno_class = NULL, geno_drug = NULL,
                               geno_sample_col = NULL, pheno_sample_col = NULL,
                               sir_col = NULL, ecoff_col = "ecoff", icat = FALSE,
                               marker_col = "marker", reverse_order = FALSE,
@@ -116,8 +117,9 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
     binary_matrix <- get_binary_matrix(
       geno_table = geno_table,
       pheno_table = pheno_table,
-      antibiotic = antibiotic,
-      drug_class_list = drug_class_list,
+      pheno_drug = pheno_drug,
+      geno_class = geno_class,
+      geno_drug = geno_drug,
       geno_sample_col = geno_sample_col,
       pheno_sample_col = pheno_sample_col,
       sir_col = sir_col,
@@ -326,14 +328,14 @@ solo_ppv_analysis <- function(geno_table, pheno_table,
     ) +
     xlim(0, 1)
 
-  if (!is.null(drug_class_list)) {
-    header <- paste("Solo markers for class:", paste0(drug_class_list, collapse = ", "))
+  if (!is.null(geno_class)) {
+    header <- paste("Solo markers for class:", paste0(geno_class, collapse = ", "))
   } else {
     header <- "Solo markers"
   }
 
-  if (!is.null(antibiotic)) {
-    subtitle <- paste("vs phenotype for drug:", antibiotic)
+  if (!is.null(pheno_drug)) {
+    subtitle <- paste("vs phenotype for drug:", pheno_drug)
   } else {
     subtitle <- "vs drug phenotype"
   }

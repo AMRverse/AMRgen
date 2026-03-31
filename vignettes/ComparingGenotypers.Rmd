@@ -50,11 +50,11 @@ library(stringr)
 
 The `download_ebi()` function lets you load phenotype data and interpret susceptible, intermediate, and resistant phenotypes using EUCAST breakpoints and ECOFF. A copy of the data objected produced below is available in the AMRgen package as `kp_mero_euscape`.
 
-``` {r download_ebi_phenotype, warning=FALSE, message=FALSE}
+``` {r download_ebi_phenotype, warning=FALSE, message=FALSE, eval=F}
 # Download Klebsiella pneumoniae AST data from EBI, filtering for meropenem and re-interpret with EUCAST breakpoints and ECOFF
 
 kp_mero <- download_ebi(
-  antibiotic = "meropenem",
+  pheno_drug = "meropenem",
   species = "Klebsiella pneumoniae",
   reformat = TRUE,
   interpret_eucast = TRUE,
@@ -89,7 +89,7 @@ summarise_pheno(kp_mero_euscape, pheno_cols = c("pheno_eucast", "ecoff"))
 # MIC distribution coloured by phenotype interpretation using EUCAST breakpoint
 assay_by_var(
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Klebsiella pneumoniae"
@@ -101,7 +101,7 @@ kp_mero_euscape %>% count(ecoff)
 # MIC distribution coloured by ECOFF
 assay_by_var(
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   measure = "mic",
   colour_by = "ecoff",
   species = "Klebsiella pneumoniae"
@@ -157,8 +157,8 @@ Most AMRgen analysis functions require a binary matrix with one sample per row, 
 kleborate_binary_matrix <- get_binary_matrix(
   geno_table = kleborate_dev,
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
-  drug_class_list = c("Carbapenems"),
+  pheno_drug = "Meropenem",
+  geno_class = c("Carbapenems"),
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic",
@@ -191,7 +191,7 @@ comboPPV_kleborate_mero <- ppv(
   binary_matrix = kleborate_binary_matrix,
   order = "value",
   min_set_size = 2,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   upset_grid = TRUE,
   plot_assay = TRUE,
   assay = "mic"
@@ -870,8 +870,8 @@ summarise_geno(rgi)
 rgi_binary_matrix <- get_binary_matrix(
   geno_table = rgi,
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
-  drug_class_list = c("Carbapenems"),
+  pheno_drug = "Meropenem",
+  geno_class = c("Carbapenems"),
   sir_col = "pheno_eucast",
   marker_col = "marker.label",
   keep_assay_values = TRUE,
@@ -930,8 +930,8 @@ soloPPV_kleborate_mero
 amrfp_binary_matrix <- get_binary_matrix(
   geno_table = kp_mero_amrfp,
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
-  drug_class_list = c("Carbapenems"),
+  pheno_drug = "Meropenem",
+  geno_class = c("Carbapenems"),
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -947,7 +947,7 @@ comboPPV_rgi_mero <- ppv(
   binary_matrix = rgi_binary_matrix_prev80,
   order = "value",
   min_set_size = 2,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   upset_grid = TRUE,
   plot_assay = TRUE,
   assay = "mic"
@@ -1106,7 +1106,7 @@ Another way to investigate the association between AMR markers and meropenem sus
 ```{r log_reg_combined}
 combined_logist <- amr_logistic(
   binary_matrix = combined_binary_matrix,
-  antibiotic = "meropenem",
+  pheno_drug = "meropenem",
   ecoff_col = "ecoff",
   maf = 10, # filter for AMR markers in at least 10 samples
   single_plot = TRUE
@@ -1123,7 +1123,7 @@ comboPPV_combined_mero <- ppv(
   binary_matrix = combined_binary_matrix,
   order = "value",
   min_set_size = 2,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   upset_grid = TRUE,
   plot_assay = TRUE,
   assay = "mic"

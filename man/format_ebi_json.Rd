@@ -13,7 +13,7 @@ format_ebi_json(
 }
 \arguments{
 \item{ebi_antibiogram_table}{A data frame in the format output by
-\code{\link[=export_ebi_ast]{export_ebi_ast()}}.}
+\code{\link[=export_ebi_pheno]{export_ebi_pheno()}}.}
 
 \item{submission_account}{Character string specifying the Webin
 submission account identifier (e.g. \code{"Webin-###"}).}
@@ -29,7 +29,7 @@ Invisibly returns \code{NULL}. The function prints JSON-formatted
 AMR submission records to file.
 }
 \description{
-Converts the tabular output of \code{\link[=export_ebi_ast]{export_ebi_ast()}} into JSON
+Converts the tabular output of \code{\link[=export_ebi_pheno]{export_ebi_pheno()}} into JSON
 files formatted for submission to EBI as BioSample data
 (https://www.ebi.ac.uk/amr/amr_submission_guide/). Each row of the input
 dataset is converted into JSON records and printed to file.

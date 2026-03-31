@@ -17,12 +17,12 @@
 #' Import and process antimicrobial phenotype data from a generic format
 #'
 #' This function attempts to import antibiotic susceptibility testing (AST) data in long-form antibiogram format (one row per sample and test), suitable for downstream use with AMRgen analysis functions. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data, S/I/R calls) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF).
-#' @param input A string representing a dataframe, or a path to an input file, containing the AST data in long-form antibiogram format (one row per sample and test). This might be a file containing the content of an EBI/NCBI AST dataset previously processed using [import_ebi_ast()], [import_ncbi_ast()], or [import_ast()] functions, or files with a similar format/structure but with different column names.
+#' @param input A string representing a dataframe, or a path to an input file, containing the AST data in long-form antibiogram format (one row per sample and test). This might be a file containing the content of an EBI/NCBI AST dataset previously processed using [import_ebi_pheno()], [import_ncbi_pheno()], or [import_pheno()] functions, or files with a similar format/structure but with different column names.
 #' @param sample_col (optional, default `"id"`) String indicating the name of the input data column that provides the sample name. If the `rename_cols` parameter is set to `TRUE`, this column will be renamed as `id`.
 #' @param species_col (optional, default `"species"`) String indicating the name of the input data column that provides a species name. If provided, this column will be converted to micro-organism class `mo` via [AMR::as.mo()]. If the `rename_cols` parameter is set to `TRUE`, this column will also be renamed as `spp_pheno`. If interpretation is switched on, this column will be used to identify the appropriate  breakpoints for interpretation of each row in the data table.
 #' @param species (optional, default `NULL`) String indicating the name of the single species to which all samples belong. Use this if you want to interpret assay measurements but the input file does not contain a column indicating the species for each sample (called `species` or a name specified by the `species_col` parameter).
-#' @param ab_col (optional, default `"drug_agent"`) String indicating the name of the input data column that provides a drug name. If provided, this column will be converted to antibiotic class `ab` via [AMR::as.ab()]. If the `rename_cols` parameter is set to `TRUE`, this column will also be renamed as `drug_agent`. If interpretation is switched on, this column will be used to identify the appropriate breakpoints for interpretation of each row in the data table.
-#' @param ab (optional, default `NULL`) String indicating the name of a single antibiotic to use for phenotype interpretation. Use this if you want to interpret assay measurements but the input file does not contain a column indicating the drug for each sample (called `drug_agent` or a name specified by the `ab_col` parameter).
+#' @param ab_col (optional, default `"drug"`) String indicating the name of the input data column that provides a drug name. If provided, this column will be converted to antibiotic class `ab` via [AMR::as.ab()]. If the `rename_cols` parameter is set to `TRUE`, this column will also be renamed as `drug`. If interpretation is switched on, this column will be used to identify the appropriate breakpoints for interpretation of each row in the data table.
+#' @param ab (optional, default `NULL`) String indicating the name of a single antibiotic to use for phenotype interpretation. Use this if you want to interpret assay measurements but the input file does not contain a column indicating the drug for each sample (called `drug` or a name specified by the `ab_col` parameter).
 #' @param mic_col (optional, default `"mic"`) String indicating the name of the input data column that provides MIC measurements. If provided, this column will be converted to MIC class `mic` via [AMR::as.mic()]. If the `rename_cols` parameter is set to `TRUE`, this column will also be renamed as `mic`. If interpretation is switched on, the MIC values will be interpreted against clinical breakpoints.
 #' @param disk_col (optional, default `"disk"`) String indicating the name of the input data column that provides disk diffusion zone measurements. If provided, this column will be converted to disk diffusion class `disk` via [AMR::as.disk()]. If the `rename_cols` parameter is set to `TRUE`, this column will also be renamed as `disk`. If interpretation is switched on, the zone values will be interpreted against clinical breakpoints.
 #' @param pheno_cols (optional, default `c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided")`) String, or vector of strings, indicating the name/s of the input data column/s that provide interpreted phenotypes (with column values encoded as `S/I/R` or `WT/NWT`). If provided, these columns will be converted to class `sir` via [AMR::as.sir()].
@@ -33,7 +33,7 @@
 #' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class `sir`.
 #' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
 #' @param interpret_ecoff A logical value (default is `FALSE`). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class `sir` and coded as `NWT` (nonwildtype) or `WT` (wildtype).
-#' @param rename_cols A logical value (default is `TRUE`). If `TRUE`, the function will rename the provided columns (specified by `sample_col`, `ab_col`, `mic_col`, `disk_col`, `species_col`) to the default names expected by AMRgen functions (`id`, `drug_agent`, `mic`, `disk`, `spp_pheno`), to match those output by the other [import_ast()] functions.
+#' @param rename_cols A logical value (default is `TRUE`). If `TRUE`, the function will rename the provided columns (specified by `sample_col`, `ab_col`, `mic_col`, `disk_col`, `species_col`) to the default names expected by AMRgen functions (`id`, `drug`, `mic`, `disk`, `spp_pheno`), to match those output by the other [import_pheno()] functions.
 #' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
 #' @importFrom dplyr any_of mutate relocate
 #' @importFrom rlang is_string :=
@@ -42,28 +42,28 @@
 #' @examples
 #' \dontrun{
 #' # import and process AST data from EBI, write formatted data to file for later use
-#' pheno <- import_ebi_ast("EBI_AMR_data.csv.gz")
+#' pheno <- import_ebi_pheno("EBI_AMR_data.csv.gz")
 #' write_tsv(pheno,
 #'   file = "EBI_AMR_data_processed.tsv.gz",
 #'   interpret_eucast = TRUE, interpret_ecoff = TRUE
 #' )
 #'
 #' # read stored data and format the columns to the correct classes
-#' pheno <- format_ast("EBI_AMR_data_processed.tsv.gz")
+#' pheno <- format_pheno("EBI_AMR_data_processed.tsv.gz")
 #'
 #' # read in unprocessed E. coli AST data from non-standard format and interpret
-#' pheno <- format_ast("AMR_data.tsv",
+#' pheno <- format_pheno("AMR_data.tsv",
 #'   sample_col = "STRAIN", species = "E. coli",
 #'   ab_col = "Antibiotic", mic_col = "MIC (mg/L)",
 #'   interpret_eucast = TRUE, interpret_ecoff = TRUE
 #' )
 #' }
-format_ast <- function(input,
+format_pheno <- function(input,
                        sample_col = "id",
                        species = NULL, # convert with as.mo
                        species_col = "spp_pheno", # convert with as.mo
                        ab = NULL, # convert with as.ab
-                       ab_col = "drug_agent", # convert with as.ab
+                       ab_col = "drug", # convert with as.ab
                        mic_col = "mic", # convert with as.mic
                        disk_col = "disk", # convert with as.disk
                        pheno_cols = c("ecoff", "pheno_eucast", "pheno_clsi", "pheno_provided"), # convert with as.sir
@@ -99,17 +99,17 @@ format_ast <- function(input,
   }
 
   if (!is.null(ab)) {
-    message("Adding new antibiotic column 'drug_agent' (class 'ab') with constant value ", ab)
-    ast$drug_agent <- as.ab(ab)
+    message("Adding new antibiotic column 'drug' (class 'ab') with constant value ", ab)
+    ast$drug <- as.ab(ab)
   }
 
   if (!is.null(ab_col)) {
     if (ab_col %in% colnames(ast)) {
       ast <- ast %>% mutate(!!sym(ab_col) := as.ab(!!sym(ab_col)))
       message("Parsing column ", ab_col, " as antibiotic (class 'ab')")
-      if (rename_cols & ab_col != "drug_agent") {
-        ast <- ast %>% rename(drug_agent = !!sym(ab_col))
-        message("Renaming column ", ab_col, " to standard name 'drug_agent'")
+      if (rename_cols & ab_col != "drug") {
+        ast <- ast %>% rename(drug = !!sym(ab_col))
+        message("Renaming column ", ab_col, " to standard name 'drug'")
       }
     } else {
       message("Could not find ab_col ", ab_col, " in input table")
@@ -208,7 +208,7 @@ format_ast <- function(input,
     }
   }
 
-  ast <- interpret_ast(ast,
+  ast <- interpret_pheno(ast,
     interpret_ecoff = interpret_ecoff,
     interpret_eucast = interpret_eucast,
     interpret_clsi = interpret_clsi,
@@ -221,7 +221,7 @@ format_ast <- function(input,
   }
 
   ast <- ast %>% relocate(any_of(c(
-    "id", "drug_agent", "mic", "disk", ab_col, mic_col, disk_col, pheno_cols,
+    "id", "drug", "mic", "disk", ab_col, mic_col, disk_col, pheno_cols,
     "pheno_eucast", "pheno_clsi", "ecoff", "guideline",
     "method", "platform", "source", "pheno_provided", "spp_pheno", species_col
   )))
@@ -233,12 +233,12 @@ format_ast <- function(input,
 #' Interpret antimicrobial susceptibility phenotype data in a standard format tibble
 #'
 #' This function applies human EUCAST or CLSI breakpoints, and/or ECOFF, to interpret antimicrobial susceptibility testing (AST) data.
-#' @param ast A tibble containing the phenotype measures in standard AMRgen format, as output by [import_ast()]. It must contain assay measurements in columns `mic` (class `mic`) and/or `disk` (class `disk`). Interpretation requires an organism (column `spp_pheno` of class `mo`, or a single value passed via the `species` parameter) and an antibiotic (column `drug_agent` of class `ab`, or a single value passed via the `ab` parameter).
+#' @param ast A tibble containing the phenotype measures in standard AMRgen format, as output by [import_pheno()]. It must contain assay measurements in columns `mic` (class `mic`) and/or `disk` (class `disk`). Interpretation requires an organism (column `spp_pheno` of class `mo`, or a single value passed via the `species` parameter) and an antibiotic (column `drug` of class `ab`, or a single value passed via the `ab` parameter).
 #' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class `sir`.
 #' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class `sir`.
 #' @param interpret_ecoff A logical value (default is `FALSE`). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class `sir` and coded as `NWT` (nonwildtype) or `WT` (wildtype).
 #' @param species (optional) Name of the species to use for phenotype interpretation. By default, the `spp_pheno` field in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.
-#' @param ab (optional) Name of the antibiotic to use for phenotype interpretation. By default, the `drug_agent` field in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.
+#' @param ab (optional) Name of the antibiotic to use for phenotype interpretation. By default, the `drug` field in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.
 #' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
 #' @importFrom dplyr across coalesce mutate
 #' @return A copy of the input table, with additional columns:
@@ -246,26 +246,26 @@ format_ast <- function(input,
 #' - `pheno_clsi`: The phenotype newly interpreted against CLSI human breakpoint standards (as S/I/R), based on the MIC or disk diffusion data.
 #' - `ecoff`: The phenotype newly interpreted against the ECOFF (as WT/NWT), based on the MIC or disk diffusion data.
 #' - `spp_pheno`: The species phenotype, formatted using the [as.mo()] function (either taken from field `spp_pheno` in the input table, or the single value specified by `species` parameter).
-#' - `drug_agent`: The antibiotic used in the test, formatted using the [as.ab()] function (either taken from field `drug_agent` in the input table, or the single value specified by `ab` parameter).
+#' - `drug`: The antibiotic used in the test, formatted using the [as.ab()] function (either taken from field `drug` in the input table, or the single value specified by `ab` parameter).
 #' @export
 #' @examples
 #' # import without re-interpreting resistance
-#' pheno <- import_ncbi_ast(ecoli_ast_raw)
+#' pheno <- import_ncbi_pheno(ecoli_pheno_raw)
 #' head(pheno)
 #'
 #' # interpret phenotypes
-#' pheno <- interpret_ast(pheno)
+#' pheno <- interpret_pheno(pheno)
 #'
 #' \dontrun{
 #' pheno <- read_csv("AST.csv") %>%
-#'   # convert antibiotic field to 'drug_agent' of class 'ab'
-#'   mutate(drug_agent = as.ab(antibiotic)) %>%
+#'   # convert antibiotic field to 'drug' of class 'ab'
+#'   mutate(drug = as.ab(antibiotic)) %>%
 #'   mutate(mic = paste0(sign, MIC)) %>%
 #'   mutate(mic = as.mic(mic)) # create a single 'mic' column of class 'mic'
 #'
-#' pheno <- interpret_ast(pheno, species = "Escherichia coli")
+#' pheno <- interpret_pheno(pheno, species = "Escherichia coli")
 #' }
-interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, interpret_clsi = TRUE, species = NULL, ab = NULL) {
+interpret_pheno <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, interpret_clsi = TRUE, species = NULL, ab = NULL) {
   if (interpret_ecoff | interpret_eucast | interpret_clsi) {
     # check we have species
     if (!is.null(species)) {
@@ -286,17 +286,17 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
     # check we have antibiotic
     if (!is.null(ab)) {
       message("Interpreting all data as drug: ", ab_name(as.ab(ab)))
-      if ("drug_agent" %in% colnames(ast)) {
-        if (length(unique(ast$drug_agent)) > 1) {
-          warning("ignoring 'drug_agent' column in input table, which contains multiple drugs:")
-          message(toString(unique(ast$drug_agent)))
-        } else if (as.ab(unique(ast$drug_agent)) != as.ab(ab)) {
-          warning("ignoring 'drug_agent' column in input table, which indicates a different drug: ", unique(ast$drug_agent))
+      if ("drug" %in% colnames(ast)) {
+        if (length(unique(ast$drug)) > 1) {
+          warning("ignoring 'drug' column in input table, which contains multiple drugs:")
+          message(toString(unique(ast$drug)))
+        } else if (as.ab(unique(ast$drug)) != as.ab(ab)) {
+          warning("ignoring 'drug' column in input table, which indicates a different drug: ", unique(ast$drug))
         }
       }
-      ast <- ast %>% mutate(drug_agent = as.ab(ab))
-    } else if (!("drug_agent" %in% colnames(ast))) {
-      stop("Warning: Could not interpret data, need to provide 'species' parameter or 'drug_agent' column in input table")
+      ast <- ast %>% mutate(drug = as.ab(ab))
+    } else if (!("drug" %in% colnames(ast))) {
+      stop("Warning: Could not interpret data, need to provide 'species' parameter or 'drug' column in input table")
     }
 
     # interpret data
@@ -307,7 +307,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
             across(
               where(is.mic),
               ~ as.sir(.x,
-                mo = "spp_pheno", ab = "drug_agent",
+                mo = "spp_pheno", ab = "drug",
                 guideline = "EUCAST", capped_mic_handling = "conservative"
               ),
               .names = "pheno_eucast_mic"
@@ -320,7 +320,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
             across(
               where(is.disk),
               ~ as.sir(.x,
-                mo = "spp_pheno", ab = "drug_agent",
+                mo = "spp_pheno", ab = "drug",
                 guideline = "EUCAST"
               ),
               .names = "pheno_eucast_disk"
@@ -343,7 +343,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
             across(
               where(is.mic),
               ~ as.sir(.x,
-                mo = "spp_pheno", ab = "drug_agent",
+                mo = "spp_pheno", ab = "drug",
                 guideline = "CLSI", capped_mic_handling = "conservative"
               ),
               .names = "pheno_clsi_mic"
@@ -356,7 +356,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
             across(
               where(is.disk),
               ~ as.sir(.x,
-                mo = "spp_pheno", ab = "drug_agent",
+                mo = "spp_pheno", ab = "drug",
                 guideline = "CLSI"
               ),
               .names = "pheno_clsi_disk"
@@ -379,7 +379,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
             across(
               where(is.mic),
               ~ as.sir(.x,
-                mo = "spp_pheno", ab = "drug_agent",
+                mo = "spp_pheno", ab = "drug",
                 guideline = "EUCAST", breakpoint_type = "ECOFF",
                 capped_mic_handling = "conservative"
               ),
@@ -393,7 +393,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
             across(
               where(is.disk),
               ~ as.sir(.x,
-                mo = "spp_pheno", ab = "drug_agent",
+                mo = "spp_pheno", ab = "drug",
                 guideline = "EUCAST", breakpoint_type = "ECOFF"
               ),
               .names = "ecoff_disk"
@@ -429,7 +429,7 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 #' @return A data frame with the processed AST data, including additional columns:
 #' - `id`: The biological sample identifier (renamed from `BioSample` or specified column).
 #' - `spp_pheno`: The species phenotype, formatted using the [as.mo()] function.
-#' - `drug_agent`: The antibiotic used in the test, formatted using the [as.ab()] function.
+#' - `drug`: The antibiotic used in the test, formatted using the [as.ab()] function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the [as.mic()] function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the [as.disk()] function.
 #' - `method`: The AST method (e.g., `"broth dilution"`, `"disk diffusion"`, `"Etest"`, `"agar dilution"`). Expected values are based on the NCBI/EBI antibiogram specification. Note that NCBI allows `"MIC"` as a synonym for `"broth dilution"` but this function will convert `"MIC"` to `"broth dilution"` on import.
@@ -443,16 +443,16 @@ interpret_ast <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE, 
 #' @export
 #' @examples
 #' # small example E. coli AST data from NCBI
-#' ecoli_ast_raw
+#' ecoli_pheno_raw
 #'
 #' # import without re-interpreting resistance
-#' pheno <- import_ncbi_ast(ecoli_ast_raw)
+#' pheno <- import_ncbi_pheno(ecoli_pheno_raw)
 #' head(pheno)
 #'
 #' # import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-#' pheno <- import_ncbi_ast(ecoli_ast_raw, interpret_eucast = TRUE, interpret_ecoff = TRUE)
+#' pheno <- import_ncbi_pheno(ecoli_pheno_raw, interpret_eucast = TRUE, interpret_ecoff = TRUE)
 #' head(pheno)
-import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, species = NULL, ab = NULL,
+import_ncbi_pheno <- function(input, sample_col = "BioSample", source = NULL, species = NULL, ab = NULL,
                             interpret_eucast = FALSE, interpret_clsi = FALSE, interpret_ecoff = FALSE) {
   ast <- process_input(input)
 
@@ -460,6 +460,13 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
   if (!is.null(sample_col)) {
     if (sample_col %in% colnames(ast)) {
       ast <- ast %>% rename(id = any_of(sample_col))
+    } else if ("BioSample" %in% colnames(ast)) {
+      message("Could not find column:", sample_col, " using column:BioSample instead")
+      sample_col <- "BioSample"
+      ast <- ast %>% rename(id = any_of(sample_col))
+    } else if ("id" %in% colnames(ast)) {
+      message("Could not find column:", sample_col, " using column:id instead")
+      sample_col <- "id"
     } else {
       stop(paste("Invalid column name:", sample_col))
     }
@@ -539,7 +546,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 
   # parse antibiotic column
   if ("Antibiotic" %in% colnames(ast)) {
-    ast <- ast %>% mutate(drug_agent = as.ab(Antibiotic))
+    ast <- ast %>% mutate(drug = as.ab(Antibiotic))
   } else {
     stop("Expected column 'Antibiotic' not found in input.")
   }
@@ -579,17 +586,17 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
     warning("Expected phenotype SIR column 'Resistance phenotype' not found in input")
   }
 
-  ast <- interpret_ast(ast, interpret_ecoff = interpret_ecoff, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, species = species, ab = ab)
+  ast <- interpret_pheno(ast, interpret_ecoff = interpret_ecoff, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, species = species, ab = ab)
 
-  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "platform", "source", "pheno_provided", "spp_pheno")))
+  ast <- ast %>% relocate(any_of(c("id", "drug", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "platform", "source", "pheno_provided", "spp_pheno")))
 
   return(ast)
 }
 
 #' Import and process antimicrobial phenotype data retrieved from NCBI BioSamples
 #'
-#' This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function [download_ncbi_ast()].
-#' Note that files downloaded from the NCBI AST web browser <https://www.ncbi.nlm.nih.gov/pathogens/ast> are formatted differently and can be imported with the function [import_ncbi_ast()].
+#' This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function [download_ncbi_pheno()].
+#' Note that files downloaded from the NCBI AST web browser <https://www.ncbi.nlm.nih.gov/pathogens/ast> are formatted differently and can be imported with the function [import_ncbi_pheno()].
 #' @param input A string representing the input dataframe, or a path to an input file, to be processed.
 #' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class `sir`.
 #' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class `sir`.
@@ -602,7 +609,7 @@ import_ncbi_ast <- function(input, sample_col = "BioSample", source = NULL, spec
 #' @examples
 #' \dontrun{
 #' # Download Klebsiella quasipneumoniae data, filter to amikacin
-#' ast <- download_ncbi_ast(
+#' ast <- download_ncbi_pheno(
 #'   "Klebsiella quasipneumoniae",
 #'   antibiotic = "amikacin"
 #' )
@@ -636,7 +643,7 @@ import_ncbi_biosample <- function(input,
       "I",
       `Resistance phenotype`
     )) %>%
-    format_ast(
+    format_pheno(
       sample_col = "id",
       species_col = "organism",
       ab_col = "Antibiotic",
@@ -656,7 +663,7 @@ import_ncbi_biosample <- function(input,
 #' Import and process antimicrobial susceptibility phenotype data from the EBI AMR web portal
 #'
 #' This function imports an antibiotic susceptibility testing (AST) dataset that has been downloaded from the EBI AMR portal website (<https://www.ebi.ac.uk/amr/data/?view=experiments>)
-#' Data downloaded from the EBI AMR Portal FTP site (<ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/>), either directly or via the function [download_ebi()], is formatted differently and can instead be processed using the [import_ebi_ast_ftp()] function.
+#' Data downloaded from the EBI AMR Portal FTP site (<ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/>), either directly or via the function [download_ebi()], is formatted differently and can instead be processed using the [import_ebi_pheno_ftp()] function.
 #'
 #' This function will process the data, and optionally interpret the results based on MIC or disk diffusion data. It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk measures) into suitable classes using the AMR package. It optionally can use the AMR package to interpret MIC/disk zone measures into susceptibility phenotypes (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF).
 #' @param input A string representing a dataframe, or a path to an input file, containing the AST data in EBI antibiogram format. These files can be downloaded from the EBI AMR browser, e.g. <https://www.ebi.ac.uk/amr/data/?view=experiments>.
@@ -672,7 +679,7 @@ import_ncbi_biosample <- function(input,
 #' @return A data frame with the processed AST data, including additional columns:
 #' - `id`: The biological sample identifier (renamed from `phenotype-BioSample_ID` or specified column).
 #' - `spp_pheno`: The species phenotype, formatted using the [as.mo()] function.
-#' - `drug_agent`: The antibiotic used in the test, formatted using the [as.ab()] function.
+#' - `drug`: The antibiotic used in the test, formatted using the [as.ab()] function.
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the [as.mic()] function.
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the [as.disk()] function.
 #' - `method`: The AST method (e.g., `"broth dilution"`, `"disk diffusion"`, `"Etest"`, `"agar dilution"`). Expected values are based on the NCBI/EBI antibiogram specification.
@@ -687,14 +694,14 @@ import_ncbi_biosample <- function(input,
 #' @examples
 #' \dontrun{
 #' # import without re-interpreting resistance
-#' pheno <- import_ebi_ast("EBI_AMR_data.csv.gz")
+#' pheno <- import_ebi_pheno("EBI_AMR_data.csv.gz")
 #' head(pheno)
 #'
 #' # import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-#' pheno <- import_ebi_ast("EBI_AMR_data.csv.gz", interpret_eucast = TRUE, interpret_ecoff = TRUE)
+#' pheno <- import_ebi_pheno("EBI_AMR_data.csv.gz", interpret_eucast = TRUE, interpret_ecoff = TRUE)
 #' head(pheno)
 #' }
-import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source = NULL, species = NULL, ab = NULL,
+import_ebi_pheno <- function(input, sample_col = "phenotype-BioSample_ID", source = NULL, species = NULL, ab = NULL,
                            interpret_eucast = FALSE, interpret_clsi = FALSE, interpret_ecoff = FALSE) {
   ast <- process_input(input)
 
@@ -735,7 +742,7 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
 
   # parse antibiotic column
   if ("phenotype-antibiotic_name" %in% colnames(ast)) {
-    ast <- ast %>% mutate(drug_agent = as.ab(`phenotype-antibiotic_name`))
+    ast <- ast %>% mutate(drug = as.ab(`phenotype-antibiotic_name`))
   } else {
     stop("Expected drug name column 'phenotype-antibiotic_name' not found in input.")
   }
@@ -780,9 +787,9 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
     warning("Expected pubmed ID column 'phenotype-resistance_phenotype' not found in input")
   }
 
-  ast <- interpret_ast(ast, interpret_ecoff = interpret_ecoff, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, species = species, ab = ab)
+  ast <- interpret_pheno(ast, interpret_ecoff = interpret_ecoff, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, species = species, ab = ab)
 
-  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "platform", "source", "pheno_provided", "spp_pheno")))
+  ast <- ast %>% relocate(any_of(c("id", "drug", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "platform", "source", "pheno_provided", "spp_pheno")))
 
   return(ast)
 }
@@ -791,7 +798,7 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
 #' Import and process antimicrobial phenotype data files retrieved from the EBI AMR portal FTP site
 #'
 #' This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from the [EBI AMR Portal FTP site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/) either directly or via the function [download_ebi()].
-#' Note that files downloaded from the [EBI AMR Portal web browser](https://www.ebi.ac.uk/amr/data/?view=experiments) are formatted differently and can be imported with the function [import_ebi_ast()].
+#' Note that files downloaded from the [EBI AMR Portal web browser](https://www.ebi.ac.uk/amr/data/?view=experiments) are formatted differently and can be imported with the function [import_ebi_pheno()].
 #' @param input A string representing the input dataframe, or a path to an input file, to be processed.
 #' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class `sir`.
 #' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class `sir`..
@@ -807,9 +814,9 @@ import_ebi_ast <- function(input, sample_col = "phenotype-BioSample_ID", source 
 #' pheno_salmonella <- download_ebi(genus = "Salmonella")
 #'
 #' # reformat to simplify use with AMRgen functions
-#' pheno_salmonella <- import_ebi_ast_ftp(pheno_salmonella)
+#' pheno_salmonella <- import_ebi_pheno_ftp(pheno_salmonella)
 #' }
-import_ebi_ast_ftp <- function(input,
+import_ebi_pheno_ftp <- function(input,
                                interpret_eucast = FALSE,
                                interpret_clsi = FALSE,
                                interpret_ecoff = FALSE) {
@@ -828,7 +835,7 @@ import_ebi_ast_ftp <- function(input,
       "I",
       resistance_phenotype
     )) %>%
-    format_ast(
+    format_pheno(
       sample_col = "BioSample_ID",
       species_col = "species",
       ab_col = "antibiotic_name",
@@ -869,7 +876,7 @@ import_ebi_ast_ftp <- function(input,
 #' @importFrom rlang sym
 #' @return Standardised AST data frame
 #' @export
-import_vitek_ast <- function(input,
+import_vitek_pheno <- function(input,
                              sample_col = "Lab ID",
                              source = NULL,
                              species = NULL,
@@ -1011,11 +1018,9 @@ import_vitek_ast <- function(input,
     ast_long <- ast_long %>% mutate(spp_pheno = as.mo(`Organism Name`))
   }
 
-  # Try full name first, then code for drug_agent (name is more reliable)
+  # Try full name first, then code for drug (name is more reliable)
   ast_long <- ast_long %>%
-    mutate(drug_agent_name = as.ab(ab_name)) %>%
-    mutate(drug_agent_code = as.ab(ab_code)) %>%
-    mutate(drug_agent = coalesce(drug_agent_name, drug_agent_code))
+    mutate(drug = coalesce(as.ab(ab_name), as.ab(ab_code)))
 
   # Rename sample column and add standard columns
   ast_long <- ast_long %>%
@@ -1044,7 +1049,7 @@ import_vitek_ast <- function(input,
   }
 
   # Interpret phenotypes
-  ast_long <- interpret_ast(ast_long,
+  ast_long <- interpret_pheno(ast_long,
     interpret_ecoff = interpret_ecoff,
     interpret_eucast = interpret_eucast,
     interpret_clsi = interpret_clsi,
@@ -1054,7 +1059,7 @@ import_vitek_ast <- function(input,
   # Reorder columns
   ast_long <- ast_long %>%
     relocate(any_of(c(
-      "id", "drug_agent", "mic", "disk",
+      "id", "drug", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno"
@@ -1086,7 +1091,7 @@ import_vitek_ast <- function(input,
 #' @importFrom rlang sym
 #' @return Standardised AST data frame
 #' @export
-import_microscan_ast <- function(input,
+import_microscan_pheno <- function(input,
                                  sample_col = NULL,
                                  source = NULL,
                                  species = NULL,
@@ -1275,9 +1280,9 @@ import_microscan_ast <- function(input,
     ast_long <- ast_long %>% mutate(spp_pheno = as.mo(Microorganism))
   }
 
-  # Parse drug_agent (drug names may be in Spanish; as.ab supports this)
+  # Parse drug (drug names may be in Spanish; as.ab supports this)
   ast_long <- ast_long %>%
-    mutate(drug_agent = as.ab(drug_name_raw))
+    mutate(drug = as.ab(drug_name_raw))
 
   # Rename sample column and add standard columns
   ast_long <- ast_long %>%
@@ -1297,7 +1302,7 @@ import_microscan_ast <- function(input,
   }
 
   # Interpret phenotypes
-  ast_long <- interpret_ast(ast_long,
+  ast_long <- interpret_pheno(ast_long,
     interpret_ecoff = interpret_ecoff,
     interpret_eucast = interpret_eucast,
     interpret_clsi = interpret_clsi,
@@ -1307,7 +1312,7 @@ import_microscan_ast <- function(input,
   # Reorder columns
   ast_long <- ast_long %>%
     relocate(any_of(c(
-      "id", "drug_agent", "mic", "disk",
+      "id", "drug", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno"
@@ -1338,7 +1343,7 @@ import_microscan_ast <- function(input,
 #' @importFrom dplyr any_of bind_rows case_when filter mutate relocate
 #' @return Standardised AST data frame
 #' @export
-import_sensititre_ast <- function(input,
+import_sensititre_pheno <- function(input,
                                   source = NULL,
                                   species = NULL,
                                   ab = NULL,
@@ -1350,7 +1355,7 @@ import_sensititre_ast <- function(input,
   # Sensititre files may be UTF-16LE encoded; tab- or comma-separated; no header row
   # Cannot use process_input() - needs custom reading
   if (!is.character(input) || !file.exists(input)) {
-    stop("import_sensititre_ast requires a file path as input")
+    stop("import_sensititre_pheno requires a file path as input")
   }
 
   # Detect encoding from BOM: UTF-16LE files start with 0xFF 0xFE
@@ -1491,9 +1496,9 @@ import_sensititre_ast <- function(input,
     )) %>%
     mutate(pheno_provided = as.sir(pheno_provided))
 
-  # Parse drug_agent from abbreviation
+  # Parse drug from abbreviation
   ast_long <- ast_long %>%
-    mutate(drug_agent = as.ab(drug_name_raw))
+    mutate(drug = as.ab(drug_name_raw))
 
   # Add standard columns
   ast_long <- ast_long %>%
@@ -1518,7 +1523,7 @@ import_sensititre_ast <- function(input,
   }
 
   # Interpret phenotypes
-  ast_long <- interpret_ast(ast_long,
+  ast_long <- interpret_pheno(ast_long,
     interpret_ecoff = interpret_ecoff,
     interpret_eucast = interpret_eucast,
     interpret_clsi = interpret_clsi,
@@ -1528,7 +1533,7 @@ import_sensititre_ast <- function(input,
   # Reorder columns
   ast_long <- ast_long %>%
     relocate(any_of(c(
-      "id", "drug_agent", "mic", "disk",
+      "id", "drug", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno"
@@ -1562,27 +1567,27 @@ import_sensititre_ast <- function(input,
 #' @return Standardised AST data frame
 #' @examples
 #' # Built-in AMR package WHONET example dataset (standard uppercase format)
-#' result <- import_whonet_ast(AMR::WHONET)
+#' result <- import_whonet_pheno(AMR::WHONET)
 #' head(result)
 #'
 #' \dontrun{
 #' # WHONET file with lowercase columns and _SIR suffix (e.g. amc_nd20, amc_nd20_SIR)
-#' # import_whonet_ast("path/to/whonet_export.csv", sample_col = "patient_id")
+#' # import_whonet_pheno("path/to/whonet_export.csv", sample_col = "patient_id")
 #'
 #' # Include patient demographics in output
-#' import_whonet_ast("path/to/whonet_export.csv",
+#' import_whonet_pheno("path/to/whonet_export.csv",
 #'   sample_col = "patient_id",
 #'   include_patient_info = TRUE
 #' )
 #'
 #' # Interpret against EUCAST breakpoints for a specific species
-#' result_interp <- import_whonet_ast(AMR::WHONET,
+#' result_interp <- import_whonet_pheno(AMR::WHONET,
 #'   interpret_eucast = TRUE,
 #'   species = "Escherichia coli"
 #' )
 #' }
 #' @export
-import_whonet_ast <- function(input,
+import_whonet_pheno <- function(input,
                               sample_col = NULL,
                               source = NULL,
                               species = NULL,
@@ -1694,7 +1699,7 @@ import_whonet_ast <- function(input,
 
   # Parse antibiotic directly from column name (as.ab handles WHONET format)
   ast_long <- ast_long %>%
-    mutate(drug_agent = as.ab(ab_col))
+    mutate(drug = as.ab(ab_col))
 
 
   # Parse method, platform, and guideline from column name suffix
@@ -1799,7 +1804,7 @@ import_whonet_ast <- function(input,
   }
 
   # Interpret phenotypes
-  ast_long <- interpret_ast(ast_long,
+  ast_long <- interpret_pheno(ast_long,
     interpret_ecoff = interpret_ecoff,
     interpret_eucast = interpret_eucast,
     interpret_clsi = interpret_clsi,
@@ -1822,7 +1827,7 @@ import_whonet_ast <- function(input,
   # Reorder columns
   ast_long <- ast_long %>%
     relocate(any_of(c(
-      "id", "drug_agent", "mic", "disk",
+      "id", "drug", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",
       "guideline", "method", "platform", "disk_potency", "source",
       "pheno_provided", "spp_pheno"
@@ -1871,7 +1876,7 @@ import_whonet_ast <- function(input,
 #'   Ignored if `species` is supplied.
 #' @param species Optional fixed species string applied to all rows (parsed via [AMR::as.mo()]).
 #'   Overrides `species_col`. Required for files without an organism column.
-#' @param ab Optional antibiotic filter/override passed to [interpret_ast()].
+#' @param ab Optional antibiotic filter/override passed to [interpret_pheno()].
 #' @param use_expertized If `TRUE` (default), prefer the expert/final interpretation column
 #'   over raw instrument interpretation when both are present and `sir_col` is not specified.
 #' @param source Optional source label recorded in the `source` output column.
@@ -1888,21 +1893,21 @@ import_whonet_ast <- function(input,
 #' @examples
 #' \dontrun{
 #' # Named-header export (e.g. CLSI report, auto-detected)
-#' pheno <- import_phoenix_ast("phoenix_clsi_report.txt",
+#' pheno <- import_phoenix_pheno("phoenix_clsi_report.txt",
 #'   species = "Escherichia coli", instrument_guideline = "CLSI 2018"
 #' )
 #'
 #' # Positional/headerless XLS export (auto-detected)
-#' pheno <- import_phoenix_ast("phoenix_export.xls")
+#' pheno <- import_phoenix_pheno("phoenix_export.xls")
 #'
 #' # Override column detection when names differ from defaults
-#' pheno <- import_phoenix_ast("phoenix_export.xlsx",
+#' pheno <- import_phoenix_pheno("phoenix_export.xlsx",
 #'   drug_col = "Antibiotic", mic_col = "Result",
 #'   sir_col = "SIR_final", sample_col = "IsolateID",
 #'   species_col = "Organism"
 #' )
 #' }
-import_phoenix_ast <- function(input,
+import_phoenix_pheno <- function(input,
                                sample_col = NULL,
                                drug_col = NULL,
                                mic_col = NULL,
@@ -2176,7 +2181,7 @@ import_phoenix_ast <- function(input,
   ast <- ast %>%
     mutate(
       id             = if (!is.null(r_sample)) as.character(.data[[r_sample]]) else NA_character_,
-      drug_agent     = as.ab(.data[[r_drug]]),
+      drug           = as.ab(.data[[r_drug]]),
       mic            = as.mic(.clean_mic(as.character(.data[[r_mic]]))),
       pheno_provided = as.sir(sir_vals)
     )
@@ -2200,7 +2205,7 @@ import_phoenix_ast <- function(input,
   if (!is.null(instrument_guideline)) ast <- ast %>% mutate(guideline = instrument_guideline)
   if (!is.null(source)) ast <- ast %>% mutate(source = source)
 
-  ast <- interpret_ast(ast,
+  ast <- interpret_pheno(ast,
     interpret_ecoff = interpret_ecoff,
     interpret_eucast = interpret_eucast,
     interpret_clsi = interpret_clsi,
@@ -2209,7 +2214,7 @@ import_phoenix_ast <- function(input,
 
   ast %>%
     select(any_of(c(
-      "id", "drug_agent", "mic", "disk",
+      "id", "drug", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno"
@@ -2237,7 +2242,7 @@ import_phoenix_ast <- function(input,
 #' @param source Optional source label for the \code{source} output column.
 #' @param species Optional fixed species string applied to all rows (parsed via
 #'   [AMR::as.mo()]). If \code{NULL}, the \code{Germe} column from the file is used.
-#' @param ab Optional antibiotic filter/override passed to [interpret_ast()].
+#' @param ab Optional antibiotic filter/override passed to [interpret_pheno()].
 #' @param instrument_guideline Optional guideline string for the \code{guideline}
 #'   column (e.g. \code{"EUCAST 2023"}).
 #' @param sirscan_codes A data frame mapping SIRscan antibiotic codes
@@ -2259,7 +2264,7 @@ import_phoenix_ast <- function(input,
 #' @importFrom rlang sym
 #' @importFrom tidyr pivot_longer
 #' @return A standardised long-format data frame with columns:
-#'   \code{id}, \code{drug_agent}, \code{mic}, \code{disk},
+#'   \code{id}, \code{drug}, \code{mic}, \code{disk},
 #'   \code{pheno_provided}, \code{pheno_eucast}, \code{pheno_clsi}, \code{ecoff},
 #'   \code{method}, \code{platform}, \code{guideline}, \code{source},
 #'   \code{spp_pheno}, \code{collection_date}, \code{specimen_type}.
@@ -2267,21 +2272,21 @@ import_phoenix_ast <- function(input,
 #' @examples
 #' \dontrun{
 #' # Import all three SIRscan export files
-#' pheno <- import_sirscan_ast(
+#' pheno <- import_sirscan_pheno(
 #'   mic_file     = "CMI_SALMO.csv",
 #'   disk_file    = "DIAM_SALMO.csv",
 #'   interpr_file = "INTERPR_SALMO.csv"
 #' )
 #'
 #' # MIC + interpretations only, with EUCAST re-interpretation
-#' pheno <- import_sirscan_ast(
+#' pheno <- import_sirscan_pheno(
 #'   mic_file = "CMI_SALMO.csv",
 #'   interpr_file = "INTERPR_SALMO.csv",
 #'   species = "Salmonella enterica",
 #'   interpret_eucast = TRUE
 #' )
 #' }
-import_sirscan_ast <- function(
+import_sirscan_pheno <- function(
   mic_file = NULL,
   disk_file = NULL,
   interpr_file = NULL,
@@ -2407,7 +2412,7 @@ import_sirscan_ast <- function(
       mutate(ab_col = dplyr::if_else(ab_col %in% names(lookup), lookup[ab_col], ab_col))
   }
   ast_long <- ast_long %>%
-    mutate(drug_agent = as.ab(ab_col)) %>%
+    mutate(drug = as.ab(ab_col)) %>%
     select(-ab_col)
 
   # Organism
@@ -2470,7 +2475,7 @@ import_sirscan_ast <- function(
     mutate(pheno_provided = as.sir(.data$pheno_provided))
 
   # Re-interpret phenotypes if requested
-  ast_long <- interpret_ast(
+  ast_long <- interpret_pheno(
     ast_long,
     interpret_ecoff  = interpret_ecoff,
     interpret_eucast = interpret_eucast,
@@ -2481,7 +2486,7 @@ import_sirscan_ast <- function(
 
   ast_long %>%
     relocate(any_of(c(
-      "id", "drug_agent", "mic", "disk",
+      "id", "drug", "mic", "disk",
       "pheno_eucast", "pheno_clsi", "ecoff",
       "guideline", "method", "platform", "source",
       "pheno_provided", "spp_pheno", "collection_date", "specimen_type"
@@ -2491,26 +2496,26 @@ import_sirscan_ast <- function(
 #' Import and process antimicrobial phenotype data from common sources
 #'
 #' This function imports an antibiotic susceptibility testing datasets in formats exported by EBI, NCBI, WHOnet and several automated AST instruments (Vitek, Microscan, Sensititre, Phoenix). It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF).
-#' @param input A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the [EBI AMR web browser](https://www.ebi.ac.uk/amr/data/?view=experiments), [EBI FTP site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or [NCBI browser](https://www.ncbi.nlm.nih.gov/pathogens/ast), or using the functions [download_ebi()], [download_ncbi_ast()], or [query_ncbi_bq_geno()]; or the files may be exported from supported AST instruments.
+#' @param input A string representing a dataframe, or a path to an input file, containing the phenotype data in a supported format. These files may be downloaded from public sources such as the [EBI AMR web browser](https://www.ebi.ac.uk/amr/data/?view=experiments), [EBI FTP site](ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/), or [NCBI browser](https://www.ncbi.nlm.nih.gov/pathogens/ast), or using the functions [download_ebi()], [download_ncbi_pheno()], or [query_ncbi_bq_geno()]; or the files may be exported from supported AST instruments.
 #' @param format A string indicating the format of the data: `"ebi"` (default), `"ebi_web"`, `"ebi_ftp"`, `"ncbi"`, `"ncbi_biosample"`, `"vitek"`, `"microscan"`, `"phoenix"`, `"sensititre"`, or `"whonet"`. This determines which importer function the data is passed on to for processing (see below).
 #' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
 #' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
 #' @param interpret_ecoff A logical value (default is `FALSE`). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class 'sir' and coded as `NWT` (nonwildtype) or `WT` (wildtype).
 #' @param ... Format-specific arguments. See
-#' - `"ebi"` : [import_ebi_ast()]
-#' - `"ebi_web"` : [import_ebi_ast()]
-#' - `"ebi_ftp"` :[import_ebi_ast_ftp()]
-#' - `"ncbi"` : [import_ncbi_ast()]
+#' - `"ebi"` : [import_ebi_pheno()]
+#' - `"ebi_web"` : [import_ebi_pheno()]
+#' - `"ebi_ftp"` :[import_ebi_pheno_ftp()]
+#' - `"ncbi"` : [import_ncbi_pheno()]
 #' - `"ncbi_biosample"` : [import_ncbi_biosample()]
-#' - `"vitek"` : [import_vitek_ast()]
-#' - `"microscan"` : [import_microscan_ast()]
-#' - `"sensititre"` : [import_sensititre_ast()]
-#' - `"phoenix"` : [import_phoenix_ast()]
-#' - `"whonet"` : [import_whonet_ast()]
+#' - `"vitek"` : [import_vitek_pheno()]
+#' - `"microscan"` : [import_microscan_pheno()]
+#' - `"sensititre"` : [import_sensititre_pheno()]
+#' - `"phoenix"` : [import_phoenix_pheno()]
+#' - `"whonet"` : [import_whonet_pheno()]
 #' @return A data frame with the processed AST data, including additional columns:
 #' - `id`: The sample identifier (`character`).
 #' - `spp_pheno`: The species phenotype, formatted using the [AMR::as.mo()] function (class `mo`).
-#' - `drug_agent`: The antibiotic used in the test, formatted using the [AMR::as.ab()] function (class `ab`).
+#' - `drug`: The antibiotic used in the test, formatted using the [AMR::as.ab()] function (class `ab`).
 #' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the [AMR::as.mic()] function (class `mic`).
 #' - `disk`: The disk diffusion measurement (in mm), formatted using the [AMR::as.disk()] function (class `disk`).
 #' - `method`: The AST method (e.g., `"broth dilution"`, `"disk diffusion"`, `"Etest"`, `"agar dilution"`). Expected values are based on the NCBI/EBI antibiogram specification (`character`).
@@ -2525,22 +2530,22 @@ import_sirscan_ast <- function(
 #' @examples
 #' \dontrun{
 #' # import NCBI data retrieved from Google Cloud, without re-interpreting resistance
-#' head(staph_ast_ncbi_cloud_raw)
-#' pheno <- import_pheno(staph_ast_ncbi_cloud_raw, format = "ncbi")
+#' head(staph_pheno_ncbi_cloud_raw)
+#' pheno <- import_pheno(staph_pheno_ncbi_cloud_raw, format = "ncbi")
 #'
 #' # import NCBI data where biosample column has been renamed to 'id'
-#' head(staph_ast_ncbi_raw)
-#' import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col = "id")
+#' head(staph_pheno_ncbi_raw)
+#' import_pheno(staph_pheno_ncbi_raw, "ncbi", sample_col = "id")
 #'
 #' # import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
-#' head(ecoli_ast_raw)
-#' pheno <- import_pheno(ecoli_ast_raw,
+#' head(ecoli_pheno_raw)
+#' pheno <- import_pheno(ecoli_pheno_raw,
 #'   format = "ncbi",
 #'   interpret_eucast = TRUE, interpret_ecoff = TRUE
 #' )
 #'
 #' # download Klebsiella quasipneumoniae phenotype data from NCBI BioSample
-#' kquasi_raw_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
+#' kquasi_raw_ncbi <- download_ncbi_pheno("Klebsiella quasipneumoniae")
 #' head(kquasi_raw_ncbi)
 #' # import the data and interpret against EUCAST breakpoints
 #' pheno <- import_pheno(kquasi_raw_ncbi,
@@ -2592,16 +2597,16 @@ import_pheno <- function(input,
 
 # registry of pheno data import functions, to be dispatched via import_pheno()
 .pheno_importers <- list(
-  ebi = "import_ebi_ast",
-  ebi_web = "import_ebi_ast",
-  ebi_ftp = "import_ebi_ast_ftp",
-  ncbi = "import_ncbi_ast",
+  ebi = "import_ebi_pheno",
+  ebi_web = "import_ebi_pheno",
+  ebi_ftp = "import_ebi_pheno_ftp",
+  ncbi = "import_ncbi_pheno",
   ncbi_biosample = "import_ncbi_biosample",
-  vitek = "import_vitek_ast",
-  microscan = "import_microscan_ast",
-  sensititre = "import_sensititre_ast",
-  phoenix = "import_phoenix_ast",
-  whonet = "import_whonet_ast"
+  vitek = "import_vitek_pheno",
+  microscan = "import_microscan_pheno",
+  sensititre = "import_sensititre_pheno",
+  phoenix = "import_phoenix_pheno",
+  whonet = "import_whonet_pheno"
 )
 
 # function to identify the right phenotype importer function to dispatch
@@ -2640,131 +2645,6 @@ forward_args <- function(fun, ...) {
   }
 
   dots[keep]
-}
-
-
-#' Import and process antimicrobial phenotype data from common sources
-#'
-#' This function imports an antibiotic susceptibility testing (AST) datasets in formats exported by EBI, NCBI, WHOnet and several automated AST instruments (Vitek, Microscan, Sensititre). It assumes that the input file is a tab-delimited text file (e.g., TSV) or CSV (which may be compressed) and parses relevant columns (antibiotic names, species names, MIC or disk data) into suitable classes using the AMR package. It optionally can use the AMR package to interpret susceptibility phenotype (SIR) based on EUCAST or CLSI guidelines (human breakpoints and/or ECOFF). If expected columns are not found warnings will be given, and interpretation may not be possible.
-#' @param input A string representing a dataframe, or a path to an input file, containing the AST data a supported format. These files may be downloaded from public sources such as the EBI AMR web browser (<https://www.ebi.ac.uk/amr/data/?view=experiments>), EBI FTP site (<ftp://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/>), or NCBI browser (e.g. <https://www.ncbi.nlm.nih.gov/pathogens/ast#Pseudomonas%20aeruginosa>), or using the functions [download_ebi()] or [download_ncbi_ast()]; or the files may be exported from supported AST instruments.
-#' @param format A string indicating the format of the data: `"ebi"` (default), `"ebi_web"`, `"ebi_ftp"`, `"ncbi"`, `"vitek"`, `"microscan"`, `"sensititre"`, or `"whonet"`. This determines whether the data is passed on to the [import_ebi_ast()] (ebi/ebi_web), [import_ebi_ast_ftp()] (ebi_ftp), [import_ncbi_ast()] (ncbi), [import_vitek_ast()] (vitek), [import_microscan_ast()] (microscan), [import_sensititre_ast()] (sensititre), or [import_whonet_ast()] (whonet) function to process.
-#' @param interpret_eucast A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against EUCAST human breakpoints. These will be reported in a new column `pheno_eucast`, of class 'sir'.
-#' @param interpret_clsi A logical value (default is `FALSE`). If `TRUE`, the function will interpret the susceptibility phenotype (SIR) for each row based on the MIC or disk diffusion values, against CLSI human breakpoints. These will be reported in a new column `pheno_clsi`, of class 'sir'.
-#' @param interpret_ecoff A logical value (default is `FALSE`). If `TRUE`, the function will interpret the wildtype vs nonwildtype status for each row based on the MIC or disk diffusion values, against epidemiological cut-off (ECOFF) values. These will be reported in a new column `ecoff`, of class 'sir' and coded as `NWT` (nonwildtype) or `WT` (wildtype).
-#' @param species (optional) Name of the species to use for phenotype interpretation. By default, the field `organism` in the input file will be assumed to specify the species for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single species name via this parameter.
-#' @param ab (optional) Name of the antibiotic to use for phenotype interpretation. By default, the field `antibiotic` in the input file will be assumed to specify the antibiotic for each sample, but if this is missing or you want to override it in the interpretation step, you may provide a single antibiotic name via this parameter.
-#' @param source (optional) A string to record as the source of these data points, e.g. `"EBI_browser"`. By default, the publications field (for EBI data) or BioProject field (for NCBI data) will be used to indicate the source for each row in the input file. For other input files, or to override this with a single value for all samples, you may provide a source name via this parameter.
-#' @importFrom AMR as.ab as.disk as.mic as.mo as.sir
-#' @importFrom dplyr any_of coalesce if_else mutate relocate rename
-#' @return A data frame with the processed AST data, including additional columns:
-#' - `id`: The biosample identifier.
-#' - `spp_pheno`: The species phenotype, formatted using the [as.mo()] function.
-#' - `drug_agent`: The antibiotic used in the test, formatted using the [as.ab()] function.
-#' - `mic`: The minimum inhibitory concentration (MIC) value, formatted using the [as.mic()] function.
-#' - `disk`: The disk diffusion measurement (in mm), formatted using the [as.disk()] function.
-#' - `method`: The AST method (e.g., `"broth dilution"`, `"disk diffusion"`, `"Etest"`, `"agar dilution"`). Expected values are based on the NCBI/EBI antibiogram specification.
-#' - `platform`: The AST platform/instrument (e.g., `"Vitek"`, `"Phoenix"`, `"Sensititre"`).
-#' - `guideline`: The AST standard recorded in the input file as being used for the AST assay.
-#' - `pheno_eucast`: The phenotype newly interpreted against EUCAST human breakpoint standards (as `S/I/R`), based on the MIC or disk diffusion data.
-#' - `pheno_clsi`: The phenotype newly interpreted against CLSI human breakpoint standards (as `S/I/R`), based on the MIC or disk diffusion data.
-#' - `ecoff`: The phenotype newly interpreted against the ECOFF (as `WT/NWT`), based on the MIC or disk diffusion data.
-#' - `pheno_provided`: The original phenotype interpretation provided in the input file.
-#' - `source`: The source of each data point (from the publications or bioproject field in the input file, or replaced with a single value passed in as the `source` parameter).
-#' @export
-#' @examples
-#' # small example E. coli AST data from NCBI
-#' ecoli_ast_raw
-#'
-#' # import without re-interpreting resistance
-#' pheno <- import_ast(ecoli_ast_raw, format = "ncbi")
-#' head(pheno)
-#'
-#' # import and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF) using AMR package
-#' pheno <- import_ast(ecoli_ast_raw, format = "ncbi", interpret_eucast = TRUE, interpret_ecoff = TRUE)
-#' head(pheno)
-import_ast <- function(input, format = "ebi", interpret_eucast = FALSE,
-                       interpret_clsi = FALSE, interpret_ecoff = FALSE,
-                       species = NULL, ab = NULL, source = NULL) {
-  if (format %in% c("ebi_web", "ebi")) {
-    message("Reading in as EBI AST format downloaded from the web portal")
-    ast <- import_ebi_ast(input,
-      interpret_eucast = interpret_eucast,
-      interpret_clsi = interpret_clsi,
-      interpret_ecoff = interpret_ecoff,
-      species = species, ab = ab
-    )
-  }
-
-  if (format == "ebi_ftp") {
-    message("Reading in as EBI AST format downloaded from the FTP portal")
-    ast <- import_ebi_ast_ftp(input,
-      interpret_eucast = interpret_eucast,
-      interpret_clsi = interpret_clsi,
-      interpret_ecoff = interpret_ecoff
-    )
-  }
-
-  if (format == "ncbi") {
-    message("Reading in as NCBI AST format")
-    ast <- import_ncbi_ast(input, interpret_eucast = interpret_eucast, interpret_clsi = interpret_clsi, interpret_ecoff = interpret_ecoff, species = species, ab = ab)
-  }
-
-  if (format == "vitek") {
-    message("Reading in as VITEK AST format")
-    ast <- import_vitek_ast(input,
-      interpret_eucast = interpret_eucast,
-      interpret_clsi = interpret_clsi,
-      interpret_ecoff = interpret_ecoff,
-      species = species, ab = ab, source = source
-    )
-  }
-
-  if (format == "microscan") {
-    message("Reading in as MicroScan AST format")
-    ast <- import_microscan_ast(input,
-      interpret_eucast = interpret_eucast,
-      interpret_clsi = interpret_clsi,
-      interpret_ecoff = interpret_ecoff,
-      species = species, ab = ab, source = source
-    )
-  }
-
-  if (format == "sensititre") {
-    message("Reading in as Sensititre AST format")
-    ast <- import_sensititre_ast(input,
-      interpret_eucast = interpret_eucast,
-      interpret_clsi = interpret_clsi,
-      interpret_ecoff = interpret_ecoff,
-      species = species, ab = ab, source = source
-    )
-  }
-
-  if (format == "whonet") {
-    message("Reading in as WHONET AST format")
-    ast <- import_whonet_ast(input,
-      interpret_eucast = interpret_eucast,
-      interpret_clsi = interpret_clsi,
-      interpret_ecoff = interpret_ecoff,
-      species = species, ab = ab, source = source
-    )
-  }
-
-  if (format == "phoenix") {
-    message("Reading in as BD Phoenix AST format")
-    ast <- import_phoenix_ast(input,
-      interpret_eucast = interpret_eucast,
-      interpret_clsi = interpret_clsi,
-      interpret_ecoff = interpret_ecoff,
-      species = species, ab = ab, source = source
-    )
-  }
-
-  if (!is.null(source)) {
-    ast <- ast %>% mutate(source = source)
-  }
-  ast <- ast %>% relocate(any_of(c("id", "drug_agent", "mic", "disk", "pheno_eucast", "pheno_clsi", "ecoff", "guideline", "method", "platform", "source", "pheno_provided", "spp_pheno")))
-
-  return(ast)
 }
 
 
@@ -2815,7 +2695,7 @@ import_amrrules_predictions <- function(input,
   if (!is.null(ab_col)) {
     if (ab_col %in% colnames(intable)) {
       intable <- intable %>%
-        mutate(drug_agent = as.ab(!!sym(ab_col)))
+        mutate(drug = as.ab(!!sym(ab_col)))
     }
   }
   if (!is.null(method)) {
@@ -2852,7 +2732,7 @@ import_amrrules_predictions <- function(input,
   }
 
   intable <- intable %>%
-    relocate(any_of(c("id", "drug_agent", sir_col, ecoff_col, "mo")))
+    relocate(any_of(c("id", "drug", sir_col, ecoff_col, "mo")))
 
   return(intable)
 }

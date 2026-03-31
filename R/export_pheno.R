@@ -21,8 +21,8 @@
 #' submission file.
 #'
 #' @param data A data frame in AMRgen long format (e.g. output of
-#'   [import_ast()] or [format_ast()]).
-#'   Expected columns: `id`, `drug_agent`, and at least one phenotype
+#'   [import_pheno()] or [format_pheno()]).
+#'   Expected columns: `id`, `drug`, and at least one phenotype
 #'   column (see `pheno_col`). Optional columns: `mic`, `disk`,
 #'   `method`, `guideline`, `platform`.
 #' @param file File path for the output file (must end in `.txt` or
@@ -60,10 +60,10 @@
 #' @examples
 #' \dontrun{
 #' # Return formatted data frame without writing a file
-#' ncbi_df <- export_ncbi_ast(ecoli_ast)
+#' ncbi_df <- export_ncbi_pheno(ecoli_pheno)
 #'
-#' # Write out the ecoli_ast data to file in NCBI format
-#' export_ncbi_ast(ecoli_ast, "Ec_NCBI.tsv")
+#' # Write out the ecoli_pheno data to file in NCBI format
+#' export_ncbi_pheno(ecoli_pheno, "Ec_NCBI.tsv")
 #'
 #' # Download data from EBI, then write it out to file in NCBI format
 #' ebi_kq <- download_ebi(
@@ -71,9 +71,9 @@
 #'   species = "Klebsiella quasipneumoniae",
 #'   reformat = T
 #' )
-#' export_ncbi_ast(ebi_kq, "Kq_NCBI.tsv")
+#' export_ncbi_pheno(ebi_kq, "Kq_NCBI.tsv")
 #' }
-export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
+export_ncbi_pheno <- function(data, file = NULL, overwrite = FALSE,
                             pheno_col = "pheno_provided", guideline = NULL,
                             vendor = NULL, version = NULL) {
   # --- input validation ---
@@ -86,7 +86,7 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
     }
   }
 
-  required <- c("id", "drug_agent", pheno_col)
+  required <- c("id", "drug", pheno_col)
   missing_req <- setdiff(required, colnames(data))
   if (length(missing_req) > 0) {
     stop("Missing required column(s): ", paste(missing_req, collapse = ", "))
@@ -142,18 +142,18 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 
   # --- antibiotic name (lowercase, "-" for combos) ---
   antibiotic <- tryCatch(
-    gsub("/", "-", AMR::ab_name(data$drug_agent, tolower = TRUE), fixed = TRUE),
+    gsub("/", "-", AMR::ab_name(data$drug, tolower = TRUE), fixed = TRUE),
     error = function(e) {
-      warning("Could not convert some drug_agent values to antibiotic names: ", e$message)
-      as.character(data$drug_agent)
+      warning("Could not convert some drug values to antibiotic names: ", e$message)
+      as.character(data$drug)
     }
   )
 
-  na_ab <- is.na(antibiotic) & !is.na(data$drug_agent)
+  na_ab <- is.na(antibiotic) & !is.na(data$drug)
   if (any(na_ab)) {
     warning(
-      "AMR::ab_name() returned NA for some drug_agent values: ",
-      paste(unique(data$drug_agent[na_ab]), collapse = ", ")
+      "AMR::ab_name() returned NA for some drug values: ",
+      paste(unique(data$drug[na_ab]), collapse = ", ")
     )
   }
 
@@ -228,8 +228,8 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #' [https://www.ebi.ac.uk/amr/amr_submission_guide/](https://www.ebi.ac.uk/amr/amr_submission_guide/)).
 #'
 #' @param data A data frame in AMRgen long format (e.g. output of
-#'   [import_ast()] or [format_ast()]).
-#'   Expected columns: `id`, `drug_agent`, `spp_pheno`, and at least
+#'   [import_pheno()] or [format_pheno()]).
+#'   Expected columns: `id`, `drug`, `spp_pheno`, and at least
 #'   one phenotype column (see `pheno_col`). Optional columns: `mic`,
 #'   `disk`, `method`, `platform`.
 #' @param pheno_col Character string naming the column that contains
@@ -274,17 +274,17 @@ export_ncbi_ast <- function(data, file = NULL, overwrite = FALSE,
 #' @export
 #' @examples
 #' # Return formatted data frame without writing files
-#' ebi_df <- export_ebi_ast(staph_ast_ebi)
+#' ebi_df <- export_ebi_pheno(staph_pheno_ebi)
 #' \dontrun{
 #' # Write out data for each BioSample to an individual JSON file for submission
-#' ebi_df <- export_ebi_ast(staph_ast_ebi,
+#' ebi_df <- export_ebi_pheno(staph_pheno_ebi,
 #'   breakpoint_version = "EUCAST 2015",
 #'   submission_account = "Webin-###",
 #'   domain = "self.ExampleDomain",
 #'   output_dir = "/path/to/output/"
 #' )
 #' }
-export_ebi_ast <- function(data,
+export_ebi_pheno <- function(data,
                            pheno_col = "pheno_provided",
                            guideline = NULL,
                            breakpoint_version = NULL,
@@ -292,7 +292,7 @@ export_ebi_ast <- function(data,
                            domain = "self.ExampleDomain",
                            output_dir = NULL) {
   # --- input validation ---
-  required <- c("id", "drug_agent", pheno_col, "spp_pheno")
+  required <- c("id", "drug", pheno_col, "spp_pheno")
   missing_req <- setdiff(required, colnames(data))
   if (length(missing_req) > 0) {
     stop("Missing required column(s): ", paste(missing_req, collapse = ", "))
@@ -357,18 +357,18 @@ export_ebi_ast <- function(data,
 
   # --- antibiotic name (Title Case, "/" for combos) ---
   antibiotic_name <- tryCatch(
-    AMR::ab_name(data$drug_agent),
+    AMR::ab_name(data$drug),
     error = function(e) {
-      warning("Could not convert some drug_agent values to antibiotic names: ", e$message)
-      as.character(data$drug_agent)
+      warning("Could not convert some drug values to antibiotic names: ", e$message)
+      as.character(data$drug)
     }
   )
 
-  na_ab <- is.na(antibiotic_name) & !is.na(data$drug_agent)
+  na_ab <- is.na(antibiotic_name) & !is.na(data$drug)
   if (any(na_ab)) {
     warning(
-      "AMR::ab_name() returned NA for some drug_agent values: ",
-      paste(unique(data$drug_agent[na_ab]), collapse = ", ")
+      "AMR::ab_name() returned NA for some drug values: ",
+      paste(unique(data$drug[na_ab]), collapse = ", ")
     )
   }
 
@@ -429,13 +429,13 @@ export_ebi_ast <- function(data,
 
 #' Generate EBI antibiogram submission in JSON
 #'
-#' Converts the tabular output of [export_ebi_ast()] into JSON
+#' Converts the tabular output of [export_ebi_pheno()] into JSON
 #' files formatted for submission to EBI as BioSample data
 #' (https://www.ebi.ac.uk/amr/amr_submission_guide/). Each row of the input
 #' dataset is converted into JSON records and printed to file.
 #'
 #' @param ebi_antibiogram_table A data frame in the format output by
-#' [export_ebi_ast()].
+#' [export_ebi_pheno()].
 #' @param submission_account Character string specifying the Webin
 #' submission account identifier (e.g. `"Webin-###"`).
 #' @param output_dir Character string specifying the directory where JSON
@@ -545,6 +545,7 @@ format_ebi_json <- function(ebi_antibiogram_table,
     ))
   }
 }
+
 
 # Helper functions
 safe_execute <- function(expr) {

@@ -24,13 +24,13 @@ import_ncbi_biosample(
 A data frame with the processed AST data, including additional columns:
 }
 \description{
-This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function \code{\link[=download_ncbi_ast]{download_ncbi_ast()}}.
-Note that files downloaded from the NCBI AST web browser \url{https://www.ncbi.nlm.nih.gov/pathogens/ast} are formatted differently and can be imported with the function \code{\link[=import_ncbi_ast]{import_ncbi_ast()}}.
+This function will import antibiotic susceptibility testing (AST) data suitable for downstream use with AMRgen analysis functions. The expected input is phenotype data retrieved from NCBI BioSample database via the function \code{\link[=download_ncbi_pheno]{download_ncbi_pheno()}}.
+Note that files downloaded from the NCBI AST web browser \url{https://www.ncbi.nlm.nih.gov/pathogens/ast} are formatted differently and can be imported with the function \code{\link[=import_ncbi_pheno]{import_ncbi_pheno()}}.
 }
 \examples{
 \dontrun{
 # Download Klebsiella quasipneumoniae data, filter to amikacin
-ast <- download_ncbi_ast(
+ast <- download_ncbi_pheno(
   "Klebsiella quasipneumoniae",
   antibiotic = "amikacin"
 )

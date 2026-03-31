@@ -16,7 +16,7 @@
 
 #' Get Binary Matrix of Genotype and Phenotype Data
 #'
-#' This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given phenotype drug, and presence or absence of genetic markers related to one or more specified genotype drug classes or drugs. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified phenotype and genotype drug criteria before creating a binary matrix. Suitable input files can be generated using [import_pheno()] to import phenotype data, and [import_amrfp()] to import genotype data from AMRFinderPlus.
+#' This function generates a binary matrix representing the resistance (R vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given drug, and presence or absence of genetic markers related to one or more specified drugs or classes. It takes as input separate tables for genotype and phenotype data, matches these according to a common identifier (either specified by column names or assuming the first column contains the ID), and filters the data according to the specified phenotype and genotype drug criteria before creating a binary matrix. Suitable input files can be generated using [import_pheno()] to import phenotype data, and [import_geno()] to import genotype data from AMRFinderPlus and other genotypers.
 #' @param geno_table A data frame containing genotype data, in long form with one row per sample and genetic marker. Expected format is that output by [import_amrfp()] and must include a column labeled `drug_class` (indicating the antibiotic class associated with each marker), in addition to a column indicating the marker (column name specified via `marker_col`) and a column for sample identifiers (specified via `geno_sample_col`, otherwise it is assumed the first column contains identifiers).
 #' @param pheno_table A data frame containing phenotype data, in long form with one row per sample, drug and assay result. Expected format is that output by [import_pheno()] and must include a column `drug` (indicating the drug, interpretable as AMR pkg class `ab`), in addition to a column for sample identifiers (specified via `pheno_sample_col`, otherwise it is assumed the first column contains identifiers), a column with the resistance interpretation (S/I/R, specified via `sir_col`), and optionally a column with the ECOFF interpretation (WT/NWT or S/R, specified via `ecoff_col`).
 #' @param pheno_drug A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the `drug` column of `pheno_table` or be coercible to a match using [as.ab].
@@ -61,7 +61,7 @@
 #'   ecoli_pheno,
 #'   pheno_drug = "Ciprofloxacin",
 #'   geno_class = c("Quinolones"),
-#'   sir_col = "Resistance phenotype",
+#'   sir_col = "pheno_provided",
 #'   keep_assay_values = TRUE
 #' )
 #' }

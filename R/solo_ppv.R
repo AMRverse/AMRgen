@@ -16,13 +16,13 @@
 
 #' Perform Solo PPV Analysis for AMR Markers
 #'
-#' This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given phenotype drug and genotype filter. It calculates the PPV for solo markers and visualises the results using various plots.
+#' This function performs a Positive Predictive Value (PPV) analysis for AMR markers associated with a given phenotype drug and genotype marker filter. It calculates the PPV for solo markers and visualises the results using various plots.
 #' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. If not provided (or set to `NULL`), user must specify `geno_table`, `pheno_table`, `pheno_drug`, and optionally `geno_class`, `geno_drug`, `geno_sample_col`, `pheno_sample_col`, `sir_col`, `ecoff_col`, `marker_col` to pass to [get_binary_matrix()].
 #' @param geno_table (Required if `binary_matrix` not provided) A data frame containing genotype data, formatted with [import_amrfp()]. Only used if `binary_matrix` not provided.
 #' @param pheno_table (Required if `binary_matrix` not provided) A data frame containing phenotype data, formatted with [import_pheno()]. Only used if `binary_matrix` not provided.
-#' @param pheno_drug (Required if `binary_matrix` not provided) A character string specifying the phenotype drug of interest to filter phenotype data. The value must match one of the entries in the `drug` column of `pheno_table`.
-#' @param geno_class (Optional if `binary_matrix` not provided) A character vector of genotype drug classes used to filter markers in `geno_table`.
-#' @param geno_drug (Optional if `binary_matrix` not provided) A character vector of genotype drug identifiers used to filter `geno_table` by its `drug` column.
+#' @param pheno_drug (Required if `binary_matrix` not provided) A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the `drug` column of `pheno_table` or be coercible to a match using [as.ab].
+#' @param geno_class (Optional if `binary_matrix` not provided) A character vector of drug classes to filter genotype markers. Markers in `geno_table` will be filtered based on whether their `drug_class` matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with `pheno_drug` and uses those (these are printed to screen so the user can see what is being filtered).
+#' @param geno_drug (Optional if `binary_matrix` not provided) A character vector of drug names whose relevant genotype markers should be included.
 #' @param geno_sample_col A character string (optional) specifying the column name in `geno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param pheno_sample_col A character string (optional) specifying the column name in `pheno_table` containing sample identifiers. Defaults to `NULL`, in which case it is assumed the first column contains identifiers. Only used if `binary_matrix` not provided.
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.

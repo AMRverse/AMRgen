@@ -611,7 +611,7 @@ import_ncbi_pheno <- function(input, sample_col = "BioSample", source = NULL, sp
 #' # Download Klebsiella quasipneumoniae data, filter to amikacin
 #' ast <- download_ncbi_pheno(
 #'   "Klebsiella quasipneumoniae",
-#'   antibiotic = "amikacin"
+#'   pheno_drug = "amikacin"
 #' )
 #'
 #' # Reformat to simplify use with AMRgen functions

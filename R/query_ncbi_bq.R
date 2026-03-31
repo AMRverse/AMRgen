@@ -28,10 +28,10 @@
 #' "Pseudomonas aeruginosa"). See <https://www.ncbi.nlm.nih.gov/pathogens/organisms/>
 #' for a list. Required.
 #' @param pheno_drug (Optional) String (or vector of strings) specifying the
-#' phenotype drug name/s to filter on (default NULL). Uses the AMR package to try
+#' drug name/s to filter on (default NULL). Uses the AMR package to try
 #' to fix typos, and format to lower-case.
-#' @param force_pheno_drug (Optional) Logical indicating whether to turn off
-#' parsing of phenotype drug names and match exactly on the input strings (default
+#' @param force_drug_name (Optional) Logical indicating whether to turn off
+#' parsing of drug names and match exactly on the input strings (default
 #' `FALSE`).
 #'
 #' @param project_id (Optional) Google Cloud Project ID to use for billing. If
@@ -55,7 +55,7 @@
 #' }
 query_ncbi_bq_pheno <- function(taxgroup,
                               pheno_drug = NULL,
-                              force_pheno_drug = FALSE,
+                              force_drug_name = FALSE,
                               project_id = NULL) {
   if (missing(taxgroup)) stop("Argument 'taxgroup' is required.")
 
@@ -84,11 +84,11 @@ query_ncbi_bq_pheno <- function(taxgroup,
 
   # Add antibiotic filter
   if (!is.null(pheno_drug)) {
-    if (!force_pheno_drug) {
+    if (!force_drug_name) {
       if (requireNamespace("AMR", quietly = TRUE)) {
         pheno_drug <- unique(tolower(AMR::ab_name(AMR::as.ab(pheno_drug))))
       } else {
-        warning("AMR package not installed. Using provided phenotype drug names without parsing.")
+        warning("AMR package not installed. Using provided drug names without parsing.")
         pheno_drug <- tolower(pheno_drug)
       }
     } else {

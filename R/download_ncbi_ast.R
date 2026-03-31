@@ -38,19 +38,16 @@
 #'   drug name using the \pkg{AMR} package before filtering, so that
 #'   matching is done exactly on the input string/s. Default is `FALSE`.
 #' @param reformat Logical. If `TRUE`, reformats the output using
-#'   [import_ncbi_pheno] for compatibility with AMR analysis workflows.
+#'   [import_ncbi_biosample()] for compatibility with AMR analysis workflows.
 #'   Default is `FALSE`. When set to `TRUE`, the data can also be interpreted
 #'   against breakpoints/ECOFF by setting the `interpret_*=TRUE`.
-#' @param interpret_eucast Logical. Passed to [interpret_pheno] via
-#'   [import_ncbi_pheno].
+#' @param interpret_eucast Logical. Passed to [import_ncbi_biosample()].
 #'   If `TRUE`, interprets MIC values using EUCAST breakpoints. Default is
 #'   `FALSE`. Only used if `reformat`=`TRUE`.
-#' @param interpret_clsi Logical. Passed to [interpret_pheno] via
-#'   [import_ncbi_pheno].
+#' @param interpret_clsi Logical. Passed to [import_ncbi_biosample()].
 #'   If `TRUE`, interprets MIC values using CLSI breakpoints. Default is
 #'   `FALSE`. Only used if `reformat`=`TRUE`.
-#' @param interpret_ecoff Logical. Passed to [interpret_pheno] via
-#'   [import_ncbi_pheno].
+#' @param interpret_ecoff Logical. Passed to [import_ncbi_biosample()].
 #'   If `TRUE`, interprets MIC values using ECOFF cutoffs. Default is `FALSE`.
 #'   Only used if `reformat`=`TRUE`.
 #'
@@ -68,8 +65,8 @@
 #'
 #' The function can optionally filter by one or more drugs. It can
 #' also optionally reformat data for compatibility with AMRgen functions via
-#' [import_ncbi_pheno], and interpret the raw data measures against breakpoints or
-#' ECOFF. See [import_ncbi_pheno] for details of output formats when these options
+#' [import_ncbi_biosample()], and interpret the raw data measures against breakpoints or
+#' ECOFF. See [import_ncbi_biosample()] for details of output formats when these options
 #' are used.
 #'
 #' @return

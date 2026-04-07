@@ -925,7 +925,7 @@ We can finally see carbapenem resistance determinants alone! Since RGI does not 
 soloPPV_kleborate_mero
 ```
 
-```{r soloPPV_amrfp}
+```{r soloPPV_amrfp,fig.height=5}
 # Generate binary matrix for AMRFinderPlus
 amrfp_binary_matrix <- get_binary_matrix(
   geno_table = kp_mero_amrfp,
@@ -1095,7 +1095,7 @@ combined_binary_matrix <- combined_binary_matrix %>%
 ```
 
 ## Solo PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR Markers
-```{r soloPPV_combined, message=FALSE}
+```{r soloPPV_combined, message=FALSE, fig.height=6}
 combined_solo_ppv <- solo_ppv_analysis(binary_matrix = combined_binary_matrix)
 ```
 From this solo_ppv_analysis() plot, we can see that there are markers that are found alone which have strong support for a particular phenotype, e.g., NDM-1 association with meropenem resistance (n=31/38 R isolates), LptD:- identified by RGI (associated with susceptibility). Noting that LptD:- indicates a variant of LptD, so the variants need to be further investigated to see if there is a particular mutation/defect that is associated with meropenem susceptibility. 
@@ -1103,7 +1103,7 @@ From this solo_ppv_analysis() plot, we can see that there are markers that are f
 Another way to investigate the association between AMR markers and meropenem susceptibility is to use the `amr_logistic()` function to perform logistic regression to analyse the relationship between the markers and a specified antibiotic.
 
 ## Logistic regression for AMRFinderPlus, RGI, Kleborate AMR Markers
-```{r log_reg_combined}
+```{r log_reg_combined, fig.height=6}
 combined_logist <- amr_logistic(
   binary_matrix = combined_binary_matrix,
   antibiotic = "meropenem",
@@ -1118,7 +1118,7 @@ A coefficient above zero indicates that the presence of the AMR marker increases
 
 
 ## Combinatorial PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR Markers
-```{r comboPPV_combined}
+```{r comboPPV_combined, fig.height=10}
 comboPPV_combined_mero <- ppv(
   binary_matrix = combined_binary_matrix,
   order = "value",

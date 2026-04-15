@@ -66,7 +66,7 @@ functions of the ARMgen package:
   genotype marker, compatible with AMR pkg, drawn from the Kleborate
   column in which the marker was reported (`character`).
 
-- `drug_agent`: Values are recorded as `NA` as Kleborate doesn't report
+- `drug`: Values are recorded as `NA` as Kleborate doesn't report
   markers assigned to individual drug level.
 
 - `variation type`: Type of variation, e.g. `Gene presence detected`,

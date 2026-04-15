@@ -8,7 +8,7 @@
 summarise_pheno(
   pheno_table,
   sample_col = "id",
-  drug_col = "drug_agent",
+  drug_col = "drug",
   mic_col = "mic",
   disk_col = "disk",
   spp_col = "spp_pheno",
@@ -23,7 +23,7 @@ summarise_pheno(
 - pheno_table:
 
   A tibble or data frame containing phenotype data, in the format output
-  by [import_ast](https://amrgen.org/reference/import_ast.md).
+  by [import_pheno](https://amrgen.org/reference/import_pheno.md).
 
 - sample_col:
 
@@ -33,8 +33,8 @@ summarise_pheno(
 - drug_col:
 
   Character. Name of the column containing drug agent identifiers.
-  Default is `"drug_agent"`. If this is of class 'ab' the entries will
-  be annotated with their full antibiotic names, converted using
+  Default is `"drug"`. If this is of class 'ab' the entries will be
+  annotated with their full antibiotic names, converted using
   [AMR::as.ab](https://amr-for-r.org/reference/as.ab.html). If this is
   desired behaviour but the class is not 'ab', set `force_ab=TRUE`.
 
@@ -100,167 +100,165 @@ column is not recognized as an `"ab"` object.
 ## Examples
 
 ``` r
-summarise_pheno(staph_ast_ebi)
+summarise_pheno(staph_pheno_ebi)
 #> No phenotype column names provided via 'pheno_cols'
 #> These are needed to summarise counts of phenotype category calls per drug.
 #> Relevant columns detected in your input table are: c('pheno_provided, pheno_eucast, pheno_clsi, pheno_eucast_mic, pheno_eucast_disk, pheno_clsi_mic, pheno_clsi_disk, ecoff, ecoff_mic, ecoff_disk'). Summarising these.
 #> $uniques
 #> # A tibble: 7 × 2
-#>   column     n_unique
-#>   <chr>         <int>
-#> 1 id              190
-#> 2 drug_agent        2
-#> 3 spp_pheno         1
-#> 4 method            3
-#> 5 platform          2
-#> 6 guideline         2
-#> 7 source            2
+#>   column    n_unique
+#>   <chr>        <int>
+#> 1 id             190
+#> 2 drug             2
+#> 3 spp_pheno        1
+#> 4 method           3
+#> 5 platform         2
+#> 6 guideline        2
+#> 7 source           2
 #> 
 #> $drugs
 #> # A tibble: 2 × 6
-#>   drug_agent drug_name   spp_pheno              disk   mic  none
-#>   <ab>       <chr>       <chr>                 <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus     3    11    70
-#> 2 DOX        Doxycycline Staphylococcus aureus    NA    47    87
+#>   drug drug_name   spp_pheno              disk   mic  none
+#>   <ab> <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus     3    11    70
+#> 2 DOX  Doxycycline Staphylococcus aureus    NA    47    87
 #> 
 #> $details
 #> # A tibble: 6 × 10
-#>   drug_agent drug_name   spp_pheno  method platform guideline source   mic  disk
-#>   <ab>       <chr>       <chr>      <chr>  <chr>    <chr>     <chr>  <int> <int>
-#> 1 AMK        Amikacin    Staphyloc… broth… Vitek    CLSI      NA         1    NA
-#> 2 AMK        Amikacin    Staphyloc… disk … NA       CLSI      NA        NA     3
-#> 3 AMK        Amikacin    Staphyloc… disk … NA       NA        27150…    NA    NA
-#> 4 AMK        Amikacin    Staphyloc… NA     NA       NA        NA        10    NA
-#> 5 DOX        Doxycycline Staphyloc… broth… NA       CLSI      NA        29    NA
-#> 6 DOX        Doxycycline Staphyloc… NA     NA       NA        NA        18    NA
-#> # ℹ 1 more variable: none <int>
+#>   drug drug_name   spp_pheno  method platform guideline source   mic  disk  none
+#>   <ab> <chr>       <chr>      <chr>  <chr>    <chr>     <chr>  <int> <int> <int>
+#> 1 AMK  Amikacin    Staphyloc… broth… Vitek    CLSI      NA         1    NA    NA
+#> 2 AMK  Amikacin    Staphyloc… disk … NA       CLSI      NA        NA     3    NA
+#> 3 AMK  Amikacin    Staphyloc… disk … NA       NA        27150…    NA    NA    70
+#> 4 AMK  Amikacin    Staphyloc… NA     NA       NA        NA        10    NA    NA
+#> 5 DOX  Doxycycline Staphyloc… broth… NA       CLSI      NA        29    NA    NA
+#> 6 DOX  Doxycycline Staphyloc… NA     NA       NA        NA        18    NA    87
 #> 
 #> $pheno_counts_list
 #> $pheno_counts_list$pheno_provided
 #> # A tibble: 2 × 6
-#>   drug_agent drug_name   spp_pheno                 S     R     I
-#>   <ab>       <chr>       <chr>                 <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    12    72    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus   103    20    11
+#>   drug drug_name   spp_pheno                 S     R     I
+#>   <ab> <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    12    72    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus   103    20    11
 #> 
 #> $pheno_counts_list$pheno_eucast
 #> # A tibble: 2 × 6
-#>   drug_agent drug_name   spp_pheno                 S     R  `NA`
-#>   <ab>       <chr>       <chr>                 <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    12     2    70
-#> 2 DOX        Doxycycline Staphylococcus aureus    38     9    87
+#>   drug drug_name   spp_pheno                 S     R  `NA`
+#>   <ab> <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    12     2    70
+#> 2 DOX  Doxycycline Staphylococcus aureus    38     9    87
 #> 
 #> $pheno_counts_list$pheno_clsi
 #> # A tibble: 2 × 7
-#>   drug_agent drug_name   spp_pheno              `NA`     S     I     R
-#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    84    NA    NA    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus    87    41     5     1
+#>   drug drug_name   spp_pheno              `NA`     S     I     R
+#>   <ab> <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    84    NA    NA    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus    87    41     5     1
 #> 
 #> $pheno_counts_list$pheno_eucast_mic
 #> # A tibble: 2 × 6
-#>   drug_agent drug_name   spp_pheno                 S     R  `NA`
-#>   <ab>       <chr>       <chr>                 <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus     9     2    73
-#> 2 DOX        Doxycycline Staphylococcus aureus    38     9    87
+#>   drug drug_name   spp_pheno                 S     R  `NA`
+#>   <ab> <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus     9     2    73
+#> 2 DOX  Doxycycline Staphylococcus aureus    38     9    87
 #> 
 #> $pheno_counts_list$pheno_eucast_disk
 #> # A tibble: 2 × 5
-#>   drug_agent drug_name   spp_pheno                 S  `NA`
-#>   <ab>       <chr>       <chr>                 <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus     3    81
-#> 2 DOX        Doxycycline Staphylococcus aureus    NA   134
+#>   drug drug_name   spp_pheno                 S  `NA`
+#>   <ab> <chr>       <chr>                 <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus     3    81
+#> 2 DOX  Doxycycline Staphylococcus aureus    NA   134
 #> 
 #> $pheno_counts_list$pheno_clsi_mic
 #> # A tibble: 2 × 7
-#>   drug_agent drug_name   spp_pheno              `NA`     S     I     R
-#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    84    NA    NA    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus    87    41     5     1
+#>   drug drug_name   spp_pheno              `NA`     S     I     R
+#>   <ab> <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    84    NA    NA    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus    87    41     5     1
 #> 
 #> $pheno_counts_list$pheno_clsi_disk
 #> # A tibble: 2 × 4
-#>   drug_agent drug_name   spp_pheno              `NA`
-#>   <ab>       <chr>       <chr>                 <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    84
-#> 2 DOX        Doxycycline Staphylococcus aureus   134
+#>   drug drug_name   spp_pheno              `NA`
+#>   <ab> <chr>       <chr>                 <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    84
+#> 2 DOX  Doxycycline Staphylococcus aureus   134
 #> 
 #> $pheno_counts_list$ecoff
 #> # A tibble: 2 × 7
-#>   drug_agent drug_name   spp_pheno                WT   NWT  `NA`    NI
-#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    12     2    70    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus    NA     9    87    38
+#>   drug drug_name   spp_pheno                WT   NWT  `NA`    NI
+#>   <ab> <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    12     2    70    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus    NA     9    87    38
 #> 
 #> $pheno_counts_list$ecoff_mic
 #> # A tibble: 2 × 7
-#>   drug_agent drug_name   spp_pheno                WT   NWT  `NA`    NI
-#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus     9     2    73    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus    NA     9    87    38
+#>   drug drug_name   spp_pheno                WT   NWT  `NA`    NI
+#>   <ab> <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus     9     2    73    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus    NA     9    87    38
 #> 
 #> $pheno_counts_list$ecoff_disk
 #> # A tibble: 2 × 5
-#>   drug_agent drug_name   spp_pheno                WT  `NA`
-#>   <ab>       <chr>       <chr>                 <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus     3    81
-#> 2 DOX        Doxycycline Staphylococcus aureus    NA   134
+#>   drug drug_name   spp_pheno                WT  `NA`
+#>   <ab> <chr>       <chr>                 <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus     3    81
+#> 2 DOX  Doxycycline Staphylococcus aureus    NA   134
 #> 
 #> 
 
-summarise_pheno(staph_ast_ebi, pheno_cols = c("pheno_provided", "pheno_clsi", "ecoff"))
+summarise_pheno(staph_pheno_ebi, pheno_cols = c("pheno_provided", "pheno_clsi", "ecoff"))
 #> $uniques
 #> # A tibble: 7 × 2
-#>   column     n_unique
-#>   <chr>         <int>
-#> 1 id              190
-#> 2 drug_agent        2
-#> 3 spp_pheno         1
-#> 4 method            3
-#> 5 platform          2
-#> 6 guideline         2
-#> 7 source            2
+#>   column    n_unique
+#>   <chr>        <int>
+#> 1 id             190
+#> 2 drug             2
+#> 3 spp_pheno        1
+#> 4 method           3
+#> 5 platform         2
+#> 6 guideline        2
+#> 7 source           2
 #> 
 #> $drugs
 #> # A tibble: 2 × 6
-#>   drug_agent drug_name   spp_pheno              disk   mic  none
-#>   <ab>       <chr>       <chr>                 <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus     3    11    70
-#> 2 DOX        Doxycycline Staphylococcus aureus    NA    47    87
+#>   drug drug_name   spp_pheno              disk   mic  none
+#>   <ab> <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus     3    11    70
+#> 2 DOX  Doxycycline Staphylococcus aureus    NA    47    87
 #> 
 #> $details
 #> # A tibble: 6 × 10
-#>   drug_agent drug_name   spp_pheno  method platform guideline source   mic  disk
-#>   <ab>       <chr>       <chr>      <chr>  <chr>    <chr>     <chr>  <int> <int>
-#> 1 AMK        Amikacin    Staphyloc… broth… Vitek    CLSI      NA         1    NA
-#> 2 AMK        Amikacin    Staphyloc… disk … NA       CLSI      NA        NA     3
-#> 3 AMK        Amikacin    Staphyloc… disk … NA       NA        27150…    NA    NA
-#> 4 AMK        Amikacin    Staphyloc… NA     NA       NA        NA        10    NA
-#> 5 DOX        Doxycycline Staphyloc… broth… NA       CLSI      NA        29    NA
-#> 6 DOX        Doxycycline Staphyloc… NA     NA       NA        NA        18    NA
-#> # ℹ 1 more variable: none <int>
+#>   drug drug_name   spp_pheno  method platform guideline source   mic  disk  none
+#>   <ab> <chr>       <chr>      <chr>  <chr>    <chr>     <chr>  <int> <int> <int>
+#> 1 AMK  Amikacin    Staphyloc… broth… Vitek    CLSI      NA         1    NA    NA
+#> 2 AMK  Amikacin    Staphyloc… disk … NA       CLSI      NA        NA     3    NA
+#> 3 AMK  Amikacin    Staphyloc… disk … NA       NA        27150…    NA    NA    70
+#> 4 AMK  Amikacin    Staphyloc… NA     NA       NA        NA        10    NA    NA
+#> 5 DOX  Doxycycline Staphyloc… broth… NA       CLSI      NA        29    NA    NA
+#> 6 DOX  Doxycycline Staphyloc… NA     NA       NA        NA        18    NA    87
 #> 
 #> $pheno_counts_list
 #> $pheno_counts_list$pheno_provided
 #> # A tibble: 2 × 6
-#>   drug_agent drug_name   spp_pheno                 S     R     I
-#>   <ab>       <chr>       <chr>                 <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    12    72    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus   103    20    11
+#>   drug drug_name   spp_pheno                 S     R     I
+#>   <ab> <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    12    72    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus   103    20    11
 #> 
 #> $pheno_counts_list$pheno_clsi
 #> # A tibble: 2 × 7
-#>   drug_agent drug_name   spp_pheno              `NA`     S     I     R
-#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    84    NA    NA    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus    87    41     5     1
+#>   drug drug_name   spp_pheno              `NA`     S     I     R
+#>   <ab> <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    84    NA    NA    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus    87    41     5     1
 #> 
 #> $pheno_counts_list$ecoff
 #> # A tibble: 2 × 7
-#>   drug_agent drug_name   spp_pheno                WT   NWT  `NA`    NI
-#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    12     2    70    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus    NA     9    87    38
+#>   drug drug_name   spp_pheno                WT   NWT  `NA`    NI
+#>   <ab> <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    12     2    70    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus    NA     9    87    38
 #> 
 #> 
 ```

@@ -2,17 +2,17 @@
 
 This function generates a binary matrix representing the resistance (R
 vs S/I) and nonwildtype (NWT vs WT, or R/I vs S) status for a given
-antibiotic, and presence or absence of genetic markers related to one or
-more specified drug classes. It takes as input separate tables for
+drug, and presence or absence of genetic markers related to one or more
+specified drugs or classes. It takes as input separate tables for
 genotype and phenotype data, matches these according to a common
 identifier (either specified by column names or assuming the first
 column contains the ID), and filters the data according to the specified
-antibiotic and drug class criteria before creating a binary matrix.
+phenotype and genotype drug criteria before creating a binary matrix.
 Suitable input files can be generated using
-[`import_ast()`](https://amrgen.org/reference/import_ast.md) to import
-phenotype data, and
-[`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md) to
-import genotype data from AMRFinderPlus.
+[`import_pheno()`](https://amrgen.org/reference/import_pheno.md) to
+import phenotype data, and
+[`import_geno()`](https://amrgen.org/reference/import_geno.md) to import
+genotype data from AMRFinderPlus and other genotypers.
 
 ## Usage
 
@@ -20,8 +20,9 @@ import genotype data from AMRFinderPlus.
 get_binary_matrix(
   geno_table,
   pheno_table,
-  antibiotic,
-  drug_class_list = NULL,
+  pheno_drug = NULL,
+  geno_class = NULL,
+  geno_drug = NULL,
   keep_SIR = TRUE,
   keep_assay_values = FALSE,
   keep_assay_values_from = c("mic", "disk"),
@@ -51,31 +52,35 @@ get_binary_matrix(
 
   A data frame containing phenotype data, in long form with one row per
   sample, drug and assay result. Expected format is that output by
-  [`import_ast()`](https://amrgen.org/reference/import_ast.md) and must
-  include a column `drug_agent` (indicating the drug agent,
-  interpretable as AMR pkg class `ab`), in addition to a column for
-  sample identifiers (specified via `pheno_sample_col`, otherwise it is
-  assumed the first column contains identifiers), a column with the
-  resistance interpretation (S/I/R, specified via `sir_col`), and
-  optionally a column with the ECOFF interpretation (WT/NWT or S/R,
-  specified via `ecoff_col`).
+  [`import_pheno()`](https://amrgen.org/reference/import_pheno.md) and
+  must include a column `drug` (indicating the drug, interpretable as
+  AMR pkg class `ab`), in addition to a column for sample identifiers
+  (specified via `pheno_sample_col`, otherwise it is assumed the first
+  column contains identifiers), a column with the resistance
+  interpretation (S/I/R, specified via `sir_col`), and optionally a
+  column with the ECOFF interpretation (WT/NWT or S/R, specified via
+  `ecoff_col`).
 
-- antibiotic:
+- pheno_drug:
 
-  A character string specifying the antibiotic of interest to filter
-  phenotype data. The value must match one of the entries in the
-  `drug_agent` column of `pheno_table` or be coercible to a match using
+  A character string specifying the drug of interest to filter phenotype
+  data. The value must match one of the entries in the `drug` column of
+  `pheno_table` or be coercible to a match using
   [AMR::as.ab](https://amr-for-r.org/reference/as.ab.html).
 
-- drug_class_list:
+- geno_class:
 
-  A character vector (optional) of drug classes to filter genotype data
-  for markers related to the specified antibiotic. Markers in
-  `geno_table` will be filtered based on whether their `drug_class`
-  matches any value in this list. If not provided, the AMR pkg is used
-  to check what class name/s are associated with the antibiotic and uses
-  those (these are printed to screen so the user can see what is being
-  filtered).
+  (Optional) A character vector of drug classes to filter genotype
+  markers. Markers in `geno_table` will be filtered based on whether
+  their `drug_class` matches any value in this list. If not provided,
+  the AMR pkg is used to check what class name/s are associated with
+  `pheno_drug` and uses those (these are printed to screen so the user
+  can see what is being filtered).
+
+- geno_drug:
+
+  (Optional) A character vector of drug names whose relevant genotype
+  markers should be included.
 
 - keep_SIR:
 
@@ -97,13 +102,13 @@ get_binary_matrix(
 
 - geno_sample_col:
 
-  A character string (optional) specifying the column name in
+  (Optional) A character string specifying the column name in
   `geno_table` containing sample identifiers. Defaults to `NULL`, in
   which case it is assumed the first column contains identifiers.
 
 - pheno_sample_col:
 
-  A character string (optional) specifying the column name in
+  (Optional) A character string specifying the column name in
   `pheno_table` containing sample identifiers. Defaults to `NULL`, in
   which case it is assumed the first column contains identifiers.
 
@@ -138,26 +143,26 @@ get_binary_matrix(
 ## Value
 
 A data frame where each row represents a sample, and each column
-represents a genetic marker related to the specified antibiotic's drug
-class. The binary values in the matrix indicate the presence (`1`) or
-absence (`0`) of each marker for each sample, along with resistance
-status columns for the specified antibiotic: `R` for resistant (defined
-from `sir_col`, 1=R, 0=I/S) and `NWT` for nonwildtype (defined by
-`ecoff_col` if provided: 1=NWT, 0=WT; otherwise defined from `sir_col`:
-1=I/R, 0=S).
+represents a genetic marker related to the specified drug's genotype
+class or drug mapping. The binary values in the matrix indicate the
+presence (`1`) or absence (`0`) of each marker for each sample, along
+with resistance status columns for the specified drug: `R` for resistant
+(defined from `sir_col`, 1=R, 0=I/S) and `NWT` for nonwildtype (defined
+by `ecoff_col` if provided: 1=NWT, 0=WT; otherwise defined from
+`sir_col`: 1=I/R, 0=S).
 
 ## Details
 
 This function performs several steps:
 
-- Verifies that the `pheno_table` contains a `drug_agent` column and
-  converts it to class `ab` if necessary.
+- Verifies that the `pheno_table` contains a `drug` column and converts
+  it to class `ab` if necessary.
 
 - Filters the `pheno_table` to retain data related to the specified
-  antibiotic.
+  phenotype drug.
 
 - Checks that the `geno_table` contains markers associated with the
-  specified drug class(es).
+  specified genotype class(es) and/or drug(s).
 
 - Matches sample identifiers between `geno_table` and `pheno_table`.
 
@@ -182,17 +187,17 @@ if (FALSE) { # \dontrun{
 ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 geno_pheno_cip <- get_binary_matrix(
   ecoli_geno,
-  ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   sir_col = "pheno_clsi"
 )
 geno_pheno_cip <- get_binary_matrix(
   ecoli_geno,
-  ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
-  sir_col = "Resistance phenotype",
+  ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
+  sir_col = "pheno_provided",
   keep_assay_values = TRUE
 )
 } # }

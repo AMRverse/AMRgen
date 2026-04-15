@@ -18,4 +18,4 @@ rgi_drugs_table
 
 - `drug_class`: Valid drug class name recognised by AMR pkg
 
-- `drug_agent`: Valid antibiotic name recognised by AMR pkg
+- `drug`: Valid antibiotic name recognised by AMR pkg

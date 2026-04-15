@@ -44,7 +44,7 @@
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
     <p><code>geno_eco_2075</code> A data frame with 56064 rows and 24 columns representing AMRFinderPlus genotyping results for 2075 E. coli isolates.</p>
 <p>Columns include:</p><ul><li><p><code>id</code>: Sample identifier.</p></li>
-<li><p><code>drug_agent</code>, <code>drug_class</code>: Antibiotic agent and class, determined by parsing AMRFinderPlus <code>subclass</code> field in the downloaded file.</p></li>
+<li><p><code>drug</code>, <code>drug_class</code>: Antibiotic agent and class, determined by parsing AMRFinderPlus <code>subclass</code> field in the downloaded file.</p></li>
 <li><p><code>gene</code>, <code>node</code>, <code>marker</code>: gene symbol, parsed from <code>amr_element_symbol</code> field in the downloaded file.</p></li>
 <li><p><code>mutation</code>: mutation within gene, parsed into HGVS nomenclature format from <code>amr_element_symbol</code> field in the downloaded file.</p></li>
 <li><p><code>marker.label</code>: label for genotype marker, combining <code>gene</code> and <code>mutation</code> information (deletion variants represented as <code>"gene:-"</code>).</p></li>

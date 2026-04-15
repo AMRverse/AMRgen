@@ -96,10 +96,10 @@ from the AMRFinderPlus table along with the newly mapped variables:
 - `drug_class`: Name of the antibiotic group associated with the
   genotype marker, compatible with AMR pkg (`character`).
 
-- `drug_agent`: Name of the specific antibiotic agent associated with
-  the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is
-  assigned when the markers are annotated with a class only and not a
-  specific antibiotic.
+- `drug`: Name of the specific antibiotic associated with the genotype
+  marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when
+  the markers are annotated with a class only and not a specific
+  antibiotic.
 
 - `variation type`: Type of variation, e.g. `Gene presence detected`,
   `Protein variant detected`, `Nucleotide variant detected`,

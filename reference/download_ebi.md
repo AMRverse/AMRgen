@@ -6,7 +6,7 @@ AMR-associated genotypes, but the results are processed and not all
 fields returned by AMRFinderPlus are included. Optionally, the function
 can also reformat the phenotype data for easy use with AMRgen functions
 (using
-[`import_ebi_ast_ftp()`](https://amrgen.org/reference/import_ebi_ast_ftp.md))
+[`import_ebi_pheno_ftp()`](https://amrgen.org/reference/import_ebi_pheno_ftp.md))
 and re-interpret assay measures using the latest breakpoints/ECOFF.
 
 ## Usage
@@ -14,12 +14,13 @@ and re-interpret assay measures using the latest breakpoints/ECOFF.
 ``` r
 download_ebi(
   data = "phenotype",
-  antibiotic = NULL,
-  force_antibiotic = FALSE,
+  pheno_drug = NULL,
+  force_drug_name = FALSE,
   genus = NULL,
   species = NULL,
   geno_subclass = NULL,
   geno_class = NULL,
+  geno_drug = NULL,
   remove_dup = FALSE,
   release = NULL,
   reformat = FALSE,
@@ -36,18 +37,17 @@ download_ebi(
   String specifying the type of data to download, either "phenotype" or
   "genotype" (default "phenotype").
 
-- antibiotic:
+- pheno_drug:
 
-  (Optional) String (or vector of strings) specifying the antibiotic
-  name/s to filter on (default NULL). Uses the AMR package to try to fix
-  typos, and format to lower-case for EBI files. Not used if
-  `data`="genotype" and `class` or `subclass` is specified.
+  (Optional) String (or vector of strings) specifying the drug name/s to
+  filter phenotype data (default `NULL`). Uses the AMR package to try to
+  fix typos, and format to lower-case for EBI files. Only used if `data`
+  = `"phenotype"`.
 
-- force_antibiotic:
+- force_drug_name:
 
-  (Optional) Logical indicating whether to turn off parsing of
-  antibiotic names and match exactly on the input strings (default
-  `FALSE`).
+  (Optional) Logical indicating whether to turn off parsing of drug
+  names and match exactly on the input strings (default `FALSE`).
 
 - genus:
 
@@ -62,23 +62,28 @@ download_ebi(
 - geno_subclass:
 
   (Optional) String specifying an antibiotic subclass to filter genotype
-  data on (default NULL). Filter is based on string match, not identity,
-  so e.g. subclass="TRIMETHOPRIM" will return all rows where the string
-  "TRIMETHOPRIM" is included in the subclass field. Only used if
-  `data`="genotype". Check [NCBI AMR Class-Subclass
+  data on (default `NULL`). Filter is based on string match, not
+  identity, so e.g. subclass="TRIMETHOPRIM" will return all rows where
+  the string "TRIMETHOPRIM" is included in the subclass field. Only used
+  if `data`="genotype". Check [NCBI AMR Class-Subclass
   Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid
   terms.
 
 - geno_class:
 
   (Optional) String specifying an antibiotic subclass to filter genotype
-  data on (default NULL). Filter is based on string match, not identity,
-  so e.g. class="TRIMETHOPRIM" will return all rows where the string
-  "TRIMETHOPRIM" is included in the class field. Only used if
-  `data`="genotype" and subclass is not specified. Check [NCBI AMR
-  Class-Subclass
+  data on (default
+  ``` NULL``). Filter is based on string match, not identity, so e.g. class="TRIMETHOPRIM" will return all rows where the string "TRIMETHOPRIM" is included in the class field. Only used if  ```data\`="genotype"
+  and subclass is not specified. Check [NCBI AMR Class-Subclass
   Reference](https://github.com/ncbi/amr/wiki/class-subclass) for valid
   terms.
+
+- geno_drug:
+
+  (Optional) String (or vector of strings) specifying the drug name/s to
+  filter on (default `NULL`). Filter is based on valid CARD terms in the
+  EBI `antibiotic_name` field and is only used if `data` = `"genotype"`
+  and neither `geno_subclass` nor `geno_class` is specified.
 
 - remove_dup:
 
@@ -103,7 +108,7 @@ download_ebi(
 
   (Optional) Logical specifying whether to reformat the downloaded data
   for easy use with downstream AMRgen functions, using
-  [import_ebi_ast_ftp](https://amrgen.org/reference/import_ebi_ast_ftp.md)
+  [import_ebi_pheno_ftp](https://amrgen.org/reference/import_ebi_pheno_ftp.md)
   (phenotypes) or
   [import_amrfp_ebi_ftp](https://amrgen.org/reference/import_amrfp_ebi_ftp.md).
   Default `FALSE`. This does things like format the antibiotic,
@@ -112,7 +117,7 @@ download_ebi(
   EUCAST/CLSI breakpoints (when `data`="phenotype"). No columns are
   removed from the downloaded data frame, but key fields are renamed,
   see documentation for
-  [format_ast](https://amrgen.org/reference/format_ast.md) and
+  [format_pheno](https://amrgen.org/reference/format_pheno.md) and
   [import_amrfp_ebi_ftp](https://amrgen.org/reference/import_amrfp_ebi_ftp.md).
 
 - interpret_eucast:
@@ -155,7 +160,7 @@ subclass terms.
 Note the function downloads the full genotype or phenotype data table
 before filtering on the provided parameters, so if you are having
 trouble with drug/class names not matching then just run without
-specifying any genus/species/antibiotic/class filters, to get the full
+specifying any genus/species/drug/class filters, to get the full
 unfiltered table and explore the field values to filter manually to get
 what you want.
 
@@ -173,13 +178,13 @@ pheno_salmonella <- download_ebi(
 )
 
 # reformat downloaded phenotype data to simplify use with AMRgen functions
-pheno_salmonella <- import_ebi_ast_ftp(pheno_salmonella)
+pheno_salmonella <- import_ebi_pheno_ftp(pheno_salmonella)
 
 
 # download phenotype data for Salmonella, filter to ampicillin and ciprofloxacin
 pheno_salmonella <- download_ebi(
   genus = "Salmonella",
-  antibiotic = c("ampicillin", "Cipro")
+  pheno_drug = c("ampicillin", "Cipro")
 )
 
 # download phenotype data for Staphylococcus aureus and reformat
@@ -223,7 +228,7 @@ geno_kpn_tmp <- download_ebi(
 geno_kpn_tmp <- download_ebi(
   data = "genotype",
   species = "Klebsiella pneumoniae",
-  antibiotic = "trimethoprim"
+  geno_drug = "trimethoprim"
 )
 } # }
 ```

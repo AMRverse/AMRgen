@@ -22,7 +22,7 @@ Columns include:
 
 - `id`: Sample identifier.
 
-- `drug_agent`, `drug_class`: Antibiotic agent and class, determined by
+- `drug`, `drug_class`: Antibiotic agent and class, determined by
   parsing AMRFinderPlus `subclass` field in the downloaded file.
 
 - `gene`, `node`, `marker`: gene symbol, parsed from

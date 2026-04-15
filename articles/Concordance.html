@@ -149,16 +149,16 @@ called <code>pheno_eco_2075</code>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pheno_eco_2075</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pheno_eco_2075</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 37</span></span></span>
-<span><span class="co">#&gt;   id      drug_agent   mic  disk pheno_provided guideline method platform source</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN26… AMK          <span style="color: #949494;">&lt;=</span>8    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth… BD Phoe… <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN26… GEN          <span style="color: #949494;">&lt;=</span>2    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth… BD Phoe… <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN26… TOB          <span style="color: #949494;">&lt;=</span>2    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth… BD Phoe… <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN26… AMP          <span style="color: #949494;">&lt;=</span>4    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth… BD Phoe… <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN26… AMC            8    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth… BD Phoe… <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN26… TZP          <span style="color: #949494;">&lt;=</span>2    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth… BD Phoe… <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 28 more variables: spp_pheno &lt;mo&gt;, SRA_accession &lt;chr&gt;, assembly_ID &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 36</span></span></span>
+<span><span class="co">#&gt;   id    drug   mic pheno_provided guideline method  platform source spp_pheno   </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;mo&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN… AMK    <span style="color: #949494;">&lt;=</span>8 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth … BD Phoe… <span style="color: #BB0000;">NA</span>     <span style="color: #949494;">B_</span>ESCHR<span style="color: #949494;">_</span>COLI</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN… GEN    <span style="color: #949494;">&lt;=</span>2 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth … BD Phoe… <span style="color: #BB0000;">NA</span>     <span style="color: #949494;">B_</span>ESCHR<span style="color: #949494;">_</span>COLI</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN… TOB    <span style="color: #949494;">&lt;=</span>2 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth … BD Phoe… <span style="color: #BB0000;">NA</span>     <span style="color: #949494;">B_</span>ESCHR<span style="color: #949494;">_</span>COLI</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN… AMP    <span style="color: #949494;">&lt;=</span>4 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth … BD Phoe… <span style="color: #BB0000;">NA</span>     <span style="color: #949494;">B_</span>ESCHR<span style="color: #949494;">_</span>COLI</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN… AMC      8 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth … BD Phoe… <span style="color: #BB0000;">NA</span>     <span style="color: #949494;">B_</span>ESCHR<span style="color: #949494;">_</span>COLI</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN… TZP    <span style="color: #949494;">&lt;=</span>2 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          CLSI      broth … BD Phoe… <span style="color: #BB0000;">NA</span>     <span style="color: #949494;">B_</span>ESCHR<span style="color: #949494;">_</span>COLI</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 27 more variables: SRA_accession &lt;chr&gt;, assembly_ID &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   collection_year &lt;dbl&gt;, ISO_country_code &lt;chr&gt;, host &lt;chr&gt;, host_age &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   host_sex &lt;lgl&gt;, isolate &lt;dbl&gt;, isolation_source &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   isolation_source_category &lt;chr&gt;, isolation_latitude &lt;dbl&gt;,</span></span></span>
@@ -173,8 +173,8 @@ to work with <code>AMRgen</code> functions are:</p>
 link to sample names in the genotype file</p></li>
 <li><p><code>spp_pheno</code>: species in the form of an AMR package
 <code>mo</code> class, in this vignette “B_ESCHR_COLI”</p></li>
-<li><p><code>drug_agent</code>: antibiotic name in the form of an AMR
-package <code>ab</code> class</p></li>
+<li><p><code>drug</code>: antibiotic name in the form of an AMR package
+<code>ab</code> class</p></li>
 <li><p>a phenotype column: S/I/R phenotype calls in the form of an AMR
 package <code>sir</code> class. In this example, SIR phenotype calls are
 as provided in the EBI AMR portal (<code>pheno_provided</code>) as we
@@ -211,14 +211,14 @@ table).</p></li>
 <span><span class="co"># Check the format of the processed genotype table</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">geno_eco_2075</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 33</span></span></span>
-<span><span class="co">#&gt;   id          marker gene  mutation drug_agent drug_class `variation type` node </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN263043… pmrB_… pmrB  Tyr358A… COL        Polymyxins Protein variant… pmrB </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN263043… blaEC  blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN263043… mdtM   mdtM  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… mdtM </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN263043… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN263043… acrF   acrF  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Efflux     Gene presence d… acrF </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN263043… blaEC  blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Beta-lact… Gene presence d… blaEC</span></span>
+<span><span class="co">#&gt;   id           marker     gene  mutation drug drug_class  `variation type` node </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN26304318 pmrB_Y358N pmrB  Tyr358A… COL  Polymyxins  Protein variant… pmrB </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN26304318 blaEC      blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>   Beta-lacta… Gene presence d… blaEC</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN26304318 mdtM       mdtM  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>   Efflux      Gene presence d… mdtM </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN26304318 glpT_E448K glpT  Glu448L… FOS  Phosphonics Protein variant… glpT </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN26304318 acrF       acrF  <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>   Efflux      Gene presence d… acrF </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN26304319 blaEC      blaEC <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>   Beta-lacta… Gene presence d… blaEC</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 25 more variables: marker.label &lt;chr&gt;, `Protein identifier` &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Contig id` &lt;chr&gt;, Start &lt;dbl&gt;, Stop &lt;dbl&gt;, Strand &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Gene symbol` &lt;chr&gt;, `Sequence name` &lt;chr&gt;, Scope &lt;chr&gt;,</span></span></span>
@@ -260,8 +260,8 @@ in both the genotype and phenotype input tables.</p>
 <span><span class="va">eco_cip_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  <span class="va">geno_eco_2075</span>,</span>
 <span>  <span class="va">pheno_eco_2075</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  geno_class <span class="op">=</span> <span class="st">"Quinolones"</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_provided"</span>,</span>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
@@ -313,7 +313,7 @@ also compare them to the updated breakpoints from CLSI 2025.</p>
 <span><span class="co"># The breakpoints are provided manually.</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
 <span>  pheno_table <span class="op">=</span> <span class="va">pheno_eco_2075</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
 <span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  colour_by <span class="op">=</span> <span class="st">"pheno_provided"</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Escherichia coli"</span>,</span>
@@ -327,7 +327,7 @@ also compare them to the updated breakpoints from CLSI 2025.</p>
 <span><span class="co"># The breakpoints are provided by passing the option "guideline"</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
 <span>  pheno_table <span class="op">=</span> <span class="va">pheno_eco_2075</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
 <span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  colour_by <span class="op">=</span> <span class="st">"pheno_provided"</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Escherichia coli"</span>,</span>

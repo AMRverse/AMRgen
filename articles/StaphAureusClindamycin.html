@@ -86,14 +86,14 @@ of clinical samples.</p>
 <div class="section level3">
 <h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
 </h3>
-<p>For this example, we have collated genotype-phenotype data from NCBI,
-EBI through the ESGEM-AMR Staphylococcus subgroup. Phenotypic data were
-collated into a single table (one row per isolate). The genotype data
-was generated using AMRFinderPlus. This pre-loaded objects
-<code>ast_CLI</code> and <code>afp_CLI</code> serve as the
-<strong>input</strong> for <code>AMRgen</code>. First, we will create a
-new marker.label column that includes the marker gene and its closest
-accession number (this will be named variant from now on).</p>
+<p>For this example, we have collated genotype-phenotype data from NCBI
+and EBI through the ESGEM-AMR Staphylococcus subgroup. Phenotypic data
+were collated into a single table (one row per isolate). The genotype
+data was generated using AMRFinderPlus. The pre-loaded objects
+<code>pheno_CLI_public</code> and <code>afp_CLI_public</code> serve as
+the <strong>input</strong> for <code>AMRgen</code>. First, we will
+create a new marker.label column that includes the marker gene and its
+closest accession number (this will be named variant from now on).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create the new marker.label column</span></span>
 <span><span class="va">cli_accession</span> <span class="op">&lt;-</span> <span class="va">afp_CLI_public</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -122,9 +122,9 @@ different associations with clindamycin resistance.</p>
 <code class="sourceCode R"><span><span class="co"># Generate binary matrix with markers</span></span>
 <span><span class="va">cli_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  <span class="va">afp_CLI_public</span>,</span>
-<span>  <span class="va">ast_CLI_public</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lincosamides"</span><span class="op">)</span>,</span>
+<span>  <span class="va">pheno_CLI_public</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
+<span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lincosamides"</span><span class="op">)</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span></span>
@@ -133,9 +133,9 @@ different associations with clindamycin resistance.</p>
 <span><span class="co"># Generate binary matrix with variants</span></span>
 <span><span class="va">cli_bin_accession</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  <span class="va">cli_accession</span>,</span>
-<span>  <span class="va">ast_CLI_public</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lincosamides"</span><span class="op">)</span>,</span>
+<span>  <span class="va">pheno_CLI_public</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
+<span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lincosamides"</span><span class="op">)</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span></span>

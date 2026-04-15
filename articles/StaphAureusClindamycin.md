@@ -19,13 +19,14 @@ library(dplyr)
 
 ### Data preparation
 
-For this example, we have collated genotype-phenotype data from NCBI,
+For this example, we have collated genotype-phenotype data from NCBI and
 EBI through the ESGEM-AMR Staphylococcus subgroup. Phenotypic data were
 collated into a single table (one row per isolate). The genotype data
-was generated using AMRFinderPlus. This pre-loaded objects `ast_CLI` and
-`afp_CLI` serve as the **input** for `AMRgen`. First, we will create a
-new marker.label column that includes the marker gene and its closest
-accession number (this will be named variant from now on).
+was generated using AMRFinderPlus. The pre-loaded objects
+`pheno_CLI_public` and `afp_CLI_public` serve as the **input** for
+`AMRgen`. First, we will create a new marker.label column that includes
+the marker gene and its closest accession number (this will be named
+variant from now on).
 
 ``` r
 # Create the new marker.label column
@@ -56,9 +57,9 @@ associations with clindamycin resistance.
 # Generate binary matrix with markers
 cli_bin <- get_binary_matrix(
   afp_CLI_public,
-  ast_CLI_public,
-  antibiotic = "Clindamycin",
-  drug_class_list = c("Lincosamides"),
+  pheno_CLI_public,
+  pheno_drug = "Clindamycin",
+  geno_class = c("Lincosamides"),
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   marker_col = "marker.label"
@@ -67,9 +68,9 @@ cli_bin <- get_binary_matrix(
 # Generate binary matrix with variants
 cli_bin_accession <- get_binary_matrix(
   cli_accession,
-  ast_CLI_public,
-  antibiotic = "Clindamycin",
-  drug_class_list = c("Lincosamides"),
+  pheno_CLI_public,
+  pheno_drug = "Clindamycin",
+  geno_class = c("Lincosamides"),
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   marker_col = "marker.label"

@@ -88,15 +88,15 @@ with quinolone genotype markers, in *E. coli*.
 
 ``` r
 # Example public E. coli AST data from NCBI
-#  (already imported via import_ncbi_ast() and re-interpreted with as.sir())
-ecoli_ast
+#  (already imported via import_ncbi_pheno() and re-interpreted with as.sir())
+ecoli_pheno
 
 # Import matching E. coli AMRFinderPlus data from AllTheBacteria
 ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 
 # Calculate solo positive predictive value for ciprofloxacin resistance, for individual markers found solo
 #  (for all quinolone-associated genotype markers)
-soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_ast, antibiotic="Ciprofloxacin", drug_class_list=c("Quinolones"), sir_col="pheno_clsi")
+soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_pheno, pheno_drug ="Ciprofloxacin", geno_class =c("Quinolones"), sir_col="pheno_clsi")
 
 # Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
 #  (for combinations observed at least 5 times)
@@ -110,7 +110,7 @@ cip_ppv <- ppv(binary_matrix=soloPPV_cipro$amr_binary, min_set_size=5)
 models <- amr_logistic(binary_matrix=soloPPV_cipro$amr_binary, maf=10)
 
 # Caclulate concordance of genotype and phenotype markers
-eco_cip_matrix <- get_binary_matrix(ecoli_geno, ecoli_ast, antibiotic = "Ciprofloxacin", drug_class_list = "Quinolones", sir_col = "pheno_provided", keep_assay_values = TRUE, keep_assay_values_from = "mic")
+eco_cip_matrix <- get_binary_matrix(ecoli_geno, ecoli_pheno, pheno_drug = "Ciprofloxacin", geno_class = "Quinolones", sir_col = "pheno_provided", keep_assay_values = TRUE, keep_assay_values_from = "mic")
 
 concordance_cip <- concordance(eco_cip_matrix)
 ```
@@ -124,7 +124,7 @@ You can see all the various phenotypic import functions for the
 following formats by running:
 
 ``` r
-?import_ast
+?import_pheno
 ```
 
 Currently, AMRgen supports the following phenotype formats:
@@ -140,8 +140,8 @@ Phenotype data can also be exported in NCBI or EBI formats, for upload
 to the public archives:
 
 ``` r
-?export_ncbi_ast
-?export_ebi_ast
+?export_ncbi_pheno
+?export_ebi_pheno
 ```
 
 ## Example analyses using AMRgen
@@ -177,7 +177,7 @@ mics <- rep(ecoli_cip_mic_data$mic, ecoli_cip_mic_data$count)
 ggplot2::autoplot(mics, ab = "cipro", mo = "E. coli", title = "E. coli cipro reference distribution")
 
 # Compare reference distribution to example E. coli data
-ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent=="CIP"]
+ecoli_cip <- ecoli_pheno$mic[ecoli_pheno$drug=="CIP"]
 comparison <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
 comparison
 ggplot2::autoplot(comparison)

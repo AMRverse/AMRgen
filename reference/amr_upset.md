@@ -15,8 +15,9 @@ amr_upset(
   order = "value",
   geno_table,
   pheno_table,
-  antibiotic = NULL,
-  drug_class_list = NULL,
+  pheno_drug = NULL,
+  geno_class = NULL,
+  geno_drug = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = NULL,
@@ -44,9 +45,9 @@ amr_upset(
   A data frame containing the original binary matrix output from the
   [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
   function. If not provided (or set to `NULL`), user must specify
-  `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and
-  optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`,
-  `ecoff_col`, `marker_col` to pass to
+  `geno_table`, `pheno_table`, `pheno_drug`, and optionally
+  `geno_class`, `geno_drug`, `geno_sample_col`, `pheno_sample_col`,
+  `sir_col`, `ecoff_col`, `marker_col` to pass to
   [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md).
 
 - assay:
@@ -89,31 +90,41 @@ amr_upset(
 
   (Required if `binary_matrix` not provided) A data frame containing
   phenotype data, formatted with
-  [`import_ast()`](https://amrgen.org/reference/import_ast.md). Only
+  [`import_pheno()`](https://amrgen.org/reference/import_pheno.md). Only
   used if `binary_matrix` not provided.
 
-- antibiotic:
+- pheno_drug:
 
-  Optional. Antibiotic name used to retrieve clinical breakpoints for
-  annotation of the assay distribution plot.
+  (Required if `binary_matrix` not provided) A character string
+  specifying the drug of interest to filter phenotype data. The value
+  must match one of the entries in the `drug` column of `pheno_table` or
+  be coercible to a match using
+  [AMR::as.ab](https://amr-for-r.org/reference/as.ab.html).
 
-- drug_class_list:
+- geno_class:
 
-  (Only relevant if `binary_matrix` not provided) If not provided, the
-  AMR pkg is used to check what class name/s are associated with the
-  antibiotic and uses those (these are printed to screen so the user can
-  see what is being filtered).
+  (Optional if `binary_matrix` not provided) A character vector of drug
+  classes to filter genotype markers. Markers in `geno_table` will be
+  filtered based on whether their `drug_class` matches any value in this
+  list. If not provided, the AMR pkg is used to check what class name/s
+  are associated with `pheno_drug` and uses those (these are printed to
+  screen so the user can see what is being filtered).
+
+- geno_drug:
+
+  (Optional if `binary_matrix` not provided) A character vector of drug
+  names whose relevant genotype markers should be included.
 
 - geno_sample_col:
 
-  A character string (optional) specifying the column name in
+  (Optional) A character string specifying the column name in
   `geno_table` containing sample identifiers. Defaults to `NULL`, in
   which case it is assumed the first column contains identifiers. Only
   used if `binary_matrix` not provided.
 
 - pheno_sample_col:
 
-  A character string (optional) specifying the column name in
+  (Optional) A character string specifying the column name in
   `pheno_table` containing sample identifiers. Defaults to `NULL`, in
   which case it is assumed the first column contains identifiers. Only
   used if `binary_matrix` not provided.
@@ -197,15 +208,15 @@ amr_upset(
 
 - bp_S:
 
-  (optional) S breakpoint to add to plot (numerical).
+  (Optional) S breakpoint to add to plot (numerical).
 
 - bp_R:
 
-  (optional) R breakpoint to add to plot (numerical).
+  (Optional) R breakpoint to add to plot (numerical).
 
 - ecoff_bp:
 
-  (optional) ECOFF breakpoint to add to plot (numerical).
+  (Optional) ECOFF breakpoint to add to plot (numerical).
 
 ## Value
 
@@ -232,9 +243,9 @@ ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 # Generate binary matrix
 binary_matrix <- get_binary_matrix(
   geno_table = ecoli_geno,
-  pheno_table = ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  pheno_table = ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   sir_col = "pheno_clsi",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -247,8 +258,8 @@ cip_mic_upset <- amr_upset(binary_matrix, assay = "mic")
 cip_mic_upset <- amr_upset(
   assay = "mic",
   geno_table = ecoli_geno,
-  pheno_table = ecoli_ast,
-  antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
   sir_col = "pheno_clsi"
 )
 } # }

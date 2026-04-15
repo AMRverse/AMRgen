@@ -56,13 +56,12 @@ AMRgen package as `kp_mero_euscape`.
 # Download Klebsiella pneumoniae AST data from EBI, filtering for meropenem and re-interpret with EUCAST breakpoints and ECOFF
 
 kp_mero <- download_ebi(
-  antibiotic = "meropenem",
+  pheno_drug = "meropenem",
   species = "Klebsiella pneumoniae",
   reformat = TRUE,
   interpret_eucast = TRUE,
   interpret_ecoff = TRUE
 )
-#> [1] "https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/2025-12/phenotype.parquet"
 
 # Filter for isolates in EuSCAPE paper (PMID: 31358985)
 kp_mero_euscape <- kp_mero %>% filter(grepl("31358985", source))
@@ -81,21 +80,21 @@ Check the data frame
 ``` r
 head(kp_mero_euscape)
 #> # A tibble: 6 × 43
-#>   id          drug_agent   mic  disk pheno_provided pheno_eucast ecoff guideline
-#>   <chr>       <ab>       <mic> <dsk> <sir>          <sir>        <sir> <chr>    
-#> 1 SAMEA37298… MEM         2.00    NA   NA             S           NWT  NA       
-#> 2 SAMEA37298… MEM         4.00    NA   NA             I           NWT  NA       
-#> 3 SAMEA37298… MEM         0.12    NA   NA             S            WT  NA       
-#> 4 SAMEA37298… MEM         1.00    NA   NA             S           NWT  NA       
-#> 5 SAMEA37298… MEM         4.00    NA   NA             I           NWT  NA       
-#> 6 SAMEA37298… MEM         8.00    NA   NA             I           NWT  NA       
-#> # ℹ 35 more variables: method <chr>, platform <chr>, source <chr>,
-#> #   spp_pheno <mo>, SRA_accession <chr>, assembly_ID <chr>,
-#> #   collection_year <int>, ISO_country_code <chr>, host <chr>, host_age <chr>,
-#> #   host_sex <chr>, isolate <chr>, isolation_source <chr>,
-#> #   isolation_source_category <chr>, isolation_latitude <chr>,
-#> #   isolation_longitude <chr>, genus <chr>, organism <chr>,
-#> #   Updated_phenotype_CLSI <chr>, Updated_phenotype_EUCAST <chr>, …
+#>   id        drug   mic  disk pheno_provided pheno_eucast ecoff guideline method 
+#>   <chr>     <ab> <mic> <dsk> <sir>          <sir>        <sir> <chr>     <chr>  
+#> 1 SAMEA372… MEM   2.00    NA   NA             S           NWT  NA        broth …
+#> 2 SAMEA372… MEM   4.00    NA   NA             I           NWT  NA        broth …
+#> 3 SAMEA372… MEM   0.12    NA   NA             S            WT  NA        broth …
+#> 4 SAMEA372… MEM   1.00    NA   NA             S           NWT  NA        broth …
+#> 5 SAMEA372… MEM   4.00    NA   NA             I           NWT  NA        broth …
+#> 6 SAMEA372… MEM   8.00    NA   NA             I           NWT  NA        broth …
+#> # ℹ 34 more variables: platform <chr>, source <chr>, spp_pheno <mo>,
+#> #   SRA_accession <chr>, assembly_ID <chr>, collection_year <int>,
+#> #   ISO_country_code <chr>, host <chr>, host_age <chr>, host_sex <chr>,
+#> #   isolate <chr>, isolation_source <chr>, isolation_source_category <chr>,
+#> #   isolation_latitude <chr>, isolation_longitude <chr>, genus <chr>,
+#> #   organism <chr>, Updated_phenotype_CLSI <chr>,
+#> #   Updated_phenotype_EUCAST <chr>, used_ECOFF <chr>, database <chr>, …
 ```
 
 ### Phenotype Data Summary
@@ -108,46 +107,46 @@ concentration (MIC) distributions with EUCAST breakpoints and ECOFF.
 summarise_pheno(kp_mero_euscape, pheno_cols = c("pheno_eucast", "ecoff"))
 #> $uniques
 #> # A tibble: 7 × 2
-#>   column     n_unique
-#>   <chr>         <int>
-#> 1 id             1490
-#> 2 drug_agent        1
-#> 3 spp_pheno         1
-#> 4 method            1
-#> 5 platform          1
-#> 6 guideline         1
-#> 7 source            2
+#>   column    n_unique
+#>   <chr>        <int>
+#> 1 id            1490
+#> 2 drug             1
+#> 3 spp_pheno        1
+#> 4 method           1
+#> 5 platform         1
+#> 6 guideline        1
+#> 7 source           2
 #> 
 #> $drugs
 #> # A tibble: 1 × 4
-#>   drug_agent drug_name spp_pheno               mic
-#>   <ab>       <chr>     <chr>                 <int>
-#> 1 MEM        Meropenem Klebsiella pneumoniae  1490
+#>   drug drug_name spp_pheno               mic
+#>   <ab> <chr>     <chr>                 <int>
+#> 1 MEM  Meropenem Klebsiella pneumoniae  1490
 #> 
 #> $details
 #> # A tibble: 2 × 8
-#>   drug_agent drug_name spp_pheno          method platform guideline source   mic
-#>   <ab>       <chr>     <chr>              <chr>  <chr>    <chr>     <chr>  <int>
-#> 1 MEM        Meropenem Klebsiella pneumo… broth… NA       NA        31358…   628
-#> 2 MEM        Meropenem Klebsiella pneumo… broth… NA       NA        31358…   862
+#>   drug drug_name spp_pheno             method    platform guideline source   mic
+#>   <ab> <chr>     <chr>                 <chr>     <chr>    <chr>     <chr>  <int>
+#> 1 MEM  Meropenem Klebsiella pneumoniae broth di… NA       NA        31358…   628
+#> 2 MEM  Meropenem Klebsiella pneumoniae broth di… NA       NA        31358…   862
 #> 
 #> $pheno_counts_list
 #> $pheno_counts_list$pheno_eucast
 #> # A tibble: 1 × 6
-#>   drug_agent drug_name spp_pheno                 S     I     R
-#>   <ab>       <chr>     <chr>                 <int> <int> <int>
-#> 1 MEM        Meropenem Klebsiella pneumoniae   973   126   391
+#>   drug drug_name spp_pheno                 S     I     R
+#>   <ab> <chr>     <chr>                 <int> <int> <int>
+#> 1 MEM  Meropenem Klebsiella pneumoniae   973   126   391
 #> 
 #> $pheno_counts_list$ecoff
 #> # A tibble: 1 × 5
-#>   drug_agent drug_name spp_pheno                WT   NWT
-#>   <ab>       <chr>     <chr>                 <int> <int>
-#> 1 MEM        Meropenem Klebsiella pneumoniae   710   780
+#>   drug drug_name spp_pheno                WT   NWT
+#>   <ab> <chr>     <chr>                 <int> <int>
+#> 1 MEM  Meropenem Klebsiella pneumoniae   710   780
 
 # MIC distribution coloured by phenotype interpretation using EUCAST breakpoint
 assay_by_var(
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Klebsiella pneumoniae"
@@ -171,7 +170,7 @@ kp_mero_euscape %>% count(ecoff)
 # MIC distribution coloured by ECOFF
 assay_by_var(
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   measure = "mic",
   colour_by = "ecoff",
   species = "Klebsiella pneumoniae"
@@ -260,52 +259,52 @@ summarise_geno(kleborate_dev)
 #>   <chr>             <int>
 #> 1 id                 1490
 #> 2 marker              470
-#> 3 drug_agent            1
+#> 3 drug                  1
 #> 4 drug_class           13
 #> 5 gene                293
 #> 6 variation type        4
 #> 
 #> $per_type
 #> # A tibble: 4 × 6
-#>   `variation type`                  id marker drug_agent drug_class  gene
-#>   <chr>                          <int>  <int>      <int>      <int> <int>
-#> 1 Gene presence detected          1490    288          1         13   288
-#> 2 Inactivating mutation detected   569    167          1          2     3
-#> 3 Nucleotide variant detected       15      1          1          1     1
-#> 4 Protein variant detected         874     14          1          2     3
+#>   `variation type`                  id marker  drug drug_class  gene
+#>   <chr>                          <int>  <int> <int>      <int> <int>
+#> 1 Gene presence detected          1490    288     1         13   288
+#> 2 Inactivating mutation detected   569    167     1          2     3
+#> 3 Nucleotide variant detected       15      1     1          1     1
+#> 4 Protein variant detected         874     14     1          2     3
 #> 
 #> $drugs
 #> # A tibble: 13 × 5
-#>    drug_agent drug_class                markers samples  hits
-#>    <lgl>      <chr>                       <int>   <int> <int>
-#>  1 NA         Aminoglycosides                68    1060  2709
-#>  2 NA         Beta-lactams                   76    1457  2833
-#>  3 NA         Carbapenems                   153     770  1477
-#>  4 NA         Cephalosporins (3rd gen.)      18     648   668
-#>  5 NA         Macrolides                     15     460   924
-#>  6 NA         Phenicols                      16     479   572
-#>  7 NA         Phosphonics                    17    1485  1490
-#>  8 NA         Polymyxins                     33     138   138
-#>  9 NA         Quinolones                     26    1021  2665
-#> 10 NA         Rifamycins                      3     119   128
-#> 11 NA         Sulfonamides                   13     917  1096
-#> 12 NA         Tetracyclines                  12     514   554
-#> 13 NA         Trimethoprims                  21     941  1110
+#>    drug  drug_class                markers samples  hits
+#>    <lgl> <chr>                       <int>   <int> <int>
+#>  1 NA    Aminoglycosides                68    1060  2709
+#>  2 NA    Beta-lactams                   76    1457  2833
+#>  3 NA    Carbapenems                   153     770  1477
+#>  4 NA    Cephalosporins (3rd gen.)      18     648   668
+#>  5 NA    Macrolides                     15     460   924
+#>  6 NA    Phenicols                      16     479   572
+#>  7 NA    Phosphonics                    17    1485  1490
+#>  8 NA    Polymyxins                     33     138   138
+#>  9 NA    Quinolones                     26    1021  2665
+#> 10 NA    Rifamycins                      3     119   128
+#> 11 NA    Sulfonamides                   13     917  1096
+#> 12 NA    Tetracyclines                  12     514   554
+#> 13 NA    Trimethoprims                  21     941  1110
 #> 
 #> $markers
 #> # A tibble: 471 × 5
-#>    marker   drug_agent drug_class                `variation type`           n
-#>    <chr>    <lgl>      <chr>                     <chr>                  <int>
-#>  1 ACC-4.v1 NA         Beta-lactams              Gene presence detected     2
-#>  2 CMY-13   NA         Beta-lactams              Gene presence detected     1
-#>  3 CMY-16   NA         Beta-lactams              Gene presence detected    31
-#>  4 CMY-2.v2 NA         Beta-lactams              Gene presence detected     1
-#>  5 CMY-30   NA         Cephalosporins (3rd gen.) Gene presence detected     1
-#>  6 CMY-4.v1 NA         Beta-lactams              Gene presence detected     5
-#>  7 CMY-6    NA         Beta-lactams              Gene presence detected     2
-#>  8 CTX-M-1  NA         Cephalosporins (3rd gen.) Gene presence detected     1
-#>  9 CTX-M-14 NA         Cephalosporins (3rd gen.) Gene presence detected    16
-#> 10 CTX-M-15 NA         Cephalosporins (3rd gen.) Gene presence detected   568
+#>    marker   drug  drug_class                `variation type`           n
+#>    <chr>    <lgl> <chr>                     <chr>                  <int>
+#>  1 ACC-4.v1 NA    Beta-lactams              Gene presence detected     2
+#>  2 CMY-13   NA    Beta-lactams              Gene presence detected     1
+#>  3 CMY-16   NA    Beta-lactams              Gene presence detected    31
+#>  4 CMY-2.v2 NA    Beta-lactams              Gene presence detected     1
+#>  5 CMY-30   NA    Cephalosporins (3rd gen.) Gene presence detected     1
+#>  6 CMY-4.v1 NA    Beta-lactams              Gene presence detected     5
+#>  7 CMY-6    NA    Beta-lactams              Gene presence detected     2
+#>  8 CTX-M-1  NA    Cephalosporins (3rd gen.) Gene presence detected     1
+#>  9 CTX-M-14 NA    Cephalosporins (3rd gen.) Gene presence detected    16
+#> 10 CTX-M-15 NA    Cephalosporins (3rd gen.) Gene presence detected   568
 #> # ℹ 461 more rows
 ```
 
@@ -324,46 +323,46 @@ summarise_geno_pheno(kleborate_dev, kp_mero_euscape,
 #> 
 #> $drugs_with_pheno
 #> # A tibble: 2 × 6
-#>   drug_agent     n drug_class   drug_name spp_pheno               mic
-#>   <ab>       <int> <chr>        <chr>     <chr>                 <int>
-#> 1 MEM         1490 Carbapenems  Meropenem Klebsiella pneumoniae  1490
-#> 2 MEM         1490 Beta-lactams Meropenem Klebsiella pneumoniae  1490
+#>   drug     n drug_class   drug_name spp_pheno               mic
+#>   <ab> <int> <chr>        <chr>     <chr>                 <int>
+#> 1 MEM   1490 Carbapenems  Meropenem Klebsiella pneumoniae  1490
+#> 2 MEM   1490 Beta-lactams Meropenem Klebsiella pneumoniae  1490
 #> 
 #> $geno_hits
 #> # A tibble: 2 × 6
-#>   drug_agent drug_name drug_class   markers samples  hits
-#>   <lgl>      <chr>     <chr>          <int>   <int> <int>
-#> 1 NA         NA        Beta-lactams      76    1457  2833
-#> 2 NA         NA        Carbapenems      153     770  1477
+#>   drug  drug_name drug_class   markers samples  hits
+#>   <lgl> <chr>     <chr>          <int>   <int> <int>
+#> 1 NA    NA        Beta-lactams      76    1457  2833
+#> 2 NA    NA        Carbapenems      153     770  1477
 #> 
 #> $geno_markers
 #> # A tibble: 229 × 6
-#>    marker   drug_agent drug_name drug_class   `variation type`           n
-#>    <chr>    <lgl>      <chr>     <chr>        <chr>                  <int>
-#>  1 ACC-4.v1 NA         NA        Beta-lactams Gene presence detected     2
-#>  2 CMY-13   NA         NA        Beta-lactams Gene presence detected     1
-#>  3 CMY-16   NA         NA        Beta-lactams Gene presence detected    31
-#>  4 CMY-2.v2 NA         NA        Beta-lactams Gene presence detected     1
-#>  5 CMY-4.v1 NA         NA        Beta-lactams Gene presence detected     5
-#>  6 CMY-6    NA         NA        Beta-lactams Gene presence detected     2
-#>  7 CTX-M-33 NA         NA        Carbapenems  Gene presence detected     1
-#>  8 DHA-1    NA         NA        Beta-lactams Gene presence detected    78
-#>  9 IMP-1    NA         NA        Carbapenems  Gene presence detected     3
-#> 10 KPC-12   NA         NA        Carbapenems  Gene presence detected     1
+#>    marker   drug  drug_name drug_class   `variation type`           n
+#>    <chr>    <lgl> <chr>     <chr>        <chr>                  <int>
+#>  1 ACC-4.v1 NA    NA        Beta-lactams Gene presence detected     2
+#>  2 CMY-13   NA    NA        Beta-lactams Gene presence detected     1
+#>  3 CMY-16   NA    NA        Beta-lactams Gene presence detected    31
+#>  4 CMY-2.v2 NA    NA        Beta-lactams Gene presence detected     1
+#>  5 CMY-4.v1 NA    NA        Beta-lactams Gene presence detected     5
+#>  6 CMY-6    NA    NA        Beta-lactams Gene presence detected     2
+#>  7 CTX-M-33 NA    NA        Carbapenems  Gene presence detected     1
+#>  8 DHA-1    NA    NA        Beta-lactams Gene presence detected    78
+#>  9 IMP-1    NA    NA        Carbapenems  Gene presence detected     3
+#> 10 KPC-12   NA    NA        Carbapenems  Gene presence detected     1
 #> # ℹ 219 more rows
 #> 
 #> $pheno_counts_list
 #> $pheno_counts_list$ecoff
 #> # A tibble: 1 × 5
-#>   drug_agent drug_name spp_pheno                WT   NWT
-#>   <ab>       <chr>     <chr>                 <int> <int>
-#> 1 MEM        Meropenem Klebsiella pneumoniae   710   780
+#>   drug drug_name spp_pheno                WT   NWT
+#>   <ab> <chr>     <chr>                 <int> <int>
+#> 1 MEM  Meropenem Klebsiella pneumoniae   710   780
 #> 
 #> $pheno_counts_list$pheno_eucast
 #> # A tibble: 1 × 6
-#>   drug_agent drug_name spp_pheno                 S     I     R
-#>   <ab>       <chr>     <chr>                 <int> <int> <int>
-#> 1 MEM        Meropenem Klebsiella pneumoniae   973   126   391
+#>   drug drug_name spp_pheno                 S     I     R
+#>   <ab> <chr>     <chr>                 <int> <int> <int>
+#> 1 MEM  Meropenem Klebsiella pneumoniae   973   126   391
 ```
 
 ## Phenotypes vs Kleborate Genotypes
@@ -380,8 +379,8 @@ produced using the `get_binary_matrix` function:
 kleborate_binary_matrix <- get_binary_matrix(
   geno_table = kleborate_dev,
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
-  drug_class_list = c("Carbapenems"),
+  pheno_drug = "Meropenem",
+  geno_class = c("Carbapenems"),
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic",
@@ -465,7 +464,7 @@ comboPPV_kleborate_mero <- ppv(
   binary_matrix = kleborate_binary_matrix,
   order = "value",
   min_set_size = 2,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   upset_grid = TRUE,
   plot_assay = TRUE,
   assay = "mic"
@@ -1010,52 +1009,52 @@ summarise_geno(kleborate_v313, sample_col = "id", marker_col = "marker.label")
 #>   <chr>             <int>
 #> 1 id                 1489
 #> 2 marker.label        263
-#> 3 drug_agent            1
+#> 3 drug                  1
 #> 4 drug_class           13
 #> 5 gene                263
 #> 6 variation type        4
 #> 
 #> $per_type
 #> # A tibble: 4 × 6
-#>   `variation type`                  id marker.label drug_agent drug_class  gene
-#>   <chr>                          <int>        <int>      <int>      <int> <int>
-#> 1 Gene presence detected          1489          246          1         13   246
-#> 2 Inactivating mutation detected   568            3          1          2     3
-#> 3 Nucleotide variant detected       15            1          1          1     1
-#> 4 Protein variant detected         874           13          1          2    13
+#>   `variation type`                  id marker.label  drug drug_class  gene
+#>   <chr>                          <int>        <int> <int>      <int> <int>
+#> 1 Gene presence detected          1489          246     1         13   246
+#> 2 Inactivating mutation detected   568            3     1          2     3
+#> 3 Nucleotide variant detected       15            1     1          1     1
+#> 4 Protein variant detected         874           13     1          2    13
 #> 
 #> $drugs
 #> # A tibble: 13 × 5
-#>    drug_agent drug_class                markers samples  hits
-#>    <lgl>      <chr>                       <int>   <int> <int>
-#>  1 NA         Aminoglycosides                59    1057  3140
-#>  2 NA         Beta-lactams                   76    1457  2833
-#>  3 NA         Carbapenems                    17     766  1459
-#>  4 NA         Cephalosporins (3rd gen.)      18     648   668
-#>  5 NA         Macrolides                     14     460   923
-#>  6 NA         Phenicols                      12     469   558
-#>  7 NA         Phosphonics                     1       3     3
-#>  8 NA         Polymyxins                      3     138   138
-#>  9 NA         Quinolones                     25    1020  2422
-#> 10 NA         Rifamycins                      2     114   114
-#> 11 NA         Sulfonamides                    9     913  1090
-#> 12 NA         Tetracyclines                   9     503   541
-#> 13 NA         Trimethoprims                  18     886  1017
+#>    drug  drug_class                markers samples  hits
+#>    <lgl> <chr>                       <int>   <int> <int>
+#>  1 NA    Aminoglycosides                59    1057  3140
+#>  2 NA    Beta-lactams                   76    1457  2833
+#>  3 NA    Carbapenems                    17     766  1459
+#>  4 NA    Cephalosporins (3rd gen.)      18     648   668
+#>  5 NA    Macrolides                     14     460   923
+#>  6 NA    Phenicols                      12     469   558
+#>  7 NA    Phosphonics                     1       3     3
+#>  8 NA    Polymyxins                      3     138   138
+#>  9 NA    Quinolones                     25    1020  2422
+#> 10 NA    Rifamycins                      2     114   114
+#> 11 NA    Sulfonamides                    9     913  1090
+#> 12 NA    Tetracyclines                   9     503   541
+#> 13 NA    Trimethoprims                  18     886  1017
 #> 
 #> $markers
 #> # A tibble: 263 × 5
-#>    marker.label drug_agent drug_class                `variation type`          n
-#>    <chr>        <lgl>      <chr>                     <chr>                 <int>
-#>  1 ACC-4        NA         Beta-lactams              Gene presence detect…     2
-#>  2 CMY-13       NA         Beta-lactams              Gene presence detect…     1
-#>  3 CMY-16       NA         Beta-lactams              Gene presence detect…    31
-#>  4 CMY-2.v2     NA         Beta-lactams              Gene presence detect…     1
-#>  5 CMY-30       NA         Cephalosporins (3rd gen.) Gene presence detect…     1
-#>  6 CMY-4.v1     NA         Beta-lactams              Gene presence detect…     5
-#>  7 CMY-6        NA         Beta-lactams              Gene presence detect…     2
-#>  8 CTX-M-1      NA         Cephalosporins (3rd gen.) Gene presence detect…     1
-#>  9 CTX-M-14     NA         Cephalosporins (3rd gen.) Gene presence detect…    16
-#> 10 CTX-M-15     NA         Cephalosporins (3rd gen.) Gene presence detect…   568
+#>    marker.label drug  drug_class                `variation type`           n
+#>    <chr>        <lgl> <chr>                     <chr>                  <int>
+#>  1 ACC-4        NA    Beta-lactams              Gene presence detected     2
+#>  2 CMY-13       NA    Beta-lactams              Gene presence detected     1
+#>  3 CMY-16       NA    Beta-lactams              Gene presence detected    31
+#>  4 CMY-2.v2     NA    Beta-lactams              Gene presence detected     1
+#>  5 CMY-30       NA    Cephalosporins (3rd gen.) Gene presence detected     1
+#>  6 CMY-4.v1     NA    Beta-lactams              Gene presence detected     5
+#>  7 CMY-6        NA    Beta-lactams              Gene presence detected     2
+#>  8 CTX-M-1      NA    Cephalosporins (3rd gen.) Gene presence detected     1
+#>  9 CTX-M-14     NA    Cephalosporins (3rd gen.) Gene presence detected    16
+#> 10 CTX-M-15     NA    Cephalosporins (3rd gen.) Gene presence detected   568
 #> # ℹ 253 more rows
 ```
 
@@ -1215,49 +1214,57 @@ head(kp_mero_amrfp)
 # Summary of carbapenem resistance determinants
 summarise_geno(kp_mero_amrfp)
 #> $uniques
-#> # A tibble: 5 × 2
+#> # A tibble: 4 × 2
 #>   column     n_unique
 #>   <chr>         <int>
 #> 1 id             1490
 #> 2 marker          237
-#> 3 drug_agent       24
-#> 4 drug_class       20
-#> 5 gene            218
+#> 3 drug_class       20
+#> 4 gene            218
 #> 
 #> $per_type
 #> NULL
 #> 
 #> $drugs
-#> # A tibble: 35 × 6
-#>    drug_agent drug_name       drug_class      markers samples  hits
-#>    <ab>       <chr>           <chr>             <int>   <int> <int>
-#>  1 AMK        Amikacin        Aminoglycosides       8     375  1200
-#>  2 APR        Apramycin       Aminoglycosides       1       5    15
-#>  3 AZM        Azithromycin    Macrolides            3     467  1812
-#>  4 BLM        Bleomycin       Glycopeptides         1      49    49
-#>  5 CHL        Chloramphenicol Phenicols            10     601   805
-#>  6 CLI        Clindamycin     Lincosamides          1       1     3
-#>  7 COL        Colistin        Polymyxins           12      40    40
-#>  8 ERY        Erythromycin    Macrolides            6     479  1917
-#>  9 FDC        Cefiderocol     Cephalosporins        1      23    48
-#> 10 FLR        Florfenicol     Phenicols             1      54   108
-#> # ℹ 25 more rows
+#> # A tibble: 20 × 4
+#>    drug_class                markers samples     n
+#>    <chr>                       <int>   <int> <int>
+#>  1 Aminoglycosides                35    1020  6046
+#>  2 Beta-lactams                   45    1424  2353
+#>  3 Carbapenems                    16     669   956
+#>  4 Cephalosporins                  1      23    48
+#>  5 Cephalosporins (3rd gen.)      36     788  1479
+#>  6 Efflux                          1    1483  1483
+#>  7 Glycopeptides                   1      49    49
+#>  8 Lincosamides                    3       3     5
+#>  9 Macrolides                      7     479  6818
+#> 10 Other                           1       2     4
+#> 11 Penicillins                     1       4    16
+#> 12 Phenicols                      25    1458  3802
+#> 13 Phosphonics                     5    1488  1491
+#> 14 Polymyxins                     12      40    40
+#> 15 Quinolones                     40    1468  4959
+#> 16 Rifamycins                      3     110   119
+#> 17 Streptogramins                  2      83   249
+#> 18 Sulfonamides                    3     931  1206
+#> 19 Tetracyclines                  12     605   699
+#> 20 Trimethoprims                  12     539   563
 #> 
 #> $markers
-#> # A tibble: 290 × 5
-#>    marker      drug_agent drug_name  drug_class          n
-#>    <chr>       <ab>       <chr>      <chr>           <int>
-#>  1 aac(3)-IId  GEN        Gentamicin Aminoglycosides   122
-#>  2 aac(3)-IIe  GEN        Gentamicin Aminoglycosides   379
-#>  3 aac(3)-IIg  GEN        Gentamicin Aminoglycosides    14
-#>  4 aac(3)-IVa  APR        Apramycin  Aminoglycosides    15
-#>  5 aac(3)-IVa  GEN        Gentamicin Aminoglycosides    15
-#>  6 aac(3)-IVa  TOB        Tobramycin Aminoglycosides    15
-#>  7 aac(3)-Ia   GEN        Gentamicin Aminoglycosides     5
-#>  8 aac(3)-VIa  GEN        Gentamicin Aminoglycosides     1
-#>  9 aac(6')-IIc GEN        Gentamicin Aminoglycosides    63
-#> 10 aac(6')-IIc KAN        Kanamycin  Aminoglycosides    63
-#> # ℹ 280 more rows
+#> # A tibble: 261 × 3
+#>    marker        drug_class          n
+#>    <chr>         <chr>           <int>
+#>  1 aac(3)-IId    Aminoglycosides   122
+#>  2 aac(3)-IIe    Aminoglycosides   379
+#>  3 aac(3)-IIg    Aminoglycosides    14
+#>  4 aac(3)-IVa    Aminoglycosides    45
+#>  5 aac(3)-Ia     Aminoglycosides     5
+#>  6 aac(3)-VIa    Aminoglycosides     1
+#>  7 aac(6')-IIc   Aminoglycosides   189
+#>  8 aac(6')-Ib    Aminoglycosides  3100
+#>  9 aac(6')-Ib'   Aminoglycosides    11
+#> 10 aac(6')-Ib-cr Aminoglycosides    24
+#> # ℹ 251 more rows
 ```
 
 ### Compare AMRFinderPlus to Kleborate genotype results
@@ -1602,21 +1609,21 @@ summarise_geno(rgi)
 #>   <chr>             <int>
 #> 1 id                 1490
 #> 2 marker              252
-#> 3 drug_agent          109
+#> 3 drug                109
 #> 4 drug_class           30
 #> 5 variation type        3
 #> 
 #> $per_type
 #> # A tibble: 3 × 5
-#>   `variation type`            id marker drug_agent drug_class
-#>   <chr>                    <int>  <int>      <int>      <int>
-#> 1 Gene presence detected    1430    233         98         29
-#> 2 Protein variant detected  1445     18         37         13
-#> 3 NA                          45      1          1          1
+#>   `variation type`            id marker  drug drug_class
+#>   <chr>                    <int>  <int> <int>      <int>
+#> 1 Gene presence detected    1430    233    98         29
+#> 2 Protein variant detected  1445     18    37         13
+#> 3 NA                          45      1     1          1
 #> 
 #> $drugs
 #> # A tibble: 114 × 5
-#>    drug_agent           drug_class       markers samples  hits
+#>    drug                 drug_class       markers samples  hits
 #>    <chr>                <chr>              <int>   <int> <int>
 #>  1 2'-N-ethylnetilmicin Aminoglycosides        8     462   492
 #>  2 5-episisomicin       Aminoglycosides        3      37    37
@@ -1632,7 +1639,7 @@ summarise_geno(rgi)
 #> 
 #> $markers
 #> # A tibble: 815 × 5
-#>    marker     drug_agent           drug_class      `variation type`           n
+#>    marker     drug                 drug_class      `variation type`           n
 #>    <chr>      <chr>                <chr>           <chr>                  <int>
 #>  1 AAC(3)-IIc 2'-N-ethylnetilmicin Aminoglycosides Gene presence detected    16
 #>  2 AAC(3)-IIc 6'-N-ethylnetilmicin Aminoglycosides Gene presence detected    16
@@ -1653,8 +1660,8 @@ summarise_geno(rgi)
 rgi_binary_matrix <- get_binary_matrix(
   geno_table = rgi,
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
-  drug_class_list = c("Carbapenems"),
+  pheno_drug = "Meropenem",
+  geno_class = c("Carbapenems"),
   sir_col = "pheno_eucast",
   marker_col = "marker.label",
   keep_assay_values = TRUE,
@@ -1820,8 +1827,8 @@ soloPPV_kleborate_mero
 amrfp_binary_matrix <- get_binary_matrix(
   geno_table = kp_mero_amrfp,
   pheno_table = kp_mero_euscape,
-  antibiotic = "Meropenem",
-  drug_class_list = c("Carbapenems"),
+  pheno_drug = "Meropenem",
+  geno_class = c("Carbapenems"),
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -1840,7 +1847,7 @@ comboPPV_rgi_mero <- ppv(
   binary_matrix = rgi_binary_matrix_prev80,
   order = "value",
   min_set_size = 2,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   upset_grid = TRUE,
   plot_assay = TRUE,
   assay = "mic"
@@ -2090,7 +2097,7 @@ between the markers and a specified antibiotic.
 ``` r
 combined_logist <- amr_logistic(
   binary_matrix = combined_binary_matrix,
-  antibiotic = "meropenem",
+  pheno_drug = "meropenem",
   ecoff_col = "ecoff",
   maf = 10, # filter for AMR markers in at least 10 samples
   single_plot = TRUE
@@ -2144,7 +2151,7 @@ comboPPV_combined_mero <- ppv(
   binary_matrix = combined_binary_matrix,
   order = "value",
   min_set_size = 2,
-  antibiotic = "Meropenem",
+  pheno_drug = "Meropenem",
   upset_grid = TRUE,
   plot_assay = TRUE,
   assay = "mic"

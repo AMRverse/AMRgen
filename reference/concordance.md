@@ -199,9 +199,9 @@ geno_table <- import_amrfp(ecoli_geno_raw, "Name")
 
 binary_matrix <- get_binary_matrix(
   geno_table = geno_table,
-  pheno_table = ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  pheno_table = ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   sir_col = "pheno_clsi"
 )
 

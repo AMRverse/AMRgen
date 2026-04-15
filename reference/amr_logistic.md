@@ -1,7 +1,7 @@
 # AMR Logistic Regression Analysis
 
 Performs logistic regression to analyse the relationship between genetic
-markers and phenotype (R, and NWT) for a specified antibiotic.
+markers and phenotype (R, and NWT) for a specified drug.
 
 ## Usage
 
@@ -9,8 +9,9 @@ markers and phenotype (R, and NWT) for a specified antibiotic.
 amr_logistic(
   geno_table,
   pheno_table,
-  antibiotic = NULL,
-  drug_class_list = NULL,
+  pheno_drug = NULL,
+  geno_class = NULL,
+  geno_drug = NULL,
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   sir_col = "pheno",
@@ -38,24 +39,30 @@ amr_logistic(
 
   (Required if `binary_matrix` not provided) A data frame containing
   phenotype data, formatted with
-  [`import_ast()`](https://amrgen.org/reference/import_ast.md). Only
+  [`import_pheno()`](https://amrgen.org/reference/import_pheno.md). Only
   used if `binary_matrix` not provided.
 
-- antibiotic:
+- pheno_drug:
 
   (Required if `binary_matrix` not provided) A character string
-  specifying the antibiotic of interest to filter phenotype data. The
-  value must match one of the entries in the `drug_agent` column of
-  `pheno_table`. Only used if `binary_matrix` not provided or if
-  breakpoints required.
+  specifying the drug of interest to filter phenotype data. The value
+  must match one of the entries in the `drug` column of `pheno_table` or
+  be coercible to a match using
+  [AMR::as.ab](https://amr-for-r.org/reference/as.ab.html).
 
-- drug_class_list:
+- geno_class:
 
-  (Required if `binary_matrix` not provided) A character vector of drug
-  classes to filter genotype data for markers related to the specified
-  antibiotic. Markers in `geno_table` will be filtered based on whether
-  their `drug_class` matches any value in this list. Only used if
-  `binary_matrix` not provided.
+  (Optional if `binary_matrix` not provided) A character vector of drug
+  classes to filter genotype markers. Markers in `geno_table` will be
+  filtered based on whether their `drug_class` matches any value in this
+  list. If not provided, the AMR pkg is used to check what class name/s
+  are associated with `pheno_drug` and uses those (these are printed to
+  screen so the user can see what is being filtered).
+
+- geno_drug:
+
+  (Optional if `binary_matrix` not provided) A character vector of drug
+  names whose relevant genotype markers should be included.
 
 - geno_sample_col:
 
@@ -102,9 +109,9 @@ amr_logistic(
   A data frame containing the original binary matrix output from the
   [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
   function. If not provided (or set to `NULL`), user must specify
-  `geno_table`, `pheno_table`, `antibiotic`, `drug_class_list` and
-  optionally `geno_sample_col`, `pheno_sample_col`, `sir_col`,
-  `ecoff_col`, `marker_col` to pass to
+  `geno_table`, `pheno_table`, `pheno_drug`, and optionally
+  `geno_class`, `geno_drug`, `geno_sample_col`, `pheno_sample_col`,
+  `sir_col`, `ecoff_col`, `marker_col` to pass to
   [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md).
 
 - maf:
@@ -166,10 +173,10 @@ A list with the following components:
 # Example usage of the amr_logistic function
 result <- amr_logistic(
   geno_table = import_amrfp(ecoli_geno_raw, "Name"),
-  pheno_table = ecoli_ast,
+  pheno_table = ecoli_pheno,
   sir_col = "pheno_clsi",
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   maf = 10
 )
 #> Generating geno-pheno binary matrix

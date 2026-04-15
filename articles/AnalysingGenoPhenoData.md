@@ -86,14 +86,14 @@ ecoli_geno <- import_amrfp(
 # Check the format of the processed genotype table
 head(ecoli_geno)
 #> # A tibble: 6 × 37
-#>   id          marker gene  mutation drug_agent drug_class `variation type` node 
-#>   <chr>       <chr>  <chr> <chr>    <ab>       <chr>      <chr>            <chr>
-#> 1 SAMN031776… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
-#> 2 SAMN031776… acrF   acrF  NA       NA         Efflux     Gene presence d… acrF 
-#> 3 SAMN031776… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT 
-#> 4 SAMN031776… floR   floR  NA       CHL        Phenicols  Gene presence d… floR 
-#> 5 SAMN031776… floR   floR  NA       FLR        Phenicols  Gene presence d… floR 
-#> 6 SAMN031776… mdtM   mdtM  NA       NA         Efflux     Gene presence d… mdtM 
+#>   id           marker     gene  mutation drug drug_class  `variation type` node 
+#>   <chr>        <chr>      <chr> <chr>    <ab> <chr>       <chr>            <chr>
+#> 1 SAMN03177615 blaEC      blaEC NA       NA   Beta-lacta… Gene presence d… blaEC
+#> 2 SAMN03177615 acrF       acrF  NA       NA   Efflux      Gene presence d… acrF 
+#> 3 SAMN03177615 glpT_E448K glpT  Glu448L… FOS  Phosphonics Protein variant… glpT 
+#> 4 SAMN03177615 floR       floR  NA       CHL  Phenicols   Gene presence d… floR 
+#> 5 SAMN03177615 floR       floR  NA       FLR  Phenicols   Gene presence d… floR 
+#> 6 SAMN03177615 mdtM       mdtM  NA       NA   Efflux      Gene presence d… mdtM 
 #> # ℹ 29 more variables: marker.label <chr>, `Protein identifier` <lgl>,
 #> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
 #> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,
@@ -159,7 +159,7 @@ ecoli_geno_summary$uniques
 #>   <chr>             <int>
 #> 1 id                 5258
 #> 2 marker              244
-#> 3 drug_agent           35
+#> 3 drug                 35
 #> 4 drug_class           26
 #> 5 gene                196
 #> 6 variation type        5
@@ -167,13 +167,13 @@ ecoli_geno_summary$uniques
 # Unique counts of samples, markers, genes, drugs, and classes - per variation type
 ecoli_geno_summary$per_type
 #> # A tibble: 5 × 6
-#>   `variation type`                  id marker drug_agent drug_class  gene
-#>   <chr>                          <int>  <int>      <int>      <int> <int>
-#> 1 Gene presence detected          5258    164         22         17   164
-#> 2 Inactivating mutation detected   615     42         15         14    42
-#> 3 Nucleotide variant detected       57      2          3          3     1
-#> 4 Promoter variant detected         93      4          1          1     1
-#> 5 Protein variant detected        4920     65         18         16    21
+#>   `variation type`                  id marker  drug drug_class  gene
+#>   <chr>                          <int>  <int> <int>      <int> <int>
+#> 1 Gene presence detected          5258    164    22         17   164
+#> 2 Inactivating mutation detected   615     42    15         14    42
+#> 3 Nucleotide variant detected       57      2     3          3     1
+#> 4 Promoter variant detected         93      4     1          1     1
+#> 5 Protein variant detected        4920     65    18         16    21
 ```
 
 The [`summarise_geno()`](https://amrgen.org/reference/summarise_geno.md)
@@ -189,35 +189,35 @@ beta-lactams… there are 22 different markers with 6,379 hits across
 ``` r
 ecoli_geno_summary$drugs
 #> # A tibble: 44 × 6
-#>    drug_agent drug_name                   drug_class       markers samples  hits
-#>    <ab>       <chr>                       <chr>              <int>   <int> <int>
-#>  1 AMC        Amoxicillin/clavulanic acid Aminopenicillins       2      57    57
-#>  2 AMK        Amikacin                    Aminoglycosides        6     176   180
-#>  3 AMP        Ampicillin                  Aminopenicillins       6     749   749
-#>  4 APR        Apramycin                   Aminoglycosides        1      98    98
-#>  5 ATM        Aztreonam                   Monobactams            2      39    39
-#>  6 AZM        Azithromycin                Macrolides             4     472   478
-#>  7 BLM        Bleomycin                   Glycopeptides          2      40    40
-#>  8 CHL        Chloramphenicol             Phenicols             15    1121  1181
-#>  9 CLI        Clindamycin                 Lincosamides           1      26    26
-#> 10 CLR        Clarithromycin              Macrolides             1       1     1
+#>    drug drug_name                   drug_class       markers samples  hits
+#>    <ab> <chr>                       <chr>              <int>   <int> <int>
+#>  1 AMC  Amoxicillin/clavulanic acid Aminopenicillins       2      57    57
+#>  2 AMK  Amikacin                    Aminoglycosides        6     176   180
+#>  3 AMP  Ampicillin                  Aminopenicillins       6     749   749
+#>  4 APR  Apramycin                   Aminoglycosides        1      98    98
+#>  5 ATM  Aztreonam                   Monobactams            2      39    39
+#>  6 AZM  Azithromycin                Macrolides             4     472   478
+#>  7 BLM  Bleomycin                   Glycopeptides          2      40    40
+#>  8 CHL  Chloramphenicol             Phenicols             15    1121  1181
+#>  9 CLI  Clindamycin                 Lincosamides           1      26    26
+#> 10 CLR  Clarithromycin              Macrolides             1       1     1
 #> # ℹ 34 more rows
 
 # Order by sample count per drug/class
 ecoli_geno_summary$drugs %>% arrange(-samples)
 #> # A tibble: 44 × 6
-#>    drug_agent drug_name       drug_class                markers samples  hits
-#>    <ab>       <chr>           <chr>                       <int>   <int> <int>
-#>  1 NA         NA              Efflux                          3    5258 11828
-#>  2 NA         NA              Beta-lactams                   22    4989  6379
-#>  3 FOS        Fosfomycin      Phosphonics                     9    4861  6411
-#>  4 COL        Colistin        Polymyxins                     11    3415  3436
-#>  5 NA         NA              Tetracyclines                  13    2634  2929
-#>  6 NA         NA              Quinolones                     45    1822  4497
-#>  7 STR1       Streptomycin    Aminoglycosides                13    1669  3291
-#>  8 SSS        Sulfonamide     Sulfonamides                    5    1500  1876
-#>  9 CHL        Chloramphenicol Phenicols                      15    1121  1181
-#> 10 NA         NA              Cephalosporins (3rd gen.)      32    1065  1285
+#>    drug drug_name       drug_class                markers samples  hits
+#>    <ab> <chr>           <chr>                       <int>   <int> <int>
+#>  1 NA   NA              Efflux                          3    5258 11828
+#>  2 NA   NA              Beta-lactams                   22    4989  6379
+#>  3 FOS  Fosfomycin      Phosphonics                     9    4861  6411
+#>  4 COL  Colistin        Polymyxins                     11    3415  3436
+#>  5 NA   NA              Tetracyclines                  13    2634  2929
+#>  6 NA   NA              Quinolones                     45    1822  4497
+#>  7 STR1 Streptomycin    Aminoglycosides                13    1669  3291
+#>  8 SSS  Sulfonamide     Sulfonamides                    5    1500  1876
+#>  9 CHL  Chloramphenicol Phenicols                      15    1121  1181
+#> 10 NA   NA              Cephalosporins (3rd gen.)      32    1065  1285
 #> # ℹ 34 more rows
 ```
 
@@ -230,18 +230,18 @@ unique markers detected across 4,989 unique samples).
 ``` r
 ecoli_geno_summary$drugs %>% arrange(-markers)
 #> # A tibble: 44 × 6
-#>    drug_agent drug_name       drug_class                markers samples  hits
-#>    <ab>       <chr>           <chr>                       <int>   <int> <int>
-#>  1 NA         NA              Quinolones                     45    1822  4497
-#>  2 NA         NA              Cephalosporins (3rd gen.)      32    1065  1285
-#>  3 NA         NA              Beta-lactams                   22    4989  6379
-#>  4 NA         NA              Trimethoprims                  16     824   877
-#>  5 CHL        Chloramphenicol Phenicols                      15    1121  1181
-#>  6 GEN        Gentamicin      Aminoglycosides                14     687   704
-#>  7 STR1       Streptomycin    Aminoglycosides                13    1669  3291
-#>  8 NA         NA              Carbapenems                    13      62    64
-#>  9 NA         NA              Tetracyclines                  13    2634  2929
-#> 10 COL        Colistin        Polymyxins                     11    3415  3436
+#>    drug drug_name       drug_class                markers samples  hits
+#>    <ab> <chr>           <chr>                       <int>   <int> <int>
+#>  1 NA   NA              Quinolones                     45    1822  4497
+#>  2 NA   NA              Cephalosporins (3rd gen.)      32    1065  1285
+#>  3 NA   NA              Beta-lactams                   22    4989  6379
+#>  4 NA   NA              Trimethoprims                  16     824   877
+#>  5 CHL  Chloramphenicol Phenicols                      15    1121  1181
+#>  6 GEN  Gentamicin      Aminoglycosides                14     687   704
+#>  7 STR1 Streptomycin    Aminoglycosides                13    1669  3291
+#>  8 NA   NA              Carbapenems                    13      62    64
+#>  9 NA   NA              Tetracyclines                  13    2634  2929
+#> 10 COL  Colistin        Polymyxins                     11    3415  3436
 #> # ℹ 34 more rows
 ```
 
@@ -255,18 +255,18 @@ glpT_E448K.
 ``` r
 ecoli_geno_summary$markers %>% arrange(-n)
 #> # A tibble: 349 × 6
-#>    marker     drug_agent drug_name  drug_class    `variation type`             n
-#>    <chr>      <ab>       <chr>      <chr>         <chr>                    <int>
-#>  1 acrF       NA         NA         Efflux        Gene presence detected    5002
-#>  2 blaEC      NA         NA         Beta-lactams  Gene presence detected    4749
-#>  3 glpT_E448K FOS        Fosfomycin Phosphonics   Protein variant detected  4731
-#>  4 mdtM       NA         NA         Efflux        Gene presence detected    3675
-#>  5 emrD       NA         NA         Efflux        Gene presence detected    2914
-#>  6 pmrB_E123D COL        Colistin   Polymyxins    Protein variant detected  1873
-#>  7 pmrB_Y358N COL        Colistin   Polymyxins    Protein variant detected  1531
-#>  8 blaTEM-1   NA         NA         Beta-lactams  Gene presence detected    1279
-#>  9 uhpT_E350Q FOS        Fosfomycin Phosphonics   Protein variant detected  1145
-#> 10 tet(A)     NA         NA         Tetracyclines Gene presence detected    1087
+#>    marker     drug drug_name  drug_class    `variation type`             n
+#>    <chr>      <ab> <chr>      <chr>         <chr>                    <int>
+#>  1 acrF       NA   NA         Efflux        Gene presence detected    5002
+#>  2 blaEC      NA   NA         Beta-lactams  Gene presence detected    4749
+#>  3 glpT_E448K FOS  Fosfomycin Phosphonics   Protein variant detected  4731
+#>  4 mdtM       NA   NA         Efflux        Gene presence detected    3675
+#>  5 emrD       NA   NA         Efflux        Gene presence detected    2914
+#>  6 pmrB_E123D COL  Colistin   Polymyxins    Protein variant detected  1873
+#>  7 pmrB_Y358N COL  Colistin   Polymyxins    Protein variant detected  1531
+#>  8 blaTEM-1   NA   NA         Beta-lactams  Gene presence detected    1279
+#>  9 uhpT_E350Q FOS  Fosfomycin Phosphonics   Protein variant detected  1145
+#> 10 tet(A)     NA   NA         Tetracyclines Gene presence detected    1087
 #> # ℹ 339 more rows
 ```
 
@@ -297,18 +297,18 @@ ecoli_geno_summary$markers %>%
   filter(drug_class == "Quinolones") %>%
   arrange(-n)
 #> # A tibble: 45 × 6
-#>    marker         drug_agent drug_name drug_class `variation type`             n
-#>    <chr>          <ab>       <chr>     <chr>      <chr>                    <int>
-#>  1 gyrA_S83L      NA         NA        Quinolones Protein variant detected   855
-#>  2 marR_S3N       NA         NA        Quinolones Protein variant detected   726
-#>  3 parC_S80I      NA         NA        Quinolones Protein variant detected   639
-#>  4 gyrA_D87N      NA         NA        Quinolones Protein variant detected   622
-#>  5 parE_I529L     NA         NA        Quinolones Protein variant detected   442
-#>  6 parC_E84V      NA         NA        Quinolones Protein variant detected   294
-#>  7 aac(6')-Ib-cr5 NA         NA        Quinolones Gene presence detected     153
-#>  8 parE_D475E     NA         NA        Quinolones Protein variant detected   147
-#>  9 parE_L416F     NA         NA        Quinolones Protein variant detected   134
-#> 10 parE_S458A     NA         NA        Quinolones Protein variant detected   111
+#>    marker         drug drug_name drug_class `variation type`             n
+#>    <chr>          <ab> <chr>     <chr>      <chr>                    <int>
+#>  1 gyrA_S83L      NA   NA        Quinolones Protein variant detected   855
+#>  2 marR_S3N       NA   NA        Quinolones Protein variant detected   726
+#>  3 parC_S80I      NA   NA        Quinolones Protein variant detected   639
+#>  4 gyrA_D87N      NA   NA        Quinolones Protein variant detected   622
+#>  5 parE_I529L     NA   NA        Quinolones Protein variant detected   442
+#>  6 parC_E84V      NA   NA        Quinolones Protein variant detected   294
+#>  7 aac(6')-Ib-cr5 NA   NA        Quinolones Gene presence detected     153
+#>  8 parE_D475E     NA   NA        Quinolones Protein variant detected   147
+#>  9 parE_L416F     NA   NA        Quinolones Protein variant detected   134
+#> 10 parE_S458A     NA   NA        Quinolones Protein variant detected   111
 #> # ℹ 35 more rows
 
 # Filter to acquired genes and sort by frequency, to see the most common acquired genes
@@ -316,20 +316,20 @@ ecoli_geno_summary$markers %>%
   filter(drug_class == "Quinolones" & `variation type` == "Gene presence detected") %>%
   arrange(-n)
 #> # A tibble: 12 × 6
-#>    marker         drug_agent drug_name drug_class `variation type`           n
-#>    <chr>          <ab>       <chr>     <chr>      <chr>                  <int>
-#>  1 aac(6')-Ib-cr5 NA         NA        Quinolones Gene presence detected   153
-#>  2 qnrS1          NA         NA        Quinolones Gene presence detected    61
-#>  3 qnrB19         NA         NA        Quinolones Gene presence detected    36
-#>  4 qnrB4          NA         NA        Quinolones Gene presence detected    11
-#>  5 qnrB1          NA         NA        Quinolones Gene presence detected     3
-#>  6 qnrB2          NA         NA        Quinolones Gene presence detected     3
-#>  7 qepA1          NA         NA        Quinolones Gene presence detected     2
-#>  8 qnrA1          NA         NA        Quinolones Gene presence detected     2
-#>  9 qnrB6          NA         NA        Quinolones Gene presence detected     2
-#> 10 qnrS2          NA         NA        Quinolones Gene presence detected     2
-#> 11 qnrB           NA         NA        Quinolones Gene presence detected     1
-#> 12 qnrB7          NA         NA        Quinolones Gene presence detected     1
+#>    marker         drug drug_name drug_class `variation type`           n
+#>    <chr>          <ab> <chr>     <chr>      <chr>                  <int>
+#>  1 aac(6')-Ib-cr5 NA   NA        Quinolones Gene presence detected   153
+#>  2 qnrS1          NA   NA        Quinolones Gene presence detected    61
+#>  3 qnrB19         NA   NA        Quinolones Gene presence detected    36
+#>  4 qnrB4          NA   NA        Quinolones Gene presence detected    11
+#>  5 qnrB1          NA   NA        Quinolones Gene presence detected     3
+#>  6 qnrB2          NA   NA        Quinolones Gene presence detected     3
+#>  7 qepA1          NA   NA        Quinolones Gene presence detected     2
+#>  8 qnrA1          NA   NA        Quinolones Gene presence detected     2
+#>  9 qnrB6          NA   NA        Quinolones Gene presence detected     2
+#> 10 qnrS2          NA   NA        Quinolones Gene presence detected     2
+#> 11 qnrB           NA   NA        Quinolones Gene presence detected     1
+#> 12 qnrB7          NA   NA        Quinolones Gene presence detected     1
 ```
 
 ### 2. Phenotype table
@@ -337,44 +337,44 @@ ecoli_geno_summary$markers %>%
 #### 2a. Importing phenotype data to AMRgen’s standard table format
 
 The [`import_pheno()`](https://amrgen.org/reference/import_pheno.md)
-function imports AST data from NCBI or other standard formats
+function imports phenotype data from NCBI or other standard formats.
 
 ``` r
-# Example E. coli AST data from NCBI
+# Example E. coli phenotype data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
-ecoli_ast
+ecoli_pheno
 #> # A tibble: 4,168 × 11
-#>    id         drug_agent    mic  disk pheno_clsi ecoff guideline method platform
-#>    <chr>      <ab>        <mic> <dsk> <sir>      <sir> <chr>     <chr>  <chr>   
-#>  1 SAMN11638… CIP        256.00    NA   R         NWT  CLSI      broth… NA      
-#>  2 SAMN05729… CIP         64.00    NA   R         NWT  CLSI      Etest  Etest   
-#>  3 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#>  4 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#>  5 SAMN10620… CIP        <=0.25    NA   S          NI  CLSI      broth… NA      
-#>  6 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#>  7 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#>  8 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#>  9 SAMN10620… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#> 10 SAMN04122… CIP          1.00    NA   R         NWT  CLSI      broth… Vitek   
+#>    id           drug    mic  disk pheno_clsi ecoff guideline method     platform
+#>    <chr>        <ab>  <mic> <dsk> <sir>      <sir> <chr>     <chr>      <chr>   
+#>  1 SAMN11638310 CIP  256.00    NA   R         NWT  CLSI      broth dil… NA      
+#>  2 SAMN05729964 CIP   64.00    NA   R         NWT  CLSI      Etest      Etest   
+#>  3 SAMN10620111 CIP  >=4.00    NA   R         NWT  CLSI      broth dil… NA      
+#>  4 SAMN10620168 CIP  >=4.00    NA   R         NWT  CLSI      broth dil… NA      
+#>  5 SAMN10620104 CIP  <=0.25    NA   S          NI  CLSI      broth dil… NA      
+#>  6 SAMN10620102 CIP  >=4.00    NA   R         NWT  CLSI      broth dil… NA      
+#>  7 SAMN10620129 CIP  >=4.00    NA   R         NWT  CLSI      broth dil… NA      
+#>  8 SAMN10620121 CIP  >=4.00    NA   R         NWT  CLSI      broth dil… NA      
+#>  9 SAMN10620086 CIP  >=4.00    NA   R         NWT  CLSI      broth dil… NA      
+#> 10 SAMN04122821 CIP    1.00    NA   R         NWT  CLSI      broth dil… Vitek   
 #> # ℹ 4,158 more rows
 #> # ℹ 2 more variables: pheno_provided <sir>, spp_pheno <mo>
 
-head(ecoli_ast)
+head(ecoli_pheno)
 #> # A tibble: 6 × 11
-#>   id          drug_agent    mic  disk pheno_clsi ecoff guideline method platform
-#>   <chr>       <ab>        <mic> <dsk> <sir>      <sir> <chr>     <chr>  <chr>   
-#> 1 SAMN116383… CIP        256.00    NA   R         NWT  CLSI      broth… NA      
-#> 2 SAMN057299… CIP         64.00    NA   R         NWT  CLSI      Etest  Etest   
-#> 3 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#> 4 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#> 5 SAMN106201… CIP        <=0.25    NA   S          NI  CLSI      broth… NA      
-#> 6 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#>   id           drug    mic  disk pheno_clsi ecoff guideline method      platform
+#>   <chr>        <ab>  <mic> <dsk> <sir>      <sir> <chr>     <chr>       <chr>   
+#> 1 SAMN11638310 CIP  256.00    NA   R         NWT  CLSI      broth dilu… NA      
+#> 2 SAMN05729964 CIP   64.00    NA   R         NWT  CLSI      Etest       Etest   
+#> 3 SAMN10620111 CIP  >=4.00    NA   R         NWT  CLSI      broth dilu… NA      
+#> 4 SAMN10620168 CIP  >=4.00    NA   R         NWT  CLSI      broth dilu… NA      
+#> 5 SAMN10620104 CIP  <=0.25    NA   S          NI  CLSI      broth dilu… NA      
+#> 6 SAMN10620102 CIP  >=4.00    NA   R         NWT  CLSI      broth dilu… NA      
 #> # ℹ 2 more variables: pheno_provided <sir>, spp_pheno <mo>
 
 
 # You can make your own from different file formats, and interpret against breakpoints, using:
-#    import_pheno("filepath/NCBI_AST.tsv", format="ncbi", interpret_clsi=T)
-#    import_pheno("filepath/Vitek_AST.tsv", format="vitek", interpret_eucast=T)
+#    import_pheno("filepath/NCBI_pheno.tsv", format="ncbi", interpret_clsi=T)
+#    import_pheno("filepath/Vitek_pheno.tsv", format="vitek", interpret_eucast=T)
 ```
 
 Data can be imported from various standard formats using the
@@ -385,12 +385,12 @@ the available formats and other options.
 
 If your assay data is not in a standard format, you can wrangle other
 input data files into the necessary format, manually and/or with the
-help of the `format_ast` function.
+help of the `format_pheno` function.
 
 ``` r
 ?import_pheno
 
-?format_ast
+?format_pheno
 ```
 
 The phenotype table is long form, with one row for each assay
@@ -408,8 +408,8 @@ functions are:
   created from a column with species name as string, using
   `AMR::as.mo(species_string)`)
 
-- `drug_agent`: antibiotic name in the form of an AMR package `ab` class
-  (can be created from a column with antibiotic name as string, using
+- `drug`: antibiotic name in the form of an AMR package `ab` class (can
+  be created from a column with antibiotic name as string, using
   `AMR::as.ab(antibiotic_string)`)
 
 - a phenotype column, e.g. the import functions output fields
@@ -455,19 +455,19 @@ You can summarise the content of a phenotype table using the inbuilt
 function.
 
 ``` r
-ecoli_pheno_summary <- summarise_pheno(ecoli_ast, pheno_cols = c("pheno_clsi", "pheno_provided", "ecoff"))
+ecoli_pheno_summary <- summarise_pheno(ecoli_pheno, pheno_cols = c("pheno_clsi", "pheno_provided", "ecoff"))
 
 # Number of samples, drugs, species, and methods included in phenotype table
 ecoli_pheno_summary$uniques
 #> # A tibble: 6 × 2
-#>   column     n_unique
-#>   <chr>         <int>
-#> 1 id             4164
-#> 2 drug_agent        1
-#> 3 spp_pheno         1
-#> 4 method            2
-#> 5 platform          8
-#> 6 guideline         1
+#>   column    n_unique
+#>   <chr>        <int>
+#> 1 id            4164
+#> 2 drug             1
+#> 3 spp_pheno        1
+#> 4 method           2
+#> 5 platform         8
+#> 6 guideline        1
 ```
 
 The
@@ -480,23 +480,23 @@ both, or neither (S/I/R calls only).
 # Number of samples with measurements from MIC vs disk vs both or neither, per bug-drug combination
 ecoli_pheno_summary$drugs
 #> # A tibble: 1 × 4
-#>   drug_agent drug_name     spp_pheno          mic
-#>   <ab>       <chr>         <chr>            <int>
-#> 1 CIP        Ciprofloxacin Escherichia coli  4168
+#>   drug drug_name     spp_pheno          mic
+#>   <ab> <chr>         <chr>            <int>
+#> 1 CIP  Ciprofloxacin Escherichia coli  4168
 
 # Number of samples with measurements from different methods, platforms, and guidelines
 ecoli_pheno_summary$details
 #> # A tibble: 8 × 7
-#>   drug_agent drug_name     spp_pheno        method      platform guideline   mic
-#>   <ab>       <chr>         <chr>            <chr>       <chr>    <chr>     <int>
-#> 1 CIP        Ciprofloxacin Escherichia coli Etest       Etest    CLSI          1
-#> 2 CIP        Ciprofloxacin Escherichia coli broth dilu… Microsc… CLSI          2
-#> 3 CIP        Ciprofloxacin Escherichia coli broth dilu… Phoenix  CLSI        483
-#> 4 CIP        Ciprofloxacin Escherichia coli broth dilu… Phoenix… CLSI          1
-#> 5 CIP        Ciprofloxacin Escherichia coli broth dilu… Sensiti… CLSI         59
-#> 6 CIP        Ciprofloxacin Escherichia coli broth dilu… Sensiti… CLSI       2708
-#> 7 CIP        Ciprofloxacin Escherichia coli broth dilu… Vitek    CLSI        502
-#> 8 CIP        Ciprofloxacin Escherichia coli broth dilu… NA       CLSI        412
+#>   drug drug_name     spp_pheno        method         platform    guideline   mic
+#>   <ab> <chr>         <chr>            <chr>          <chr>       <chr>     <int>
+#> 1 CIP  Ciprofloxacin Escherichia coli Etest          Etest       CLSI          1
+#> 2 CIP  Ciprofloxacin Escherichia coli broth dilution Microscan   CLSI          2
+#> 3 CIP  Ciprofloxacin Escherichia coli broth dilution Phoenix     CLSI        483
+#> 4 CIP  Ciprofloxacin Escherichia coli broth dilution Phoenix NM… CLSI          1
+#> 5 CIP  Ciprofloxacin Escherichia coli broth dilution Sensititer  CLSI         59
+#> 6 CIP  Ciprofloxacin Escherichia coli broth dilution Sensititre  CLSI       2708
+#> 7 CIP  Ciprofloxacin Escherichia coli broth dilution Vitek       CLSI        502
+#> 8 CIP  Ciprofloxacin Escherichia coli broth dilution NA          CLSI        412
 ```
 
 The
@@ -511,21 +511,21 @@ informative for downstream analyses of genotypes.
 ecoli_pheno_summary$pheno_counts_list
 #> $pheno_clsi
 #> # A tibble: 1 × 6
-#>   drug_agent drug_name     spp_pheno            S     I     R
-#>   <ab>       <chr>         <chr>            <int> <int> <int>
-#> 1 CIP        Ciprofloxacin Escherichia coli  3011    63  1094
+#>   drug drug_name     spp_pheno            S     I     R
+#>   <ab> <chr>         <chr>            <int> <int> <int>
+#> 1 CIP  Ciprofloxacin Escherichia coli  3011    63  1094
 #> 
 #> $pheno_provided
 #> # A tibble: 1 × 7
-#>   drug_agent drug_name     spp_pheno            S     R    NI  `NA`
-#>   <ab>       <chr>         <chr>            <int> <int> <int> <int>
-#> 1 CIP        Ciprofloxacin Escherichia coli  3113   970    37    48
+#>   drug drug_name     spp_pheno            S     R    NI  `NA`
+#>   <ab> <chr>         <chr>            <int> <int> <int> <int>
+#> 1 CIP  Ciprofloxacin Escherichia coli  3113   970    37    48
 #> 
 #> $ecoff
 #> # A tibble: 1 × 6
-#>   drug_agent drug_name     spp_pheno           NI    WT   NWT
-#>   <ab>       <chr>         <chr>            <int> <int> <int>
-#> 1 CIP        Ciprofloxacin Escherichia coli   170  2768  1230
+#>   drug drug_name     spp_pheno           NI    WT   NWT
+#>   <ab> <chr>         <chr>            <int> <int> <int>
+#> 1 CIP  Ciprofloxacin Escherichia coli   170  2768  1230
 ```
 
 ### 3. Plot phenotype data distribution
@@ -540,7 +540,7 @@ variable.
 # Example E. coli AST data from NCBI
 
 # Plot MIC distribution, coloured by CLSI S/I/R call
-assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi")
+assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi")
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/plot_mic-1.png)
@@ -569,7 +569,7 @@ checkBreakpoints(species = "E. coli", guide = "CLSI 2025", antibiotic = "Ciprofl
 #> [1] "-"
 
 # Specify species and guideline, to annotate with CLSI breakpoints
-assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025")
+assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 ```
 
@@ -587,7 +587,7 @@ NCBI includes non-standard values in the platform (e.g., `"Sensititre"`
 
 ``` r
 # specify facet_var="method" to generate facet plots by assay method
-mic_by_platform <- assay_by_var(pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
+mic_by_platform <- assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 
 mic_by_platform
@@ -644,7 +644,7 @@ ecoli_cip_mic_data
 
 ``` r
 # Compare reference distribution to example E. coli data
-ecoli_cip <- ecoli_ast$mic[ecoli_ast$drug_agent == "CIP"]
+ecoli_cip <- ecoli_pheno$mic[ecoli_pheno$drug == "CIP"]
 
 ecoli_cip_vs_ref <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. coli")
 ```
@@ -681,7 +681,7 @@ function.
 
 ``` r
 ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno,
-  ecoli_ast,
+  ecoli_pheno,
   pheno_cols = c("pheno_clsi", "ecoff")
 )
 
@@ -695,10 +695,10 @@ ecoli_geno_pheno$overlapping_samples
 # appear in the genotype table
 ecoli_geno_pheno$drugs_with_pheno
 #> # A tibble: 2 × 6
-#>   drug_agent     n drug_class       drug_name     spp_pheno          mic
-#>   <ab>       <int> <chr>            <chr>         <chr>            <int>
-#> 1 CIP         3629 Fluoroquinolones Ciprofloxacin Escherichia coli  4168
-#> 2 CIP         3629 Quinolones       Ciprofloxacin Escherichia coli  4168
+#>   drug     n drug_class       drug_name     spp_pheno          mic
+#>   <ab> <int> <chr>            <chr>         <chr>            <int>
+#> 1 CIP   3629 Fluoroquinolones Ciprofloxacin Escherichia coli  4168
+#> 2 CIP   3629 Quinolones       Ciprofloxacin Escherichia coli  4168
 
 # List of tables, one for each phenotype column in the input, indicating
 # the number in each category (WT/NWT, S/I/R), amongst samples that also
@@ -706,40 +706,40 @@ ecoli_geno_pheno$drugs_with_pheno
 ecoli_geno_pheno$pheno_counts_list
 #> $ecoff
 #> # A tibble: 1 × 6
-#>   drug_agent drug_name     spp_pheno           NI    WT   NWT
-#>   <ab>       <chr>         <chr>            <int> <int> <int>
-#> 1 CIP        Ciprofloxacin Escherichia coli   170  2768  1230
+#>   drug drug_name     spp_pheno           NI    WT   NWT
+#>   <ab> <chr>         <chr>            <int> <int> <int>
+#> 1 CIP  Ciprofloxacin Escherichia coli   170  2768  1230
 #> 
 #> $pheno_clsi
 #> # A tibble: 1 × 6
-#>   drug_agent drug_name     spp_pheno            S     I     R
-#>   <ab>       <chr>         <chr>            <int> <int> <int>
-#> 1 CIP        Ciprofloxacin Escherichia coli  3011    63  1094
+#>   drug drug_name     spp_pheno            S     I     R
+#>   <ab> <chr>         <chr>            <int> <int> <int>
+#> 1 CIP  Ciprofloxacin Escherichia coli  3011    63  1094
 
 # Number of markers encountered for each drug/class in the genotype table,
 # amongst samples that have phenotype data for the relevant drug/class
 ecoli_geno_pheno$geno_hits
 #> # A tibble: 1 × 6
-#>   drug_agent drug_name drug_class markers samples  hits
-#>   <ab>       <chr>     <chr>        <int>   <int> <int>
-#> 1 NA         NA        Quinolones      44    1039  3618
+#>   drug drug_name drug_class markers samples  hits
+#>   <ab> <chr>     <chr>        <int>   <int> <int>
+#> 1 NA   NA        Quinolones      44    1039  3618
 
 # Frequency of each marker in the genotype table, amongst samples that have
 # phenotype data for the relevant drug/class
 ecoli_geno_pheno$geno_markers
 #> # A tibble: 44 × 6
-#>    marker         drug_agent drug_name drug_class `variation type`             n
-#>    <chr>          <ab>       <chr>     <chr>      <chr>                    <int>
-#>  1 aac(6')-Ib-cr  NA         NA        Quinolones Inactivating mutation d…     1
-#>  2 aac(6')-Ib-cr5 NA         NA        Quinolones Gene presence detected     150
-#>  3 acrR_R45C      NA         NA        Quinolones Protein variant detected     1
-#>  4 gyrA_D87G      NA         NA        Quinolones Protein variant detected     3
-#>  5 gyrA_D87N      NA         NA        Quinolones Protein variant detected   611
-#>  6 gyrA_D87Y      NA         NA        Quinolones Protein variant detected    16
-#>  7 gyrA_S83A      NA         NA        Quinolones Protein variant detected     3
-#>  8 gyrA_S83L      NA         NA        Quinolones Protein variant detected   782
-#>  9 gyrA_S83W      NA         NA        Quinolones Protein variant detected     1
-#> 10 marR_R77C      NA         NA        Quinolones Protein variant detected     1
+#>    marker         drug drug_name drug_class `variation type`                   n
+#>    <chr>          <ab> <chr>     <chr>      <chr>                          <int>
+#>  1 aac(6')-Ib-cr  NA   NA        Quinolones Inactivating mutation detected     1
+#>  2 aac(6')-Ib-cr5 NA   NA        Quinolones Gene presence detected           150
+#>  3 acrR_R45C      NA   NA        Quinolones Protein variant detected           1
+#>  4 gyrA_D87G      NA   NA        Quinolones Protein variant detected           3
+#>  5 gyrA_D87N      NA   NA        Quinolones Protein variant detected         611
+#>  6 gyrA_D87Y      NA   NA        Quinolones Protein variant detected          16
+#>  7 gyrA_S83A      NA   NA        Quinolones Protein variant detected           3
+#>  8 gyrA_S83L      NA   NA        Quinolones Protein variant detected         782
+#>  9 gyrA_S83W      NA   NA        Quinolones Protein variant detected           1
+#> 10 marR_R77C      NA   NA        Quinolones Protein variant detected           1
 #> # ℹ 34 more rows
 ```
 
@@ -767,9 +767,9 @@ analyses, discussed below.
 #    class (which are labelled "Quinolones" in AMRFinderPlus).
 cip_bin <- get_binary_matrix(
   ecoli_geno,
-  ecoli_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = "Quinolones",
+  ecoli_pheno,
+  pheno_drug = "Ciprofloxacin",
+  geno_class = "Quinolones",
   sir_col = "pheno_clsi",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -816,9 +816,9 @@ For example, we can use it as input to `assay_by_var` to plot the assay
 distribution coloured by presence of a particular genetic marker
 
 ``` r
-assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", antibiotic = "Ciprofloxacin")
-#> Warning in assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
-#> Ensure your input table is already filtered to the antibiotic.
+assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", pheno_drug = "Ciprofloxacin")
+#> Warning in assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", : Column 'drug' not found in phenotype table, so can't filter to the specified pheno_drug.
+#> Ensure your input table is already filtered to the relevant drug.
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-1.png)
@@ -831,9 +831,9 @@ gyrA_mut <- cip_bin %>%
   select(mic, gyrA_mut)
 
 # plot the MIC distribution, coloured by count of gyrA mutations
-mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", antibiotic = "Ciprofloxacin")
-#> Warning in assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
-#> Ensure your input table is already filtered to the antibiotic.
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "No. gyrA mutations", pheno_drug = "Ciprofloxacin")
+#> Warning in assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", : Column 'drug' not found in phenotype table, so can't filter to the specified pheno_drug.
+#> Ensure your input table is already filtered to the relevant drug.
 
 mic_by_gyrA_count
 ```
@@ -848,9 +848,9 @@ marker_count <- cip_bin %>%
   select(mic, marker_count)
 
 # plot the MIC distribution, coloured by count of associated genetic markers
-mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1))
-#> Warning in assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", : Column 'drug_agent' not found in phenotype table, so can't input matrix to specified antibiotic.
-#> Ensure your input table is already filtered to the antibiotic.
+mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", pheno_drug = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1))
+#> Warning in assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", : Column 'drug' not found in phenotype table, so can't filter to the specified pheno_drug.
+#> Ensure your input table is already filtered to the relevant drug.
 
 mic_by_marker_count
 ```
@@ -1018,10 +1018,10 @@ plot_estimates(modelR_summary)
 # Alternatively, use the amr_logistic() function to model R and NWT and plot the results together
 models <- amr_logistic(
   geno_table = ecoli_geno,
-  pheno_table = ecoli_ast,
+  pheno_table = ecoli_pheno,
   sir_col = "pheno_clsi",
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = c("Quinolones"),
+  pheno_drug = "Ciprofloxacin",
+  geno_class = c("Quinolones"),
   maf = 10
 )
 #> Generating geno-pheno binary matrix
@@ -1166,10 +1166,10 @@ The function returns 4 objects:
 # Run a solo PPV analysis
 soloPPV_cipro <- solo_ppv_analysis(
   ecoli_geno,
-  ecoli_ast,
+  ecoli_pheno,
   sir_col = "pheno_clsi",
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = "Quinolones"
+  pheno_drug = "Ciprofloxacin",
+  geno_class = "Quinolones"
 )
 #> Generating geno-pheno binary matrix
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff

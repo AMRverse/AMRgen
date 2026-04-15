@@ -106,19 +106,19 @@ salm_geno <- salm_raw %>%
   select(-marker_no) %>%
   mutate(
     drug_class = "Quinolones",
-    drug_agent = NA_character_
-  ) ## the variable drug_agent appears essential for get_binary_matrix function to work...
+    drug = NA_character_
+  ) ## the variable drug appears essential for get_binary_matrix function to work...
 
 # Check the format of the processed genotype table
 head(salm_geno)
 #> # A tibble: 6 × 4
-#>   Name   marker    drug_class drug_agent
-#>   <chr>  <chr>     <chr>      <chr>     
-#> 1 SAL001 gyrA_S83F Quinolones NA        
-#> 2 SAL001 parC_T57S Quinolones NA        
-#> 3 SAL002 gyrA_S83Y Quinolones NA        
-#> 4 SAL003 gyrA_S83F Quinolones NA        
-#> 5 SAL003 parC_T57S Quinolones NA        
+#>   Name   marker    drug_class drug 
+#>   <chr>  <chr>     <chr>      <chr>
+#> 1 SAL001 gyrA_S83F Quinolones NA   
+#> 2 SAL001 parC_T57S Quinolones NA   
+#> 3 SAL002 gyrA_S83Y Quinolones NA   
+#> 4 SAL003 gyrA_S83F Quinolones NA   
+#> 5 SAL003 parC_T57S Quinolones NA   
 #> 6 SAL003 qnrB19    Quinolones NA
 ```
 
@@ -139,24 +139,24 @@ salm_geno_summary$uniques
 #>   column     n_unique
 #>   <chr>         <int>
 #> 1 marker           26
-#> 2 drug_agent        1
+#> 2 drug              1
 #> 3 drug_class        1
 
 # Prevalence of each detected marker, in decreasing abundance
 salm_geno_summary$markers %>% arrange(-n)
 #> # A tibble: 26 × 4
-#>    marker    drug_agent drug_class     n
-#>    <chr>     <chr>      <chr>      <int>
-#>  1 parC_T57S NA         Quinolones    49
-#>  2 gyrA_S83F NA         Quinolones    18
-#>  3 gyrA_S83Y NA         Quinolones    18
-#>  4 qnrS1     NA         Quinolones    18
-#>  5 qnrB19    NA         Quinolones    16
-#>  6 gyrA_D87Y NA         Quinolones    14
-#>  7 gyrA_D87N NA         Quinolones    12
-#>  8 gyrA_D87G NA         Quinolones    11
-#>  9 parC_S80I NA         Quinolones     9
-#> 10 qnrA1     NA         Quinolones     5
+#>    marker    drug  drug_class     n
+#>    <chr>     <chr> <chr>      <int>
+#>  1 parC_T57S NA    Quinolones    49
+#>  2 gyrA_S83F NA    Quinolones    18
+#>  3 gyrA_S83Y NA    Quinolones    18
+#>  4 qnrS1     NA    Quinolones    18
+#>  5 qnrB19    NA    Quinolones    16
+#>  6 gyrA_D87Y NA    Quinolones    14
+#>  7 gyrA_D87N NA    Quinolones    12
+#>  8 gyrA_D87G NA    Quinolones    11
+#>  9 parC_S80I NA    Quinolones     9
+#> 10 qnrA1     NA    Quinolones     5
 #> # ℹ 16 more rows
 ```
 
@@ -175,8 +175,8 @@ form with a single column for all antimicrobial agents that were tested,
 rather than separate columns for each agent. It also needs to have at a
 minimum the following columns: `id` (unique sample name for each
 isolate), `spp_pheno` (species name formatted as per the AMR package
-`mo` class), `drug_agent` (antimicrobial agent name formatted as per the
-AMR package `ab` class), a S/I/R phenotype column (e.g. one or more of
+`mo` class), `drug` (antimicrobial agent name formatted as per the AMR
+package `ab` class), a S/I/R phenotype column (e.g. one or more of
 `pheno_eucast`, `pheno_clsi`, `pheno_provided`, `ecoff`). If raw assay
 data is to be included, it needs to be in a column called `mic` and/or
 `disk`.
@@ -198,15 +198,15 @@ salm_pheno <- salm_raw %>%
   mutate(across(c(Ciprofloxacin, Levofloxacin, Moxifloxacin), as.character)) %>%
   pivot_longer(
     cols = c(Ciprofloxacin, Levofloxacin, Moxifloxacin),
-    names_to = "antibiotic",
+    names_to = "drug",
     values_to = "MIC.values",
     values_drop_na = TRUE
   )
 ```
 
 Our phenotype data is not yet in a standard AMR/AMRgen format so we use
-the helpful `format_ast` function to add the species name, to format the
-antimicrobial and MIC columns correctly, and to generate the S/I/R
+the helpful `format_pheno` function to add the species name, to format
+the antimicrobial and MIC columns correctly, and to generate the S/I/R
 phenotype column `pheno_eucast` by interpreting our Salmonella MIC data
 against EUCAST breakpoints. We apply these breakpoints across our
 human/animal/other isolates, as our interest is in resistance phenotypes
@@ -214,11 +214,11 @@ that are potentially problematic in human infections, including zoonotic
 ones.
 
 ``` r
-salm_ast <- format_ast(
+salm_ast <- format_pheno(
   input = salm_pheno,
   sample_col = "Sample",
   species = "Salmonella enterica",
-  ab_col = "antibiotic",
+  ab_col = "drug",
   mic_col = "MIC.values",
   interpret_eucast = TRUE
 )
@@ -226,14 +226,14 @@ salm_ast <- format_ast(
 # Check the format of the processed phenotype table
 head(salm_ast)
 #> # A tibble: 6 × 7
-#>   id     drug_agent   mic pheno_eucast spp_pheno    Source Serovar       
-#>   <chr>  <ab>       <mic> <sir>        <mo>         <chr>  <chr>         
-#> 1 SAL001 CIP         0.19   R          B_SLMNL_ENTR Animal other         
-#> 2 SAL001 LVX         0.50   S          B_SLMNL_ENTR Animal other         
-#> 3 SAL001 MFX         0.50   R          B_SLMNL_ENTR Animal other         
-#> 4 SAL002 CIP         0.38   R          B_SLMNL_ENTR Human  S. Enteritidis
-#> 5 SAL002 LVX         1.50   R          B_SLMNL_ENTR Human  S. Enteritidis
-#> 6 SAL002 MFX         1.50   R          B_SLMNL_ENTR Human  S. Enteritidis
+#>   id     drug   mic pheno_eucast spp_pheno    Source Serovar       
+#>   <chr>  <ab> <mic> <sir>        <mo>         <chr>  <chr>         
+#> 1 SAL001 CIP   0.19   R          B_SLMNL_ENTR Animal other         
+#> 2 SAL001 LVX   0.50   S          B_SLMNL_ENTR Animal other         
+#> 3 SAL001 MFX   0.50   R          B_SLMNL_ENTR Animal other         
+#> 4 SAL002 CIP   0.38   R          B_SLMNL_ENTR Human  S. Enteritidis
+#> 5 SAL002 LVX   1.50   R          B_SLMNL_ENTR Human  S. Enteritidis
+#> 6 SAL002 MFX   1.50   R          B_SLMNL_ENTR Human  S. Enteritidis
 ```
 
 #### Summarise phenotype data
@@ -254,21 +254,21 @@ salm_pheno_summary <- summarise_pheno(salm_ast, pheno_cols = c("pheno_eucast"))
 # Number of samples, drugs, species, and methods included in phenotype table
 salm_pheno_summary$uniques
 #> # A tibble: 3 × 2
-#>   column     n_unique
-#>   <chr>         <int>
-#> 1 id              115
-#> 2 drug_agent        3
-#> 3 spp_pheno         1
+#>   column    n_unique
+#>   <chr>        <int>
+#> 1 id             115
+#> 2 drug             3
+#> 3 spp_pheno        1
 
 # SIR summary table for each drug in the phenotype table
 salm_pheno_summary$pheno_counts_list
 #> $pheno_eucast
 #> # A tibble: 3 × 6
-#>   drug_agent drug_name     spp_pheno               S     R     I
-#>   <ab>       <chr>         <chr>               <int> <int> <int>
-#> 1 CIP        Ciprofloxacin Salmonella enterica    23    92    NA
-#> 2 LVX        Levofloxacin  Salmonella enterica    63    25    27
-#> 3 MFX        Moxifloxacin  Salmonella enterica    20    95    NA
+#>   drug drug_name     spp_pheno               S     R     I
+#>   <ab> <chr>         <chr>               <int> <int> <int>
+#> 1 CIP  Ciprofloxacin Salmonella enterica    23    92    NA
+#> 2 LVX  Levofloxacin  Salmonella enterica    63    25    27
+#> 3 MFX  Moxifloxacin  Salmonella enterica    20    95    NA
 ```
 
 These summaries show that there are 115 isolates of one species in this
@@ -296,21 +296,21 @@ could then be combined into a multipanel figure using packages like
 
 ``` r
 # Plot MIC distributions coloured by S/I/R call
-assay_by_var(pheno_table = salm_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast")
+assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast")
 ```
 
 ![](SalmonellaExamples_files/figure-html/plot_mic-1.png)
 
 ``` r
 
-assay_by_var(pheno_table = salm_ast, antibiotic = "Levofloxacin", measure = "mic", colour_by = "pheno_eucast")
+assay_by_var(pheno_table = salm_ast, pheno_drug = "Levofloxacin", measure = "mic", colour_by = "pheno_eucast")
 ```
 
 ![](SalmonellaExamples_files/figure-html/plot_mic-2.png)
 
 ``` r
 
-assay_by_var(pheno_table = salm_ast, antibiotic = "Moxifloxacin", measure = "mic", colour_by = "pheno_eucast")
+assay_by_var(pheno_table = salm_ast, pheno_drug = "Moxifloxacin", measure = "mic", colour_by = "pheno_eucast")
 ```
 
 ![](SalmonellaExamples_files/figure-html/plot_mic-3.png)
@@ -329,7 +329,7 @@ example, we can split the ciprofloxacin plot by isolation source like
 this:
 
 ``` r
-assay_by_var(pheno_table = salm_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast", facet_var = "Source")
+assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast", facet_var = "Source")
 ```
 
 ![](SalmonellaExamples_files/figure-html/facet_var-1.png)
@@ -343,7 +343,7 @@ facets are displayed) or
 to facet on two variables.
 
 ``` r
-assay_by_var(pheno_table = salm_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast") +
+assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast") +
   facet_grid(Source ~ Serovar)
 ```
 
@@ -357,7 +357,7 @@ ggplot2 extensions (e.g. using `viridis` to change the colour palette).
 
 ``` r
 # Specify species and guideline to show breakpoints, but colour bars by isolation source
-assay_by_var(pheno_table = salm_ast, antibiotic = "Ciprofloxacin", measure = "mic", colour_by = "Source", species = "Salmonella enterica", guideline = "EUCAST 2025") +
+assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "Source", species = "Salmonella enterica", guideline = "EUCAST 2025") +
   scale_fill_viridis_d(end = 0.8)
 #>   MIC breakpoints determined using AMR package: S <= 0.064 and R > 0.064
 ```
@@ -380,8 +380,8 @@ levofloxacin and moxifloxacin.
 cip_bin <- get_binary_matrix(
   salm_geno,
   salm_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = "Quinolones",
+  pheno_drug = "Ciprofloxacin",
+  geno_class = "Quinolones",
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -455,7 +455,7 @@ gyrA_mut <- cip_bin_meta %>%
   select(mic, gyrA_mut, Source, Serovar)
 
 # plot the MIC distribution, coloured by count of gyrA mutations
-mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", pheno_drug = "Ciprofloxacin", bar_cols = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
 
 mic_by_gyrA_count
 ```
@@ -472,7 +472,7 @@ marker_count <- cip_bin_meta %>%
   select(mic, marker_count, Source, Serovar)
 
 # plot the MIC distribution, coloured by count of associated genetic markers
-mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", antibiotic = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1)) +
+mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1)) +
   facet_wrap(~Source, ncol = 1)
 
 mic_by_marker_count

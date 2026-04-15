@@ -98,16 +98,16 @@ called `pheno_eco_2075`.
 data(pheno_eco_2075)
 
 head(pheno_eco_2075)
-#> # A tibble: 6 × 37
-#>   id      drug_agent   mic  disk pheno_provided guideline method platform source
-#>   <chr>   <ab>       <mic> <dsk> <sir>          <chr>     <chr>  <chr>    <lgl> 
-#> 1 SAMN26… AMK          <=8    NA   S            CLSI      broth… BD Phoe… NA    
-#> 2 SAMN26… GEN          <=2    NA   S            CLSI      broth… BD Phoe… NA    
-#> 3 SAMN26… TOB          <=2    NA   S            CLSI      broth… BD Phoe… NA    
-#> 4 SAMN26… AMP          <=4    NA   S            CLSI      broth… BD Phoe… NA    
-#> 5 SAMN26… AMC            8    NA   S            CLSI      broth… BD Phoe… NA    
-#> 6 SAMN26… TZP          <=2    NA   S            CLSI      broth… BD Phoe… NA    
-#> # ℹ 28 more variables: spp_pheno <mo>, SRA_accession <chr>, assembly_ID <chr>,
+#> # A tibble: 6 × 36
+#>   id    drug   mic pheno_provided guideline method  platform source spp_pheno   
+#>   <chr> <ab> <mic> <sir>          <chr>     <chr>   <chr>    <lgl>  <mo>        
+#> 1 SAMN… AMK    <=8   S            CLSI      broth … BD Phoe… NA     B_ESCHR_COLI
+#> 2 SAMN… GEN    <=2   S            CLSI      broth … BD Phoe… NA     B_ESCHR_COLI
+#> 3 SAMN… TOB    <=2   S            CLSI      broth … BD Phoe… NA     B_ESCHR_COLI
+#> 4 SAMN… AMP    <=4   S            CLSI      broth … BD Phoe… NA     B_ESCHR_COLI
+#> 5 SAMN… AMC      8   S            CLSI      broth … BD Phoe… NA     B_ESCHR_COLI
+#> 6 SAMN… TZP    <=2   S            CLSI      broth … BD Phoe… NA     B_ESCHR_COLI
+#> # ℹ 27 more variables: SRA_accession <chr>, assembly_ID <chr>,
 #> #   collection_year <dbl>, ISO_country_code <chr>, host <chr>, host_age <lgl>,
 #> #   host_sex <lgl>, isolate <dbl>, isolation_source <chr>,
 #> #   isolation_source_category <chr>, isolation_latitude <dbl>,
@@ -126,7 +126,7 @@ work with `AMRgen` functions are:
 - `spp_pheno`: species in the form of an AMR package `mo` class, in this
   vignette “B_ESCHR_COLI”
 
-- `drug_agent`: antibiotic name in the form of an AMR package `ab` class
+- `drug`: antibiotic name in the form of an AMR package `ab` class
 
 - a phenotype column: S/I/R phenotype calls in the form of an AMR
   package `sir` class. In this example, SIR phenotype calls are as
@@ -159,14 +159,14 @@ geno_eco_2075 <- import_amrfp(geno_eco_2075, "Name")
 # Check the format of the processed genotype table
 head(geno_eco_2075)
 #> # A tibble: 6 × 33
-#>   id          marker gene  mutation drug_agent drug_class `variation type` node 
-#>   <chr>       <chr>  <chr> <chr>    <ab>       <chr>      <chr>            <chr>
-#> 1 SAMN263043… pmrB_… pmrB  Tyr358A… COL        Polymyxins Protein variant… pmrB 
-#> 2 SAMN263043… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
-#> 3 SAMN263043… mdtM   mdtM  NA       NA         Efflux     Gene presence d… mdtM 
-#> 4 SAMN263043… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT 
-#> 5 SAMN263043… acrF   acrF  NA       NA         Efflux     Gene presence d… acrF 
-#> 6 SAMN263043… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
+#>   id           marker     gene  mutation drug drug_class  `variation type` node 
+#>   <chr>        <chr>      <chr> <chr>    <ab> <chr>       <chr>            <chr>
+#> 1 SAMN26304318 pmrB_Y358N pmrB  Tyr358A… COL  Polymyxins  Protein variant… pmrB 
+#> 2 SAMN26304318 blaEC      blaEC NA       NA   Beta-lacta… Gene presence d… blaEC
+#> 3 SAMN26304318 mdtM       mdtM  NA       NA   Efflux      Gene presence d… mdtM 
+#> 4 SAMN26304318 glpT_E448K glpT  Glu448L… FOS  Phosphonics Protein variant… glpT 
+#> 5 SAMN26304318 acrF       acrF  NA       NA   Efflux      Gene presence d… acrF 
+#> 6 SAMN26304319 blaEC      blaEC NA       NA   Beta-lacta… Gene presence d… blaEC
 #> # ℹ 25 more variables: marker.label <chr>, `Protein identifier` <lgl>,
 #> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
 #> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,
@@ -212,8 +212,8 @@ strains that appear in both the genotype and phenotype input tables.
 eco_cip_matrix <- get_binary_matrix(
   geno_eco_2075,
   pheno_eco_2075,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = "Quinolones",
+  pheno_drug = "Ciprofloxacin",
+  geno_class = "Quinolones",
   sir_col = "pheno_provided",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -269,7 +269,7 @@ breakpoints from CLSI 2025.
 # The breakpoints are provided manually.
 assay_by_var(
   pheno_table = pheno_eco_2075,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   measure = "mic",
   colour_by = "pheno_provided",
   species = "Escherichia coli",
@@ -286,7 +286,7 @@ assay_by_var(
 # The breakpoints are provided by passing the option "guideline"
 assay_by_var(
   pheno_table = pheno_eco_2075,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   measure = "mic",
   colour_by = "pheno_provided",
   species = "Escherichia coli",

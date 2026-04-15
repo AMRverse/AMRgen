@@ -97,9 +97,9 @@ the AMRgen package as a data object `DASSIM_geno`.
 We downloaded the AST data from the [blantyreESBL
 Github](https://joelewis101.github.io/blantyreESBL/) from Dr. Joe Lewis
 at
-<https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_AST.rda>.
+<https://github.com/joelewis101/blantyreESBL/raw/refs/heads/main/data/btESBL_pheno.rda>.
 
-This is included in the AMRgen package as a data object: `btESBL_AST`.
+This is included in the AMRgen package as a data object: `btESBL_pheno`.
 
 Additional metadata relating to the isolates can be found in
 [Supplementary Data
@@ -133,15 +133,15 @@ library(ggplot2)
 
 ### 2.2 Format the phenotype data
 
-The phenotype data in `btESBL_AST` needs to be reformatted to long
+The phenotype data in `btESBL_pheno` needs to be reformatted to long
 format, and sequence identifiers imported from `DASSIM_pheno_raw` so we
 can match the phenotype data to the genotypes.
 
 ``` r
 # Convert the S/I/R phenotype data to long format for easy use with AMRgen functions
-DASSIM_pheno <- btESBL_AST %>%
+DASSIM_pheno <- btESBL_pheno %>%
   pivot_longer(
-    names_to = "drug_agent",
+    names_to = "drug",
     values_to = "pheno",
     cols = "amikacin":"meropenem"
   ) %>%
@@ -164,7 +164,7 @@ DASSIM_pheno <- DASSIM_pheno %>%
 
 head(DASSIM_pheno)
 #> # A tibble: 6 × 7
-#>   id         supplier_name organism drug_agent      pheno    ST mic  
+#>   id         supplier_name organism drug            pheno    ST mic  
 #>   <chr>      <chr>         <chr>    <chr>           <sir> <dbl> <lgl>
 #> 1 ERR3426052 CAB10K        E. coli  amikacin          S     656 NA   
 #> 2 ERR3426052 CAB10K        E. coli  chloramphenicol   S     656 NA   
@@ -221,9 +221,9 @@ We can then plot the PPV graphs using
 
 ``` r
 # Get binary matrix
-DASSIM_CHL_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "chloramphenicol", sir_col = "pheno")
+DASSIM_CHL_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "chloramphenicol", sir_col = "pheno")
 # Plot ppv
-DASSIM_CHL_PPV <- ppv(DASSIM_CHL_bin_mat, antibiotic = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
+DASSIM_CHL_PPV <- ppv(DASSIM_CHL_bin_mat, pheno_drug = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-5-1.png)
@@ -235,16 +235,16 @@ Now let’s check how well aminoglycoside markers predict resistance to
 amikacin and gentamicin.
 
 ``` r
-DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "amikacin", sir_col = "pheno")
-DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, antibiotic = "amikacin", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "amikacin", sir_col = "pheno")
+DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-1.png)
 
 ``` r
 
-DASSIM_GEN_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "gentamicin", sir_col = "pheno")
-DASSIM_GEN_PPV <- ppv(DASSIM_GEN_bin_mat, antibiotic = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_GEN_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "gentamicin", sir_col = "pheno")
+DASSIM_GEN_PPV <- ppv(DASSIM_GEN_bin_mat, pheno_drug = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-2.png)
@@ -262,8 +262,8 @@ Now let’s check how well markers associated with trimethoprims or
 sulfonamides predict resistance to co-trimoxazole.
 
 ``` r
-DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "cotrimoxazole", sir_col = "pheno")
-DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, antibiotic = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "cotrimoxazole", sir_col = "pheno")
+DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, pheno_drug = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-1.png)
@@ -285,8 +285,8 @@ only a single isolate, carrying multiple beta-lactamases, was phenotyped
 as resistant to meropenem.
 
 ``` r
-DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, antibiotic = "meropenem", sir_col = "pheno")
-DASSIM_MEM_PPV <- ppv(DASSIM_MEM_bin_mat, antibiotic = "meropenem", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "meropenem", sir_col = "pheno")
+DASSIM_MEM_PPV <- ppv(DASSIM_MEM_bin_mat, pheno_drug = "meropenem", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-8-1.png)
@@ -297,8 +297,8 @@ a variety of antibiotics.
 
 Next we’ll explore the chloramphenicol susceptibility associated with
 the *catB3* gene with more functions of the AMRgen package. For this we
-need raw AST data (e.g., MIC or disc diffusion), so we will go to NCBI
-to download public datasets.
+need raw phenotype data (e.g., MIC or disc diffusion), so we will go to
+NCBI to download public datasets.
 
 ## 3. Analysis of publicly available phenotype and genotype data for chloramphenicol
 
@@ -315,18 +315,18 @@ allowing researchers to correlate specific bacterial isolates with their
 phenotypic resistance profiles.
 
 AST data can be retrieved directly from NCBI using the AMRgen functions
-[`download_ncbi_ast()`](https://amrgen.org/reference/download_ncbi_ast.md)
+[`download_ncbi_pheno()`](https://amrgen.org/reference/download_ncbi_pheno.md)
 (slow but does not require authorisation) or
-[`query_ncbi_bq_ast()`](https://amrgen.org/reference/query_ncbi_bq_ast.md)
+[`query_ncbi_bq_pheno()`](https://amrgen.org/reference/query_ncbi_bq_pheno.md)
 (very fast, requires a Google Cloud account), or via the NCBI AST
 Browser. For more details see the [Analysing Geno-Pheno
 Data](https://amrgen.org/articles/AnalysingGenoPhenoData.html) vignette.
 
 ``` r
-# Download E. coli AST data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
-ecoli_ast_ncbi_via_biosample <- download_ncbi_ast(
+# Download E. coli phenotype data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
+ecoli_pheno_ncbi_via_biosample <- download_ncbi_pheno(
   species = "E. coli",
-  antibiotic = "chloramphenicol",
+  pheno_drug = "chloramphenicol",
   reformat = TRUE,
   interpret_clsi = TRUE
 )
@@ -340,13 +340,13 @@ library(bigrquery)
 bigrquery::bq_auth()
 
 # replace xxx with your project id
-ecoli_ast_ncbi_via_cloud <- query_ncbi_bq_ast(
+ecoli_pheno_ncbi_via_cloud <- query_ncbi_bq_pheno(
   taxgroup = "E.coli and Shigella",
-  antibiotic = "chloramphenicol",
+  pheno_drug = "chloramphenicol",
   project_id = "xxx"
 )
 
-ecoli_ast_ncbi_via_cloud_interpreted <- import_ncbi_ast(ecoli_ast_ncbi_via_cloud,
+ecoli_pheno_ncbi_via_cloud_interpreted <- import_ncbi_pheno(ecoli_pheno_ncbi_via_cloud,
   interpret_clsi = TRUE
 )
 ```
@@ -364,29 +364,29 @@ AMRgen function `import_pheno`.
 
 ``` r
 # import phenotype data
-NCBI_Ecoli_AST_chl <- import_pheno("data-raw/CHL_Ecoli_asts.tsv", format = "ncbi")
+NCBI_Ecoli_pheno_chl <- import_pheno("data-raw/CHL_Ecoli_asts.tsv", format = "ncbi")
 ```
 
 A copy of this imported data (downloaded March 2026) is included in
-AMRgen as data frame `NCBI_Ecoli_AST_chl`.
+AMRgen as data frame `NCBI_Ecoli_pheno_chl`.
 
 ``` r
-head(NCBI_Ecoli_AST_chl)
+head(NCBI_Ecoli_pheno_chl)
 #> # A tibble: 6 × 25
-#>   id           drug_agent    mic  disk guideline method  platform pheno_provided
-#>   <chr>        <ab>        <mic> <dsk> <chr>     <chr>   <chr>    <chr>         
-#> 1 SAMN50215339 CHL        <=0.03    NA EUCAST    broth … NA       not defined   
-#> 2 SAMN50215184 CHL          4.00    NA EUCAST    broth … NA       not defined   
-#> 3 SAMN50215166 CHL          2.00    NA EUCAST    broth … NA       not defined   
-#> 4 SAMN50215662 CHL        <=0.03    NA EUCAST    broth … NA       not defined   
-#> 5 SAMN50215818 CHL          2.00    NA EUCAST    broth … NA       not defined   
-#> 6 SAMN50215473 CHL          1.00    NA EUCAST    broth … NA       not defined   
-#> # ℹ 17 more variables: spp_pheno <mo>, `Organism group` <chr>,
-#> #   `Scientific name` <chr>, `Isolation type` <chr>, Location <chr>,
-#> #   `Isolation source` <chr>, Isolate <chr>, Antibiotic <chr>,
-#> #   `Resistance phenotype` <chr>, `Measurement sign` <chr>, `MIC (mg/L)` <dbl>,
-#> #   `Disk diffusion (mm)` <dbl>, `Laboratory typing platform` <chr>,
-#> #   Vendor <chr>, `Laboratory typing method version or reagent` <chr>,
+#>   id    drug    mic  disk guideline method  platform pheno_provided spp_pheno   
+#>   <chr> <ab>  <mic> <dsk> <chr>     <chr>   <chr>    <chr>          <mo>        
+#> 1 SAMN… CHL  <=0.03    NA EUCAST    broth … NA       not defined    B_ESCHR_COLI
+#> 2 SAMN… CHL    4.00    NA EUCAST    broth … NA       not defined    B_ESCHR_COLI
+#> 3 SAMN… CHL    2.00    NA EUCAST    broth … NA       not defined    B_ESCHR_COLI
+#> 4 SAMN… CHL  <=0.03    NA EUCAST    broth … NA       not defined    B_ESCHR_COLI
+#> 5 SAMN… CHL    2.00    NA EUCAST    broth … NA       not defined    B_ESCHR_COLI
+#> 6 SAMN… CHL    1.00    NA EUCAST    broth … NA       not defined    B_ESCHR_COLI
+#> # ℹ 16 more variables: `Organism group` <chr>, `Scientific name` <chr>,
+#> #   `Isolation type` <chr>, Location <chr>, `Isolation source` <chr>,
+#> #   Isolate <chr>, Antibiotic <chr>, `Resistance phenotype` <chr>,
+#> #   `Measurement sign` <chr>, `MIC (mg/L)` <dbl>, `Disk diffusion (mm)` <dbl>,
+#> #   `Laboratory typing platform` <chr>, Vendor <chr>,
+#> #   `Laboratory typing method version or reagent` <chr>,
 #> #   `Testing standard` <chr>, `Create date` <dttm>
 ```
 
@@ -440,15 +440,15 @@ head(MICROBIGGE_Ecoli_CHLR)
 
 ``` r
 # filter AST data, re-interpret using CLSI breakpoints
-AST_pheno <- NCBI_Ecoli_AST_chl %>%
+AST_pheno <- NCBI_Ecoli_pheno_chl %>%
   filter(id %in% MICROBIGGE_Ecoli_CHLR$id) %>%
-  interpret_ast(interpret_clsi = TRUE)
+  interpret_pheno(interpret_clsi = TRUE)
 #> Warning: There was 1 warning in `mutate()`.
 #> ℹ In argument: `across(...)`.
 #> Caused by warning:
 #> ! Some MICs were converted to the nearest higher log2 level, following the CLSI
 #> interpretation guideline.
-MB_CHLR_geno <- MICROBIGGE_Ecoli_CHLR %>% filter(id %in% NCBI_Ecoli_AST_chl$id)
+MB_CHLR_geno <- MICROBIGGE_Ecoli_CHLR %>% filter(id %in% NCBI_Ecoli_pheno_chl$id)
 
 # check how many samples we have
 length(unique(AST_pheno$id))
@@ -496,7 +496,7 @@ AST_pheno <- AST_pheno %>%
 
 assay_by_var(
   pheno_table = AST_pheno,
-  antibiotic = "chloramphenicol",
+  pheno_drug = "chloramphenicol",
   measure = "mic",
   colour_by = "pheno_clsi",
   species = "Escherichia coli"
@@ -514,7 +514,7 @@ AST data of isolates containing the *catB3* gene only
 
 assay_by_var(
   pheno_table = AST_CATB3_pheno,
-  antibiotic = "CHL",
+  pheno_drug = "CHL",
   measure = "mic",
   colour_by = "pheno_clsi",
   species = "Escherichia coli"
@@ -559,7 +559,7 @@ AST_CATB3_pheno_3 <- AST_CATB3_pheno_2 %>%
 # plot the MIC distribution for these 2 groups
 MIC_dist_by_cov <- assay_by_var(
   pheno_table = AST_CATB3_pheno_3,
-  antibiotic = "CHL",
+  pheno_drug = "CHL",
   measure = "mic",
   colour_by = "pheno_clsi",
   species = "Escherichia coli",
@@ -612,15 +612,15 @@ MB_CHLR_geno <- MB_CHLR_geno %>%
 
 CHL_bin_mat <- get_binary_matrix(MB_CHLR_geno,
   AST_pheno,
-  antibiotic = "CHL",
-  drug_class_list = c("Phenicols"),
+  pheno_drug = "CHL",
+  geno_class = c("Phenicols"),
   sir_col = "pheno_clsi",
   keep_assay_values = TRUE
 )
 
 CHL_PPV <- ppv(CHL_bin_mat,
-  antibiotic = "Chloramphenicol",
-  drug_class_list = c("Phenicols"),
+  pheno_drug = "Chloramphenicol",
+  geno_class = c("Phenicols"),
   sir_col = "pheno_clsi",
   upset_grid = TRUE,
   assay = "mic",
@@ -646,7 +646,7 @@ threshold for the number of samples a marker is present in.
 ``` r
 CHL_logist <- amr_logistic(
   binary_matrix = CHL_bin_mat,
-  antibiotic = "chloramphenicol",
+  pheno_drug = "chloramphenicol",
   ecoff_col = "ecoff",
   maf = 10,
   single_plot = TRUE

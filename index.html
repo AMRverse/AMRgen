@@ -112,15 +112,15 @@
 <p>Below is a quick example demonstrating the major functions with AMRgen and how they can be used to compare ciprofloxacin resistance phenotypes with quinolone genotype markers, in <em>E. coli</em>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example public E. coli AST data from NCBI</span></span>
-<span><span class="co">#  (already imported via import_ncbi_ast() and re-interpreted with as.sir())</span></span>
-<span><span class="va">ecoli_ast</span></span>
+<span><span class="co">#  (already imported via import_ncbi_pheno() and re-interpreted with as.sir())</span></span>
+<span><span class="va">ecoli_pheno</span></span>
 <span></span>
 <span><span class="co"># Import matching E. coli AMRFinderPlus data from AllTheBacteria</span></span>
 <span><span class="va">ecoli_geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_amrfp.html">import_amrfp</a></span><span class="op">(</span><span class="va">ecoli_geno_raw</span>, <span class="st">"Name"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate solo positive predictive value for ciprofloxacin resistance, for individual markers found solo</span></span>
 <span><span class="co">#  (for all quinolone-associated genotype markers)</span></span>
-<span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_ast</span>, antibiotic<span class="op">=</span><span class="st">"Ciprofloxacin"</span>, drug_class_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno_clsi"</span><span class="op">)</span></span>
+<span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_pheno</span>, pheno_drug <span class="op">=</span><span class="st">"Ciprofloxacin"</span>, geno_class <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>, sir_col<span class="op">=</span><span class="st">"pheno_clsi"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations</span></span>
 <span><span class="co">#  (for combinations observed at least 5 times)</span></span>
@@ -134,7 +134,7 @@
 <span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, maf<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Caclulate concordance of genotype and phenotype markers</span></span>
-<span><span class="va">eco_cip_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_ast</span>, antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, drug_class_list <span class="op">=</span> <span class="st">"Quinolones"</span>, sir_col <span class="op">=</span> <span class="st">"pheno_provided"</span>, keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>, keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
+<span><span class="va">eco_cip_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">ecoli_geno</span>, <span class="va">ecoli_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, geno_class <span class="op">=</span> <span class="st">"Quinolones"</span>, sir_col <span class="op">=</span> <span class="st">"pheno_provided"</span>, keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>, keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">concordance_cip</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/concordance.html">concordance</a></span><span class="op">(</span><span class="va">eco_cip_matrix</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -145,7 +145,7 @@
 <p>To learn how to download data from the public archives <a href="http://amrgen.org/articles/DownloadGenoPhenoData.html" class="external-link">NCBI or EBI</a></p>
 <p>You can see all the various phenotypic import functions for the following formats by running:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">?</span><span class="va">import_ast</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">?</span><span class="va">import_pheno</span></span></code></pre></div>
 <p>Currently, AMRgen supports the following phenotype formats:</p>
 <ul>
 <li>EBI</li>
@@ -157,8 +157,8 @@
 </ul>
 <p>Phenotype data can also be exported in NCBI or EBI formats, for upload to the public archives:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">?</span><span class="va">export_ncbi_ast</span></span>
-<span><span class="op">?</span><span class="va">export_ebi_ast</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">?</span><span class="va">export_ncbi_pheno</span></span>
+<span><span class="op">?</span><span class="va">export_ebi_pheno</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-analyses-using-amrgen">Example analyses using AMRgen<a class="anchor" aria-label="anchor" href="#example-analyses-using-amrgen"></a>
@@ -181,7 +181,7 @@
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">mics</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span>, title <span class="op">=</span> <span class="st">"E. coli cipro reference distribution"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare reference distribution to example E. coli data</span></span>
-<span><span class="va">ecoli_cip</span> <span class="op">&lt;-</span> <span class="va">ecoli_ast</span><span class="op">$</span><span class="va">mic</span><span class="op">[</span><span class="va">ecoli_ast</span><span class="op">$</span><span class="va">drug_agent</span><span class="op">==</span><span class="st">"CIP"</span><span class="op">]</span></span>
+<span><span class="va">ecoli_cip</span> <span class="op">&lt;-</span> <span class="va">ecoli_pheno</span><span class="op">$</span><span class="va">mic</span><span class="op">[</span><span class="va">ecoli_pheno</span><span class="op">$</span><span class="va">drug</span><span class="op">==</span><span class="st">"CIP"</span><span class="op">]</span></span>
 <span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">compare_mic_with_eucast</a></span><span class="op">(</span><span class="va">ecoli_cip</span>, ab <span class="op">=</span> <span class="st">"cipro"</span>, mo <span class="op">=</span> <span class="st">"E. coli"</span><span class="op">)</span></span>
 <span><span class="va">comparison</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>

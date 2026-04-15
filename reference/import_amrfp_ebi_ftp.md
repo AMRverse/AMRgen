@@ -45,16 +45,16 @@ from the AMRFinderPlus table along with the newly mapped variables:
 - `drug_class`: Name of the antibiotic group associated with the
   genotype marker, compatible with AMR pkg (`character`).
 
-- `drug_agent`: Name of the specific antibiotic agent associated with
-  the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is
-  assigned when the markers are annotated with a class only and not a
-  specific antibiotic. ... Other fields specific to the input file
+- `drug`: Name of the specific antibiotic associated with the genotype
+  marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when
+  the markers are annotated with a class only and not a specific
+  antibiotic. ... Other fields specific to the input file
 
 ## Details
 
 These data are pre-processed by EBI to match NCBI class/subclass to
 CARD's antibiotic resistance ontology (ARO), however for consistency
-this function will re-process the data to generate `drug_agent` and
+this function will re-process the data to generate `drug` and
 `drug_class` fields consistent with the
 [`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md)
 function (the EBI fields `antibiotic*` are also retained). Note several

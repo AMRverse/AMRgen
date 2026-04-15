@@ -14,7 +14,7 @@ summarise_geno_pheno(
   geno_sample_col = NULL,
   pheno_sample_col = NULL,
   pheno_cols,
-  drug_col = "drug_agent",
+  drug_col = "drug",
   class_col = "drug_class",
   marker_col = "marker",
   gene_col = "gene",
@@ -36,7 +36,7 @@ summarise_geno_pheno(
 - pheno_table:
 
   A tibble or data frame containing phenotype data, in the format output
-  by [import_ast](https://amrgen.org/reference/import_ast.md).
+  by [import_pheno](https://amrgen.org/reference/import_pheno.md).
 
 - geno_sample_col:
 
@@ -57,8 +57,8 @@ summarise_geno_pheno(
 - drug_col:
 
   Character. Name of the column in the phenotype table containing drug
-  agent identifiers. Default is `"drug_agent"`. Entries will be
-  annotated with their full antibiotic names, converted using
+  agent identifiers. Default is `"drug"`. Entries will be annotated with
+  their full antibiotic names, converted using
   [`AMR::as.ab()`](https://amr-for-r.org/reference/as.ab.html). If the
   genotype table contains a column indicating individual agents it
   should share this same name.
@@ -143,63 +143,55 @@ column is not recognized as an `"ab"` object.
 ## Examples
 
 ``` r
-staph_geno_pheno <- summarise_geno_pheno(staph_geno_ebi, staph_ast_ebi,
+staph_geno_pheno <- summarise_geno_pheno(staph_geno_ebi, staph_pheno_ebi,
   pheno_cols = c("pheno_clsi", "pheno_provided")
 )
+#> Column drug not found in input genotype table
 staph_geno_pheno
 #> $overlapping_samples
 #> [1] 190
 #> 
 #> $drugs_with_pheno
 #> # A tibble: 2 × 8
-#>   drug_agent     n drug_class      drug_name   spp_pheno        disk   mic  none
-#>   <ab>       <int> <chr>           <chr>       <chr>           <int> <int> <int>
-#> 1 AMK           84 Aminoglycosides Amikacin    Staphylococcus…     3    11    70
-#> 2 DOX          134 Tetracyclines   Doxycycline Staphylococcus…    NA    47    87
+#>   drug     n drug_class      drug_name   spp_pheno              disk   mic  none
+#>   <ab> <int> <chr>           <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK     84 Aminoglycosides Amikacin    Staphylococcus aureus     3    11    70
+#> 2 DOX    134 Tetracyclines   Doxycycline Staphylococcus aureus    NA    47    87
 #> 
 #> $geno_hits
-#> # A tibble: 7 × 6
-#>   drug_agent drug_name    drug_class      markers samples  hits
-#>   <ab>       <chr>        <chr>             <int>   <int> <int>
-#> 1 AMK        Amikacin     Aminoglycosides       2      37   170
-#> 2 GEN        Gentamicin   Aminoglycosides       1      27   108
-#> 3 KAN        Kanamycin    Aminoglycosides       2      37   170
-#> 4 STR1       Streptomycin Aminoglycosides       1      15    15
-#> 5 TOB        Tobramycin   Aminoglycosides       1      27   108
-#> 6 TGC        Tigecycline  Tetracyclines         1     116   116
-#> 7 NA         NA           Tetracyclines         4     116   144
+#> # A tibble: 2 × 6
+#>   drug  drug_name drug_class      markers samples  hits
+#>   <lgl> <chr>     <chr>             <int>   <int> <int>
+#> 1 NA    NA        Aminoglycosides       3      37   571
+#> 2 NA    NA        Tetracyclines         5     116   260
 #> 
 #> $geno_markers
-#> # A tibble: 12 × 5
-#>    marker                 drug_agent drug_name    drug_class          n
-#>    <chr>                  <ab>       <chr>        <chr>           <int>
-#>  1 aac(6')-Ie/aph(2'')-Ia AMK        Amikacin     Aminoglycosides   108
-#>  2 aac(6')-Ie/aph(2'')-Ia GEN        Gentamicin   Aminoglycosides   108
-#>  3 aac(6')-Ie/aph(2'')-Ia KAN        Kanamycin    Aminoglycosides   108
-#>  4 aac(6')-Ie/aph(2'')-Ia TOB        Tobramycin   Aminoglycosides   108
-#>  5 ant(6)-Ia              STR1       Streptomycin Aminoglycosides    15
-#>  6 aph(3')-IIIa           AMK        Amikacin     Aminoglycosides    62
-#>  7 aph(3')-IIIa           KAN        Kanamycin    Aminoglycosides    62
-#>  8 mepA                   TGC        Tigecycline  Tetracyclines     116
-#>  9 tet(38)                NA         NA           Tetracyclines     116
-#> 10 tet(K)                 NA         NA           Tetracyclines      14
-#> 11 tet(L)                 NA         NA           Tetracyclines       1
-#> 12 tet(M)                 NA         NA           Tetracyclines      13
+#> # A tibble: 8 × 5
+#>   marker                 drug  drug_name drug_class          n
+#>   <chr>                  <lgl> <chr>     <chr>           <int>
+#> 1 aac(6')-Ie/aph(2'')-Ia NA    NA        Aminoglycosides   432
+#> 2 ant(6)-Ia              NA    NA        Aminoglycosides    15
+#> 3 aph(3')-IIIa           NA    NA        Aminoglycosides   124
+#> 4 mepA                   NA    NA        Tetracyclines     116
+#> 5 tet(38)                NA    NA        Tetracyclines     116
+#> 6 tet(K)                 NA    NA        Tetracyclines      14
+#> 7 tet(L)                 NA    NA        Tetracyclines       1
+#> 8 tet(M)                 NA    NA        Tetracyclines      13
 #> 
 #> $pheno_counts_list
 #> $pheno_counts_list$pheno_clsi
 #> # A tibble: 2 × 7
-#>   drug_agent drug_name   spp_pheno              `NA`     S     I     R
-#>   <ab>       <chr>       <chr>                 <int> <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    84    NA    NA    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus    87    41     5     1
+#>   drug drug_name   spp_pheno              `NA`     S     I     R
+#>   <ab> <chr>       <chr>                 <int> <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    84    NA    NA    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus    87    41     5     1
 #> 
 #> $pheno_counts_list$pheno_provided
 #> # A tibble: 2 × 6
-#>   drug_agent drug_name   spp_pheno                 S     R     I
-#>   <ab>       <chr>       <chr>                 <int> <int> <int>
-#> 1 AMK        Amikacin    Staphylococcus aureus    12    72    NA
-#> 2 DOX        Doxycycline Staphylococcus aureus   103    20    11
+#>   drug drug_name   spp_pheno                 S     R     I
+#>   <ab> <chr>       <chr>                 <int> <int> <int>
+#> 1 AMK  Amikacin    Staphylococcus aureus    12    72    NA
+#> 2 DOX  Doxycycline Staphylococcus aureus   103    20    11
 #> 
 #> 
 ```

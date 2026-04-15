@@ -15,7 +15,7 @@ concordance_from_tables(
   pred_SIR = "clinical category",
   pred_ecoff = "phenotype",
   sample_col = "id",
-  drug_col = "drug_agent",
+  drug_col = "drug",
   measure_col = "mic"
 )
 ```
@@ -62,7 +62,7 @@ concordance_from_tables(
 - drug_col:
 
   Character. Name of the column containing drug agent identifiers. This
-  must be the same in both tables (default `"drug_agent"`).
+  must be the same in both tables (default `"drug"`).
 
 - measure_col:
 

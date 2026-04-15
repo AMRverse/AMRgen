@@ -43,7 +43,7 @@
 <span>  geno_sample_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pheno_sample_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">pheno_cols</span>,</span>
-<span>  drug_col <span class="op">=</span> <span class="st">"drug_agent"</span>,</span>
+<span>  drug_col <span class="op">=</span> <span class="st">"drug"</span>,</span>
 <span>  class_col <span class="op">=</span> <span class="st">"drug_class"</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker"</span>,</span>
 <span>  gene_col <span class="op">=</span> <span class="st">"gene"</span>,</span>
@@ -64,7 +64,7 @@
 
 
 <dt id="arg-pheno-table">pheno_table<a class="anchor" aria-label="anchor" href="#arg-pheno-table"></a></dt>
-<dd><p>A tibble or data frame containing phenotype data, in the format output by <a href="import_ast.html">import_ast</a>.</p></dd>
+<dd><p>A tibble or data frame containing phenotype data, in the format output by <a href="import_pheno.html">import_pheno</a>.</p></dd>
 
 
 <dt id="arg-geno-sample-col">geno_sample_col<a class="anchor" aria-label="anchor" href="#arg-geno-sample-col"></a></dt>
@@ -80,7 +80,7 @@
 
 
 <dt id="arg-drug-col">drug_col<a class="anchor" aria-label="anchor" href="#arg-drug-col"></a></dt>
-<dd><p>Character. Name of the column in the phenotype table containing drug agent identifiers. Default is <code>"drug_agent"</code>. Entries will be annotated with their full antibiotic names, converted using <code><a href="https://amr-for-r.org/reference/as.ab.html" class="external-link">AMR::as.ab()</a></code>. If the genotype table contains a column indicating individual agents it should share this same name.</p></dd>
+<dd><p>Character. Name of the column in the phenotype table containing drug agent identifiers. Default is <code>"drug"</code>. Entries will be annotated with their full antibiotic names, converted using <code><a href="https://amr-for-r.org/reference/as.ab.html" class="external-link">AMR::as.ab()</a></code>. If the genotype table contains a column indicating individual agents it should share this same name.</p></dd>
 
 
 <dt id="arg-class-col">class_col<a class="anchor" aria-label="anchor" href="#arg-class-col"></a></dt>
@@ -130,63 +130,55 @@ The <code>force_ab</code> parameter allows the addition of full antibiotic names
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">staph_geno_pheno</span> <span class="op">&lt;-</span> <span class="fu">summarise_geno_pheno</span><span class="op">(</span><span class="va">staph_geno_ebi</span>, <span class="va">staph_ast_ebi</span>,</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">staph_geno_pheno</span> <span class="op">&lt;-</span> <span class="fu">summarise_geno_pheno</span><span class="op">(</span><span class="va">staph_geno_ebi</span>, <span class="va">staph_pheno_ebi</span>,</span></span>
 <span class="r-in"><span>  pheno_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pheno_clsi"</span>, <span class="st">"pheno_provided"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Column drug not found in input genotype table</span>
 <span class="r-in"><span><span class="va">staph_geno_pheno</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $overlapping_samples</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 190</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $drugs_with_pheno</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   drug_agent     n drug_class      drug_name   spp_pheno        disk   mic  none</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> AMK           84 Aminoglycosides Amikacin    Staphylococcus…     3    11    70</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> DOX          134 Tetracyclines   Doxycycline Staphylococcus…    <span style="color: #BB0000;">NA</span>    47    87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   drug     n drug_class      drug_name   spp_pheno              disk   mic  none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> AMK     84 Aminoglycosides Amikacin    Staphylococcus aureus     3    11    70</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> DOX    134 Tetracyclines   Doxycycline Staphylococcus aureus    <span style="color: #BB0000;">NA</span>    47    87</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $geno_hits</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   drug_agent drug_name    drug_class      markers samples  hits</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> AMK        Amikacin     Aminoglycosides       2      37   170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> GEN        Gentamicin   Aminoglycosides       1      27   108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> KAN        Kanamycin    Aminoglycosides       2      37   170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> STR1       Streptomycin Aminoglycosides       1      15    15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> TOB        Tobramycin   Aminoglycosides       1      27   108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> TGC        Tigecycline  Tetracyclines         1     116   116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>           Tetracyclines         4     116   144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   drug  drug_name drug_class      markers samples  hits</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Aminoglycosides       3      37   571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Tetracyclines         5     116   260</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $geno_markers</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 12 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    marker                 drug_agent drug_name    drug_class          n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> aac(6')-Ie/aph(2'')-Ia AMK        Amikacin     Aminoglycosides   108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> aac(6')-Ie/aph(2'')-Ia GEN        Gentamicin   Aminoglycosides   108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> aac(6')-Ie/aph(2'')-Ia KAN        Kanamycin    Aminoglycosides   108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> aac(6')-Ie/aph(2'')-Ia TOB        Tobramycin   Aminoglycosides   108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ant(6)-Ia              STR1       Streptomycin Aminoglycosides    15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> aph(3')-IIIa           AMK        Amikacin     Aminoglycosides    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> aph(3')-IIIa           KAN        Kanamycin    Aminoglycosides    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> mepA                   TGC        Tigecycline  Tetracyclines     116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> tet(38)                <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>           Tetracyclines     116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> tet(K)                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>           Tetracyclines      14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> tet(L)                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>           Tetracyclines       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> tet(M)                 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>           Tetracyclines      13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   marker                 drug  drug_name drug_class          n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> aac(6')-Ie/aph(2'')-Ia <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Aminoglycosides   432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ant(6)-Ia              <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Aminoglycosides    15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> aph(3')-IIIa           <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Aminoglycosides   124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> mepA                   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Tetracyclines     116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> tet(38)                <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Tetracyclines     116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> tet(K)                 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Tetracyclines      14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> tet(L)                 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Tetracyclines       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> tet(M)                 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Tetracyclines      13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pheno_counts_list</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pheno_counts_list$pheno_clsi</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   drug_agent drug_name   spp_pheno              `NA`     S     I     R</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> AMK        Amikacin    Staphylococcus aureus    84    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> DOX        Doxycycline Staphylococcus aureus    87    41     5     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   drug drug_name   spp_pheno              `NA`     S     I     R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> AMK  Amikacin    Staphylococcus aureus    84    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> DOX  Doxycycline Staphylococcus aureus    87    41     5     1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pheno_counts_list$pheno_provided</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   drug_agent drug_name   spp_pheno                 S     R     I</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> AMK        Amikacin    Staphylococcus aureus    12    72    <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> DOX        Doxycycline Staphylococcus aureus   103    20    11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   drug drug_name   spp_pheno                 S     R     I</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> AMK  Amikacin    Staphylococcus aureus    12    72    <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> DOX  Doxycycline Staphylococcus aureus   103    20    11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>

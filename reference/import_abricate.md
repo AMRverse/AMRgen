@@ -69,11 +69,10 @@ functions of the ARMgen package:
   column of the input file which depends on the database that ABRicate
   was run with (`character`).
 
-- `drug_agent`: Name of the specific antibiotic agent associated with
-  the genotype marker, compatible with AMR pkg, parsed from the
-  `RESISTANCE` column of the input file (`ab`). Value `NA` is assigned
-  when the markers are annotated with a class only and not a specific
-  antibiotic.
+- `drug`: Name of the specific antibiotic associated with the genotype
+  marker, compatible with AMR pkg, parsed from the `RESISTANCE` column
+  of the input file (`ab`). Value `NA` is assigned when the markers are
+  annotated with a class only and not a specific antibiotic.
 
 - `variation type`: Type of variation, i.e. `Gene presence detected`, as
   ABRicate only detects presence/absence of genes in the query database.

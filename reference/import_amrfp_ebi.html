@@ -59,12 +59,12 @@
 <li><p><code>gene</code>: The gene identifier (<code>character</code>).</p></li>
 <li><p><code>mutation</code>: The mutation detected within the gene, converted to <a href="https://hgvs-nomenclature.org/stable/" class="external-link">HGVS nomenclature</a> syntax (e.g. <code>Ser83Phe</code>) (<code>character</code>).</p></li>
 <li><p><code>drug_class</code>: Name of the antibiotic group associated with the genotype marker, compatible with AMR pkg (<code>character</code>).</p></li>
-<li><p><code>drug_agent</code>: Name of the specific antibiotic agent associated with the genotype marker, compatible with AMR pkg (<code>ab</code>). Value <code>NA</code> is assigned when the markers are annotated with a class only and not a specific antibiotic.
+<li><p><code>drug</code>: Name of the specific antibiotic associated with the genotype marker, compatible with AMR pkg (<code>ab</code>). Value <code>NA</code> is assigned when the markers are annotated with a class only and not a specific antibiotic.
 ... Other fields specific to the input file</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate <code>drug_agent</code> and <code>drug_class</code> fields consistent with the <code><a href="import_amrfp.html">import_amrfp()</a></code> function (the EBI fields <code>antibiotic*</code> are also retained).
+    <p>These data are pre-processed by EBI to match NCBI class/subclass to CARD's antibiotic resistance ontology (ARO), however for consistency this function will re-process the data to generate <code>drug</code> and <code>drug_class</code> fields consistent with the <code><a href="import_amrfp.html">import_amrfp()</a></code> function (the EBI fields <code>antibiotic*</code> are also retained).
 Note several AMRFinderPlus fields are excluded from EBI files, including hierarchy node, method, percent identity and coverage; therefore unlike the <code><a href="import_amrfp.html">import_amrfp()</a></code> function, this function cannot assign <code>variation type</code> or <code>node</code>.</p>
 <p>The function performs the following steps:</p><ul><li><p>Reads the EBI-processed genotype table.</p></li>
 <li><p>Maps AMRFinderPlus subclasses to standardised drug agent and drug class

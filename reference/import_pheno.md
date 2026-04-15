@@ -31,7 +31,7 @@ import_pheno(
   [NCBI browser](https://www.ncbi.nlm.nih.gov/pathogens/ast), or using
   the functions
   [`download_ebi()`](https://amrgen.org/reference/download_ebi.md),
-  [`download_ncbi_ast()`](https://amrgen.org/reference/download_ncbi_ast.md),
+  [`download_ncbi_pheno()`](https://amrgen.org/reference/download_ncbi_pheno.md),
   or
   [`query_ncbi_bq_geno()`](https://amrgen.org/reference/query_ncbi_bq_geno.md);
   or the files may be exported from supported AST instruments.
@@ -71,34 +71,34 @@ import_pheno(
   Format-specific arguments. See
 
   - `"ebi"` :
-    [`import_ebi_ast()`](https://amrgen.org/reference/import_ebi_ast.md)
+    [`import_ebi_pheno()`](https://amrgen.org/reference/import_ebi_pheno.md)
 
   - `"ebi_web"` :
-    [`import_ebi_ast()`](https://amrgen.org/reference/import_ebi_ast.md)
+    [`import_ebi_pheno()`](https://amrgen.org/reference/import_ebi_pheno.md)
 
   - `"ebi_ftp"`
-    :[`import_ebi_ast_ftp()`](https://amrgen.org/reference/import_ebi_ast_ftp.md)
+    :[`import_ebi_pheno_ftp()`](https://amrgen.org/reference/import_ebi_pheno_ftp.md)
 
   - `"ncbi"` :
-    [`import_ncbi_ast()`](https://amrgen.org/reference/import_ncbi_ast.md)
+    [`import_ncbi_pheno()`](https://amrgen.org/reference/import_ncbi_pheno.md)
 
   - `"ncbi_biosample"` :
     [`import_ncbi_biosample()`](https://amrgen.org/reference/import_ncbi_biosample.md)
 
   - `"vitek"` :
-    [`import_vitek_ast()`](https://amrgen.org/reference/import_vitek_ast.md)
+    [`import_vitek_pheno()`](https://amrgen.org/reference/import_vitek_pheno.md)
 
   - `"microscan"` :
-    [`import_microscan_ast()`](https://amrgen.org/reference/import_microscan_ast.md)
+    [`import_microscan_pheno()`](https://amrgen.org/reference/import_microscan_pheno.md)
 
   - `"sensititre"` :
-    [`import_sensititre_ast()`](https://amrgen.org/reference/import_sensititre_ast.md)
+    [`import_sensititre_pheno()`](https://amrgen.org/reference/import_sensititre_pheno.md)
 
   - `"phoenix"` :
-    [`import_phoenix_ast()`](https://amrgen.org/reference/import_phoenix_ast.md)
+    [`import_phoenix_pheno()`](https://amrgen.org/reference/import_phoenix_pheno.md)
 
   - `"whonet"` :
-    [`import_whonet_ast()`](https://amrgen.org/reference/import_whonet_ast.md)
+    [`import_whonet_pheno()`](https://amrgen.org/reference/import_whonet_pheno.md)
 
 ## Value
 
@@ -110,7 +110,7 @@ A data frame with the processed AST data, including additional columns:
   [`AMR::as.mo()`](https://amr-for-r.org/reference/as.mo.html) function
   (class `mo`).
 
-- `drug_agent`: The antibiotic used in the test, formatted using the
+- `drug`: The antibiotic used in the test, formatted using the
   [`AMR::as.ab()`](https://amr-for-r.org/reference/as.ab.html) function
   (class `ab`).
 
@@ -158,22 +158,22 @@ A data frame with the processed AST data, including additional columns:
 ``` r
 if (FALSE) { # \dontrun{
 # import NCBI data retrieved from Google Cloud, without re-interpreting resistance
-head(staph_ast_ncbi_cloud_raw)
-pheno <- import_pheno(staph_ast_ncbi_cloud_raw, format = "ncbi")
+head(staph_pheno_ncbi_cloud_raw)
+pheno <- import_pheno(staph_pheno_ncbi_cloud_raw, format = "ncbi")
 
 # import NCBI data where biosample column has been renamed to 'id'
-head(staph_ast_ncbi_raw)
-import_pheno(staph_ast_ncbi_raw, "ncbi", sample_col = "id")
+head(staph_pheno_ncbi_raw)
+import_pheno(staph_pheno_ncbi_raw, "ncbi", sample_col = "id")
 
 # import NCBI data and re-interpret resistance (S/I/R) and WT/NWT (vs ECOFF)
-head(ecoli_ast_raw)
-pheno <- import_pheno(ecoli_ast_raw,
+head(ecoli_pheno_raw)
+pheno <- import_pheno(ecoli_pheno_raw,
   format = "ncbi",
   interpret_eucast = TRUE, interpret_ecoff = TRUE
 )
 
 # download Klebsiella quasipneumoniae phenotype data from NCBI BioSample
-kquasi_raw_ncbi <- download_ncbi_ast("Klebsiella quasipneumoniae")
+kquasi_raw_ncbi <- download_ncbi_pheno("Klebsiella quasipneumoniae")
 head(kquasi_raw_ncbi)
 # import the data and interpret against EUCAST breakpoints
 pheno <- import_pheno(kquasi_raw_ncbi,

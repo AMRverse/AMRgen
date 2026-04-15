@@ -21,7 +21,7 @@ Columns include:
 
 - `id`: Sample identifier (BioSample).
 
-- `drug_agent`: Antibiotic identifier, as class 'ab'.
+- `drug`: Antibiotic identifier, as class 'ab'.
 
 - `mic`: MIC data, as class 'mic'.
 

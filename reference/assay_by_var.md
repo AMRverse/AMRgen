@@ -15,7 +15,7 @@ plot.
 ``` r
 assay_by_var(
   pheno_table,
-  antibiotic = NULL,
+  pheno_drug = NULL,
   measure = "mic",
   colour_by = NULL,
   bar_cols = NULL,
@@ -38,12 +38,12 @@ assay_by_var(
 
 - pheno_table:
 
-  Phenotype table in standard format as per import_ast().
+  Phenotype table in standard format as per import_pheno().
 
-- antibiotic:
+- pheno_drug:
 
-  (optional) Name of an antibiotic to filter the 'drug_agent' column,
-  and to retrieve breakpoints for.
+  (optional) Name of a drug to filter the `drug` column, and to retrieve
+  breakpoints for.
 
 - measure:
 
@@ -127,21 +127,21 @@ The stacked bar plot
 ``` r
 # plot MIC distribution, highlighting values expressed as ranges
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic"
 )
 
 
 # colour by SIR interpretation recorded in column 'pheno_clsi'
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi"
 )
 
 
 # manually specify colours for the barplot
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
   bar_cols = c(S = "skyblue", I = "orange", R = "maroon")
 )
@@ -149,7 +149,7 @@ assay_by_var(
 
 # look up ECOFF and CLSI breakpoints and annotate these on the plot
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
   species = "E. coli", guideline = "CLSI 2025"
 )
@@ -158,7 +158,7 @@ assay_by_var(
 
 # facet by method
 assay_by_var(
-  pheno_table = ecoli_ast, antibiotic = "Ciprofloxacin",
+  pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
   species = "E. coli", guideline = "CLSI 2025",
   facet_var = "method"

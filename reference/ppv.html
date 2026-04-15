@@ -43,8 +43,9 @@
 <span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
 <span>  <span class="va">geno_table</span>,</span>
 <span>  <span class="va">pheno_table</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geno_class <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geno_drug <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geno_sample_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pheno_sample_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -75,7 +76,7 @@
 
 
 <dl><dt id="arg-binary-matrix">binary_matrix<a class="anchor" aria-label="anchor" href="#arg-binary-matrix"></a></dt>
-<dd><p>A data frame containing the original binary matrix output from the <code><a href="get_binary_matrix.html">get_binary_matrix()</a></code> function. If not provided (or set to <code>NULL</code>), user must specify <code>geno_table</code>, <code>pheno_table</code>, <code>antibiotic</code>, <code>drug_class_list</code> and optionally <code>geno_sample_col</code>, <code>pheno_sample_col</code>, <code>sir_col</code>, <code>ecoff_col</code>, <code>marker_col</code> to pass to <code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>.</p></dd>
+<dd><p>A data frame containing the original binary matrix output from the <code><a href="get_binary_matrix.html">get_binary_matrix()</a></code> function. If not provided (or set to <code>NULL</code>), user must specify <code>geno_table</code>, <code>pheno_table</code>, <code>pheno_drug</code>, and optionally <code>geno_class</code>, <code>geno_drug</code>, <code>geno_sample_col</code>, <code>pheno_sample_col</code>, <code>sir_col</code>, <code>ecoff_col</code>, <code>marker_col</code> to pass to <code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>.</p></dd>
 
 
 <dt id="arg-min-set-size">min_set_size<a class="anchor" aria-label="anchor" href="#arg-min-set-size"></a></dt>
@@ -95,23 +96,27 @@
 
 
 <dt id="arg-pheno-table">pheno_table<a class="anchor" aria-label="anchor" href="#arg-pheno-table"></a></dt>
-<dd><p>(Required if <code>binary_matrix</code> not provided) A data frame containing phenotype data, formatted with <code><a href="import_ast.html">import_ast()</a></code>. Only used if <code>binary_matrix</code> not provided.</p></dd>
+<dd><p>(Required if <code>binary_matrix</code> not provided) A data frame containing phenotype data, formatted with <code><a href="import_pheno.html">import_pheno()</a></code>. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
-<dt id="arg-antibiotic">antibiotic<a class="anchor" aria-label="anchor" href="#arg-antibiotic"></a></dt>
-<dd><p>(Required if <code>binary_matrix</code> not provided) A character string specifying the antibiotic of interest to filter phenotype data (and optionally retrieve breakpoints). The value must match one of the entries in the <code>drug_agent</code> column of <code>pheno_table</code>. Only used if <code>binary_matrix</code> not provided or if breakpoints required.</p></dd>
+<dt id="arg-pheno-drug">pheno_drug<a class="anchor" aria-label="anchor" href="#arg-pheno-drug"></a></dt>
+<dd><p>(Required if <code>binary_matrix</code> not provided) A character string specifying the drug of interest to filter phenotype data. The value must match one of the entries in the <code>drug</code> column of <code>pheno_table</code> or be coercible to a match using <a href="https://amr-for-r.org/reference/as.ab.html" class="external-link">AMR::as.ab</a>.</p></dd>
 
 
-<dt id="arg-drug-class-list">drug_class_list<a class="anchor" aria-label="anchor" href="#arg-drug-class-list"></a></dt>
-<dd><p>(Only relevant if <code>binary_matrix</code> not provided) If not provided, the AMR pkg is used to check what class name/s are associated with the antibiotic and uses those (these are printed to screen so the user can see what is being filtered).</p></dd>
+<dt id="arg-geno-class">geno_class<a class="anchor" aria-label="anchor" href="#arg-geno-class"></a></dt>
+<dd><p>(Optional if <code>binary_matrix</code> not provided) A character vector of drug classes to filter genotype markers. Markers in <code>geno_table</code> will be filtered based on whether their <code>drug_class</code> matches any value in this list. If not provided, the AMR pkg is used to check what class name/s are associated with <code>pheno_drug</code> and uses those (these are printed to screen so the user can see what is being filtered).</p></dd>
+
+
+<dt id="arg-geno-drug">geno_drug<a class="anchor" aria-label="anchor" href="#arg-geno-drug"></a></dt>
+<dd><p>(Optional if <code>binary_matrix</code> not provided) A character vector of drug names whose relevant genotype markers should be included.</p></dd>
 
 
 <dt id="arg-geno-sample-col">geno_sample_col<a class="anchor" aria-label="anchor" href="#arg-geno-sample-col"></a></dt>
-<dd><p>A character string (optional) specifying the column name in <code>geno_table</code> containing sample identifiers. Defaults to <code>NULL</code>, in which case it is assumed the first column contains identifiers. Only used if <code>binary_matrix</code> not provided.</p></dd>
+<dd><p>(Optional) A character string specifying the column name in <code>geno_table</code> containing sample identifiers. Defaults to <code>NULL</code>, in which case it is assumed the first column contains identifiers. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-pheno-sample-col">pheno_sample_col<a class="anchor" aria-label="anchor" href="#arg-pheno-sample-col"></a></dt>
-<dd><p>A character string (optional) specifying the column name in <code>pheno_table</code> containing sample identifiers. Defaults to <code>NULL</code>, in which case it is assumed the first column contains identifiers. Only used if <code>binary_matrix</code> not provided.</p></dd>
+<dd><p>(Optional) A character string specifying the column name in <code>pheno_table</code> containing sample identifiers. Defaults to <code>NULL</code>, in which case it is assumed the first column contains identifiers. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
 <dt id="arg-sir-col">sir_col<a class="anchor" aria-label="anchor" href="#arg-sir-col"></a></dt>
@@ -170,11 +175,11 @@
 
 
 <dt id="arg-species">species<a class="anchor" aria-label="anchor" href="#arg-species"></a></dt>
-<dd><p>Optional. Species name used to retrieve clinical breakpoints for annotation of the assay distribution plot.</p></dd>
+<dd><p>(Optional) Species name used to retrieve clinical breakpoints for annotation of the assay distribution plot.</p></dd>
 
 
 <dt id="arg-bp-site">bp_site<a class="anchor" aria-label="anchor" href="#arg-bp-site"></a></dt>
-<dd><p>Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.</p></dd>
+<dd><p>(Optional) Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.</p></dd>
 
 
 <dt id="arg-guideline">guideline<a class="anchor" aria-label="anchor" href="#arg-guideline"></a></dt>
@@ -182,15 +187,15 @@
 
 
 <dt id="arg-bp-s">bp_S<a class="anchor" aria-label="anchor" href="#arg-bp-s"></a></dt>
-<dd><p>(optional) S breakpoint to add to assay distribution plot (numerical).</p></dd>
+<dd><p>(Optional) S breakpoint to add to assay distribution plot (numerical).</p></dd>
 
 
 <dt id="arg-bp-r">bp_R<a class="anchor" aria-label="anchor" href="#arg-bp-r"></a></dt>
-<dd><p>(optional) R breakpoint to add to assay distribution plot (numerical).</p></dd>
+<dd><p>(Optional) R breakpoint to add to assay distribution plot (numerical).</p></dd>
 
 
 <dt id="arg-ecoff-bp">ecoff_bp<a class="anchor" aria-label="anchor" href="#arg-ecoff-bp"></a></dt>
-<dd><p>(optional) ECOFF breakpoint to add to assay distribution plot (numerical).</p></dd>
+<dd><p>(Optional) ECOFF breakpoint to add to assay distribution plot (numerical).</p></dd>
 
 
 <dt id="arg-pd">pd<a class="anchor" aria-label="anchor" href="#arg-pd"></a></dt>
@@ -212,9 +217,9 @@
 <span class="r-in"><span><span class="co"># Generate binary matrix</span></span></span>
 <span class="r-in"><span><span class="va">binary_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  geno_table <span class="op">=</span> <span class="va">ecoli_geno</span>,</span></span>
-<span class="r-in"><span>  pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>,</span></span>
-<span class="r-in"><span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span></span>
-<span class="r-in"><span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pheno_table <span class="op">=</span> <span class="va">ecoli_pheno</span>,</span></span>
+<span class="r-in"><span>  pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span></span>
+<span class="r-in"><span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Quinolones"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span></span>
 <span class="r-in"><span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span></span>
@@ -226,8 +231,8 @@
 <span class="r-in"><span><span class="co"># Alternatively, generate binary matrix and run ppv() in one step</span></span></span>
 <span class="r-in"><span><span class="va">ppv</span> <span class="op">&lt;-</span> <span class="fu">ppv</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  geno_table <span class="op">=</span> <span class="va">ecoli_geno</span>,</span></span>
-<span class="r-in"><span>  pheno_table <span class="op">=</span> <span class="va">ecoli_ast</span>,</span></span>
-<span class="r-in"><span>  antibiotic <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span></span>
+<span class="r-in"><span>  pheno_table <span class="op">=</span> <span class="va">ecoli_pheno</span>,</span></span>
+<span class="r-in"><span>  pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span></span>
 <span class="r-in"><span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>

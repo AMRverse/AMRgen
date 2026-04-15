@@ -13,15 +13,15 @@ ecoli_cip_vs_ref
 
 An object of class `compare_eucast` with 32 rows and 3 columns. It
 provides MIC distributions from EUCAST and public AST data extracted
-from [ecoli_ast](https://amrgen.org/reference/ecoli_ast.md) in the form
-of counts per value.
+from [ecoli_pheno](https://amrgen.org/reference/ecoli_pheno.md) in the
+form of counts per value.
 
 Columns include:
 
 - `value`: MIC value.
 
 - `user`: Count of samples with this MIC value, from the example data
-  [ecoli_ast](https://amrgen.org/reference/ecoli_ast.md).
+  [ecoli_pheno](https://amrgen.org/reference/ecoli_pheno.md).
 
 - `eucast`: Count of samples with this MIC value, downloaded from EUCAST
   (Feb 2026).

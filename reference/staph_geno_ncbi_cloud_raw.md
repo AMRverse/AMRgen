@@ -1,7 +1,7 @@
 # S. aureus Example of Raw Genotype Data Downloaded from NCBI via Google Cloud BigQuery
 
 AMRFinderPlus genotypes sourced from NCBI via
-[query_ncbi_bq_ast](https://amrgen.org/reference/query_ncbi_bq_ast.md)
+[query_ncbi_bq_pheno](https://amrgen.org/reference/query_ncbi_bq_pheno.md)
 function, without reformatting.
 
 ## Usage

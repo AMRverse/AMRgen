@@ -4,7 +4,7 @@ Reference table mapping Bio-Rad SIRscan antibiotic codes to antibiotic
 names recognised by
 [`AMR::as.ab()`](https://amr-for-r.org/reference/as.ab.html). Used as
 the default lookup in
-[`import_sirscan_ast()`](https://amrgen.org/reference/import_sirscan_ast.md)
+[`import_sirscan_pheno()`](https://amrgen.org/reference/import_sirscan_pheno.md)
 to translate codes that the AMR package does not recognise directly.
 Users can supply their own table via the `sirscan_codes` argument if
 their SIRscan configuration uses different code meanings.

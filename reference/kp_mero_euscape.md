@@ -19,8 +19,7 @@ kp_mero_euscape
 - `id`: Sample identifier, imported from the `BioSample` column in the
   raw input.
 
-- `drug_agent`: Antibiotic code, interpreted from `Antibiotic` using
-  `as.ab`.
+- `drug`: Antibiotic code, interpreted from `Antibiotic` using `as.ab`.
 
 - `mic`: Minimum inhibitory concentration, formatted using `as.mic`.
 

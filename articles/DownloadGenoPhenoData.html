@@ -87,7 +87,7 @@ different clinical breakpoints.</p>
 <div class="section level4">
 <h4 id="option-1a-download-ast-data-from-ncbi-via-rentrez">Option 1a: Download AST data from NCBI via rentrez<a class="anchor" aria-label="anchor" href="#option-1a-download-ast-data-from-ncbi-via-rentrez"></a>
 </h4>
-<p>The <code><a href="../reference/download_ncbi_ast.html">download_ncbi_ast()</a></code> function lets you download
+<p>The <code><a href="../reference/download_ncbi_pheno.html">download_ncbi_pheno()</a></code> function lets you download
 antibiogram data from NCBI via their ‘EUtils’ API using the rentrez R
 pacakge. You must specify a species, and can optionally limit the
 download to one or more specific drugs. The function can also re-format
@@ -101,43 +101,43 @@ access to NCBI data but require authentication via a Google Cloud
 account.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline, and re-interpret with EUCAST breakpoints</span></span>
-<span><span class="va">staph_ast_ncbi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ncbi_ast.html">download_ncbi_ast</a></span><span class="op">(</span></span>
+<span><span class="va">staph_pheno_ncbi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ncbi_pheno.html">download_ncbi_pheno</a></span><span class="op">(</span></span>
 <span>  species <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span>, <span class="co"># antibiotics can be listed in short or long form</span></span>
+<span>  pheno_drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span>, <span class="co"># antibiotics can be listed in short or long form</span></span>
 <span>  reformat <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span> <span class="co"># reformat must be true to use interpret_* argument</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># check how many samples retrieved</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">staph_ast_ncbi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">staph_pheno_ncbi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 143</span></span>
 <span></span>
 <span><span class="co"># check the output</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_ast_ncbi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_pheno_ncbi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 19</span></span></span>
-<span><span class="co">#&gt;   id         drug_agent   mic  disk pheno_provided pheno_eucast guideline method</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN47875… DOX          <span style="color: #949494;">&lt;=</span>1    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      broth…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN47875… DOX          <span style="color: #949494;">&lt;=</span>1    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      broth…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN38228… AMK          <span style="color: #949494;">&lt;=</span>2    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      broth…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN30333… AMK           <span style="color: #BB0000;">NA</span>    21 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      disk …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN20982… AMK           <span style="color: #BB0000;">NA</span>    23 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      disk …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN20982… AMK           <span style="color: #BB0000;">NA</span>    22 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      disk …</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 11 more variables: platform &lt;chr&gt;, source &lt;chr&gt;, spp_pheno &lt;mo&gt;,</span></span></span>
+<span><span class="co">#&gt;   id     drug   mic  disk pheno_provided pheno_eucast guideline method  platform</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN4… DOX    <span style="color: #949494;">&lt;=</span>1    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      broth … <span style="color: #BB0000;">NA</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN4… DOX    <span style="color: #949494;">&lt;=</span>1    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      broth … <span style="color: #BB0000;">NA</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN3… AMK    <span style="color: #949494;">&lt;=</span>2    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      broth … Vitek   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN3… AMK     <span style="color: #BB0000;">NA</span>    21 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      disk d… Scan 500</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN2… AMK     <span style="color: #BB0000;">NA</span>    23 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      disk d… Scan 500</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN2… AMK     <span style="color: #BB0000;">NA</span>    22 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        CLSI      disk d… Scan 500</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10 more variables: source &lt;chr&gt;, spp_pheno &lt;mo&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Resistance phenotype` &lt;chr&gt;, `Measurement sign` &lt;chr&gt;, Measurement &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Measurement units` &lt;chr&gt;, Vendor &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Laboratory typing method version or reagent` &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   pheno_eucast_mic &lt;sir&gt;, pheno_eucast_disk &lt;sir&gt;</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This is the same as downloading the data then re-interpreting it separately:</span></span>
-<span><span class="va">staph_ast_ncbi_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ncbi_ast.html">download_ncbi_ast</a></span><span class="op">(</span></span>
+<span><span class="va">staph_pheno_ncbi_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ncbi_pheno.html">download_ncbi_pheno</a></span><span class="op">(</span></span>
 <span>  species <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span>,</span>
 <span>  reformat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  interpret_eucast <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_ast_ncbi_raw</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_pheno_ncbi_raw</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 13</span></span></span>
 <span><span class="co">#&gt;   id    BioProject organism Antibiotic `Resistance phenotype` `Measurement sign`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span></span>
@@ -152,9 +152,9 @@ account.</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Vendor &lt;chr&gt;, `Laboratory typing method version or reagent` &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `Testing standard` &lt;chr&gt;</span></span></span>
 <span></span>
-<span><span class="co"># Then reformat and re-interpret using EUCAST and CLSI breakpoints, and ECOFFs using the import_ncbi_biosample() function</span></span>
-<span><span class="va">staph_ast_ncbi2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_ncbi_biosample.html">import_ncbi_biosample</a></span><span class="op">(</span></span>
-<span>  input <span class="op">=</span> <span class="va">staph_ast_ncbi_raw</span>,</span>
+<span><span class="co"># Then reformat and re-interpret using EUCAST and CLSI breakpoints, and ECOFFs using the import_ncbi_pheno() function</span></span>
+<span><span class="va">staph_pheno_ncbi2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_ncbi_biosample.html">import_ncbi_biosample</a></span><span class="op">(</span></span>
+<span>  input <span class="op">=</span> <span class="va">staph_pheno_ncbi_raw</span>,</span>
 <span>  interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -162,7 +162,7 @@ account.</p>
 <span><span class="co">#&gt; Parsing column organism as micro-organism (class 'mo')</span></span>
 <span><span class="co">#&gt; Renaming column organism to standard name 'spp_pheno'</span></span>
 <span><span class="co">#&gt; Parsing column Antibiotic as antibiotic (class 'ab')</span></span>
-<span><span class="co">#&gt; Renaming column Antibiotic to standard name 'drug_agent'</span></span>
+<span><span class="co">#&gt; Renaming column Antibiotic to standard name 'drug'</span></span>
 <span><span class="co">#&gt; Parsing column mic as class 'mic'</span></span>
 <span><span class="co">#&gt; Parsing column disk as class 'disk'</span></span>
 <span><span class="co">#&gt; Parsing column pheno_provided as class 'sir'</span></span>
@@ -176,20 +176,20 @@ account.</p>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Some MICs were converted to the nearest higher log2 level, following the CLSI</span></span>
 <span><span class="co">#&gt; interpretation guideline.</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_ast_ncbi2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_pheno_ncbi2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 25</span></span></span>
-<span><span class="co">#&gt;   id         drug_agent   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN47875… DOX          <span style="color: #949494;">&lt;=</span>1    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #5FD7AF;">  S  </span>      <span style="color: #080808; background-color: #444444;">  NI </span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN47875… DOX          <span style="color: #949494;">&lt;=</span>1    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #5FD7AF;">  S  </span>      <span style="color: #080808; background-color: #444444;">  NI </span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN38228… AMK          <span style="color: #949494;">&lt;=</span>2    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">  NA</span>       <span style="color: #080808; background-color: #5FD7AF;">  WT </span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN30333… AMK           <span style="color: #BB0000;">NA</span>    21 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">  NA</span>       <span style="color: #080808; background-color: #5FD7AF;">  WT </span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN20982… AMK           <span style="color: #BB0000;">NA</span>    23 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">  NA</span>       <span style="color: #080808; background-color: #5FD7AF;">  WT </span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN20982… AMK           <span style="color: #BB0000;">NA</span>    22 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">  NA</span>       <span style="color: #080808; background-color: #5FD7AF;">  WT </span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 17 more variables: guideline &lt;chr&gt;, method &lt;chr&gt;, platform &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   source &lt;chr&gt;, spp_pheno &lt;mo&gt;, `Resistance phenotype` &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   `Measurement sign` &lt;chr&gt;, Measurement &lt;chr&gt;, `Measurement units` &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Vendor &lt;chr&gt;, `Laboratory typing method version or reagent` &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt;   id    drug   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff guideline</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMN… DOX    <span style="color: #949494;">&lt;=</span>1    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #5FD7AF;">  S  </span>      <span style="color: #080808; background-color: #444444;">  NI </span> CLSI     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMN… DOX    <span style="color: #949494;">&lt;=</span>1    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #5FD7AF;">  S  </span>      <span style="color: #080808; background-color: #444444;">  NI </span> CLSI     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMN… AMK    <span style="color: #949494;">&lt;=</span>2    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">  NA</span>       <span style="color: #080808; background-color: #5FD7AF;">  WT </span> CLSI     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMN… AMK     <span style="color: #BB0000;">NA</span>    21 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">  NA</span>       <span style="color: #080808; background-color: #5FD7AF;">  WT </span> CLSI     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMN… AMK     <span style="color: #BB0000;">NA</span>    23 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">  NA</span>       <span style="color: #080808; background-color: #5FD7AF;">  WT </span> CLSI     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMN… AMK     <span style="color: #BB0000;">NA</span>    22 <span style="color: #080808; background-color: #5FD7AF;">  S  </span>          <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #949494;">  NA</span>       <span style="color: #080808; background-color: #5FD7AF;">  WT </span> CLSI     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more variables: method &lt;chr&gt;, platform &lt;chr&gt;, source &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   spp_pheno &lt;mo&gt;, `Resistance phenotype` &lt;chr&gt;, `Measurement sign` &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Measurement &lt;chr&gt;, `Measurement units` &lt;chr&gt;, Vendor &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `Laboratory typing method version or reagent` &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   pheno_eucast_mic &lt;sir&gt;, pheno_eucast_disk &lt;sir&gt;, pheno_clsi_mic &lt;sir&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   pheno_clsi_disk &lt;sir&gt;, ecoff_mic &lt;sir&gt;, ecoff_disk &lt;sir&gt;</span></span></span>
 <span></span>
@@ -208,7 +208,7 @@ bigrquery<a class="anchor" aria-label="anchor" href="#option-1b-download-ast-and
 <p>NCBI data can be accessed via Google Cloud BigQuery. This requires a
 Google Cloud account. For more information about using BigQuery to
 explore NCBI Pathogen Detection data see <a href="https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/" class="external-link">https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/</a>.</p>
-<p>The <code><a href="../reference/query_ncbi_bq_ast.html">query_ncbi_bq_ast()</a></code> function lets you download
+<p>The <code><a href="../reference/query_ncbi_bq_pheno.html">query_ncbi_bq_pheno()</a></code> function lets you download
 antibiogram data from NCBI via Google Cloud BigQuery using the bigrquery
 R pacakge. You must specify a species, and can optionally limit the
 download to one or more specific drugs. The function can also re-format
@@ -231,19 +231,19 @@ account.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline</span></span>
 <span><span class="co"># NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials</span></span>
-<span><span class="va">staph_ast_ncbi_cloud_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_ncbi_bq_ast.html">query_ncbi_bq_ast</a></span><span class="op">(</span></span>
+<span><span class="va">staph_pheno_ncbi_cloud_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_ncbi_bq_pheno.html">query_ncbi_bq_pheno</a></span><span class="op">(</span></span>
 <span>  taxgroup <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span></span>
+<span>  pheno_drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Import and reinterpret using CLSI breakpoints</span></span>
 <span><span class="co"># NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials</span></span>
-<span><span class="va">staph_ast_ncbi_cloud</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_ncbi_ast.html">import_ncbi_ast</a></span><span class="op">(</span><span class="va">staph_ast_ncbi_cloud_raw</span>, interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">staph_pheno_ncbi_cloud</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_ncbi_pheno.html">import_ncbi_pheno</a></span><span class="op">(</span><span class="va">staph_pheno_ncbi_cloud_raw</span>, interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: There was 1 warning in `mutate()`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `pheno_provided = as.sir(`Resistance phenotype`)`.</span></span>
 <span><span class="co">#&gt; Caused by warning:</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> in `as.sir()`: 8 results in column <span style="color: #00BB00; font-weight: bold;">pheno_provided</span> truncated (6%) that were</span></span>
-<span><span class="co">#&gt; invalid antimicrobial interpretations: "intermediate"</span></span>
+<span><span class="co">#&gt; invalid antimicrobial interpretations: <span style="color: #0000BB;">"intermediate"</span></span></span>
 <span><span class="co">#&gt; Manually setting `pheno_provided` to "I" where `Resistance phenotype` was "intermediate"</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -268,7 +268,7 @@ results obtained with more recent versions.</p>
 <span><span class="va">staph_geno_ncbi_cloud_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_ncbi_bq_geno.html">query_ncbi_bq_geno</a></span><span class="op">(</span></span>
 <span>  taxgroup <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span>
 <span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AMINOGLYCOSIDE"</span>, <span class="st">"TETRACYCLINE"</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">biosample_acc</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">staph_ast_ncbi_cloud_raw</span><span class="op">$</span><span class="va">BioSample</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">biosample_acc</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">staph_pheno_ncbi_cloud_raw</span><span class="op">$</span><span class="va">BioSample</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">staph_geno_ncbi_cloud_raw</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 119 × 9</span></span></span>
@@ -292,18 +292,18 @@ results obtained with more recent versions.</p>
 <span></span>
 <span><span class="va">staph_geno_ncbi_cloud</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 148 × 18</span></span></span>
-<span><span class="co">#&gt;    id         marker gene  mutation drug_agent drug_class `variation type` node </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN07291… mepA   mepA  <span style="color: #BB0000;">NA</span>       TGC        Tetracycl… Gene presence d… mepA </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN04901… ant(9… ant(… <span style="color: #BB0000;">NA</span>       SPT        Other      Gene presence d… ant(…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN04901… mepA   mepA  <span style="color: #BB0000;">NA</span>       TGC        Tetracycl… Gene presence d… mepA </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN04901… mepA   mepA  <span style="color: #BB0000;">NA</span>       TGC        Tetracycl… Gene presence d… mepA </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN07291… aac(6… aac(… <span style="color: #BB0000;">NA</span>       AMK        Aminoglyc… Gene presence d… aac(…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN07291… aac(6… aac(… <span style="color: #BB0000;">NA</span>       GEN        Aminoglyc… Gene presence d… aac(…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN07291… aac(6… aac(… <span style="color: #BB0000;">NA</span>       KAN        Aminoglyc… Gene presence d… aac(…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN07291… aac(6… aac(… <span style="color: #BB0000;">NA</span>       TOB        Aminoglyc… Gene presence d… aac(…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN07291… mepA   mepA  <span style="color: #BB0000;">NA</span>       TGC        Tetracycl… Gene presence d… mepA </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN04901… tet(M) tet(… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>         Tetracycl… Gene presence d… tet(…</span></span>
+<span><span class="co">#&gt;    id           marker    gene  mutation drug drug_class  `variation type` node </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> SAMN07291566 mepA      mepA  <span style="color: #BB0000;">NA</span>       TGC  Tetracycli… Gene presence d… mepA </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> SAMN04901618 ant(9)-Ia ant(… <span style="color: #BB0000;">NA</span>       SPT  Other       Gene presence d… ant(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> SAMN04901605 mepA      mepA  <span style="color: #BB0000;">NA</span>       TGC  Tetracycli… Gene presence d… mepA </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> SAMN04901606 mepA      mepA  <span style="color: #BB0000;">NA</span>       TGC  Tetracycli… Gene presence d… mepA </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> SAMN07291567 aac(6')-… aac(… <span style="color: #BB0000;">NA</span>       AMK  Aminoglyco… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> SAMN07291567 aac(6')-… aac(… <span style="color: #BB0000;">NA</span>       GEN  Aminoglyco… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> SAMN07291567 aac(6')-… aac(… <span style="color: #BB0000;">NA</span>       KAN  Aminoglyco… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> SAMN07291567 aac(6')-… aac(… <span style="color: #BB0000;">NA</span>       TOB  Aminoglyco… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> SAMN07291564 mepA      mepA  <span style="color: #BB0000;">NA</span>       TGC  Tetracycli… Gene presence d… mepA </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> SAMN04901609 tet(M)    tet(… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>   Tetracycli… Gene presence d… tet(…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 138 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10 more variables: marker.label &lt;chr&gt;, `Gene symbol` &lt;chr&gt;, Class &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Subclass &lt;chr&gt;, `Element type` &lt;chr&gt;, `Element subtype` &lt;chr&gt;,</span></span></span>
@@ -321,8 +321,8 @@ the AST data<a class="anchor" aria-label="anchor" href="#visualise-the-downloade
 <span></span>
 <span><span class="co"># Doxycycline</span></span>
 <span><span class="va">staph_dox_mic_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
-<span>  pheno_table <span class="op">=</span> <span class="va">staph_ast_ncbi</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DOX"</span><span class="op">)</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">staph_pheno_ncbi</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DOX"</span><span class="op">)</span>,</span>
 <span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span>
@@ -335,8 +335,8 @@ the AST data<a class="anchor" aria-label="anchor" href="#visualise-the-downloade
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Amikacin</span></span>
 <span><span class="va">staph_ami_mic_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
-<span>  pheno_table <span class="op">=</span> <span class="va">staph_ast_ncbi</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span><span class="op">)</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">staph_pheno_ncbi</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span><span class="op">)</span>,</span>
 <span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Staphylococcus aureus"</span>,</span>
@@ -367,9 +367,9 @@ content, they are not identical and each includes biosamples that the
 other does not.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download EBI phenotype data for all Staphylococcus, using the same example drugs as above. Reformat and re-interpret using EUCAST breakpoints</span></span>
-<span><span class="va">staph_ast_ebi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ebi.html">download_ebi</a></span><span class="op">(</span></span>
+<span><span class="va">staph_pheno_ebi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ebi.html">download_ebi</a></span><span class="op">(</span></span>
 <span>  genus <span class="op">=</span> <span class="st">"Staphylococcus"</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"amikacin"</span>, <span class="st">"DOX"</span><span class="op">)</span>,</span>
 <span>  reformat <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  interpret_clsi <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -377,24 +377,24 @@ other does not.</p>
 <span><span class="op">)</span> <span class="co"># chose which guideline to use for re-interpretation. reformat must be TRUE for re-interpretation</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># check output</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">staph_ast_ebi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">staph_pheno_ebi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 218</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">staph_ast_ebi</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">staph_pheno_ebi</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 190</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_ast_ebi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_pheno_ebi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 46</span></span></span>
-<span><span class="co">#&gt;   id         drug_agent   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMEA6982… AMK           <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMEA6985… AMK           <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMEA6982… AMK           <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMEA6984… AMK           <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMEA6984… AMK           <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMEA6986… AMK           <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 38 more variables: guideline &lt;chr&gt;, method &lt;chr&gt;, platform &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   source &lt;chr&gt;, spp_pheno &lt;mo&gt;, SRA_accession &lt;chr&gt;, assembly_ID &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt;   id    drug   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff guideline</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAME… AMK     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span>  <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAME… AMK     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span>  <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAME… AMK     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span>  <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAME… AMK     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span>  <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAME… AMK     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span>  <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAME… AMK     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> <span style="color: #080808; background-color: #FF5F5F;">  R  </span>          <span style="color: #949494;">  NA</span>         <span style="color: #949494;">  NA</span>       <span style="color: #949494;">  NA</span>  <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 37 more variables: method &lt;chr&gt;, platform &lt;chr&gt;, source &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   spp_pheno &lt;mo&gt;, SRA_accession &lt;chr&gt;, assembly_ID &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   collection_year &lt;int&gt;, ISO_country_code &lt;chr&gt;, host &lt;chr&gt;, host_age &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   host_sex &lt;chr&gt;, isolate &lt;chr&gt;, isolation_source &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   isolation_source_category &lt;chr&gt;, isolation_latitude &lt;chr&gt;,</span></span></span>
@@ -447,7 +447,7 @@ can then be extracted and combined using the
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># first filter both EBI pheno and geno dataframes for Staph aureus only</span></span>
 <span><span class="co"># filter pheno data</span></span>
-<span><span class="va">staph_ast_ebi_filtered</span> <span class="op">&lt;-</span> <span class="va">staph_ast_ebi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">staph_pheno_ebi_filtered</span> <span class="op">&lt;-</span> <span class="va">staph_pheno_ebi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">organism</span> <span class="op">==</span> <span class="st">"Staphylococcus aureus"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># filter geno data</span></span>
@@ -457,9 +457,9 @@ can then be extracted and combined using the
 <span><span class="co"># Make binary geno-pheno matrix for doxycycline phenotype (re-interpreted with EUCAST), and genotypes associated with the associated drug class (Tetracyclines)</span></span>
 <span><span class="va">tet_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  geno_table <span class="op">=</span> <span class="va">staph_geno_ebi_filtered</span>,</span>
-<span>  pheno_table <span class="op">=</span> <span class="va">staph_ast_ebi_filtered</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"DOX"</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="st">"Tetracyclines"</span>, <span class="co"># matches drug_class in geno_table</span></span>
+<span>  pheno_table <span class="op">=</span> <span class="va">staph_pheno_ebi_filtered</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"DOX"</span>,</span>
+<span>  geno_class <span class="op">=</span> <span class="st">"Tetracyclines"</span>, <span class="co"># matches drug_class in geno_table</span></span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>, <span class="co"># phenotype column in pheno_table</span></span>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
@@ -491,7 +491,7 @@ can then be extracted and combined using the
 <p><img src="DownloadGenoPhenoData_files/figure-html/ppv-2.png" class="r-plt" alt="" width="100%">
 This produces a binary matrix with 1 row per BioSample, for all
 BioSamples that had both phenotype data for doxycycline in
-<code>staph_ast_ebi_filtered</code> AND any genotype data (associated
+<code>staph_pheno_ebi_filtered</code> AND any genotype data (associated
 with any marker, not just Tetracyclines) in
 <code>staph_geno_ebi_filtered</code>. This ensures that we include
 samples for which genotyping was performed but returned no hits

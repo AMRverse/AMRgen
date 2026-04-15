@@ -131,38 +131,37 @@ MIC values across antibiotics may be stored as different types (numeric
 vs. character) due to inequality prefixes such as `<0.016` or `>32`. We
 coerce all antibiotic columns to character before pivoting to avoid type
 conflicts while preserving this information for downstream processing by
-[`format_ast()`](https://amrgen.org/reference/format_ast.md):
+[`format_pheno()`](https://amrgen.org/reference/format_pheno.md):
 
 ``` r
 eurogasp_pheno <- eurogasp_pheno_raw %>%
   mutate(across(c(Azithromycin, Ciprofloxacin, Cefixime, Ceftriaxone), as.character)) %>%
   pivot_longer(
     cols = c(Azithromycin, Ciprofloxacin, Cefixime, Ceftriaxone),
-    names_to = "antibiotic",
+    names_to = "drug",
     values_to = "mic"
   )
 ```
 
 Then format with
-[`format_ast()`](https://amrgen.org/reference/format_ast.md). Setting
-`interpret_eucast = TRUE` and `interpret_ecoff = TRUE` adds categorical
-SIR interpretations (clinical breakpoints) and WT/NWT classifications
-(ECOFF) fron EUCAST:
+[`format_pheno()`](https://amrgen.org/reference/format_pheno.md).
+Setting `interpret_eucast = TRUE` and `interpret_ecoff = TRUE` adds
+categorical SIR interpretations (clinical breakpoints) and WT/NWT
+classifications (ECOFF) fron EUCAST:
 
 ``` r
-eurogasp_ast <- format_ast(
+eurogasp_ast <- format_pheno(
   input = eurogasp_pheno,
   sample_col = "id",
   species = "Neisseria gonorrhoeae",
-  ab_col = "antibiotic",
+  ab_col = "drug",
   mic_col = "mic",
   interpret_eucast = TRUE,
   interpret_ecoff = TRUE
 )
 #> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae
 #> Parsing column spp_pheno as micro-organism (class 'mo')
-#> Parsing column antibiotic as antibiotic (class 'ab')
-#> Renaming column antibiotic to standard name 'drug_agent'
+#> Parsing column drug as antibiotic (class 'ab')
 #> Parsing column mic as class 'mic'
 #> Could not find disk_col disk in input table
 #> Could not find pheno_col ecoff in input table
@@ -210,12 +209,10 @@ compare it to the EUCAST reference distribution using
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
-  antibiotic = "Azithromycin",
+  pheno_drug = "Azithromycin",
   measure = "mic",
-  colour_by = "ecoff",
-  species = "Neisseria gonorrhoeae"
+  colour_by = "ecoff"
 )
-#> Error in executing command: Could not determine MIC breakpoints using AMR package, please provide your own breakpoints
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/pheno_azm-1.png)
@@ -224,7 +221,7 @@ assay_by_var(
 
 # Extract MIC data from the pheno table
 azm_data <- eurogasp_double %>%
-  filter(drug_agent == "AZM") %>%
+  filter(drug == "AZM") %>%
   pull(mic)
 ```
 
@@ -251,7 +248,7 @@ autoplot(azm_comparison)
 # The breakpoint for R is 0.06 but cannot be represented directly as it is not a doubling dilution (values in x axis).
 assay_by_var(
   pheno_table = eurogasp_double,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Neisseria gonorrhoeae"
@@ -266,7 +263,7 @@ assay_by_var(
 # If the AST data without doublig dilutions is represented, then both breakpoints can be plotted.
 assay_by_var(
   pheno_table = eurogasp_ast,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Neisseria gonorrhoeae"
@@ -280,7 +277,7 @@ assay_by_var(
 
 # Extract MIC data from the pheno table
 cip_data <- eurogasp_double %>%
-  filter(drug_agent == "CIP") %>%
+  filter(drug == "CIP") %>%
   pull(mic)
 ```
 
@@ -306,7 +303,7 @@ autoplot(cip_comparison)
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
-  antibiotic = "Ceftriaxone",
+  pheno_drug = "Ceftriaxone",
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Neisseria gonorrhoeae"
@@ -319,7 +316,7 @@ assay_by_var(
 ``` r
 # Extract MIC data from the pheno table
 cro_data <- eurogasp_double %>%
-  filter(drug_agent == "CRO") %>%
+  filter(drug == "CRO") %>%
   pull(mic)
 ```
 
@@ -344,7 +341,7 @@ autoplot(cro_comparison)
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
-  antibiotic = "Cefixime",
+  pheno_drug = "Cefixime",
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Neisseria gonorrhoeae"
@@ -357,7 +354,7 @@ assay_by_var(
 ``` r
 # Extract MIC data from the pheno table
 cfm_data <- eurogasp_double %>%
-  filter(drug_agent == "CFM") %>%
+  filter(drug == "CFM") %>%
   pull(mic)
 ```
 
@@ -390,8 +387,8 @@ Build the binary matrix combining genotype and phenotype:
 azm_bin <- get_binary_matrix(
   geno_table = eurogasp_geno,
   pheno_table = eurogasp_ast,
-  antibiotic = "Azithromycin",
-  drug_class_list = c("Macrolides", "Lincosamides"),
+  pheno_drug = "Azithromycin",
+  geno_class = c("Macrolides", "Lincosamides"),
   ecoff_col = "ecoff",
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
@@ -425,7 +422,7 @@ determinant):
 ``` r
 azm_solo_ppv <- solo_ppv_analysis(
   binary_matrix = azm_bin,
-  antibiotic = "Azithromycin",
+  pheno_drug = "Azithromycin",
   reverse_order = FALSE
 )
 ```
@@ -446,7 +443,7 @@ azm_ppv <- ppv(
   binary_matrix = azm_bin,
   order = "value",
   min_set_size = 2,
-  antibiotic = "Azithromycin",
+  pheno_drug = "Azithromycin",
   upset_grid = TRUE,
   plot_assay = TRUE,
   assay = "mic"
@@ -470,7 +467,7 @@ isolates:
 ``` r
 azm_logist <- amr_logistic(
   binary_matrix = azm_bin,
-  antibiotic = "Azithromycin",
+  pheno_drug = "Azithromycin",
   ecoff_col = "ecoff",
   maf = 10,
   single_plot = TRUE
@@ -545,18 +542,18 @@ eurogasp_azm_pred <- eurogasp_ast %>%
 
 head(eurogasp_azm_pred)
 #> # A tibble: 6 × 7
-#>   id         drug_agent   mic ecoff pheno_eucast spp_pheno    NWT_pred
-#>   <chr>      <ab>       <mic> <sir> <sir>        <mo>            <int>
-#> 1 ERR1549755 AZM        0.190   WT    NA         B_NESSR_GNRR        0
-#> 2 ERR1549755 CIP        8.000  NWT    R          B_NESSR_GNRR        0
-#> 3 ERR1549755 CFM        0.064   NA    S          B_NESSR_GNRR        0
-#> 4 ERR1549755 CRO        0.032   NA    S          B_NESSR_GNRR        0
-#> 5 ERR1549756 AZM        0.250   WT    NA         B_NESSR_GNRR        0
-#> 6 ERR1549756 CIP        0.008   WT    S          B_NESSR_GNRR        0
+#>   id         drug   mic ecoff pheno_eucast spp_pheno    NWT_pred
+#>   <chr>      <ab> <mic> <sir> <sir>        <mo>            <int>
+#> 1 ERR1549755 AZM  0.190   WT    NA         B_NESSR_GNRR        0
+#> 2 ERR1549755 CIP  8.000  NWT    R          B_NESSR_GNRR        0
+#> 3 ERR1549755 CFM  0.064   NA    S          B_NESSR_GNRR        0
+#> 4 ERR1549755 CRO  0.032   NA    S          B_NESSR_GNRR        0
+#> 5 ERR1549756 AZM  0.250   WT    NA         B_NESSR_GNRR        0
+#> 6 ERR1549756 CIP  0.008   WT    S          B_NESSR_GNRR        0
 
 assay_by_var(
   pheno_table = eurogasp_azm_pred,
-  antibiotic = "Azithromycin",
+  pheno_drug = "Azithromycin",
   measure = "mic",
   colour_by = "NWT_pred",
   species = "Neisseria gonorrhoeae",
@@ -583,8 +580,8 @@ generate upset plots:
 cip_bin <- get_binary_matrix(
   geno_table = eurogasp_geno,
   pheno_table = eurogasp_ast,
-  antibiotic = "Ciprofloxacin",
-  drug_class_list = "Quinolones",
+  pheno_drug = "Ciprofloxacin",
+  geno_class = "Quinolones",
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -597,7 +594,7 @@ cip_upset <- amr_upset(
   min_set_size = 1,
   order = "value",
   assay = "mic",
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   species = "Neisseria gonorrhoeae"
 )
 #> Removing 336 rows with no phenotype call
@@ -618,7 +615,7 @@ Only four markers appear in isolation; evaluate their solo PPVs:
 ``` r
 cip_solo_ppv <- solo_ppv_analysis(
   binary_matrix = cip_bin,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   reverse_order = FALSE
 )
 ```
@@ -632,7 +629,7 @@ cip_ppv <- ppv(
   binary_matrix = cip_bin,
   order = "value",
   min_set_size = 2,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   upset_grid = TRUE,
   plot_assay = TRUE,
   assay = "mic"
@@ -650,7 +647,7 @@ marker:
 ``` r
 cip_logist <- amr_logistic(
   binary_matrix = cip_bin,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   sir_col = "pheno_eucast",
   ecoff_col = "ecoff",
   maf = 10,
@@ -747,14 +744,14 @@ eurogasp_cip_pred <- eurogasp_ast %>%
 
 head(eurogasp_cip_pred)
 #> # A tibble: 6 × 8
-#>   id         drug_agent   mic ecoff pheno_eucast spp_pheno    R_pred NWT_pred
-#>   <chr>      <ab>       <mic> <sir> <sir>        <mo>          <int>    <int>
-#> 1 ERR1549755 AZM        0.190   WT    NA         B_NESSR_GNRR      1        1
-#> 2 ERR1549755 CIP        8.000  NWT    R          B_NESSR_GNRR      1        1
-#> 3 ERR1549755 CFM        0.064   NA    S          B_NESSR_GNRR      1        1
-#> 4 ERR1549755 CRO        0.032   NA    S          B_NESSR_GNRR      1        1
-#> 5 ERR1549756 AZM        0.250   WT    NA         B_NESSR_GNRR      0        0
-#> 6 ERR1549756 CIP        0.008   WT    S          B_NESSR_GNRR      0        0
+#>   id         drug   mic ecoff pheno_eucast spp_pheno    R_pred NWT_pred
+#>   <chr>      <ab> <mic> <sir> <sir>        <mo>          <int>    <int>
+#> 1 ERR1549755 AZM  0.190   WT    NA         B_NESSR_GNRR      1        1
+#> 2 ERR1549755 CIP  8.000  NWT    R          B_NESSR_GNRR      1        1
+#> 3 ERR1549755 CFM  0.064   NA    S          B_NESSR_GNRR      1        1
+#> 4 ERR1549755 CRO  0.032   NA    S          B_NESSR_GNRR      1        1
+#> 5 ERR1549756 AZM  0.250   WT    NA         B_NESSR_GNRR      0        0
+#> 6 ERR1549756 CIP  0.008   WT    S          B_NESSR_GNRR      0        0
 ```
 
 Visualise the distribution of ciprofloxacin MICs by the R/NWT
@@ -763,7 +760,7 @@ predictions:
 ``` r
 assay_by_var(
   pheno_table = eurogasp_cip_pred,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   measure = "mic",
   colour_by = "R_pred",
   species = "Neisseria gonorrhoeae",
@@ -774,7 +771,7 @@ assay_by_var(
 
 assay_by_var(
   pheno_table = eurogasp_cip_pred,
-  antibiotic = "Ciprofloxacin",
+  pheno_drug = "Ciprofloxacin",
   measure = "mic",
   colour_by = "NWT_pred",
   species = "Neisseria gonorrhoeae",
@@ -803,8 +800,8 @@ Build binary matrices for each antibiotic:
 cfm_bin <- get_binary_matrix(
   geno_table = eurogasp_geno,
   pheno_table = eurogasp_ast,
-  antibiotic = "Cefixime",
-  drug_class_list = "Cephalosporins (3rd gen.)",
+  pheno_drug = "Cefixime",
+  geno_class = "Cephalosporins (3rd gen.)",
   sir_col = "pheno_eucast",
   ecoff_col = "ecoff",
   keep_assay_values = TRUE,
@@ -815,8 +812,8 @@ cfm_bin <- get_binary_matrix(
 cro_bin <- get_binary_matrix(
   geno_table = eurogasp_geno,
   pheno_table = eurogasp_ast,
-  antibiotic = "Ceftriaxone",
-  drug_class_list = "Cephalosporins (3rd gen.)",
+  pheno_drug = "Ceftriaxone",
+  geno_class = "Cephalosporins (3rd gen.)",
   sir_col = "pheno_eucast",
   ecoff_col = "ecoff",
   keep_assay_values = TRUE,
@@ -833,7 +830,7 @@ cfm_upset <- amr_upset(
   min_set_size = 1,
   order = "value",
   assay = "mic",
-  antibiotic = "Cefixime",
+  pheno_drug = "Cefixime",
   species = "Neisseria gonorrhoeae"
 )
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
@@ -849,7 +846,7 @@ cro_upset <- amr_upset(
   min_set_size = 1,
   order = "value",
   assay = "mic",
-  antibiotic = "Ceftriaxone",
+  pheno_drug = "Ceftriaxone",
   species = "Neisseria gonorrhoeae"
 )
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
@@ -873,8 +870,8 @@ case:
 ``` r
 cfm_solo_ppv <- solo_ppv_analysis(
   binary_matrix = cfm_bin,
-  antibiotic = "Cefixime",
-  drug_class_list = "Cephalosporins (3rd gen.)",
+  pheno_drug = "Cefixime",
+  geno_class = "Cephalosporins (3rd gen.)",
   sir_col = "pheno_eucast"
 )
 ```
@@ -885,8 +882,8 @@ cfm_solo_ppv <- solo_ppv_analysis(
 
 cro_solo_ppv <- solo_ppv_analysis(
   binary_matrix = cro_bin,
-  antibiotic = "Ceftriaxone",
-  drug_class_list = "Cephalosporins (3rd gen.)",
+  pheno_drug = "Ceftriaxone",
+  geno_class = "Cephalosporins (3rd gen.)",
   sir_col = "pheno_eucast"
 )
 ```
@@ -980,22 +977,21 @@ ngono_cro_geno <- import_amrfp(ngono_cro_geno_raw, "Name")
 ngono_cro_pheno <- ngono_cro_pheno_raw %>%
   pivot_longer(
     cols = c(Ceftriaxone),
-    names_to = "antibiotic",
+    names_to = "drug",
     values_to = "mic"
   )
 
-ngono_cro_ast <- format_ast(
+ngono_cro_ast <- format_pheno(
   input = ngono_cro_pheno,
   sample_col = "id",
   species = "Neisseria gonorrhoeae",
-  ab_col = "antibiotic",
+  ab_col = "drug",
   mic_col = "mic",
   interpret_eucast = TRUE
 )
 #> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae
 #> Parsing column spp_pheno as micro-organism (class 'mo')
-#> Parsing column antibiotic as antibiotic (class 'ab')
-#> Renaming column antibiotic to standard name 'drug_agent'
+#> Parsing column drug as antibiotic (class 'ab')
 #> Parsing column mic as class 'mic'
 #> Could not find disk_col disk in input table
 #> Could not find pheno_col ecoff in input table
@@ -1024,8 +1020,8 @@ Build the binary matrix and generate upset plots:
 cro_bin_2 <- get_binary_matrix(
   geno_table = ngono_cro_geno,
   pheno_table = ngono_cro_ast,
-  antibiotic = "Ceftriaxone",
-  drug_class_list = "Cephalosporins (3rd gen.)",
+  pheno_drug = "Ceftriaxone",
+  geno_class = "Cephalosporins (3rd gen.)",
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -1038,7 +1034,7 @@ cro_upset_2 <- amr_upset(
   min_set_size = 1,
   order = "value",
   assay = "mic",
-  antibiotic = "Ceftriaxone",
+  pheno_drug = "Ceftriaxone",
   species = "Neisseria gonorrhoeae"
 )
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
@@ -1069,7 +1065,7 @@ Run logistic regression to evaluate individual marker contributions:
 ``` r
 cro_logist <- amr_logistic(
   binary_matrix = cro_bin_2,
-  antibiotic = "Ceftriaxone",
+  pheno_drug = "Ceftriaxone",
   sir_col = "pheno_eucast",
   ecoff_col = "ecoff",
   fit_glm = TRUE,
@@ -1118,23 +1114,22 @@ Import and format phenotype data:
 ngono_tet_pheno <- ngono_tet_pheno_raw %>%
   pivot_longer(
     cols = c(Tetracycline),
-    names_to = "antibiotic",
+    names_to = "drug",
     values_to = "mic"
   )
 
-ngono_tet_ast <- format_ast(
+ngono_tet_ast <- format_pheno(
   input = ngono_tet_pheno,
   sample_col = "id",
   species = "Neisseria gonorrhoeae",
-  ab_col = "antibiotic",
+  ab_col = "drug",
   mic_col = "mic",
   interpret_eucast = TRUE,
   interpret_ecoff = TRUE
 )
 #> Adding new micro-organism column 'spp_pheno' (class 'mo') with constant value Neisseria gonorrhoeae
 #> Parsing column spp_pheno as micro-organism (class 'mo')
-#> Parsing column antibiotic as antibiotic (class 'ab')
-#> Renaming column antibiotic to standard name 'drug_agent'
+#> Parsing column drug as antibiotic (class 'ab')
 #> Parsing column mic as class 'mic'
 #> Could not find disk_col disk in input table
 #> Could not find pheno_col ecoff in input table
@@ -1162,7 +1157,7 @@ ngono_tet_geno <- import_amrfp(
 negative_samples <- ngono_tet_ast %>%
   anti_join(ngono_tet_geno) %>%
   pull(id)
-#> Joining with `by = join_by(id, drug_agent)`
+#> Joining with `by = join_by(id, drug)`
 
 ngono_tet_geno <- ngono_tet_geno %>% bind_rows(tibble(id = negative_samples))
 ```
@@ -1173,8 +1168,8 @@ Build the binary matrix and generate upset plots:
 tet_bin <- get_binary_matrix(
   geno_table = ngono_tet_geno,
   pheno_table = ngono_tet_ast,
-  antibiotic = "Tetracycline",
-  drug_class_list = "Tetracyclines",
+  pheno_drug = "Tetracycline",
+  geno_class = "Tetracyclines",
   ecoff_col = "ecoff",
   sir_col = "pheno_eucast",
   keep_assay_values = TRUE,
@@ -1291,8 +1286,8 @@ Run logistic regression to confirm the independent contributions of
 ``` r
 tet_logist <- amr_logistic(
   binary_matrix = tet_bin,
-  antibiotic = "Tetracycline",
-  drug_class_list = "Tetracyclines",
+  pheno_drug = "Tetracycline",
+  geno_class = "Tetracyclines",
   sir_col = "pheno_eucast",
   ecoff_col = "ecoff",
   maf = 10,
@@ -1362,7 +1357,7 @@ ngono_tet_pred <- ngono_tet_ast %>%
 
 assay_by_var(
   pheno_table = ngono_tet_pred,
-  antibiotic = "Tetracycline",
+  pheno_drug = "Tetracycline",
   measure = "mic",
   colour_by = "R_pred",
   species = "Neisseria gonorrhoeae",

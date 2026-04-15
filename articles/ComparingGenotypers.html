@@ -117,13 +117,12 @@ is available in the AMRgen package as <code>kp_mero_euscape</code>.</p>
 <code class="sourceCode R"><span><span class="co"># Download Klebsiella pneumoniae AST data from EBI, filtering for meropenem and re-interpret with EUCAST breakpoints and ECOFF</span></span>
 <span></span>
 <span><span class="va">kp_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ebi.html">download_ebi</a></span><span class="op">(</span></span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"meropenem"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"meropenem"</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
 <span>  reformat <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  interpret_eucast <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  interpret_ecoff <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/2025-12/phenotype.parquet"</span></span>
 <span></span>
 <span><span class="co"># Filter for isolates in EuSCAPE paper (PMID: 31358985)</span></span>
 <span><span class="va">kp_mero_euscape</span> <span class="op">&lt;-</span> <span class="va">kp_mero</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"31358985"</span>, <span class="va">source</span><span class="op">)</span><span class="op">)</span></span>
@@ -139,21 +138,21 @@ is available in the AMRgen package as <code>kp_mero_euscape</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">kp_mero_euscape</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 43</span></span></span>
-<span><span class="co">#&gt;   id          drug_agent   mic  disk pheno_provided pheno_eucast ecoff guideline</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMEA37298… MEM         2<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMEA37298… MEM         4<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #AFFFD7;">  I  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMEA37298… MEM         0.12    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #5FD7AF;">  WT </span> <span style="color: #BB0000;">NA</span>       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMEA37298… MEM         1<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMEA37298… MEM         4<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #AFFFD7;">  I  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMEA37298… MEM         8<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #AFFFD7;">  I  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>       </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 35 more variables: method &lt;chr&gt;, platform &lt;chr&gt;, source &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   spp_pheno &lt;mo&gt;, SRA_accession &lt;chr&gt;, assembly_ID &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   collection_year &lt;int&gt;, ISO_country_code &lt;chr&gt;, host &lt;chr&gt;, host_age &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   host_sex &lt;chr&gt;, isolate &lt;chr&gt;, isolation_source &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   isolation_source_category &lt;chr&gt;, isolation_latitude &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   isolation_longitude &lt;chr&gt;, genus &lt;chr&gt;, organism &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Updated_phenotype_CLSI &lt;chr&gt;, Updated_phenotype_EUCAST &lt;chr&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt;   id        drug   mic  disk pheno_provided pheno_eucast ecoff guideline method </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;mic&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dsk&gt;</span> <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;sir&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMEA372… MEM   2<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>        broth …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMEA372… MEM   4<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #AFFFD7;">  I  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>        broth …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMEA372… MEM   0.12    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #5FD7AF;">  WT </span> <span style="color: #BB0000;">NA</span>        broth …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMEA372… MEM   1<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #5FD7AF;">  S  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>        broth …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMEA372… MEM   4<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #AFFFD7;">  I  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>        broth …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMEA372… MEM   8<span style="color: #949494;">.00</span>    <span style="color: #BB0000;">NA</span> <span style="color: #949494;">  NA</span>           <span style="color: #080808; background-color: #AFFFD7;">  I  </span>        <span style="color: #080808; background-color: #FF5F5F;"> NWT </span> <span style="color: #BB0000;">NA</span>        broth …</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 34 more variables: platform &lt;chr&gt;, source &lt;chr&gt;, spp_pheno &lt;mo&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   SRA_accession &lt;chr&gt;, assembly_ID &lt;chr&gt;, collection_year &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ISO_country_code &lt;chr&gt;, host &lt;chr&gt;, host_age &lt;chr&gt;, host_sex &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   isolate &lt;chr&gt;, isolation_source &lt;chr&gt;, isolation_source_category &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   isolation_latitude &lt;chr&gt;, isolation_longitude &lt;chr&gt;, genus &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   organism &lt;chr&gt;, Updated_phenotype_CLSI &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Updated_phenotype_EUCAST &lt;chr&gt;, used_ECOFF &lt;chr&gt;, database &lt;chr&gt;, …</span></span></span></code></pre></div>
 <div class="section level3">
 <h3 id="phenotype-data-summary">Phenotype Data Summary<a class="anchor" aria-label="anchor" href="#phenotype-data-summary"></a>
 </h3>
@@ -165,46 +164,46 @@ ECOFF.</p>
 <span><span class="fu"><a href="../reference/summarise_pheno.html">summarise_pheno</a></span><span class="op">(</span><span class="va">kp_mero_euscape</span>, pheno_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pheno_eucast"</span>, <span class="st">"ecoff"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $uniques</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 2</span></span></span>
-<span><span class="co">#&gt;   column     n_unique</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> id             <span style="text-decoration: underline;">1</span>490</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> drug_agent        1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> spp_pheno         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> method            1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> platform          1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> guideline         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> source            2</span></span>
+<span><span class="co">#&gt;   column    n_unique</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> id            <span style="text-decoration: underline;">1</span>490</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> drug             1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> spp_pheno        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> method           1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> platform         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> guideline        1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> source           2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $drugs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   drug_agent drug_name spp_pheno               mic</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM        Meropenem Klebsiella pneumoniae  <span style="text-decoration: underline;">1</span>490</span></span>
+<span><span class="co">#&gt;   drug drug_name spp_pheno               mic</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM  Meropenem Klebsiella pneumoniae  <span style="text-decoration: underline;">1</span>490</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $details</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 8</span></span></span>
-<span><span class="co">#&gt;   drug_agent drug_name spp_pheno          method platform guideline source   mic</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM        Meropenem Klebsiella pneumo… broth… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        31358…   628</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> MEM        Meropenem Klebsiella pneumo… broth… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        31358…   862</span></span>
+<span><span class="co">#&gt;   drug drug_name spp_pheno             method    platform guideline source   mic</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM  Meropenem Klebsiella pneumoniae broth di… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        31358…   628</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> MEM  Meropenem Klebsiella pneumoniae broth di… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        31358…   862</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $pheno_counts_list</span></span>
 <span><span class="co">#&gt; $pheno_counts_list$pheno_eucast</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
-<span><span class="co">#&gt;   drug_agent drug_name spp_pheno                 S     I     R</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM        Meropenem Klebsiella pneumoniae   973   126   391</span></span>
+<span><span class="co">#&gt;   drug drug_name spp_pheno                 S     I     R</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM  Meropenem Klebsiella pneumoniae   973   126   391</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $pheno_counts_list$ecoff</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 5</span></span></span>
-<span><span class="co">#&gt;   drug_agent drug_name spp_pheno                WT   NWT</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM        Meropenem Klebsiella pneumoniae   710   780</span></span>
+<span><span class="co">#&gt;   drug drug_name spp_pheno                WT   NWT</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM  Meropenem Klebsiella pneumoniae   710   780</span></span>
 <span></span>
 <span><span class="co"># MIC distribution coloured by phenotype interpretation using EUCAST breakpoint</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
 <span>  pheno_table <span class="op">=</span> <span class="va">kp_mero_euscape</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
 <span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  colour_by <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span></span>
@@ -225,7 +224,7 @@ ECOFF.</p>
 <span><span class="co"># MIC distribution coloured by ECOFF</span></span>
 <span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
 <span>  pheno_table <span class="op">=</span> <span class="va">kp_mero_euscape</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
 <span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  colour_by <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span></span>
@@ -307,52 +306,52 @@ content:</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> id                 <span style="text-decoration: underline;">1</span>490</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> marker              470</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug_agent            1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug                  1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> drug_class           13</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> gene                293</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> variation type        4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $per_type</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
-<span><span class="co">#&gt;   `variation type`                  id marker drug_agent drug_class  gene</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Gene presence detected          <span style="text-decoration: underline;">1</span>490    288          1         13   288</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Inactivating mutation detected   569    167          1          2     3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Nucleotide variant detected       15      1          1          1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Protein variant detected         874     14          1          2     3</span></span>
+<span><span class="co">#&gt;   `variation type`                  id marker  drug drug_class  gene</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Gene presence detected          <span style="text-decoration: underline;">1</span>490    288     1         13   288</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Inactivating mutation detected   569    167     1          2     3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Nucleotide variant detected       15      1     1          1     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Protein variant detected         874     14     1          2     3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $drugs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 13 × 5</span></span></span>
-<span><span class="co">#&gt;    drug_agent drug_class                markers samples  hits</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> <span style="color: #BB0000;">NA</span>         Aminoglycosides                68    <span style="text-decoration: underline;">1</span>060  <span style="text-decoration: underline;">2</span>709</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> <span style="color: #BB0000;">NA</span>         Beta-lactams                   76    <span style="text-decoration: underline;">1</span>457  <span style="text-decoration: underline;">2</span>833</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> <span style="color: #BB0000;">NA</span>         Carbapenems                   153     770  <span style="text-decoration: underline;">1</span>477</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.)      18     648   668</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> <span style="color: #BB0000;">NA</span>         Macrolides                     15     460   924</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> <span style="color: #BB0000;">NA</span>         Phenicols                      16     479   572</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> <span style="color: #BB0000;">NA</span>         Phosphonics                    17    <span style="text-decoration: underline;">1</span>485  <span style="text-decoration: underline;">1</span>490</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> <span style="color: #BB0000;">NA</span>         Polymyxins                     33     138   138</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> <span style="color: #BB0000;">NA</span>         Quinolones                     26    <span style="text-decoration: underline;">1</span>021  <span style="text-decoration: underline;">2</span>665</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> <span style="color: #BB0000;">NA</span>         Rifamycins                      3     119   128</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> <span style="color: #BB0000;">NA</span>         Sulfonamides                   13     917  <span style="text-decoration: underline;">1</span>096</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> <span style="color: #BB0000;">NA</span>         Tetracyclines                  12     514   554</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> <span style="color: #BB0000;">NA</span>         Trimethoprims                  21     941  <span style="text-decoration: underline;">1</span>110</span></span>
+<span><span class="co">#&gt;    drug  drug_class                markers samples  hits</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> <span style="color: #BB0000;">NA</span>    Aminoglycosides                68    <span style="text-decoration: underline;">1</span>060  <span style="text-decoration: underline;">2</span>709</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> <span style="color: #BB0000;">NA</span>    Beta-lactams                   76    <span style="text-decoration: underline;">1</span>457  <span style="text-decoration: underline;">2</span>833</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> <span style="color: #BB0000;">NA</span>    Carbapenems                   153     770  <span style="text-decoration: underline;">1</span>477</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.)      18     648   668</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> <span style="color: #BB0000;">NA</span>    Macrolides                     15     460   924</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> <span style="color: #BB0000;">NA</span>    Phenicols                      16     479   572</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> <span style="color: #BB0000;">NA</span>    Phosphonics                    17    <span style="text-decoration: underline;">1</span>485  <span style="text-decoration: underline;">1</span>490</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> <span style="color: #BB0000;">NA</span>    Polymyxins                     33     138   138</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> <span style="color: #BB0000;">NA</span>    Quinolones                     26    <span style="text-decoration: underline;">1</span>021  <span style="text-decoration: underline;">2</span>665</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> <span style="color: #BB0000;">NA</span>    Rifamycins                      3     119   128</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> <span style="color: #BB0000;">NA</span>    Sulfonamides                   13     917  <span style="text-decoration: underline;">1</span>096</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> <span style="color: #BB0000;">NA</span>    Tetracyclines                  12     514   554</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> <span style="color: #BB0000;">NA</span>    Trimethoprims                  21     941  <span style="text-decoration: underline;">1</span>110</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $markers</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 471 × 5</span></span></span>
-<span><span class="co">#&gt;    marker   drug_agent drug_class                `variation type`           n</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ACC-4.v1 <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detected     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CMY-13   <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detected     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CMY-16   <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detected    31</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> CMY-2.v2 <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detected     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CMY-30   <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.) Gene presence detected     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CMY-4.v1 <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detected     5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> CMY-6    <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detected     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> CTX-M-1  <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.) Gene presence detected     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> CTX-M-14 <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.) Gene presence detected    16</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> CTX-M-15 <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.) Gene presence detected   568</span></span>
+<span><span class="co">#&gt;    marker   drug  drug_class                `variation type`           n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ACC-4.v1 <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CMY-13   <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CMY-16   <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected    31</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> CMY-2.v2 <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CMY-30   <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.) Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CMY-4.v1 <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> CMY-6    <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> CTX-M-1  <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.) Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> CTX-M-14 <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.) Gene presence detected    16</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> CTX-M-15 <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.) Gene presence detected   568</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 461 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -370,46 +369,46 @@ level.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $drugs_with_pheno</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
-<span><span class="co">#&gt;   drug_agent     n drug_class   drug_name spp_pheno               mic</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM         <span style="text-decoration: underline;">1</span>490 Carbapenems  Meropenem Klebsiella pneumoniae  <span style="text-decoration: underline;">1</span>490</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> MEM         <span style="text-decoration: underline;">1</span>490 Beta-lactams Meropenem Klebsiella pneumoniae  <span style="text-decoration: underline;">1</span>490</span></span>
+<span><span class="co">#&gt;   drug     n drug_class   drug_name spp_pheno               mic</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM   <span style="text-decoration: underline;">1</span>490 Carbapenems  Meropenem Klebsiella pneumoniae  <span style="text-decoration: underline;">1</span>490</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> MEM   <span style="text-decoration: underline;">1</span>490 Beta-lactams Meropenem Klebsiella pneumoniae  <span style="text-decoration: underline;">1</span>490</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $geno_hits</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
-<span><span class="co">#&gt;   drug_agent drug_name drug_class   markers samples  hits</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Beta-lactams      76    <span style="text-decoration: underline;">1</span>457  <span style="text-decoration: underline;">2</span>833</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Carbapenems      153     770  <span style="text-decoration: underline;">1</span>477</span></span>
+<span><span class="co">#&gt;   drug  drug_name drug_class   markers samples  hits</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Beta-lactams      76    <span style="text-decoration: underline;">1</span>457  <span style="text-decoration: underline;">2</span>833</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Carbapenems      153     770  <span style="text-decoration: underline;">1</span>477</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $geno_markers</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 229 × 6</span></span></span>
-<span><span class="co">#&gt;    marker   drug_agent drug_name drug_class   `variation type`           n</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ACC-4.v1 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CMY-13   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CMY-16   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected    31</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> CMY-2.v2 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CMY-4.v1 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CMY-6    <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> CTX-M-33 <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Carbapenems  Gene presence detected     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> DHA-1    <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected    78</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> IMP-1    <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Carbapenems  Gene presence detected     3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> KPC-12   <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>        Carbapenems  Gene presence detected     1</span></span>
+<span><span class="co">#&gt;    marker   drug  drug_name drug_class   `variation type`           n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ACC-4.v1 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CMY-13   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CMY-16   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected    31</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> CMY-2.v2 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CMY-4.v1 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CMY-6    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> CTX-M-33 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Carbapenems  Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> DHA-1    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Beta-lactams Gene presence detected    78</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> IMP-1    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Carbapenems  Gene presence detected     3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> KPC-12   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        Carbapenems  Gene presence detected     1</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 219 more rows</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $pheno_counts_list</span></span>
 <span><span class="co">#&gt; $pheno_counts_list$ecoff</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 5</span></span></span>
-<span><span class="co">#&gt;   drug_agent drug_name spp_pheno                WT   NWT</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM        Meropenem Klebsiella pneumoniae   710   780</span></span>
+<span><span class="co">#&gt;   drug drug_name spp_pheno                WT   NWT</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM  Meropenem Klebsiella pneumoniae   710   780</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $pheno_counts_list$pheno_eucast</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
-<span><span class="co">#&gt;   drug_agent drug_name spp_pheno                 S     I     R</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM        Meropenem Klebsiella pneumoniae   973   126   391</span></span></code></pre></div>
+<span><span class="co">#&gt;   drug drug_name spp_pheno                 S     I     R</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> MEM  Meropenem Klebsiella pneumoniae   973   126   391</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -428,8 +427,8 @@ marker in that sample. This is produced using the
 <code class="sourceCode R"><span><span class="va">kleborate_binary_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  geno_table <span class="op">=</span> <span class="va">kleborate_dev</span>,</span>
 <span>  pheno_table <span class="op">=</span> <span class="va">kp_mero_euscape</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Carbapenems"</span><span class="op">)</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
+<span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Carbapenems"</span><span class="op">)</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span>,</span>
@@ -506,7 +505,7 @@ range) where relevant.</p>
 <span>  binary_matrix <span class="op">=</span> <span class="va">kleborate_binary_matrix</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
 <span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
@@ -1030,52 +1029,52 @@ Let’s import it and summarise its contents:</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> id                 <span style="text-decoration: underline;">1</span>489</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> marker.label        263</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug_agent            1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug                  1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> drug_class           13</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> gene                263</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> variation type        4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $per_type</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
-<span><span class="co">#&gt;   `variation type`                  id marker.label drug_agent drug_class  gene</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Gene presence detected          <span style="text-decoration: underline;">1</span>489          246          1         13   246</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Inactivating mutation detected   568            3          1          2     3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Nucleotide variant detected       15            1          1          1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Protein variant detected         874           13          1          2    13</span></span>
+<span><span class="co">#&gt;   `variation type`                  id marker.label  drug drug_class  gene</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Gene presence detected          <span style="text-decoration: underline;">1</span>489          246     1         13   246</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Inactivating mutation detected   568            3     1          2     3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Nucleotide variant detected       15            1     1          1     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Protein variant detected         874           13     1          2    13</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $drugs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 13 × 5</span></span></span>
-<span><span class="co">#&gt;    drug_agent drug_class                markers samples  hits</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> <span style="color: #BB0000;">NA</span>         Aminoglycosides                59    <span style="text-decoration: underline;">1</span>057  <span style="text-decoration: underline;">3</span>140</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> <span style="color: #BB0000;">NA</span>         Beta-lactams                   76    <span style="text-decoration: underline;">1</span>457  <span style="text-decoration: underline;">2</span>833</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> <span style="color: #BB0000;">NA</span>         Carbapenems                    17     766  <span style="text-decoration: underline;">1</span>459</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.)      18     648   668</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> <span style="color: #BB0000;">NA</span>         Macrolides                     14     460   923</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> <span style="color: #BB0000;">NA</span>         Phenicols                      12     469   558</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> <span style="color: #BB0000;">NA</span>         Phosphonics                     1       3     3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> <span style="color: #BB0000;">NA</span>         Polymyxins                      3     138   138</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> <span style="color: #BB0000;">NA</span>         Quinolones                     25    <span style="text-decoration: underline;">1</span>020  <span style="text-decoration: underline;">2</span>422</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> <span style="color: #BB0000;">NA</span>         Rifamycins                      2     114   114</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> <span style="color: #BB0000;">NA</span>         Sulfonamides                    9     913  <span style="text-decoration: underline;">1</span>090</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> <span style="color: #BB0000;">NA</span>         Tetracyclines                   9     503   541</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> <span style="color: #BB0000;">NA</span>         Trimethoprims                  18     886  <span style="text-decoration: underline;">1</span>017</span></span>
+<span><span class="co">#&gt;    drug  drug_class                markers samples  hits</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> <span style="color: #BB0000;">NA</span>    Aminoglycosides                59    <span style="text-decoration: underline;">1</span>057  <span style="text-decoration: underline;">3</span>140</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> <span style="color: #BB0000;">NA</span>    Beta-lactams                   76    <span style="text-decoration: underline;">1</span>457  <span style="text-decoration: underline;">2</span>833</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> <span style="color: #BB0000;">NA</span>    Carbapenems                    17     766  <span style="text-decoration: underline;">1</span>459</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.)      18     648   668</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> <span style="color: #BB0000;">NA</span>    Macrolides                     14     460   923</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> <span style="color: #BB0000;">NA</span>    Phenicols                      12     469   558</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> <span style="color: #BB0000;">NA</span>    Phosphonics                     1       3     3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> <span style="color: #BB0000;">NA</span>    Polymyxins                      3     138   138</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> <span style="color: #BB0000;">NA</span>    Quinolones                     25    <span style="text-decoration: underline;">1</span>020  <span style="text-decoration: underline;">2</span>422</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> <span style="color: #BB0000;">NA</span>    Rifamycins                      2     114   114</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> <span style="color: #BB0000;">NA</span>    Sulfonamides                    9     913  <span style="text-decoration: underline;">1</span>090</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> <span style="color: #BB0000;">NA</span>    Tetracyclines                   9     503   541</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> <span style="color: #BB0000;">NA</span>    Trimethoprims                  18     886  <span style="text-decoration: underline;">1</span>017</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $markers</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 263 × 5</span></span></span>
-<span><span class="co">#&gt;    marker.label drug_agent drug_class                `variation type`          n</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ACC-4        <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detect…     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CMY-13       <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detect…     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CMY-16       <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detect…    31</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> CMY-2.v2     <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detect…     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CMY-30       <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.) Gene presence detect…     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CMY-4.v1     <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detect…     5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> CMY-6        <span style="color: #BB0000;">NA</span>         Beta-lactams              Gene presence detect…     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> CTX-M-1      <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.) Gene presence detect…     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> CTX-M-14     <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.) Gene presence detect…    16</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> CTX-M-15     <span style="color: #BB0000;">NA</span>         Cephalosporins (3rd gen.) Gene presence detect…   568</span></span>
+<span><span class="co">#&gt;    marker.label drug  drug_class                `variation type`           n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> ACC-4        <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CMY-13       <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CMY-16       <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected    31</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> CMY-2.v2     <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CMY-30       <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.) Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CMY-4.v1     <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> CMY-6        <span style="color: #BB0000;">NA</span>    Beta-lactams              Gene presence detected     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> CTX-M-1      <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.) Gene presence detected     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> CTX-M-14     <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.) Gene presence detected    16</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> CTX-M-15     <span style="color: #BB0000;">NA</span>    Cephalosporins (3rd gen.) Gene presence detected   568</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 253 more rows</span></span></span></code></pre></div>
 </div>
 </div>
@@ -1227,49 +1226,57 @@ identifies.</p>
 <span><span class="co"># Summary of carbapenem resistance determinants</span></span>
 <span><span class="fu"><a href="../reference/summarise_geno.html">summarise_geno</a></span><span class="op">(</span><span class="va">kp_mero_amrfp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $uniques</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
 <span><span class="co">#&gt;   column     n_unique</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> id             <span style="text-decoration: underline;">1</span>490</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> marker          237</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug_agent       24</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> drug_class       20</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> gene            218</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug_class       20</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gene            218</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $per_type</span></span>
 <span><span class="co">#&gt; NULL</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $drugs</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 35 × 6</span></span></span>
-<span><span class="co">#&gt;    drug_agent drug_name       drug_class      markers samples  hits</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> AMK        Amikacin        Aminoglycosides       8     375  <span style="text-decoration: underline;">1</span>200</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> APR        Apramycin       Aminoglycosides       1       5    15</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> AZM        Azithromycin    Macrolides            3     467  <span style="text-decoration: underline;">1</span>812</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> BLM        Bleomycin       Glycopeptides         1      49    49</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CHL        Chloramphenicol Phenicols            10     601   805</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CLI        Clindamycin     Lincosamides          1       1     3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> COL        Colistin        Polymyxins           12      40    40</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ERY        Erythromycin    Macrolides            6     479  <span style="text-decoration: underline;">1</span>917</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> FDC        Cefiderocol     Cephalosporins        1      23    48</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> FLR        Florfenicol     Phenicols             1      54   108</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 25 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 4</span></span></span>
+<span><span class="co">#&gt;    drug_class                markers samples     n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Aminoglycosides                35    <span style="text-decoration: underline;">1</span>020  <span style="text-decoration: underline;">6</span>046</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Beta-lactams                   45    <span style="text-decoration: underline;">1</span>424  <span style="text-decoration: underline;">2</span>353</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Carbapenems                    16     669   956</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Cephalosporins                  1      23    48</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Cephalosporins (3rd gen.)      36     788  <span style="text-decoration: underline;">1</span>479</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Efflux                          1    <span style="text-decoration: underline;">1</span>483  <span style="text-decoration: underline;">1</span>483</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Glycopeptides                   1      49    49</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Lincosamides                    3       3     5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Macrolides                      7     479  <span style="text-decoration: underline;">6</span>818</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Other                           1       2     4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Penicillins                     1       4    16</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Phenicols                      25    <span style="text-decoration: underline;">1</span>458  <span style="text-decoration: underline;">3</span>802</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> Phosphonics                     5    <span style="text-decoration: underline;">1</span>488  <span style="text-decoration: underline;">1</span>491</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> Polymyxins                     12      40    40</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> Quinolones                     40    <span style="text-decoration: underline;">1</span>468  <span style="text-decoration: underline;">4</span>959</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> Rifamycins                      3     110   119</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> Streptogramins                  2      83   249</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> Sulfonamides                    3     931  <span style="text-decoration: underline;">1</span>206</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> Tetracyclines                  12     605   699</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> Trimethoprims                  12     539   563</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $markers</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 290 × 5</span></span></span>
-<span><span class="co">#&gt;    marker      drug_agent drug_name  drug_class          n</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> aac(3)-IId  GEN        Gentamicin Aminoglycosides   122</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> aac(3)-IIe  GEN        Gentamicin Aminoglycosides   379</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> aac(3)-IIg  GEN        Gentamicin Aminoglycosides    14</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> aac(3)-IVa  APR        Apramycin  Aminoglycosides    15</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> aac(3)-IVa  GEN        Gentamicin Aminoglycosides    15</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> aac(3)-IVa  TOB        Tobramycin Aminoglycosides    15</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> aac(3)-Ia   GEN        Gentamicin Aminoglycosides     5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> aac(3)-VIa  GEN        Gentamicin Aminoglycosides     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> aac(6')-IIc GEN        Gentamicin Aminoglycosides    63</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> aac(6')-IIc KAN        Kanamycin  Aminoglycosides    63</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 280 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 261 × 3</span></span></span>
+<span><span class="co">#&gt;    marker        drug_class          n</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> aac(3)-IId    Aminoglycosides   122</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> aac(3)-IIe    Aminoglycosides   379</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> aac(3)-IIg    Aminoglycosides    14</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> aac(3)-IVa    Aminoglycosides    45</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> aac(3)-Ia     Aminoglycosides     5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> aac(3)-VIa    Aminoglycosides     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> aac(6')-IIc   Aminoglycosides   189</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> aac(6')-Ib    Aminoglycosides  <span style="text-decoration: underline;">3</span>100</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> aac(6')-Ib'   Aminoglycosides    11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> aac(6')-Ib-cr Aminoglycosides    24</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 251 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="compare-amrfinderplus-to-kleborate-genotype-results">Compare AMRFinderPlus to Kleborate genotype results<a class="anchor" aria-label="anchor" href="#compare-amrfinderplus-to-kleborate-genotype-results"></a>
@@ -1603,21 +1610,21 @@ package provides CARD RGI calls for the EuSCAPE genomes:</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> id                 <span style="text-decoration: underline;">1</span>490</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> marker              252</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug_agent          109</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> drug                109</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> drug_class           30</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> variation type        3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $per_type</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 5</span></span></span>
-<span><span class="co">#&gt;   `variation type`            id marker drug_agent drug_class</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Gene presence detected    <span style="text-decoration: underline;">1</span>430    233         98         29</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Protein variant detected  <span style="text-decoration: underline;">1</span>445     18         37         13</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>                          45      1          1          1</span></span>
+<span><span class="co">#&gt;   `variation type`            id marker  drug drug_class</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Gene presence detected    <span style="text-decoration: underline;">1</span>430    233    98         29</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Protein variant detected  <span style="text-decoration: underline;">1</span>445     18    37         13</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>                          45      1     1          1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $drugs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 114 × 5</span></span></span>
-<span><span class="co">#&gt;    drug_agent           drug_class       markers samples  hits</span></span>
+<span><span class="co">#&gt;    drug                 drug_class       markers samples  hits</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 2'-N-ethylnetilmicin Aminoglycosides        8     462   492</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 5-episisomicin       Aminoglycosides        3      37    37</span></span>
@@ -1633,7 +1640,7 @@ package provides CARD RGI calls for the EuSCAPE genomes:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $markers</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 815 × 5</span></span></span>
-<span><span class="co">#&gt;    marker     drug_agent           drug_class      `variation type`           n</span></span>
+<span><span class="co">#&gt;    marker     drug                 drug_class      `variation type`           n</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> AAC(3)-IIc 2'-N-ethylnetilmicin Aminoglycosides Gene presence detected    16</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> AAC(3)-IIc 6'-N-ethylnetilmicin Aminoglycosides Gene presence detected    16</span></span>
@@ -1654,8 +1661,8 @@ package provides CARD RGI calls for the EuSCAPE genomes:</p>
 <code class="sourceCode R"><span><span class="va">rgi_binary_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  geno_table <span class="op">=</span> <span class="va">rgi</span>,</span>
 <span>  pheno_table <span class="op">=</span> <span class="va">kp_mero_euscape</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Carbapenems"</span><span class="op">)</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
+<span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Carbapenems"</span><span class="op">)</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span>,</span>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -1793,8 +1800,8 @@ was found in 59 resistant genomes (using RGI), 31 resistant genomes
 <span><span class="va">amrfp_binary_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  geno_table <span class="op">=</span> <span class="va">kp_mero_amrfp</span>,</span>
 <span>  pheno_table <span class="op">=</span> <span class="va">kp_mero_euscape</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
-<span>  drug_class_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Carbapenems"</span><span class="op">)</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
+<span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Carbapenems"</span><span class="op">)</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  keep_assay_values_from <span class="op">=</span> <span class="st">"mic"</span></span>
@@ -1812,7 +1819,7 @@ was found in 59 resistant genomes (using RGI), 31 resistant genomes
 <span>  binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
 <span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
@@ -2054,7 +2061,7 @@ Markers<a class="anchor" aria-label="anchor" href="#logistic-regression-for-amrf
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">combined_binary_matrix</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"meropenem"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"meropenem"</span>,</span>
 <span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
 <span>  maf <span class="op">=</span> <span class="fl">10</span>, <span class="co"># filter for AMR markers in at least 10 samples</span></span>
 <span>  single_plot <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -2105,7 +2112,7 @@ Markers<a class="anchor" aria-label="anchor" href="#combinatorial-ppv-analysis-f
 <span>  binary_matrix <span class="op">=</span> <span class="va">combined_binary_matrix</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  antibiotic <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
 <span>  upset_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>

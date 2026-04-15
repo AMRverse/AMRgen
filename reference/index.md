@@ -17,48 +17,46 @@ from public repositories or internal formats.
   : Import EBI-processed AMRFinderPlus Genotypes from Web
 - [`import_amrrules_predictions()`](https://amrgen.org/reference/import_amrrules_predictions.md)
   : Import phenotype predictions from AMRrules output
-- [`import_ast()`](https://amrgen.org/reference/import_ast.md) : Import
-  and process antimicrobial phenotype data from common sources
-- [`import_ebi_ast()`](https://amrgen.org/reference/import_ebi_ast.md) :
-  Import and process antimicrobial susceptibility phenotype data from
+- [`import_ebi_pheno()`](https://amrgen.org/reference/import_ebi_pheno.md)
+  : Import and process antimicrobial susceptibility phenotype data from
   the EBI AMR web portal
-- [`import_ebi_ast_ftp()`](https://amrgen.org/reference/import_ebi_ast_ftp.md)
+- [`import_ebi_pheno_ftp()`](https://amrgen.org/reference/import_ebi_pheno_ftp.md)
   : Import and process antimicrobial phenotype data files retrieved from
   the EBI AMR portal FTP site
 - [`import_geno()`](https://amrgen.org/reference/import_geno.md) :
   Import and process antimicrobial genotype data from common sources
 - [`import_kleborate()`](https://amrgen.org/reference/import_kleborate.md)
   : Import and Process Kleborate Results
-- [`import_microscan_ast()`](https://amrgen.org/reference/import_microscan_ast.md)
+- [`import_microscan_pheno()`](https://amrgen.org/reference/import_microscan_pheno.md)
   : Import and process antimicrobial phenotype data exported from
   MicroScan instruments
-- [`import_ncbi_ast()`](https://amrgen.org/reference/import_ncbi_ast.md)
-  : Import and process antimicrobial susceptibility phenotype data from
-  the NCBI AST browser
 - [`import_ncbi_biosample()`](https://amrgen.org/reference/import_ncbi_biosample.md)
   : Import and process antimicrobial phenotype data retrieved from NCBI
   BioSamples
+- [`import_ncbi_pheno()`](https://amrgen.org/reference/import_ncbi_pheno.md)
+  : Import and process antimicrobial susceptibility phenotype data from
+  the NCBI AST browser
 - [`import_pheno()`](https://amrgen.org/reference/import_pheno.md) :
   Import and process antimicrobial phenotype data from common sources
-- [`import_phoenix_ast()`](https://amrgen.org/reference/import_phoenix_ast.md)
+- [`import_phoenix_pheno()`](https://amrgen.org/reference/import_phoenix_pheno.md)
   : Import and process antimicrobial phenotype data exported from BD
   Phoenix instruments
 - [`import_rgi()`](https://amrgen.org/reference/import_rgi.md) : Import
   and Process Resistance Gene Identifier (RGI) Results
-- [`import_sensititre_ast()`](https://amrgen.org/reference/import_sensititre_ast.md)
+- [`import_sensititre_pheno()`](https://amrgen.org/reference/import_sensititre_pheno.md)
   : Import and process antimicrobial phenotype data exported from
   Sensititre instruments
-- [`import_sirscan_ast()`](https://amrgen.org/reference/import_sirscan_ast.md)
+- [`import_sirscan_pheno()`](https://amrgen.org/reference/import_sirscan_pheno.md)
   : Import and process antimicrobial susceptibility data from SIRscan
   (Bio-Rad)
-- [`import_vitek_ast()`](https://amrgen.org/reference/import_vitek_ast.md)
+- [`import_vitek_pheno()`](https://amrgen.org/reference/import_vitek_pheno.md)
   : Import and process antimicrobial phenotype data exported from Vitek
   instruments
-- [`import_whonet_ast()`](https://amrgen.org/reference/import_whonet_ast.md)
+- [`import_whonet_pheno()`](https://amrgen.org/reference/import_whonet_pheno.md)
   : Import and process antimicrobial phenotype data from WHONET files
-- [`export_ebi_ast()`](https://amrgen.org/reference/export_ebi_ast.md) :
-  Export EBI Antibiogram
-- [`export_ncbi_ast()`](https://amrgen.org/reference/export_ncbi_ast.md)
+- [`export_ebi_pheno()`](https://amrgen.org/reference/export_ebi_pheno.md)
+  : Export EBI Antibiogram
+- [`export_ncbi_pheno()`](https://amrgen.org/reference/export_ncbi_pheno.md)
   : Export NCBI BioSample Antibiogram
 - [`convert_aa_code()`](https://amrgen.org/reference/convert_aa_code.md)
   : Convert single-letter amino acid code(s) to three-letter code(s)
@@ -67,7 +65,7 @@ from public repositories or internal formats.
 - [`download_ebi()`](https://amrgen.org/reference/download_ebi.md) :
   Download antimicrobial genotype or phenotype data from the EBI AMR
   Portal
-- [`download_ncbi_ast()`](https://amrgen.org/reference/download_ncbi_ast.md)
+- [`download_ncbi_pheno()`](https://amrgen.org/reference/download_ncbi_pheno.md)
   : Download NCBI antimicrobial susceptibility testing (AST) data
 - [`summarise_geno()`](https://amrgen.org/reference/summarise_geno.md) :
   Summarise a Genotype Table
@@ -75,20 +73,20 @@ from public repositories or internal formats.
   : Summarise the intersection of a genotype table and a phenotype table
 - [`summarise_pheno()`](https://amrgen.org/reference/summarise_pheno.md)
   : Summarise a Phenotype Table
-- [`format_ast()`](https://amrgen.org/reference/format_ast.md) : Import
-  and process antimicrobial phenotype data from a generic format
 - [`format_ebi_json()`](https://amrgen.org/reference/format_ebi_json.md)
   : Generate EBI antibiogram submission in JSON
+- [`format_pheno()`](https://amrgen.org/reference/format_pheno.md) :
+  Import and process antimicrobial phenotype data from a generic format
 - [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md)
   : Get Binary Matrix of Genotype and Phenotype Data
 - [`get_combo_matrix()`](https://amrgen.org/reference/get_combo_matrix.md)
   : Add marker combinations to a binary geno-pheno matrix
-- [`query_ncbi_bq_ast()`](https://amrgen.org/reference/query_ncbi_bq_ast.md)
-  : Query antimicrobial phenotype (AST) data from NCBI Pathogen
-  Detection BigQuery
 - [`query_ncbi_bq_geno()`](https://amrgen.org/reference/query_ncbi_bq_geno.md)
   : Query antimicrobial genotype (MicroBIGG-E) data from NCBI Pathogen
   Detection BigQuery
+- [`query_ncbi_bq_pheno()`](https://amrgen.org/reference/query_ncbi_bq_pheno.md)
+  : Query antimicrobial phenotype data from NCBI Pathogen Detection
+  BigQuery
 
 ## Resistance Interpretation
 
@@ -109,8 +107,8 @@ breakpoints and custom models.
   : Retrieve Available Antimicrobial Wild Type Distributions from EUCAST
 - [`merge_logreg_soloppv()`](https://amrgen.org/reference/merge_logreg_soloppv.md)
   : Merge Logistic Regression and Solo PPV Statistics
-- [`interpret_ast()`](https://amrgen.org/reference/interpret_ast.md) :
-  Interpret antimicrobial susceptibility phenotype data in a standard
+- [`interpret_pheno()`](https://amrgen.org/reference/interpret_pheno.md)
+  : Interpret antimicrobial susceptibility phenotype data in a standard
   format tibble
 
 ## Modelling and analysis
@@ -138,8 +136,6 @@ logistic regression and Firth regression.
 - [`concordance_from_tables()`](https://amrgen.org/reference/concordance_from_tables.md)
   : Assess concordance between tables of observed and predicted
   phenotypes
-- [`cooccuring_ppv_analysis()`](https://amrgen.org/reference/cooccuring_ppv_analysis.md)
-  : Co-occuring PPV Analysis
 - [`print(`*`<amr_concordance>`*`)`](https://amrgen.org/reference/print.amr_concordance.md)
   : Print method for amr_concordance objects
 
@@ -161,11 +157,11 @@ and genotype-phenotype relationships.
 
 Example datasets for demonstration and reproducible analysis.
 
-- [`ecoli_ast`](https://amrgen.org/reference/ecoli_ast.md) : E. coli
+- [`ecoli_pheno`](https://amrgen.org/reference/ecoli_pheno.md) : E. coli
   NCBI AST Example Data, Re-interpreted with AMR Package
 
-- [`ecoli_ast_raw`](https://amrgen.org/reference/ecoli_ast_raw.md) : E.
-  coli NCBI AST Example Data
+- [`ecoli_pheno_raw`](https://amrgen.org/reference/ecoli_pheno_raw.md)
+  : E. coli NCBI AST Example Data
 
 - [`ecoli_geno_raw`](https://amrgen.org/reference/ecoli_geno_raw.md)
   : E. coli Genotype Example Data
@@ -176,14 +172,14 @@ Example datasets for demonstration and reproducible analysis.
 - [`ecoli_cip_mic_data`](https://amrgen.org/reference/ecoli_cip_mic_data.md)
   : EUCAST Reference distribution for Ciprofloxacin in E. coli
 
-- [`staph_ast_ncbi`](https://amrgen.org/reference/staph_ast_ncbi.md)
+- [`staph_pheno_ncbi`](https://amrgen.org/reference/staph_pheno_ncbi.md)
   : S. aureus Example of Imported NCBI Phenotype Data
 
-- [`staph_ast_ncbi_raw`](https://amrgen.org/reference/staph_ast_ncbi_raw.md)
+- [`staph_pheno_ncbi_raw`](https://amrgen.org/reference/staph_pheno_ncbi_raw.md)
   : S. aureus Example of Raw Phenotype Data Downloaded from NCBI
   BioSamples via Entrez API
 
-- [`staph_ast_ncbi_cloud_raw`](https://amrgen.org/reference/staph_ast_ncbi_cloud_raw.md)
+- [`staph_pheno_ncbi_cloud_raw`](https://amrgen.org/reference/staph_pheno_ncbi_cloud_raw.md)
   : S. aureus Example of Raw Phenotype Data Downloaded from NCBI via
   Google Cloud BigQuery
 
@@ -191,8 +187,8 @@ Example datasets for demonstration and reproducible analysis.
   : S. aureus Example of Raw Genotype Data Downloaded from NCBI via
   Google Cloud BigQuery
 
-- [`staph_ast_ebi`](https://amrgen.org/reference/staph_ast_ebi.md) : S.
-  aureus Example of Imported EBI Phenotype Data
+- [`staph_pheno_ebi`](https://amrgen.org/reference/staph_pheno_ebi.md)
+  : S. aureus Example of Imported EBI Phenotype Data
 
 - [`staph_geno_ebi`](https://amrgen.org/reference/staph_geno_ebi.md)
   : S. aureus Example of Imported EBI Genotype Data
@@ -252,7 +248,8 @@ Example datasets for demonstration and reproducible analysis.
 - [`kleborate_classes`](https://amrgen.org/reference/kleborate_classes.md)
   : Table mapping Kleborate drug class columns
 
-- [`ast_CLI_public`](https://amrgen.org/reference/ast_CLI_public.md) :
+- [`pheno_CLI_public`](https://amrgen.org/reference/pheno_CLI_public.md)
+  :
 
   Clindamycin MIC data for 5914 *Staphylococcus aureus* isolates
 
@@ -266,13 +263,13 @@ Example datasets for demonstration and reproducible analysis.
 - [`DASSIM_pheno_raw`](https://amrgen.org/reference/DASSIM_pheno_raw.md)
   : DASSIM phenotype metadata
 
-- [`btESBL_AST`](https://amrgen.org/reference/btESBL_AST.md) :
+- [`btESBL_pheno`](https://amrgen.org/reference/btESBL_pheno.md) :
   blantyreESBL AST data
 
 - [`DASSIM_geno`](https://amrgen.org/reference/DASSIM_geno.md) : DASSIM
   genotype data (AMRFinderPlus)
 
-- [`NCBI_Ecoli_AST_chl`](https://amrgen.org/reference/NCBI_Ecoli_AST_chl.md)
+- [`NCBI_Ecoli_pheno_chl`](https://amrgen.org/reference/NCBI_Ecoli_pheno_chl.md)
   : NCBI AST for Escherichia coli tested against chloramphenicol
 
 - [`MICROBIGGE_Ecoli_CHLR`](https://amrgen.org/reference/MICROBIGGE_Ecoli_CHLR.md)

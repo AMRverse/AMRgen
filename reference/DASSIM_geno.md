@@ -25,7 +25,7 @@ DASSIM_geno
 
 - `marker.label`: marker.label.
 
-- `drug_agent`: drug_agent.
+- `drug`: drug.
 
 - `drug_class`: drug_class.
 

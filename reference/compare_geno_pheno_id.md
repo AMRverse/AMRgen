@@ -68,19 +68,19 @@ A list containing:
 
 ``` r
 geno_table <- import_amrfp(ecoli_geno_raw)
-head(ecoli_ast)
+head(ecoli_pheno)
 #> # A tibble: 6 × 11
-#>   id          drug_agent    mic  disk pheno_clsi ecoff guideline method platform
-#>   <chr>       <ab>        <mic> <dsk> <sir>      <sir> <chr>     <chr>  <chr>   
-#> 1 SAMN116383… CIP        256.00    NA   R         NWT  CLSI      broth… NA      
-#> 2 SAMN057299… CIP         64.00    NA   R         NWT  CLSI      Etest  Etest   
-#> 3 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#> 4 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
-#> 5 SAMN106201… CIP        <=0.25    NA   S          NI  CLSI      broth… NA      
-#> 6 SAMN106201… CIP        >=4.00    NA   R         NWT  CLSI      broth… NA      
+#>   id           drug    mic  disk pheno_clsi ecoff guideline method      platform
+#>   <chr>        <ab>  <mic> <dsk> <sir>      <sir> <chr>     <chr>       <chr>   
+#> 1 SAMN11638310 CIP  256.00    NA   R         NWT  CLSI      broth dilu… NA      
+#> 2 SAMN05729964 CIP   64.00    NA   R         NWT  CLSI      Etest       Etest   
+#> 3 SAMN10620111 CIP  >=4.00    NA   R         NWT  CLSI      broth dilu… NA      
+#> 4 SAMN10620168 CIP  >=4.00    NA   R         NWT  CLSI      broth dilu… NA      
+#> 5 SAMN10620104 CIP  <=0.25    NA   S          NI  CLSI      broth dilu… NA      
+#> 6 SAMN10620102 CIP  >=4.00    NA   R         NWT  CLSI      broth dilu… NA      
 #> # ℹ 2 more variables: pheno_provided <sir>, spp_pheno <mo>
 result <- compare_geno_pheno_id(geno_table,
-  ecoli_ast,
+  ecoli_pheno,
   geno_sample_col = "id",
   pheno_sample_col = "id"
 )
@@ -1512,18 +1512,18 @@ print(result$overlap_ids)
 #> [3629] "SAMN03892121"
 print(result$geno_matched)
 #> # A tibble: 36,088 × 37
-#>    id         marker gene  mutation drug_agent drug_class `variation type` node 
-#>    <chr>      <chr>  <chr> <chr>    <ab>       <chr>      <chr>            <chr>
-#>  1 SAMN03177… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
-#>  2 SAMN03177… acrF   acrF  NA       NA         Efflux     Gene presence d… acrF 
-#>  3 SAMN03177… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT 
-#>  4 SAMN03177… floR   floR  NA       CHL        Phenicols  Gene presence d… floR 
-#>  5 SAMN03177… floR   floR  NA       FLR        Phenicols  Gene presence d… floR 
-#>  6 SAMN03177… mdtM   mdtM  NA       NA         Efflux     Gene presence d… mdtM 
-#>  7 SAMN03177… blaTE… blaT… NA       NA         Beta-lact… Gene presence d… blaT…
-#>  8 SAMN03177… sul2   sul2  NA       SSS        Sulfonami… Gene presence d… sul2 
-#>  9 SAMN03177… aph(3… aph(… NA       STR1       Aminoglyc… Gene presence d… aph(…
-#> 10 SAMN03177… aph(6… aph(… NA       STR1       Aminoglyc… Gene presence d… aph(…
+#>    id           marker    gene  mutation drug drug_class  `variation type` node 
+#>    <chr>        <chr>     <chr> <chr>    <ab> <chr>       <chr>            <chr>
+#>  1 SAMN03177615 blaEC     blaEC NA       NA   Beta-lacta… Gene presence d… blaEC
+#>  2 SAMN03177615 acrF      acrF  NA       NA   Efflux      Gene presence d… acrF 
+#>  3 SAMN03177615 glpT_E44… glpT  Glu448L… FOS  Phosphonics Protein variant… glpT 
+#>  4 SAMN03177615 floR      floR  NA       CHL  Phenicols   Gene presence d… floR 
+#>  5 SAMN03177615 floR      floR  NA       FLR  Phenicols   Gene presence d… floR 
+#>  6 SAMN03177615 mdtM      mdtM  NA       NA   Efflux      Gene presence d… mdtM 
+#>  7 SAMN03177615 blaTEM-1  blaT… NA       NA   Beta-lacta… Gene presence d… blaT…
+#>  8 SAMN03177615 sul2      sul2  NA       SSS  Sulfonamid… Gene presence d… sul2 
+#>  9 SAMN03177615 aph(3'')… aph(… NA       STR1 Aminoglyco… Gene presence d… aph(…
+#> 10 SAMN03177615 aph(6)-Id aph(… NA       STR1 Aminoglyco… Gene presence d… aph(…
 #> # ℹ 36,078 more rows
 #> # ℹ 29 more variables: marker.label <chr>, `Protein identifier` <lgl>,
 #> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
@@ -1533,18 +1533,18 @@ print(result$geno_matched)
 #> #   `% Coverage of reference sequence` <dbl>, …
 print(result$pheno_matched)
 #> # A tibble: 3,629 × 11
-#>    id        drug_agent     mic  disk pheno_clsi ecoff guideline method platform
-#>    <chr>     <ab>         <mic> <dsk> <sir>      <sir> <chr>     <chr>  <chr>   
-#>  1 SAMN1163… CIP        256.000    NA   R         NWT  CLSI      broth… NA      
-#>  2 SAMN0412… CIP          1.000    NA   R         NWT  CLSI      broth… Vitek   
-#>  3 SAMN0427… CIP        >=4.000    NA   R         NWT  CLSI      broth… Vitek   
-#>  4 SAMN0427… CIP        >=4.000    NA   R         NWT  CLSI      broth… Vitek   
-#>  5 SAMN0433… CIP          1.000    NA   R         NWT  CLSI      broth… Vitek   
-#>  6 SAMN0439… CIP        >=4.000    NA   R         NWT  CLSI      broth… Vitek   
-#>  7 SAMN0445… CIP        <=0.015    NA   S          WT  CLSI      broth… NA      
-#>  8 SAMN0445… CIP        <=0.015    NA   S          WT  CLSI      broth… NA      
-#>  9 SAMN0445… CIP        <=0.015    NA   S          WT  CLSI      broth… NA      
-#> 10 SAMN0449… CIP        <=0.015    NA   S          WT  CLSI      broth… NA      
+#>    id           drug     mic  disk pheno_clsi ecoff guideline method    platform
+#>    <chr>        <ab>   <mic> <dsk> <sir>      <sir> <chr>     <chr>     <chr>   
+#>  1 SAMN11638310 CIP  256.000    NA   R         NWT  CLSI      broth di… NA      
+#>  2 SAMN04122821 CIP    1.000    NA   R         NWT  CLSI      broth di… Vitek   
+#>  3 SAMN04279649 CIP  >=4.000    NA   R         NWT  CLSI      broth di… Vitek   
+#>  4 SAMN04279648 CIP  >=4.000    NA   R         NWT  CLSI      broth di… Vitek   
+#>  5 SAMN04339728 CIP    1.000    NA   R         NWT  CLSI      broth di… Vitek   
+#>  6 SAMN04393387 CIP  >=4.000    NA   R         NWT  CLSI      broth di… Vitek   
+#>  7 SAMN04455486 CIP  <=0.015    NA   S          WT  CLSI      broth di… NA      
+#>  8 SAMN04455488 CIP  <=0.015    NA   S          WT  CLSI      broth di… NA      
+#>  9 SAMN04455487 CIP  <=0.015    NA   S          WT  CLSI      broth di… NA      
+#> 10 SAMN04495823 CIP  <=0.015    NA   S          WT  CLSI      broth di… NA      
 #> # ℹ 3,619 more rows
 #> # ℹ 2 more variables: pheno_provided <sir>, spp_pheno <mo>
 ```

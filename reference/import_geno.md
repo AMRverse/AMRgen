@@ -89,10 +89,10 @@ functions of the ARMgen package:
 - `drug_class`: Name of the antibiotic group associated with the
   genotype marker, compatible with AMR pkg (`character`).
 
-- `drug_agent`: Name of the specific antibiotic agent associated with
-  the genotype marker, compatible with AMR pkg (`ab`). Value `NA` is
-  assigned when the markers are annotated with a class only and not a
-  specific antibiotic.
+- `drug`: Name of the specific antibiotic associated with the genotype
+  marker, compatible with AMR pkg (`ab`). Value `NA` is assigned when
+  the markers are annotated with a class only and not a specific
+  antibiotic.
 
 - `variation type`: (for AMRFinderPlus, ABRicate, or Kleborate results)
   Type of variation, e.g. `Gene presence detected`,
@@ -125,14 +125,14 @@ head(ecoli_geno_raw)
 geno <- import_geno(ecoli_geno_raw %>% head(n = 10), format = "amrfp")
 head(geno)
 #> # A tibble: 6 × 37
-#>   id          marker gene  mutation drug_agent drug_class `variation type` node 
-#>   <chr>       <chr>  <chr> <chr>    <ab>       <chr>      <chr>            <chr>
-#> 1 SAMN031776… blaEC  blaEC NA       NA         Beta-lact… Gene presence d… blaEC
-#> 2 SAMN031776… acrF   acrF  NA       NA         Efflux     Gene presence d… acrF 
-#> 3 SAMN031776… glpT_… glpT  Glu448L… FOS        Phosphoni… Protein variant… glpT 
-#> 4 SAMN031776… floR   floR  NA       CHL        Phenicols  Gene presence d… floR 
-#> 5 SAMN031776… floR   floR  NA       FLR        Phenicols  Gene presence d… floR 
-#> 6 SAMN031776… mdtM   mdtM  NA       NA         Efflux     Gene presence d… mdtM 
+#>   id           marker     gene  mutation drug drug_class  `variation type` node 
+#>   <chr>        <chr>      <chr> <chr>    <ab> <chr>       <chr>            <chr>
+#> 1 SAMN03177615 blaEC      blaEC NA       NA   Beta-lacta… Gene presence d… blaEC
+#> 2 SAMN03177615 acrF       acrF  NA       NA   Efflux      Gene presence d… acrF 
+#> 3 SAMN03177615 glpT_E448K glpT  Glu448L… FOS  Phosphonics Protein variant… glpT 
+#> 4 SAMN03177615 floR       floR  NA       CHL  Phenicols   Gene presence d… floR 
+#> 5 SAMN03177615 floR       floR  NA       FLR  Phenicols   Gene presence d… floR 
+#> 6 SAMN03177615 mdtM       mdtM  NA       NA   Efflux      Gene presence d… mdtM 
 #> # ℹ 29 more variables: marker.label <chr>, `Protein identifier` <lgl>,
 #> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
 #> #   `Gene symbol` <chr>, `Sequence name` <chr>, Scope <chr>,

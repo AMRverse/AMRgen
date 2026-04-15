@@ -26,7 +26,7 @@ library(dplyr)
 #### Option 1a: Download AST data from NCBI via rentrez
 
 The
-[`download_ncbi_ast()`](https://amrgen.org/reference/download_ncbi_ast.md)
+[`download_ncbi_pheno()`](https://amrgen.org/reference/download_ncbi_pheno.md)
 function lets you download antibiogram data from NCBI via their ‘EUtils’
 API using the rentrez R pacakge. You must specify a species, and can
 optionally limit the download to one or more specific drugs. The
@@ -43,9 +43,9 @@ account.
 
 ``` r
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline, and re-interpret with EUCAST breakpoints
-staph_ast_ncbi <- download_ncbi_ast(
+staph_pheno_ncbi <- download_ncbi_pheno(
   species = "Staphylococcus aureus",
-  antibiotic = c("amikacin", "DOX"), # antibiotics can be listed in short or long form
+  pheno_drug = c("amikacin", "DOX"), # antibiotics can be listed in short or long form
   reformat = TRUE,
   interpret_eucast = TRUE
 ) # reformat must be true to use interpret_* argument
@@ -53,21 +53,21 @@ staph_ast_ncbi <- download_ncbi_ast(
 
 ``` r
 # check how many samples retrieved
-nrow(staph_ast_ncbi)
+nrow(staph_pheno_ncbi)
 #> [1] 143
 
 # check the output
-head(staph_ast_ncbi)
+head(staph_pheno_ncbi)
 #> # A tibble: 6 × 19
-#>   id         drug_agent   mic  disk pheno_provided pheno_eucast guideline method
-#>   <chr>      <ab>       <mic> <dsk> <sir>          <sir>        <chr>     <chr> 
-#> 1 SAMN47875… DOX          <=1    NA   S              S          CLSI      broth…
-#> 2 SAMN47875… DOX          <=1    NA   S              S          CLSI      broth…
-#> 3 SAMN38228… AMK          <=2    NA   S              S          CLSI      broth…
-#> 4 SAMN30333… AMK           NA    21   S              S          CLSI      disk …
-#> 5 SAMN20982… AMK           NA    23   S              S          CLSI      disk …
-#> 6 SAMN20982… AMK           NA    22   S              S          CLSI      disk …
-#> # ℹ 11 more variables: platform <chr>, source <chr>, spp_pheno <mo>,
+#>   id     drug   mic  disk pheno_provided pheno_eucast guideline method  platform
+#>   <chr>  <ab> <mic> <dsk> <sir>          <sir>        <chr>     <chr>   <chr>   
+#> 1 SAMN4… DOX    <=1    NA   S              S          CLSI      broth … NA      
+#> 2 SAMN4… DOX    <=1    NA   S              S          CLSI      broth … NA      
+#> 3 SAMN3… AMK    <=2    NA   S              S          CLSI      broth … Vitek   
+#> 4 SAMN3… AMK     NA    21   S              S          CLSI      disk d… Scan 500
+#> 5 SAMN2… AMK     NA    23   S              S          CLSI      disk d… Scan 500
+#> 6 SAMN2… AMK     NA    22   S              S          CLSI      disk d… Scan 500
+#> # ℹ 10 more variables: source <chr>, spp_pheno <mo>,
 #> #   `Resistance phenotype` <chr>, `Measurement sign` <chr>, Measurement <chr>,
 #> #   `Measurement units` <chr>, Vendor <chr>,
 #> #   `Laboratory typing method version or reagent` <chr>,
@@ -76,16 +76,16 @@ head(staph_ast_ncbi)
 
 ``` r
 # This is the same as downloading the data then re-interpreting it separately:
-staph_ast_ncbi_raw <- download_ncbi_ast(
+staph_pheno_ncbi_raw <- download_ncbi_pheno(
   species = "Staphylococcus aureus",
-  antibiotic = c("amikacin", "DOX"),
+  pheno_drug = c("amikacin", "DOX"),
   reformat = FALSE,
   interpret_eucast = FALSE
 )
 ```
 
 ``` r
-head(staph_ast_ncbi_raw)
+head(staph_pheno_ncbi_raw)
 #> # A tibble: 6 × 13
 #>   id    BioProject organism Antibiotic `Resistance phenotype` `Measurement sign`
 #>   <chr> <chr>      <chr>    <chr>      <chr>                  <chr>             
@@ -100,9 +100,9 @@ head(staph_ast_ncbi_raw)
 #> #   Vendor <chr>, `Laboratory typing method version or reagent` <chr>,
 #> #   `Testing standard` <chr>
 
-# Then reformat and re-interpret using EUCAST and CLSI breakpoints, and ECOFFs using the import_ncbi_biosample() function
-staph_ast_ncbi2 <- import_ncbi_biosample(
-  input = staph_ast_ncbi_raw,
+# Then reformat and re-interpret using EUCAST and CLSI breakpoints, and ECOFFs using the import_ncbi_pheno() function
+staph_pheno_ncbi2 <- import_ncbi_biosample(
+  input = staph_pheno_ncbi_raw,
   interpret_clsi = TRUE,
   interpret_eucast = TRUE,
   interpret_ecoff = TRUE
@@ -110,7 +110,7 @@ staph_ast_ncbi2 <- import_ncbi_biosample(
 #> Parsing column organism as micro-organism (class 'mo')
 #> Renaming column organism to standard name 'spp_pheno'
 #> Parsing column Antibiotic as antibiotic (class 'ab')
-#> Renaming column Antibiotic to standard name 'drug_agent'
+#> Renaming column Antibiotic to standard name 'drug'
 #> Parsing column mic as class 'mic'
 #> Parsing column disk as class 'disk'
 #> Parsing column pheno_provided as class 'sir'
@@ -124,20 +124,20 @@ staph_ast_ncbi2 <- import_ncbi_biosample(
 #> ! Some MICs were converted to the nearest higher log2 level, following the CLSI
 #> interpretation guideline.
 
-head(staph_ast_ncbi2)
+head(staph_pheno_ncbi2)
 #> # A tibble: 6 × 25
-#>   id         drug_agent   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff
-#>   <chr>      <ab>       <mic> <dsk> <sir>          <sir>        <sir>      <sir>
-#> 1 SAMN47875… DOX          <=1    NA   S              S            S          NI 
-#> 2 SAMN47875… DOX          <=1    NA   S              S            S          NI 
-#> 3 SAMN38228… AMK          <=2    NA   S              S            NA         WT 
-#> 4 SAMN30333… AMK           NA    21   S              S            NA         WT 
-#> 5 SAMN20982… AMK           NA    23   S              S            NA         WT 
-#> 6 SAMN20982… AMK           NA    22   S              S            NA         WT 
-#> # ℹ 17 more variables: guideline <chr>, method <chr>, platform <chr>,
-#> #   source <chr>, spp_pheno <mo>, `Resistance phenotype` <chr>,
-#> #   `Measurement sign` <chr>, Measurement <chr>, `Measurement units` <chr>,
-#> #   Vendor <chr>, `Laboratory typing method version or reagent` <chr>,
+#>   id    drug   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff guideline
+#>   <chr> <ab> <mic> <dsk> <sir>          <sir>        <sir>      <sir> <chr>    
+#> 1 SAMN… DOX    <=1    NA   S              S            S          NI  CLSI     
+#> 2 SAMN… DOX    <=1    NA   S              S            S          NI  CLSI     
+#> 3 SAMN… AMK    <=2    NA   S              S            NA         WT  CLSI     
+#> 4 SAMN… AMK     NA    21   S              S            NA         WT  CLSI     
+#> 5 SAMN… AMK     NA    23   S              S            NA         WT  CLSI     
+#> 6 SAMN… AMK     NA    22   S              S            NA         WT  CLSI     
+#> # ℹ 16 more variables: method <chr>, platform <chr>, source <chr>,
+#> #   spp_pheno <mo>, `Resistance phenotype` <chr>, `Measurement sign` <chr>,
+#> #   Measurement <chr>, `Measurement units` <chr>, Vendor <chr>,
+#> #   `Laboratory typing method version or reagent` <chr>,
 #> #   pheno_eucast_mic <sir>, pheno_eucast_disk <sir>, pheno_clsi_mic <sir>,
 #> #   pheno_clsi_disk <sir>, ecoff_mic <sir>, ecoff_disk <sir>
 
@@ -160,7 +160,7 @@ explore NCBI Pathogen Detection data see
 <https://www.ncbi.nlm.nih.gov/pathogens/docs/getting_started_bigquery/>.
 
 The
-[`query_ncbi_bq_ast()`](https://amrgen.org/reference/query_ncbi_bq_ast.md)
+[`query_ncbi_bq_pheno()`](https://amrgen.org/reference/query_ncbi_bq_pheno.md)
 function lets you download antibiogram data from NCBI via Google Cloud
 BigQuery using the bigrquery R pacakge. You must specify a species, and
 can optionally limit the download to one or more specific drugs. The
@@ -187,16 +187,16 @@ bigrquery::bq_auth()
 ``` r
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline
 # NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
-staph_ast_ncbi_cloud_raw <- query_ncbi_bq_ast(
+staph_pheno_ncbi_cloud_raw <- query_ncbi_bq_pheno(
   taxgroup = "Staphylococcus aureus",
-  antibiotic = c("amikacin", "DOX")
+  pheno_drug = c("amikacin", "DOX")
 )
 ```
 
 ``` r
 # Import and reinterpret using CLSI breakpoints
 # NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
-staph_ast_ncbi_cloud <- import_ncbi_ast(staph_ast_ncbi_cloud_raw, interpret_clsi = TRUE)
+staph_pheno_ncbi_cloud <- import_ncbi_pheno(staph_pheno_ncbi_cloud_raw, interpret_clsi = TRUE)
 #> Warning: There was 1 warning in `mutate()`.
 #> ℹ In argument: `pheno_provided = as.sir(`Resistance phenotype`)`.
 #> Caused by warning:
@@ -232,7 +232,7 @@ results obtained with more recent versions.
 staph_geno_ncbi_cloud_raw <- query_ncbi_bq_geno(
   taxgroup = "Staphylococcus aureus",
   geno_class = c("AMINOGLYCOSIDE", "TETRACYCLINE")
-) %>% filter(biosample_acc %in% staph_ast_ncbi_cloud_raw$BioSample)
+) %>% filter(biosample_acc %in% staph_pheno_ncbi_cloud_raw$BioSample)
 ```
 
 ``` r
@@ -258,18 +258,18 @@ staph_geno_ncbi_cloud <- import_amrfp(staph_geno_ncbi_cloud_raw, sample_col = "b
 
 staph_geno_ncbi_cloud
 #> # A tibble: 148 × 18
-#>    id         marker gene  mutation drug_agent drug_class `variation type` node 
-#>    <chr>      <chr>  <chr> <chr>    <ab>       <chr>      <chr>            <chr>
-#>  1 SAMN07291… mepA   mepA  NA       TGC        Tetracycl… Gene presence d… mepA 
-#>  2 SAMN04901… ant(9… ant(… NA       SPT        Other      Gene presence d… ant(…
-#>  3 SAMN04901… mepA   mepA  NA       TGC        Tetracycl… Gene presence d… mepA 
-#>  4 SAMN04901… mepA   mepA  NA       TGC        Tetracycl… Gene presence d… mepA 
-#>  5 SAMN07291… aac(6… aac(… NA       AMK        Aminoglyc… Gene presence d… aac(…
-#>  6 SAMN07291… aac(6… aac(… NA       GEN        Aminoglyc… Gene presence d… aac(…
-#>  7 SAMN07291… aac(6… aac(… NA       KAN        Aminoglyc… Gene presence d… aac(…
-#>  8 SAMN07291… aac(6… aac(… NA       TOB        Aminoglyc… Gene presence d… aac(…
-#>  9 SAMN07291… mepA   mepA  NA       TGC        Tetracycl… Gene presence d… mepA 
-#> 10 SAMN04901… tet(M) tet(… NA       NA         Tetracycl… Gene presence d… tet(…
+#>    id           marker    gene  mutation drug drug_class  `variation type` node 
+#>    <chr>        <chr>     <chr> <chr>    <ab> <chr>       <chr>            <chr>
+#>  1 SAMN07291566 mepA      mepA  NA       TGC  Tetracycli… Gene presence d… mepA 
+#>  2 SAMN04901618 ant(9)-Ia ant(… NA       SPT  Other       Gene presence d… ant(…
+#>  3 SAMN04901605 mepA      mepA  NA       TGC  Tetracycli… Gene presence d… mepA 
+#>  4 SAMN04901606 mepA      mepA  NA       TGC  Tetracycli… Gene presence d… mepA 
+#>  5 SAMN07291567 aac(6')-… aac(… NA       AMK  Aminoglyco… Gene presence d… aac(…
+#>  6 SAMN07291567 aac(6')-… aac(… NA       GEN  Aminoglyco… Gene presence d… aac(…
+#>  7 SAMN07291567 aac(6')-… aac(… NA       KAN  Aminoglyco… Gene presence d… aac(…
+#>  8 SAMN07291567 aac(6')-… aac(… NA       TOB  Aminoglyco… Gene presence d… aac(…
+#>  9 SAMN07291564 mepA      mepA  NA       TGC  Tetracycli… Gene presence d… mepA 
+#> 10 SAMN04901609 tet(M)    tet(… NA       NA   Tetracycli… Gene presence d… tet(…
 #> # ℹ 138 more rows
 #> # ℹ 10 more variables: marker.label <chr>, `Gene symbol` <chr>, Class <chr>,
 #> #   Subclass <chr>, `Element type` <chr>, `Element subtype` <chr>,
@@ -285,8 +285,8 @@ staph_geno_ncbi_cloud
 
 # Doxycycline
 staph_dox_mic_plot <- assay_by_var(
-  pheno_table = staph_ast_ncbi,
-  antibiotic = c("DOX"),
+  pheno_table = staph_pheno_ncbi,
+  pheno_drug = c("DOX"),
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Staphylococcus aureus",
@@ -302,8 +302,8 @@ staph_dox_mic_plot
 ``` r
 # Amikacin
 staph_ami_mic_plot <- assay_by_var(
-  pheno_table = staph_ast_ncbi,
-  antibiotic = c("amikacin"),
+  pheno_table = staph_pheno_ncbi,
+  pheno_drug = c("amikacin"),
   measure = "mic",
   colour_by = "pheno_eucast",
   species = "Staphylococcus aureus",
@@ -338,9 +338,9 @@ other does not.
 
 ``` r
 # Download EBI phenotype data for all Staphylococcus, using the same example drugs as above. Reformat and re-interpret using EUCAST breakpoints
-staph_ast_ebi <- download_ebi(
+staph_pheno_ebi <- download_ebi(
   genus = "Staphylococcus",
-  antibiotic = c("amikacin", "DOX"),
+  pheno_drug = c("amikacin", "DOX"),
   reformat = TRUE,
   interpret_eucast = TRUE,
   interpret_clsi = TRUE,
@@ -350,24 +350,24 @@ staph_ast_ebi <- download_ebi(
 
 ``` r
 # check output
-nrow(staph_ast_ebi)
+nrow(staph_pheno_ebi)
 #> [1] 218
 
-length(unique(staph_ast_ebi$id))
+length(unique(staph_pheno_ebi$id))
 #> [1] 190
 
-head(staph_ast_ebi)
+head(staph_pheno_ebi)
 #> # A tibble: 6 × 46
-#>   id         drug_agent   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff
-#>   <chr>      <ab>       <mic> <dsk> <sir>          <sir>        <sir>      <sir>
-#> 1 SAMEA6982… AMK           NA    NA   R              NA           NA         NA 
-#> 2 SAMEA6985… AMK           NA    NA   R              NA           NA         NA 
-#> 3 SAMEA6982… AMK           NA    NA   R              NA           NA         NA 
-#> 4 SAMEA6984… AMK           NA    NA   R              NA           NA         NA 
-#> 5 SAMEA6984… AMK           NA    NA   R              NA           NA         NA 
-#> 6 SAMEA6986… AMK           NA    NA   R              NA           NA         NA 
-#> # ℹ 38 more variables: guideline <chr>, method <chr>, platform <chr>,
-#> #   source <chr>, spp_pheno <mo>, SRA_accession <chr>, assembly_ID <chr>,
+#>   id    drug   mic  disk pheno_provided pheno_eucast pheno_clsi ecoff guideline
+#>   <chr> <ab> <mic> <dsk> <sir>          <sir>        <sir>      <sir> <chr>    
+#> 1 SAME… AMK     NA    NA   R              NA           NA         NA  NA       
+#> 2 SAME… AMK     NA    NA   R              NA           NA         NA  NA       
+#> 3 SAME… AMK     NA    NA   R              NA           NA         NA  NA       
+#> 4 SAME… AMK     NA    NA   R              NA           NA         NA  NA       
+#> 5 SAME… AMK     NA    NA   R              NA           NA         NA  NA       
+#> 6 SAME… AMK     NA    NA   R              NA           NA         NA  NA       
+#> # ℹ 37 more variables: method <chr>, platform <chr>, source <chr>,
+#> #   spp_pheno <mo>, SRA_accession <chr>, assembly_ID <chr>,
 #> #   collection_year <int>, ISO_country_code <chr>, host <chr>, host_age <chr>,
 #> #   host_sex <chr>, isolate <chr>, isolation_source <chr>,
 #> #   isolation_source_category <chr>, isolation_latitude <chr>,
@@ -428,7 +428,7 @@ function.
 ``` r
 # first filter both EBI pheno and geno dataframes for Staph aureus only
 # filter pheno data
-staph_ast_ebi_filtered <- staph_ast_ebi %>%
+staph_pheno_ebi_filtered <- staph_pheno_ebi %>%
   filter(organism == "Staphylococcus aureus")
 
 # filter geno data
@@ -438,9 +438,9 @@ staph_geno_ebi_filtered <- staph_geno_ebi %>%
 # Make binary geno-pheno matrix for doxycycline phenotype (re-interpreted with EUCAST), and genotypes associated with the associated drug class (Tetracyclines)
 tet_bin <- get_binary_matrix(
   geno_table = staph_geno_ebi_filtered,
-  pheno_table = staph_ast_ebi_filtered,
-  antibiotic = "DOX",
-  drug_class_list = "Tetracyclines", # matches drug_class in geno_table
+  pheno_table = staph_pheno_ebi_filtered,
+  pheno_drug = "DOX",
+  geno_class = "Tetracyclines", # matches drug_class in geno_table
   sir_col = "pheno_eucast", # phenotype column in pheno_table
   keep_assay_values = TRUE,
   keep_assay_values_from = "mic"
@@ -478,7 +478,7 @@ tet_ppv$plot
 
 ![](DownloadGenoPhenoData_files/figure-html/ppv-2.png) This produces a
 binary matrix with 1 row per BioSample, for all BioSamples that had both
-phenotype data for doxycycline in `staph_ast_ebi_filtered` AND any
+phenotype data for doxycycline in `staph_pheno_ebi_filtered` AND any
 genotype data (associated with any marker, not just Tetracyclines) in
 `staph_geno_ebi_filtered`. This ensures that we include samples for
 which genotyping was performed but returned no hits associated with

@@ -93,7 +93,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   if (sum(!is.na(binary_matrix$pheno)) == 0) {
     if (sum(!is.na(binary_matrix$ecoff)) > 0) {
       binary_matrix <- binary_matrix %>% mutate(pheno = ecoff)
-      warning("no values in pheno column, colouring upset plot by ecoff column")
+      warning("No values in pheno column, colouring upset plot by ecoff column")
     } else {
       stop(" Failed to make upset plot as no values in field pheno or ecoff")
     }

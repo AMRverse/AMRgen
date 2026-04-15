@@ -97,7 +97,7 @@ get_binary_matrix <- function(geno_table,
   }
   if (!(sir_col %in% colnames(pheno_table))) {
     stop(paste0("Column: '", sir_col, "' not found in input phenotype data. Please specify a valid column with S/I/R values."))
-  }
+  } 
 
   # check we have a drug column with class ab
   if (!("drug" %in% colnames(pheno_table))) {
@@ -136,7 +136,7 @@ get_binary_matrix <- function(geno_table,
     }
   }
 
-  # subset pheno & geno dataframes to those samples with overlap
+  # subset pheno & geno data frames to those samples with overlap
   overlap <- compare_geno_pheno_id(geno_table, pheno_table, geno_sample_col = geno_sample_col, pheno_sample_col = pheno_sample_col, rename_id_cols = TRUE)
   pheno_matched <- overlap$pheno_matched
   geno_matched <- overlap$geno_matched
@@ -222,7 +222,10 @@ get_binary_matrix <- function(geno_table,
   if (sum(!is.na(pheno_binary$R)) == 0 & sum(!is.na(pheno_binary$NWT)) == 0) {
     stop(paste("No samples with both genotype data and non-NA phenotype interpretation values for", pheno_drug, "in input", deparse(substitute(pheno_table))))
   }
-
+  if (sum(!is.na(pheno_binary$R))==0) {
+    warning(paste("No samples with valid phenotypes in sir_col:", sir_col))
+  }
+  
   # extract list of relevant drug markers
   if (!("drug" %in% colnames(geno_matched))) {
     geno_matched <- geno_matched %>% mutate(drug = as.ab(NA))

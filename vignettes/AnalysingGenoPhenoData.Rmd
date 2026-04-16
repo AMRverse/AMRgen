@@ -420,7 +420,7 @@ models$binary_matrix
 
 The strongest evidence of the effect of an individual genetic marker on a drug phenotype is its positive predictive value (PPV) for resistance amongst strains that carry this marker 'solo' with no other markers known to be associated with resistance to the drug class. This is referred to as 'solo PPV'. 
 
-The function `solo_ppv_analysis()` takes as input our genotype and phenotype tables, and calculates solo PPV for resistance to a specific drug (included in our phenotype table) for markers associated with the specified drug class (included in our genotype table). It uses the `get_binary_matrix()` function to first calculate the binary matrix, then filters out all samples that have more than one marker.
+The function `solo_ppv()` takes as input our genotype and phenotype tables, and calculates solo PPV for resistance to a specific drug (included in our phenotype table) for markers associated with the specified drug class (included in our genotype table). It uses the `get_binary_matrix()` function to first calculate the binary matrix, then filters out all samples that have more than one marker.
 
 It then calculates for each remaining marker, amongst the genomes in which that marker is found solo, the number of genomes, the number and proportion that are R or NWT, and the 95% confidence intervals for these proportions. The values are returned as a table, and also plotted so we can easily visualise the distribution of S/I/R calls and the solo PPV for R and NWT, for each solo marker.
 
@@ -434,9 +434,9 @@ The function returns 4 objects:
 
 * `combined_plot`: a plot showing the distribution of S/I/R calls and the solo PPV for R and NWT, for each solo marker
 
-``` {r solo_ppv_analysis, fig.height=8}
+``` {r solo_ppv, fig.height=8}
 # Run a solo PPV analysis
-soloPPV_cipro <- solo_ppv_analysis(
+soloPPV_cipro <- solo_ppv(
   ecoli_geno,
   ecoli_pheno,
   sir_col = "pheno_clsi",

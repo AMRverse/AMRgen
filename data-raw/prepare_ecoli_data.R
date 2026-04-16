@@ -1,5 +1,5 @@
 # subset of NCBI phenotype data that has already been re-interpreted using import_ncbi_pheno
-# provided for testing solo_ppv_analysis and amr_upset functions
+# provided for testing solo_ppv and amr_upset functions
 ecoli_pheno <- read_tsv("ecoli_pheno.tsv.gz") %>%
   import_ncbi_pheno(interpret_clsi = TRUE, interpret_ecoff = TRUE) %>%
   filter(`Scientific name` == "Escherichia coli") %>%
@@ -18,7 +18,7 @@ ecoli_pheno <- ecoli_pheno %>%
 
 # set of AMRFinderPlus (v3.12.8, DB 2024-01-31.1) genotype results sourced from AllTheBacteria
 # for the same biosamples as ecoli_pheno
-# provided for testing import_amrfp, solo_ppv_analysis and amr_upset functions
+# provided for testing import_amrfp, solo_ppv and amr_upset functions
 ecoli_geno_raw <- read_tsv("ecoli_geno.tsv.gz")
 
 usethis::use_data(ecoli_pheno, internal = FALSE, overwrite = TRUE)

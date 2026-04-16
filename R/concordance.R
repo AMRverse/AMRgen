@@ -51,7 +51,7 @@
 #' @param ppv_threshold A numeric PPV threshold (0-1). Used for solo PPV-based
 #'   marker filtering when `solo_ppv_results` is provided, or as the combination
 #'   PPV threshold when `prediction_rule = "combo_ppv"`.
-#' @param solo_ppv_results Output of [solo_ppv_analysis()], used for PPV-based
+#' @param solo_ppv_results Output of [solo_ppv()], used for PPV-based
 #'   marker filtering when `ppv_threshold` is set.
 #' @param ppv_results Output of [ppv()], required when
 #'   `prediction_rule = "combo_ppv"`. The `summary` table from this object is
@@ -114,7 +114,7 @@
 #' @importFrom stats predict
 #' @importFrom tibble tibble
 #' @importFrom yardstick conf_mat sens spec ppv npv accuracy kap f_meas
-#' @seealso [get_binary_matrix()], [solo_ppv_analysis()], [amr_logistic()], [yardstick]
+#' @seealso [get_binary_matrix()], [solo_ppv()], [amr_logistic()], [yardstick]
 #' @export
 #' @examples
 #' \dontrun{
@@ -139,7 +139,7 @@
 #' result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
 #'
 #' # Filter markers by solo PPV threshold
-#' solo_ppv <- solo_ppv_analysis(binary_matrix = binary_matrix)
+#' solo_ppv <- solo_ppv(binary_matrix = binary_matrix)
 #' result <- concordance(
 #'   binary_matrix,
 #'   ppv_threshold = 0.5,

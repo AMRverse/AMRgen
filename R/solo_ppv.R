@@ -70,29 +70,29 @@
 #' # Run solo PPV analysis plot analysis using this binary_matrix
 #' # (note pheno_drug / geno_class are optional here, and only used
 #' # for titling the plot)
-#' soloPPV_cipro <- solo_ppv_analysis(binary_matrix = binary_matrix)
+#' soloPPV_cipro <- solo_ppv(binary_matrix = binary_matrix)
 #'
 #' soloPPV_cipro$solo_stats
 #' soloPPV_cipro$combined_plot
 #' }
-solo_ppv_analysis <- function(geno_table, pheno_table,
-                              pheno_drug = NULL, geno_class = NULL, geno_drug = NULL,
-                              geno_sample_col = NULL, pheno_sample_col = NULL,
-                              sir_col = NULL, ecoff_col = "ecoff", icat = FALSE,
-                              marker_col = "marker", reverse_order = FALSE,
-                              binary_matrix = NULL,
-                              min = 1,
-                              axis_label_size = 9,
-                              pd = position_dodge(width = 0.8),
-                              excludeRanges = NULL,
-                              colours_SIR = c(
-                                S = "#3CAEA3", SDD = "#8FD6C4",
-                                I = "#F6D55C", R = "#ED553B"
-                              ),
-                              colours_ppv = c(
-                                "R" = "maroon", "I" = "skyblue",
-                                "NWT" = "navy"
-                              )) {
+solo_ppv <- function(geno_table, pheno_table,
+                     pheno_drug = NULL, geno_class = NULL, geno_drug = NULL,
+                     geno_sample_col = NULL, pheno_sample_col = NULL,
+                     sir_col = NULL, ecoff_col = "ecoff", icat = FALSE,
+                     marker_col = "marker", reverse_order = FALSE,
+                     binary_matrix = NULL,
+                     min = 1,
+                     axis_label_size = 9,
+                     pd = position_dodge(width = 0.8),
+                     excludeRanges = NULL,
+                     colours_SIR = c(
+                       S = "#3CAEA3", SDD = "#8FD6C4",
+                       I = "#F6D55C", R = "#ED553B"
+                     ),
+                     colours_ppv = c(
+                       "R" = "maroon", "I" = "skyblue",
+                       "NWT" = "navy"
+                     )) {
   # get binary matrix
   if (is.null(binary_matrix)) {
     message("Generating geno-pheno binary matrix")

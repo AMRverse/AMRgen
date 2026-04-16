@@ -170,12 +170,12 @@ head(kleborate_binary_matrix, n = 10)
 
 ## Solo PPV Analysis for Kleborate AMR Markers
 
-To understand the individual contribution of an AMR marker found "solo" (i.e., in the absence of another carbapenem resistance determinant), we use the `solo_ppv_analysis()` function. 
+To understand the individual contribution of an AMR marker found "solo" (i.e., in the absence of another carbapenem resistance determinant), we use the `solo_ppv()` function. 
 
 The `combined_plot` is a visual representation of each AMR marker found solo, the phenotypic distribution of isolates, and the positive predictive values (PPVs). The `solo_stats` table provides the PPVs, standard error (`se`), lower confidence interval (`ci.lower`), and upper confidence interval (`ci.upper`). 
 
 ```{r kleborate_soloPPV, fig.height=6}
-soloPPV_kleborate_mero <- solo_ppv_analysis(binary_matrix = kleborate_binary_matrix)
+soloPPV_kleborate_mero <- solo_ppv(binary_matrix = kleborate_binary_matrix)
 
 soloPPV_kleborate_mero$solo_stats
 ```
@@ -881,9 +881,9 @@ rgi_binary_matrix <- get_binary_matrix(
 
 ## Solo PPV Analysis for RGI AMR Markers
 ```{r rgi_soloPPV, eval=FALSE}
-# No solo markers error when you run solo_ppv_analysis()! Since CARD/RGI includes intrinsic and acquired resistance determinants, there could be intrinsic / core resistance determinants that are found across most (if not all) genomes which obstructs our view of carbapenem resistance determinants found alone.
+# No solo markers error when you run solo_ppv()! Since CARD/RGI includes intrinsic and acquired resistance determinants, there could be intrinsic / core resistance determinants that are found across most (if not all) genomes which obstructs our view of carbapenem resistance determinants found alone.
 
-soloPPV_rgi_mero <- solo_ppv_analysis(binary_matrix = rgi_binary_matrix)
+soloPPV_rgi_mero <- solo_ppv(binary_matrix = rgi_binary_matrix)
 ```
 
 As such, we will exclude the core/intrinsic resistance determinants, using their prevalence and exclude any determinants identified across more than 80% of genomes.
@@ -899,9 +899,9 @@ rgi_binary_matrix_prev80 <- rgi_binary_matrix %>%
   }))
 ```
 
-Try running the `solo_ppv_analysis()` function again. 
+Try running the `solo_ppv()` function again. 
 ```{r rgi_soloPPV_2, fig.height=5}
-soloPPV_rgi_mero <- solo_ppv_analysis(binary_matrix = rgi_binary_matrix_prev80)
+soloPPV_rgi_mero <- solo_ppv(binary_matrix = rgi_binary_matrix_prev80)
 # Count number of genomes that have either `MdtQ` or `MdtQ:-`
 sum(rgi_binary_matrix_prev80$MdtQ == "1" | rgi_binary_matrix_prev80$`MdtQ..-` == "1", na.rm = TRUE)
 ```
@@ -913,13 +913,13 @@ Only MdtQ and MdtQ variants (MdtQ:-) were identified in the absence of other car
 rgi_binary_matrix_prev80 <- rgi_binary_matrix_prev80 %>% select(-MdtQ, -`MdtQ..-`)
 ```
 
-Try running the `solo_ppv_analysis()` function... again. 
+Try running the `solo_ppv()` function... again. 
 
 ```{r rgi_soloPPV_3, fig.height=6,fig.height=10}
-soloPPV_rgi_mero <- solo_ppv_analysis(binary_matrix = rgi_binary_matrix_prev80)
+soloPPV_rgi_mero <- solo_ppv(binary_matrix = rgi_binary_matrix_prev80)
 ```
 
-We can finally see carbapenem resistance determinants alone! Since RGI does not detect porin defects, many AMR markers are found alone compared to Kleborate's and AMRFinderPlus' `solo_ppv_analysis()` (see below). For example, NDM-1 alone was found in 59 resistant genomes (using RGI), 31 resistant genomes (using Kleborate), and 41 resistant genomes (using AMRFinderPlus). 
+We can finally see carbapenem resistance determinants alone! Since RGI does not detect porin defects, many AMR markers are found alone compared to Kleborate's and AMRFinderPlus' `solo_ppv()` (see below). For example, NDM-1 alone was found in 59 resistant genomes (using RGI), 31 resistant genomes (using Kleborate), and 41 resistant genomes (using AMRFinderPlus). 
 
 ```{r, soloPPV_kleborate_show, fig.height=6,fig.height=10}
 soloPPV_kleborate_mero
@@ -937,7 +937,7 @@ amrfp_binary_matrix <- get_binary_matrix(
   keep_assay_values_from = "mic"
 )
 # Solo PPV analysis
-soloPPV_amrfp_mero <- solo_ppv_analysis(binary_matrix = amrfp_binary_matrix)
+soloPPV_amrfp_mero <- solo_ppv(binary_matrix = amrfp_binary_matrix)
 ```
 
 ## Combinatorial PPV Analysis for RGI AMR Markers
@@ -1096,9 +1096,9 @@ combined_binary_matrix <- combined_binary_matrix %>%
 
 ## Solo PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR Markers
 ```{r soloPPV_combined, message=FALSE, fig.height=6}
-combined_solo_ppv <- solo_ppv_analysis(binary_matrix = combined_binary_matrix)
+combined_solo_ppv <- solo_ppv(binary_matrix = combined_binary_matrix)
 ```
-From this solo_ppv_analysis() plot, we can see that there are markers that are found alone which have strong support for a particular phenotype, e.g., NDM-1 association with meropenem resistance (n=31/38 R isolates), LptD:- identified by RGI (associated with susceptibility). Noting that LptD:- indicates a variant of LptD, so the variants need to be further investigated to see if there is a particular mutation/defect that is associated with meropenem susceptibility. 
+From this solo_ppv() plot, we can see that there are markers that are found alone which have strong support for a particular phenotype, e.g., NDM-1 association with meropenem resistance (n=31/38 R isolates), LptD:- identified by RGI (associated with susceptibility). Noting that LptD:- indicates a variant of LptD, so the variants need to be further investigated to see if there is a particular mutation/defect that is associated with meropenem susceptibility. 
 
 Another way to investigate the association between AMR markers and meropenem susceptibility is to use the `amr_logistic()` function to perform logistic regression to analyse the relationship between the markers and a specified antibiotic.
 

@@ -304,7 +304,7 @@ glm_details <- function(model) {
 #' @export
 #' @examples
 #' \dontrun{
-#' soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_pheno,
+#' soloPPV_cipro <- solo_ppv(ecoli_geno, ecoli_pheno,
 #'   pheno_drug = "Ciprofloxacin",
 #'   geno_class = c("Quinolones"),
 #'   sir_col = "pheno"

@@ -325,7 +325,7 @@ azi_upset <- amr_upset(
 Evaluate the positive predictive value (PPV) of solo markers (i.e. markers occurring in the absence of any other known AMR determinant):
 
 ```{r azm_solo_ppv, fig.height=8, warning=FALSE}
-azm_solo_ppv <- solo_ppv_analysis(
+azm_solo_ppv <- solo_ppv(
   binary_matrix = azm_bin,
   pheno_drug = "Azithromycin",
   reverse_order = FALSE
@@ -431,7 +431,7 @@ The upset plot shows that most isolates with an MIC above the EUCAST clinical br
 Only four markers appear in isolation; evaluate their solo PPVs:
 
 ```{r cip_solo_ppv, fig.height=8, warning=FALSE}
-cip_solo_ppv <- solo_ppv_analysis(
+cip_solo_ppv <- solo_ppv(
   binary_matrix = cip_bin,
   pheno_drug = "Ciprofloxacin",
   reverse_order = FALSE
@@ -575,14 +575,14 @@ Several mutations in *penA* are associated with increased MICs, however only par
 Because most known cephalosporin resistance mutations appear in combination, solo marker analysis provides limited information in this case:
 
 ```{r esc_solo_ppv, fig.height=4, warning=FALSE}
-cfm_solo_ppv <- solo_ppv_analysis(
+cfm_solo_ppv <- solo_ppv(
   binary_matrix = cfm_bin,
   pheno_drug = "Cefixime",
   geno_class = "Cephalosporins (3rd gen.)",
   sir_col = "pheno_eucast"
 )
 
-cro_solo_ppv <- solo_ppv_analysis(
+cro_solo_ppv <- solo_ppv(
   binary_matrix = cro_bin,
   pheno_drug = "Ceftriaxone",
   geno_class = "Cephalosporins (3rd gen.)",

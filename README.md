@@ -67,7 +67,7 @@ ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 
 # Calculate solo positive predictive value for ciprofloxacin resistance, for individual markers found solo
 #  (for all quinolone-associated genotype markers)
-soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_pheno, pheno_drug ="Ciprofloxacin", geno_class =c("Quinolones"), sir_col="pheno_clsi")
+soloPPV_cipro <- solo_ppv(ecoli_geno, ecoli_pheno, pheno_drug ="Ciprofloxacin", geno_class =c("Quinolones"), sir_col="pheno_clsi")
 
 # Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
 #  (for combinations observed at least 5 times)

@@ -35,7 +35,7 @@ from the genotypic prediction. Applied after \code{markers} filtering.}
 marker filtering when \code{solo_ppv_results} is provided, or as the combination
 PPV threshold when \code{prediction_rule = "combo_ppv"}.}
 
-\item{solo_ppv_results}{Output of \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, used for PPV-based
+\item{solo_ppv_results}{Output of \code{\link[=solo_ppv]{solo_ppv()}}, used for PPV-based
 marker filtering when \code{ppv_threshold} is set.}
 
 \item{ppv_results}{Output of \code{\link[=ppv]{ppv()}}, required when
@@ -154,7 +154,7 @@ result <- concordance(binary_matrix, truth = "R")
 result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
 
 # Filter markers by solo PPV threshold
-solo_ppv <- solo_ppv_analysis(binary_matrix = binary_matrix)
+solo_ppv <- solo_ppv(binary_matrix = binary_matrix)
 result <- concordance(
   binary_matrix,
   ppv_threshold = 0.5,
@@ -195,5 +195,5 @@ result$data \%>\% count(R_pred, pheno)
 }
 }
 \seealso{
-\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv_analysis]{solo_ppv_analysis()}}, \code{\link[=amr_logistic]{amr_logistic()}}, \link[yardstick:yardstick-package]{yardstick::yardstick}
+\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv]{solo_ppv()}}, \code{\link[=amr_logistic]{amr_logistic()}}, \link[yardstick:yardstick-package]{yardstick::yardstick}
 }

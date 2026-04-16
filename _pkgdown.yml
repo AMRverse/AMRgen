@@ -97,7 +97,7 @@ reference:
       Statistical models for resistance prediction and inference, including logistic regression and Firth regression.
     contents:
       - amr_upset
-      - solo_ppv_analysis
+      - solo_ppv
       - ppv
       - amr_logistic
       - glm_details

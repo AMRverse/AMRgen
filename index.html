@@ -57,8 +57,8 @@
 <img src="logo.png" class="logo" alt=""><h1 id="amrgen">AMRgen<a class="anchor" aria-label="anchor" href="#amrgen"></a>
 </h1>
 </div>
-<p><strong>AMRgen</strong> is an open-source R package designed to <strong>bridge the gap between genotypic and phenotypic antimicrobial resistance (AMR) data</strong>. Developed as an extension to the <a href="https://amr-for-r.org" class="external-link">AMR R package</a>, it provides tools to interpret AMR genes, integrate these findings with antimicrobial susceptibility test (AST) data, and calculate genotype-phenotype associations.</p>
-<p>This package is developed in collaboration with the ESGEM-AMR Working Group and is tailored for researchers and healthcare professionals tackling AMR globally.</p>
+<p><strong>AMRgen</strong> is an open-source R package designed to support systematic AMR genotype-phenotype analysis. Developed as an extension to the <a href="https://amr-for-r.org" class="external-link">AMR R package</a>, it provides functions to import and harmonise genotypic data from common bioinformatics tools, alongside phenotypic data from automated antimicrobial susceptibility testing (AST) instruments and public repositories, and combine enotype-phenotype data together in a single data structure. AMRgen supports common analyses linking AST data to reference distributions, modelling enotype-phenotype associations, quantifying concordance, and producing publication-ready visualisations including UpSet plots that jointly display genotypic marker combination frequencies and associated phenotypic distributions.</p>
+<p>This package is developed in collaboration with the <a href="https://esgem-amr.amrrules.org" class="external-link">ESGEM-AMR Working Group</a> and is tailored for researchers and health professionals tackling AMR globally.</p>
 <p>The <a href="https://amrgen.org">AMRgen website</a> has full function <a href="https://amrgen.org/reference/index.html">documentation</a> and various <a href="https://amrgen.org/articles/">vignettes</a> working through analysing geno/pheno data using key functions.</p>
 <hr>
 <div class="section level2">
@@ -66,17 +66,19 @@
 </h2>
 <ul>
 <li>
-<strong>Import Genotype and Phenotype Data</strong>: Import from common formats (NCBI or EBI antibiogram format, VITEK, Sensititre, MicroScan, Phoenix, WHONet for phenotypes; AMRFinderPlus, ABRicate, Kleborate, RGI and AMRrules for genotypes.</li>
+<strong>Import genotype and phenotype data</strong>: Import from common formats (NCBI or EBI antibiogram format, VITEK, Sensititre, MicroScan, Phoenix, WHONet for phenotypes; AMRFinderPlus, ABRicate, Kleborate, and CARD RGI for genotypes.</li>
+<li>
+<strong>Fetch public genotype and phenotype data</strong>: Download public data from NCBI or EBI.</li>
 <li>
 <strong>Genotype-Phenotype Integration</strong>: Links AMR gene presence with phenotypic resistance profiles, enabling deeper insights into resistance mechanisms.</li>
 <li>
-<strong>Automated EUCAST MIC Distribution Integration</strong>: Fetch MIC distribution data directly from <a href="https://mic.eucast.org" class="external-link">EUCAST</a> for seamless comparison with local susceptibility data.</li>
+<strong>Automated EUCAST reference distribution integration</strong>: Fetch MIC and disk zone reference distribution data directly from <a href="https://mic.eucast.org" class="external-link">EUCAST</a> for seamless comparison with local susceptibility data.</li>
 <li>
 <strong>Visualisation</strong>: Generate powerful UpSet plots to identify intersections of AMR gene presence and phenotypic resistance, highlighting multidrug resistance patterns.</li>
 <li>
-<strong>Modular and Extensible</strong>: Leverages the robust foundation of the AMR package, including antibiotic selectors and clinical breakpoint interpretations.</li>
+<strong>Modular and extensible</strong>: Leverages the robust foundation of the AMR package, including antibiotic selectors and clinical breakpoint interpretations.</li>
 <li>
-<strong>NCBI- and EBI-Compliant Export</strong>: Export phenotype data to NCBI- and EBI-compliant antibiogram format.</li>
+<strong>NCBI- and EBI-Compliant Export</strong>: Export phenotype data to antibiogram formats suitable for submission to NCBI or EBI along with genome data (linked by BioSample).</li>
 </ul>
 <hr>
 </div>
@@ -142,37 +144,35 @@
 <div class="section level2">
 <h2 id="importing-geno-or-pheno-data">Importing geno or pheno data<a class="anchor" aria-label="anchor" href="#importing-geno-or-pheno-data"></a>
 </h2>
-<p>To learn how to download data from the public archives <a href="http://amrgen.org/articles/DownloadGenoPhenoData.html" class="external-link">NCBI or EBI</a></p>
-<p>You can see all the various phenotypic import functions for the following formats by running:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">?</span><span class="va">import_pheno</span></span></code></pre></div>
-<p>Currently, AMRgen supports the following phenotype formats:</p>
+<p>Functions to import phenotypic data are documented in the <a href="https://amrgen.org/reference/import_pheno.html">import_pheno()</a> function reference. Currently, AMRgen supports importing files in the following formats:</p>
 <ul>
 <li>EBI</li>
 <li>NCBI</li>
 <li>VITEK</li>
 <li>MicroScan</li>
 <li>SensiTitre</li>
+<li>BD Phoenix</li>
 <li>WHOnet</li>
 </ul>
-<p>Phenotype data can also be exported in NCBI or EBI formats, for upload to the public archives:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">?</span><span class="va">export_ncbi_pheno</span></span>
-<span><span class="op">?</span><span class="va">export_ebi_pheno</span></span></code></pre></div>
+<p>The generic import function <a href="https://amrgen.org/reference/format_pheno.html">format_pheno()</a> is provided to help import phenotype data from formats other than the above. For a usage example see the vignettes on <a href="https://amrgen.org/articles/NeisseriaGonoExamples.html">Large-scale regional/national surveillance data</a> and <a href="https://amrgen.org/articles/SalmonellaExamples.html">Custom stratification by isolate source</a>.</p>
+<p>Functions to import genotypic data are documented in the <a href="https://amrgen.org/reference/import_geno.html">import_geno()</a> function reference. Currently, AMRgen supports the following genotype data formats:</p>
+<ul>
+<li>AMRFinderPlus</li>
+<li>Kleborate</li>
+<li>ABRicate (run with resfinder or ncbi databases)</li>
+<li>CARD RGI</li>
+<li>EBI AMR portal</li>
+</ul>
 </div>
 <div class="section level2">
-<h2 id="example-analyses-using-amrgen">Example analyses using AMRgen<a class="anchor" aria-label="anchor" href="#example-analyses-using-amrgen"></a>
+<h2 id="fetching-public-geno-or-pheno-data">Fetching public geno or pheno data<a class="anchor" aria-label="anchor" href="#fetching-public-geno-or-pheno-data"></a>
 </h2>
-<p>For a complete example of how to analyse your genotypic and phenotypic data together, see <a href="http://amrgen.org/articles/AnalysingGenoPhenoData.html" class="external-link">Analysing Geno-Pheno Data</a>.</p>
-<p>Example analysis of a small <em>Salmonella enterica</em> dataset for <a href="http://amrgen.org/articles/SalmonellaExamples.html" class="external-link">ciprofloxacin resistance</a></p>
-<p>Example analysis of clindamycin resistance in <a href="http://amrgen.org/articles/StaphAureusClindamycin.html" class="external-link"><em>Staphylococcus aureus</em></a></p>
-<p>Example analysis using large-scale surviellance genotype and phenotype data in <a href="http://amrgen.org/articles/NeisseriaGonoExamples.html" class="external-link"><em>Neiserria gonohorroeae</em></a></p>
-<p>How to assess concordance of predicted phenotypes with <a href="http://amrgen.org/articles/Concordance.html" class="external-link">observed phenotypes</a></p>
-<p>For more see the various <a href="https://amrgen.org/articles/">vignettes</a>.</p>
+<p>To learn how to download data from the public archives (NCBI or EBI) see the vignette: <a href="http://amrgen.org/articles/DownloadGenoPhenoData.html" class="external-link">Downloading Geno-Pheno Data</a></p>
+<p>Phenotype data can also be exported in NCBI or EBI formats, for upload to the public archives, see documentation for [export_ebi_pheno()](<a href="https://amrgen.org/reference/export_ebi_pheno.html" class="uri">https://amrgen.org/reference/export_ebi_pheno.html</a>] and <a href="https://amrgen.org/reference/export_ncbi_pheno.html">export_ncbi_pheno()</a> functions.</p>
 <div class="section level3">
 <h3 id="download-reference-mic-distribution-from-eucastorg-and-compare-to-example-data">Download reference MIC distribution from eucast.org and compare to example data<a class="anchor" aria-label="anchor" href="#download-reference-mic-distribution-from-eucastorg-and-compare-to-example-data"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get MIC reference distribution for ciprofloxacin in E. coli</span></span>
 <span><span class="va">ecoli_cip_mic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_eucast_amr_distribution.html">get_eucast_mic_distribution</a></span><span class="op">(</span><span class="st">"cipro"</span>, <span class="st">"E. coli"</span><span class="op">)</span></span>
 <span></span>
@@ -186,6 +186,14 @@
 <span><span class="va">comparison</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="vignettes-example-analyses-using-amrgen">Vignettes: Example analyses using AMRgen<a class="anchor" aria-label="anchor" href="#vignettes-example-analyses-using-amrgen"></a>
+</h2>
+<p>AMRgen includes a set of <a href="https://amrgen.org/articles/">vignettes</a> to illustrate package functionality.</p>
+<p>For an overview of available functions, and how they can be used to analyse genotypic and phenotypic data together, see * <a href="http://amrgen.org/articles/AnalysingGenoPhenoData.html" class="external-link">Analysing Geno-Pheno Data</a>.</p>
+<p>Vignettes for specific tasks: * <a href="http://amrgen.org/articles/DownloadGenoPhenoData.html" class="external-link">Downloading Geno-Pheno Data</a> from EBI or NCBI databases * <a href="https://amrgen.org/articles/Concordance.html">Assessing Geno-Pheno Concordance</a></p>
+<p>Vignettes using real-world examples to illustrate more complex geno-pheno analyses: * <a href="http://amrgen.org/articles/NeisseriaGonoExamples.html" class="external-link">Large-scale surveillance data for <em>Neiserria gonohorroeae</em></a> * <a href="http://amrgen.org/articles/SalmonellaExamples.html" class="external-link">Example with multiple <em>Salmonella enterica</em> serovars</a> - illustrating different ways to explore geno-pheno data by source, genotypic marker count, etc * <a href="http://amrgen.org/articles/StaphAureusClindamycin.html" class="external-link">Analysing clindamycin resistance in <em>Staphylococcus aureus</em></a> - illustrating how to dig further into AMRFinderPlus genotype calls and explore how different types of hits relate differently to phenotype * <a href="https://amrgen.org/articles/DeletionVariantsCatB3.html">Exploring catB3 deletion variants and impact on chloramphenicol susceptibility in <em>Escherichia coli</em></a> - illustrating how to explore the impact of gene deletion variants on phenotypes * <a href="https://amrgen.org/articles/ComparingGenotypers.html">Analysing meropenem resistance in <em>Klebsiella pneumoniae</em></a> - exploring combined impacts of acquired genes and mutations, comparing genotype calls from Kleborate, CARD RGI, AMRFinderPlus</p>
 </div>
 <div class="section level2">
 <h2 id="contributions">Contributions<a class="anchor" aria-label="anchor" href="#contributions"></a>

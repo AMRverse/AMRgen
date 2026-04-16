@@ -106,7 +106,7 @@ ecoli_geno <- import_amrfp(ecoli_geno_raw, "Name")
 
 # Calculate solo positive predictive value for ciprofloxacin resistance, for individual markers found solo
 #  (for all quinolone-associated genotype markers)
-soloPPV_cipro <- solo_ppv_analysis(ecoli_geno, ecoli_pheno, pheno_drug ="Ciprofloxacin", geno_class =c("Quinolones"), sir_col="pheno_clsi")
+soloPPV_cipro <- solo_ppv(ecoli_geno, ecoli_pheno, pheno_drug ="Ciprofloxacin", geno_class =c("Quinolones"), sir_col="pheno_clsi")
 
 # Do upset plot of ciprofloxacin MIC vs quinolone genotype marker combinations
 #  (for combinations observed at least 5 times)
@@ -354,8 +354,8 @@ logistic regression and Firth regression.
 
 - [`amr_upset()`](https://amrgen.org/reference/amr_upset.md) : Generate
   Upset Plot
-- [`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md)
-  : Perform Solo PPV Analysis for AMR Markers
+- [`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md) : Perform
+  Solo PPV Analysis for AMR Markers
 - [`ppv()`](https://amrgen.org/reference/ppv.md) : Generate PPV Plot
 - [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md) : AMR
   Logistic Regression Analysis

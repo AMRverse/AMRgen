@@ -8,7 +8,7 @@ various plots.
 ## Usage
 
 ``` r
-solo_ppv_analysis(
+solo_ppv(
   geno_table,
   pheno_table,
   pheno_drug = NULL,
@@ -219,7 +219,7 @@ binary_matrix <- get_binary_matrix(
 # Run solo PPV analysis plot analysis using this binary_matrix
 # (note pheno_drug / geno_class are optional here, and only used
 # for titling the plot)
-soloPPV_cipro <- solo_ppv_analysis(binary_matrix = binary_matrix)
+soloPPV_cipro <- solo_ppv(binary_matrix = binary_matrix)
 
 soloPPV_cipro$solo_stats
 soloPPV_cipro$combined_plot

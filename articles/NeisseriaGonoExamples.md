@@ -420,7 +420,7 @@ Evaluate the positive predictive value (PPV) of solo markers
 determinant):
 
 ``` r
-azm_solo_ppv <- solo_ppv_analysis(
+azm_solo_ppv <- solo_ppv(
   binary_matrix = azm_bin,
   pheno_drug = "Azithromycin",
   reverse_order = FALSE
@@ -613,7 +613,7 @@ ECOFF.
 Only four markers appear in isolation; evaluate their solo PPVs:
 
 ``` r
-cip_solo_ppv <- solo_ppv_analysis(
+cip_solo_ppv <- solo_ppv(
   binary_matrix = cip_bin,
   pheno_drug = "Ciprofloxacin",
   reverse_order = FALSE
@@ -868,7 +868,7 @@ combination, solo marker analysis provides limited information in this
 case:
 
 ``` r
-cfm_solo_ppv <- solo_ppv_analysis(
+cfm_solo_ppv <- solo_ppv(
   binary_matrix = cfm_bin,
   pheno_drug = "Cefixime",
   geno_class = "Cephalosporins (3rd gen.)",
@@ -880,7 +880,7 @@ cfm_solo_ppv <- solo_ppv_analysis(
 
 ``` r
 
-cro_solo_ppv <- solo_ppv_analysis(
+cro_solo_ppv <- solo_ppv(
   binary_matrix = cro_bin,
   pheno_drug = "Ceftriaxone",
   geno_class = "Cephalosporins (3rd gen.)",

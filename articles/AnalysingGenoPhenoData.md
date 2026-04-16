@@ -1131,8 +1131,7 @@ amongst strains that carry this marker ‘solo’ with no other markers
 known to be associated with resistance to the drug class. This is
 referred to as ‘solo PPV’.
 
-The function
-[`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md)
+The function [`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md)
 takes as input our genotype and phenotype tables, and calculates solo
 PPV for resistance to a specific drug (included in our phenotype table)
 for markers associated with the specified drug class (included in our
@@ -1164,7 +1163,7 @@ The function returns 4 objects:
 
 ``` r
 # Run a solo PPV analysis
-soloPPV_cipro <- solo_ppv_analysis(
+soloPPV_cipro <- solo_ppv(
   ecoli_geno,
   ecoli_pheno,
   sir_col = "pheno_clsi",
@@ -1179,7 +1178,7 @@ soloPPV_cipro <- solo_ppv_analysis(
 #> (`geom_point()`).
 ```
 
-![](AnalysingGenoPhenoData_files/figure-html/solo_ppv_analysis-1.png)
+![](AnalysingGenoPhenoData_files/figure-html/solo_ppv-1.png)
 
 ``` r
 

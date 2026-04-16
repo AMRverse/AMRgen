@@ -461,7 +461,7 @@ marker in that sample. This is produced using the
 </h3>
 <p>To understand the individual contribution of an AMR marker found
 “solo” (i.e., in the absence of another carbapenem resistance
-determinant), we use the <code><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis()</a></code> function.</p>
+determinant), we use the <code><a href="../reference/solo_ppv.html">solo_ppv()</a></code> function.</p>
 <p>The <code>combined_plot</code> is a visual representation of each AMR
 marker found solo, the phenotypic distribution of isolates, and the
 positive predictive values (PPVs). The <code>solo_stats</code> table
@@ -469,7 +469,7 @@ provides the PPVs, standard error (<code>se</code>), lower confidence
 interval (<code>ci.lower</code>), and upper confidence interval
 (<code>ci.upper</code>).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">soloPPV_kleborate_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">kleborate_binary_matrix</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">soloPPV_kleborate_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">kleborate_binary_matrix</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ComparingGenotypers_files/figure-html/kleborate_soloPPV-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -1674,9 +1674,9 @@ package provides CARD RGI calls for the EuSCAPE genomes:</p>
 <h3 id="solo-ppv-analysis-for-rgi-amr-markers">Solo PPV Analysis for RGI AMR Markers<a class="anchor" aria-label="anchor" href="#solo-ppv-analysis-for-rgi-amr-markers"></a>
 </h3>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># No solo markers error when you run solo_ppv_analysis()! Since CARD/RGI includes intrinsic and acquired resistance determinants, there could be intrinsic / core resistance determinants that are found across most (if not all) genomes which obstructs our view of carbapenem resistance determinants found alone.</span></span>
+<code class="sourceCode R"><span><span class="co"># No solo markers error when you run solo_ppv()! Since CARD/RGI includes intrinsic and acquired resistance determinants, there could be intrinsic / core resistance determinants that are found across most (if not all) genomes which obstructs our view of carbapenem resistance determinants found alone.</span></span>
 <span></span>
-<span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix</span><span class="op">)</span></span></code></pre></div>
 <p>As such, we will exclude the core/intrinsic resistance determinants,
 using their prevalence and exclude any determinants identified across
 more than 80% of genomes.</p>
@@ -1690,9 +1690,9 @@ more than 80% of genomes.</p>
 <span>      <span class="cn">TRUE</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">}</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Try running the <code><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis()</a></code> function again.</p>
+<p>Try running the <code><a href="../reference/solo_ppv.html">solo_ppv()</a></code> function again.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ComparingGenotypers_files/figure-html/rgi_soloPPV_2-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Count number of genomes that have either `MdtQ` or `MdtQ:-`</span></span>
@@ -1713,16 +1713,16 @@ will exclude it from further analyses.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exclude MdtQ and MdtQ:- from the binary matrix</span></span>
 <span><span class="va">rgi_binary_matrix_prev80</span> <span class="op">&lt;-</span> <span class="va">rgi_binary_matrix_prev80</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">MdtQ</span>, <span class="op">-</span><span class="va">`MdtQ..-`</span><span class="op">)</span></span></code></pre></div>
-<p>Try running the <code><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis()</a></code> function… again.</p>
+<p>Try running the <code><a href="../reference/solo_ppv.html">solo_ppv()</a></code> function… again.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ComparingGenotypers_files/figure-html/rgi_soloPPV_3-1.png" class="r-plt" alt="" width="100%"></p>
 <p>We can finally see carbapenem resistance determinants alone! Since
 RGI does not detect porin defects, many AMR markers are found alone
-compared to Kleborate’s and AMRFinderPlus’
-<code><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis()</a></code> (see below). For example, NDM-1 alone
-was found in 59 resistant genomes (using RGI), 31 resistant genomes
-(using Kleborate), and 41 resistant genomes (using AMRFinderPlus).</p>
+compared to Kleborate’s and AMRFinderPlus’ <code><a href="../reference/solo_ppv.html">solo_ppv()</a></code> (see
+below). For example, NDM-1 alone was found in 59 resistant genomes
+(using RGI), 31 resistant genomes (using Kleborate), and 41 resistant
+genomes (using AMRFinderPlus).</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soloPPV_kleborate_mero</span></span>
 <span><span class="co">#&gt; $solo_stats</span></span>
@@ -1808,7 +1808,7 @@ was found in 59 resistant genomes (using RGI), 31 resistant genomes
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
 <span><span class="co"># Solo PPV analysis</span></span>
-<span><span class="va">soloPPV_amrfp_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">amrfp_binary_matrix</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">soloPPV_amrfp_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">amrfp_binary_matrix</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ComparingGenotypers_files/figure-html/soloPPV_amrfp-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
@@ -2040,15 +2040,15 @@ a <code>1</code> (present), otherwise <code>0</code> (absent).</p>
 <h3 id="solo-ppv-analysis-for-amrfinderplus-rgi-kleborate-amr-markers">Solo PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR Markers<a class="anchor" aria-label="anchor" href="#solo-ppv-analysis-for-amrfinderplus-rgi-kleborate-amr-markers"></a>
 </h3>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">combined_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">combined_binary_matrix</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">combined_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">combined_binary_matrix</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ComparingGenotypers_files/figure-html/soloPPV_combined-1.png" class="r-plt" alt="" width="100%">
-From this solo_ppv_analysis() plot, we can see that there are markers
-that are found alone which have strong support for a particular
-phenotype, e.g., NDM-1 association with meropenem resistance (n=31/38 R
-isolates), LptD:- identified by RGI (associated with susceptibility).
-Noting that LptD:- indicates a variant of LptD, so the variants need to
-be further investigated to see if there is a particular mutation/defect
-that is associated with meropenem susceptibility.</p>
+From this solo_ppv() plot, we can see that there are markers that are
+found alone which have strong support for a particular phenotype, e.g.,
+NDM-1 association with meropenem resistance (n=31/38 R isolates), LptD:-
+identified by RGI (associated with susceptibility). Noting that LptD:-
+indicates a variant of LptD, so the variants need to be further
+investigated to see if there is a particular mutation/defect that is
+associated with meropenem susceptibility.</p>
 <p>Another way to investigate the association between AMR markers and
 meropenem susceptibility is to use the <code><a href="../reference/amr_logistic.html">amr_logistic()</a></code>
 function to perform logistic regression to analyse the relationship

@@ -63,8 +63,7 @@ concordance(
 
 - solo_ppv_results:
 
-  Output of
-  [`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md),
+  Output of [`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md),
   used for PPV-based marker filtering when `ppv_threshold` is set.
 
 - ppv_results:
@@ -187,7 +186,7 @@ rates are computed internally:
 ## See also
 
 [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md),
-[`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md),
+[`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md),
 [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md),
 [yardstick::yardstick](https://yardstick.tidymodels.org/reference/yardstick-package.html)
 
@@ -216,7 +215,7 @@ result <- concordance(binary_matrix, truth = "R")
 result <- concordance(binary_matrix, exclude_markers = c("qnrS1"))
 
 # Filter markers by solo PPV threshold
-solo_ppv <- solo_ppv_analysis(binary_matrix = binary_matrix)
+solo_ppv <- solo_ppv(binary_matrix = binary_matrix)
 result <- concordance(
   binary_matrix,
   ppv_threshold = 0.5,

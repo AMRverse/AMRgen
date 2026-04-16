@@ -19,8 +19,8 @@ those defined by an input inclusion list or exclusion list (specific
 marker(s), a minimum number of markers). The user may also filter the
 markers to be included in the genotypic prediction based on thresholds
 for solo Positive Predictive Value (PPV, see
-[`solo_ppv_analysis()`](https://amrgen.org/reference/solo_ppv_analysis.md)
-function) or logistic regression p-values (see
+[`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md) function) or
+logistic regression p-values (see
 [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md)
 function.
 

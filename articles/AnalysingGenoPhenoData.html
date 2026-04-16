@@ -1107,13 +1107,12 @@ on a drug phenotype is its positive predictive value (PPV) for
 resistance amongst strains that carry this marker ‘solo’ with no other
 markers known to be associated with resistance to the drug class. This
 is referred to as ‘solo PPV’.</p>
-<p>The function <code><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis()</a></code> takes as input our
-genotype and phenotype tables, and calculates solo PPV for resistance to
-a specific drug (included in our phenotype table) for markers associated
-with the specified drug class (included in our genotype table). It uses
-the <code><a href="../reference/get_binary_matrix.html">get_binary_matrix()</a></code> function to first calculate the
-binary matrix, then filters out all samples that have more than one
-marker.</p>
+<p>The function <code><a href="../reference/solo_ppv.html">solo_ppv()</a></code> takes as input our genotype and
+phenotype tables, and calculates solo PPV for resistance to a specific
+drug (included in our phenotype table) for markers associated with the
+specified drug class (included in our genotype table). It uses the
+<code><a href="../reference/get_binary_matrix.html">get_binary_matrix()</a></code> function to first calculate the binary
+matrix, then filters out all samples that have more than one marker.</p>
 <p>It then calculates for each remaining marker, amongst the genomes in
 which that marker is found solo, the number of genomes, the number and
 proportion that are R or NWT, and the 95% confidence intervals for these
@@ -1136,7 +1135,7 @@ marker</p></li>
 </ul>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run a solo PPV analysis</span></span>
-<span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span></span>
+<span><span class="va">soloPPV_cipro</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span></span>
 <span>  <span class="va">ecoli_geno</span>,</span>
 <span>  <span class="va">ecoli_pheno</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span>
@@ -1149,7 +1148,7 @@ marker</p></li>
 <span><span class="co">#&gt; (`geom_segment()`).</span></span>
 <span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre></div>
-<p><img src="AnalysingGenoPhenoData_files/figure-html/solo_ppv_analysis-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="AnalysingGenoPhenoData_files/figure-html/solo_ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Output table</span></span>

@@ -123,7 +123,7 @@ PPV threshold when <code>prediction_rule = "combo_ppv"</code>.</p></dd>
 
 
 <dt id="arg-solo-ppv-results">solo_ppv_results<a class="anchor" aria-label="anchor" href="#arg-solo-ppv-results"></a></dt>
-<dd><p>Output of <code><a href="solo_ppv_analysis.html">solo_ppv_analysis()</a></code>, used for PPV-based
+<dd><p>Output of <code><a href="solo_ppv.html">solo_ppv()</a></code>, used for PPV-based
 marker filtering when <code>ppv_threshold</code> is set.</p></dd>
 
 
@@ -211,7 +211,7 @@ truly susceptible isolates incorrectly predicted resistant from genotype.</p></l
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>, <code><a href="solo_ppv_analysis.html">solo_ppv_analysis()</a></code>, <code><a href="amr_logistic.html">amr_logistic()</a></code>, <a href="https://yardstick.tidymodels.org/reference/yardstick-package.html" class="external-link">yardstick::yardstick</a></p></div>
+    <div class="dont-index"><p><code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>, <code><a href="solo_ppv.html">solo_ppv()</a></code>, <code><a href="amr_logistic.html">amr_logistic()</a></code>, <a href="https://yardstick.tidymodels.org/reference/yardstick-package.html" class="external-link">yardstick::yardstick</a></p></div>
     </div>
 
     <div class="section level2">
@@ -238,7 +238,7 @@ truly susceptible isolates incorrectly predicted resistant from genotype.</p></l
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">concordance</span><span class="op">(</span><span class="va">binary_matrix</span>, exclude_markers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"qnrS1"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Filter markers by solo PPV threshold</span></span></span>
-<span class="r-in"><span><span class="va">solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="solo_ppv_analysis.html">solo_ppv_analysis</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">binary_matrix</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">binary_matrix</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">concordance</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">binary_matrix</span>,</span></span>
 <span class="r-in"><span>  ppv_threshold <span class="op">=</span> <span class="fl">0.5</span>,</span></span>

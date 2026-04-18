@@ -14,7 +14,7 @@
   source](https://amrgen.org/articles/SalmonellaExamples.md):
 - [Example with custom classification of genotype
   hits](https://amrgen.org/articles/StaphAureusClindamycin.md):
-- [Analysing the impact of deletion variants on
-  susceptibility](https://amrgen.org/articles/DeletionVariantsCatB3.md):
 - [Example exploring gene vs mutation
   combinations](https://amrgen.org/articles/KlebsiellaMultipleGenotypers.md):
+- [Analysing the impact of deletion variants on
+  susceptibility](https://amrgen.org/articles/DeletionVariantsCatB3.md):

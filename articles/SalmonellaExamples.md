@@ -480,6 +480,50 @@ mic_by_marker_count
 
 ![](SalmonellaExamples_files/figure-html/assay_by_genotype_Source-1.png)
 
+We can also use the `boxplot=TRUE` option in
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) to see
+the MIC distribution as boxplots, stratified by number of markers. This
+also summarises the median and interquartile range of MIC values, per
+marker count so we can quantify as well as visualise the impact of
+number of mutations on MIC.
+
+``` r
+# plot the MIC distributions as boxplots, stratified by number of markers
+mic_boxpplot_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), boxplot=T)
+
+mic_boxpplot_by_marker_count$plot
+```
+
+![](SalmonellaExamples_files/figure-html/assay_by_markercount_boxplot-1.png)
+
+``` r
+
+mic_boxpplot_by_marker_count$stats
+#> # A tibble: 4 × 5
+#>   marker_count     n median   q25    q75
+#>          <dbl> <int>  <dbl> <dbl>  <dbl>
+#> 1            1   180  0.125 0.041  0.205
+#> 2            2   108  0.22  0.117  0.38 
+#> 3            3    39  3     0.5    6    
+#> 4            4    18  4.19  0.25  12
+```
+
+We can also use the `boxplot=TRUE` option in
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) to see
+the MIC distribution as boxplots, stratified by number of markers. This
+also summarises the median and interquartile range of MIC values, per
+marker count so we can quantify as well as visualise the impact of
+number of mutations on MIC.
+
+``` r
+# plot the MIC distributions as boxplots, stratified by number of markers
+mic_boxpplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_var="Source", boxplot=T)
+
+mic_boxpplot_by_marker_count_source$plot
+```
+
+![](SalmonellaExamples_files/figure-html/assay_by_markercount_boxplot_source-1.png)
+
 #### Plot ciprofloxacin phenotype by combinations of markers
 
 We can look at how combinations of markers are associated with

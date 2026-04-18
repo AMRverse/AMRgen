@@ -2,14 +2,14 @@
 % Please edit documentation in R/assay_distribution.R
 \name{assay_by_var}
 \alias{assay_by_var}
-\title{Generate a Stacked Bar Plot of Assay Values Colored by a Variable}
+\title{Plot Assay Values Colored by a Variable}
 \usage{
 assay_by_var(
   pheno_table,
   pheno_drug = NULL,
   measure = "mic",
   colour_by = NULL,
-  bar_cols = NULL,
+  colours = NULL,
   facet_var = NULL,
   bp_site = NULL,
   bp_S = NULL,
@@ -17,11 +17,14 @@ assay_by_var(
   bp_ecoff = NULL,
   species = NULL,
   guideline = "EUCAST 2025",
-  bp_cols = c(S = "#3CAEA3", R = "#ED553B", E = "grey"),
-  x_axis_label = "Measurement",
+  bp_colours = c(S = "grey", R = "grey", E = "grey"),
+  measure_axis_label = "Measurement",
   y_axis_label = "Count",
   colour_legend_label = NULL,
-  plot_title = NULL
+  plot_title = NULL,
+  boxplot = FALSE,
+  facet_nrow = NULL,
+  facet_ncol = NULL
 )
 }
 \arguments{
@@ -33,7 +36,7 @@ assay_by_var(
 
 \item{colour_by}{(optional) Field name containing a variable to colour bars by (default NULL, which will colour each bar to indicate whether the value is expressed as a range or not).}
 
-\item{bar_cols}{(optional) Manual colour scale to use for bar plot. If NULL, \code{colour_by} variable is of class 'sir', bars will by default be coloured using standard SIR colours.}
+\item{colours}{(optional) Manual colour scale to use for bar plot. If NULL, \code{colour_by} variable is of class 'sir', bars will by default be coloured using standard SIR colours.}
 
 \item{facet_var}{(optional) Column name containing a variable to facet on (default NULL).}
 
@@ -49,21 +52,27 @@ assay_by_var(
 
 \item{guideline}{(optional) Guideline to use when looking up breakpoints (default 'EUCAST 2025').}
 
-\item{bp_cols}{(optional) Manual colour scale for breakpoint lines.}
+\item{bp_colours}{(optional) Manual colour scale for breakpoint lines (default \code{c(S = "grey", R = "grey", E = "grey")}).}
 
-\item{x_axis_label}{(optional) String to label the x-axis (default "Measurement").}
+\item{measure_axis_label}{(optional) String to label the measurement axis (x-axis for histogram, y-axis for boxplot, default \code{"Measurement"}).}
 
-\item{y_axis_label}{(optional) String to label the y-axis (default "Count").}
+\item{y_axis_label}{(optional) String to label the y-axis in histogram plot (default \code{"Count"}).}
 
-\item{colour_legend_label}{(optional) String to label the barplot fill colour legend (default NULL, which results in plotting the variable name specified via the 'colour_by' parameter).}
+\item{colour_legend_label}{(optional) String to label the colour legend (default \code{NULL}, which results in plotting the variable name specified via the 'colour_by' parameter). Also used to label the x-axis if boxplot=\code{TRUE}.}
 
 \item{plot_title}{(optional) String to title the plot (default indicates whether MIC or disk distribution is plotted, prefixed with the antibiotic name if provided, e.g. 'Ciprofloxacin MIC distribution')}
+
+\item{boxplot}{(optional) If \code{TRUE}, plot the data as a grouped boxplot of assay measures, grouped and coloured by the \code{colour_by} variable. Summary statistics (median and interquartile range of assay measures) are also computed, stratified by the \code{colour_by} and \code{facet_var} variables.}
+
+\item{facet_nrow}{(optional) Number of rows for the facet grid (not used unless \code{facet_var} is provided).}
+
+\item{facet_ncol}{(optional) Number of columns for the facet grid (not used unless \code{facet_var} is provided).}
 }
 \value{
-The stacked bar plot
+If boxplot=\code{FALSE}, the plot is returned as a single unnamed value. If boxplot=\code{TRUE}, the plot is returned ($plot) along with the summary statistics ($stats).
 }
 \description{
-This function creates a stacked bar plot using \code{ggplot2}, where the x-axis represents MIC (Minimum Inhibitory Concentration) or disk values, the y-axis indicates their frequency, and the bars are colored by a variable (by default, colours indicate whether the assay value is expressed as a range or not). Plots can optionally be faceted on an additional categorical variable. If breakpoints are provided, or species and drug are provided so we can extract EUCAST breakpoints, vertical lines indicating the S/R breakpoints and ECOFF will be added to the plot.
+This function by deafault creates a stacked bar plot, where the x-axis represents assay measurements (either MIC, Minimum Inhibitory Concentration) or disk diffusion zones values), the y-axis indicates their frequency, and the bars are colored by a variable indicated using \code{colour_by} (by default, colours indicate whether the assay value is expressed as a range or not). Plots can optionally be faceted on an additional categorical variable. Optionally, the data can be plotted as a grouped bar plot instead, with the assay measures shown on the y-axis, grouped and coloured by the \code{colour_by} variable, by setting barplot = \code{TRUE}. If breakpoints are provided, or species and drug are provided so we can extract breakpoints, lines indicating the S/R breakpoints (solid lines) and ECOFF (dashed line) will be added to the plot (and printed in the subtitle).
 }
 \examples{
 # plot MIC distribution, highlighting values expressed as ranges
@@ -82,7 +91,7 @@ assay_by_var(
 assay_by_var(
   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
-  bar_cols = c(S = "skyblue", I = "orange", R = "maroon")
+  colours = c(S = "skyblue", I = "orange", R = "maroon")
 )
 
 # look up ECOFF and CLSI breakpoints and annotate these on the plot

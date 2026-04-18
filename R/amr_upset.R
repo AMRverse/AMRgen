@@ -41,6 +41,7 @@
 #' @param species Optional. Species name used for breakpoint lookup.
 #' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
+#' @param marker_order (optional) Force order of markers in upset grid. Default `NULL` in which case markers are ordered in decreasing order of freauency.
 #' @importFrom AMR as.mic as.ab as.mo as.disk scale_color_sir scale_fill_sir scale_y_mic
 #' @importFrom dplyr any_of arrange desc distinct filter group_by if_else left_join right_join mutate n pull relocate row_number select summarise ungroup
 #' @importFrom forcats fct_rev fct_relevel
@@ -79,7 +80,8 @@
 #'
 #' combo_matrix <- combo_stats(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
 #' }
-combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
+combo_stats <- function(binary_matrix, min_set_size = 2, 
+                        order = "",
                         assay = "mic",
                         print_set_size = FALSE,
                         print_category_counts = FALSE,
@@ -89,7 +91,8 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
                         pheno_drug = NULL, species = NULL, bp_site = NULL,
                         guideline = "EUCAST 2025",
                         bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
-                        pd = position_dodge(width = 0.8)) {
+                        pd = position_dodge(width = 0.8), 
+                        marker_order = NULL) {
   if (sum(!is.na(binary_matrix$pheno)) == 0) {
     if (sum(!is.na(binary_matrix$ecoff)) > 0) {
       binary_matrix <- binary_matrix %>% mutate(pheno = ecoff)
@@ -179,10 +182,15 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 
   ### Set order of genes for y axis in combination dot plot
   ## (amongst strains with marker combinations exceeding the minimum set size, that will be included in plot)
-  gene.order.desc <- gene.prev %>%
-    arrange(desc(gene.prev)) %>%
-    filter(gene.prev > 0) %>%
-    pull(genes)
+  if (is.null(marker_order)) {
+    gene.order.desc <- gene.prev %>%
+      arrange(desc(gene.prev)) %>%
+      filter(gene.prev > 0) %>%
+      pull(genes)
+  } else {
+    # expect a user-supplied vector of markers to force inclusion
+    gene.order.desc <- marker_order
+  }
 
   # For gene prev plot
   gene.prev <- gene.prev %>%
@@ -249,8 +257,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
         median = median(as.double(as.disk(disk)), na.rm = TRUE),
         q25 = stats::quantile(as.double(as.disk(disk)), 0.25, na.rm = TRUE),
         q75 = stats::quantile(as.double(as.disk(disk)), 0.75, na.rm = TRUE),
-        n = n(),
-        n_exclRangeValues = sum(!grepl("<|>", as.character(mic)))
+        n = n()
       )
   }
   if ("NWT" %in% colnames(binary_matrix_wide)) {
@@ -374,12 +381,13 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
   }
 
   ##### Plots ###
-
+  
   ### assay data plot (MIC/disk distribution)
   if (!is.null(assay)) {
-    g1 <- ggplot(data = assay_plot, aes(x = combination_id, y = `get(assay)`)) +
+    g1 <- ggplot(data = binary_matrix, aes(x = combination_id, y = get(assay))) +
       geom_boxplot(colour = boxplot_col) +
-      geom_point(aes(size = n, colour = pheno), show.legend = TRUE) +
+      geom_point(data = assay_plot, aes(x = combination_id, y = `get(assay)`, 
+                 size = n, colour = pheno), show.legend = TRUE) +
       theme_bw() +
       scale_size_continuous("Number of\nisolates") +
       scale_color_sir(
@@ -500,7 +508,8 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
     marker_grid_plot = g3,
     marker_count_plot = g4,
     category_plot = category_plot,
-    ppv_plot = ppv_plot
+    ppv_plot = ppv_plot,
+    binary_matrix = binary_matrix_wide
   ))
 }
 
@@ -540,6 +549,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2, order = "",
 #' @param species Optional. Species name used for breakpoint lookup.
 #' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
+#' @param marker_order (optional) Force order of markers in upset grid. Default `NULL` in which case markers are ordered in decreasing order of freauency.
 #' @importFrom ggplot2 theme theme_bw theme_light element_blank element_text labs scale_y_reverse
 #' @importFrom patchwork plot_layout plot_spacer
 #' @return A list containing the following elements:
@@ -589,7 +599,8 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
                       species = NULL, bp_site = NULL,
                       guideline = "EUCAST 2025",
-                      bp_S = NULL, bp_R = NULL, ecoff_bp = NULL) {
+                      bp_S = NULL, bp_R = NULL, ecoff_bp = NULL, 
+                      marker_order = NULL) {
   if (is.null(assay)) {
     stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `ppv()` is more appropriate.")
   } else if (!(assay %in% c("mic", "disk"))) {
@@ -629,7 +640,8 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
     guideline = guideline,
     bp_S = bp_S,
     bp_R = bp_R,
-    ecoff_bp = ecoff_bp
+    ecoff_bp = ecoff_bp,
+    marker_order = marker_order
   )
 
   # assemble plot
@@ -666,7 +678,9 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 
   print(final_plot)
 
-  return(list(plot = final_plot, binary_matrix = binary_matrix, summary = combo_data$summary))
+  return(list(plot = final_plot, 
+              binary_matrix = combo_data$binary_matrix, 
+              summary = combo_data$summary))
 }
 
 
@@ -710,6 +724,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' @param bp_R (Optional) R breakpoint to add to assay distribution plot (numerical).
 #' @param ecoff_bp (Optional) ECOFF breakpoint to add to assay distribution plot (numerical).
 #' @param pd A `ggplot2::position_dodge()` object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default is `position_dodge(width = 0.8)`.
+#' @param marker_order (optional) Force order of markers in upset grid. Default `NULL` in which case markers are ordered in decreasing order of freauency.
 #' @importFrom dplyr distinct filter group_by if_else left_join mutate n pull relocate row_number select summarise ungroup starts_with
 #' @importFrom ggplot2 aes after_stat coord_flip element_blank geom_bar geom_boxplot geom_col geom_point geom_segment geom_text ggplot labs position_fill scale_size_continuous scale_x_discrete scale_y_discrete scale_y_reverse theme theme_bw theme_light ylab scale_x_continuous theme_void guides margin coord_cartesian
 #' @importFrom patchwork plot_layout plot_spacer
@@ -766,7 +781,8 @@ ppv <- function(binary_matrix = NULL,
                 boxplot_col = "grey", species = NULL, bp_site = NULL,
                 guideline = "EUCAST 2025",
                 bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
-                pd = position_dodge(width = 0.8)) {
+                pd = position_dodge(width = 0.8), 
+                marker_order = NULL) {
   # get binary matrix
   if (is.null(binary_matrix)) {
     message("Generating geno-pheno binary matrix")
@@ -801,7 +817,8 @@ ppv <- function(binary_matrix = NULL,
     bp_S = bp_S,
     bp_R = bp_R,
     ecoff_bp = ecoff_bp,
-    pd = pd
+    pd = pd,
+    marker_order = marker_order
   )
 
   # assemble plot

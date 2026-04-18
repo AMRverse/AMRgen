@@ -232,7 +232,7 @@ gyrA_mut <- cip_bin_meta %>%
   select(mic, gyrA_mut, Source, Serovar)
 
 # plot the MIC distribution, coloured by count of gyrA mutations
-mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", pheno_drug = "Ciprofloxacin", bar_cols = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
 
 mic_by_gyrA_count
 ```
@@ -245,7 +245,7 @@ marker_count <- cip_bin_meta %>%
   select(mic, marker_count, Source, Serovar)
 
 # plot the MIC distribution, coloured by count of associated genetic markers
-mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1)) +
+mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1)) +
   facet_wrap(~Source, ncol = 1)
 
 mic_by_marker_count

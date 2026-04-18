@@ -64,8 +64,7 @@ articles:
       - SalmonellaExamples
       - StaphAureusClindamycin
       - DeletionVariantsCatB3
-      - ComparingGenotypers
-      
+      - KlebsiellaMultipleGenotypers
 
 # Reference section grouping
 reference:

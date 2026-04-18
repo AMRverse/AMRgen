@@ -34,7 +34,8 @@ ppv(
   bp_S = NULL,
   bp_R = NULL,
   ecoff_bp = NULL,
-  pd = position_dodge(width = 0.8)
+  pd = position_dodge(width = 0.8),
+  marker_order = NULL
 )
 }
 \arguments{
@@ -108,6 +109,8 @@ ppv(
 \item{ecoff_bp}{(Optional) ECOFF breakpoint to add to assay distribution plot (numerical).}
 
 \item{pd}{A \code{ggplot2::position_dodge()} object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default is \code{position_dodge(width = 0.8)}.}
+
+\item{marker_order}{(optional) Force order of markers in upset grid. Default \code{NULL} in which case markers are ordered in decreasing order of freauency.}
 }
 \value{
 A list containing the following elements:

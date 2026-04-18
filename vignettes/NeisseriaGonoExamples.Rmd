@@ -392,7 +392,7 @@ assay_by_var(
   measure = "mic",
   colour_by = "NWT_pred",
   species = "Neisseria gonorrhoeae",
-  bar_cols = c("#3CAEA3", "#ED553B"),
+  colours = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "NWT prediction"
 )
 ```
@@ -501,7 +501,7 @@ assay_by_var(
   measure = "mic",
   colour_by = "R_pred",
   species = "Neisseria gonorrhoeae",
-  bar_cols = c("#3CAEA3", "#ED553B"),
+  colours = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "R prediction"
 )
 
@@ -511,7 +511,7 @@ assay_by_var(
   measure = "mic",
   colour_by = "NWT_pred",
   species = "Neisseria gonorrhoeae",
-  bar_cols = c("#3CAEA3", "#ED553B"),
+  colours = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "NWT prediction"
 )
 ```
@@ -871,7 +871,7 @@ assay_by_var(
   measure = "mic",
   colour_by = "R_pred",
   species = "Neisseria gonorrhoeae",
-  bar_cols = c("#3CAEA3", "#ED553B"),
+  colours = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "R prediction"
 )
 ```

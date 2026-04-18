@@ -30,7 +30,8 @@ amr_upset(
   guideline = "EUCAST 2025",
   bp_S = NULL,
   bp_R = NULL,
-  ecoff_bp = NULL
+  ecoff_bp = NULL,
+  marker_order = NULL
 )
 }
 \arguments{
@@ -95,6 +96,8 @@ amr_upset(
 \item{bp_R}{(Optional) R breakpoint to add to plot (numerical).}
 
 \item{ecoff_bp}{(Optional) ECOFF breakpoint to add to plot (numerical).}
+
+\item{marker_order}{(optional) Force order of markers in upset grid. Default \code{NULL} in which case markers are ordered in decreasing order of freauency.}
 }
 \value{
 A list containing the following elements:

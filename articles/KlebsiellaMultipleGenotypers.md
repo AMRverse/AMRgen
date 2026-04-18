@@ -560,6 +560,8 @@ kp_mic_upset_kleborate2 <- amr_upset(
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot_groupins-1.png)
 
+### MIC boxplot for Kleborate enzymes vs porin mutations
+
 Now let’s use the
 [`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md)
 function to explore the MIC distribution stratified by enzyme, and by
@@ -604,34 +606,17 @@ head(kleborate_dev_wide_mic)
 #> #   guideline <chr>, method <chr>, platform <chr>, source <chr>, …
 
 # this table is now ready to use with assay_by_var, to flexibly explore MIC distribution by genotype
-assay_by_var(kleborate_dev_wide_mic,
+kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic,
              pheno_drug="Meropenem", colour_by = "Omp_mutations",
              facet_var = "Bla_Carb_acquired", species="Klebsiella pneumoniae", 
              colour_legend_label = "Omp mutations", boxplot=T)
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
-#> $plot
+
+kleborate_mic_by_gene_mutation$plot
 ```
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_boxplot-1.png)
-
-    #> 
-    #> $stats
-    #> # A tibble: 45 × 6
-    #> # Groups:   Omp_mutations [6]
-    #>    Omp_mutations Bla_Carb_acquired     n median   q25   q75
-    #>    <chr>         <chr>             <int>  <dbl> <dbl> <dbl>
-    #>  1 -             -                   726   0.06  0.06  0.06
-    #>  2 -             IMP-1                 3  16    12    16   
-    #>  3 -             KPC-2                17   8     8    16   
-    #>  4 -             KPC-2,VIM-1           2  24    20    28   
-    #>  5 -             KPC-3                10   6     2    14   
-    #>  6 -             NDM-1                38  32    16    32   
-    #>  7 -             NDM-1,OXA-48          1  32    32    32   
-    #>  8 -             NDM-1,VIM-1           1  16    16    16   
-    #>  9 -             OXA-162               2   2.5   1.75  3.25
-    #> 10 -             OXA-204               1   0.5   0.5   0.5 
-    #> # ℹ 35 more rows
 
 The plot is crowded with some carbapenemase/combinations that are very
 rare, let’s collapse into enzyme families, and remove the single CTX
@@ -650,6 +635,18 @@ kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic_trim,
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
 
+kleborate_mic_by_gene_mutation$plot
+```
+
+![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_boxplot_genefam-1.png)
+
+Now we can see the impact of the mutations in the absence of any
+carbapenemase gene (panel labelled “-”); the MIC distribution associated
+with each carbapenemase in the absence of any mutation (red points in
+all other plots); and the impact of mutations in the presence of each
+type of carbapenemase (other colours).
+
+``` r
 kleborate_mic_by_gene_mutation$stats %>% head(19)
 #> # A tibble: 19 × 6
 #> # Groups:   Omp_mutations [4]
@@ -675,12 +672,6 @@ kleborate_mic_by_gene_mutation$stats %>% head(19)
 #> 18 OmpK36ins       KPC                   3  32    20     32   
 #> 19 OmpK36ins       NDM                   8  32    32     32
 ```
-
-Now we can see the impact of the mutations in the absence of any
-carbapenemase gene (panel labelled “-”); the MIC distribution associated
-with each carbapenemase in the absence of any mutation (red points in
-all other plots); and the impact of mutations in the presence of each
-type of carbapenemase (other colours).
 
 ## Genotypes from Kleborate v3.1.3
 

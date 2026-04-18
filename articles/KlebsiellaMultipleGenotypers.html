@@ -590,6 +590,10 @@ together.</p>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot_groupins-1.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="mic-boxplot-for-kleborate-enzymes-vs-porin-mutations">MIC boxplot for Kleborate enzymes vs porin mutations<a class="anchor" aria-label="anchor" href="#mic-boxplot-for-kleborate-enzymes-vs-porin-mutations"></a>
+</h3>
 <p>Now let’s use the <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code> function to explore the
 MIC distribution stratified by enzyme, and by mutation. Setting
 <code>boxplot=T</code> we can view boxplots of MIC, grouped and coloured
@@ -632,35 +636,19 @@ add these to the plot.</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   guideline &lt;chr&gt;, method &lt;chr&gt;, platform &lt;chr&gt;, source &lt;chr&gt;, …</span></span></span>
 <span></span>
 <span><span class="co"># this table is now ready to use with assay_by_var, to flexibly explore MIC distribution by genotype</span></span>
-<span><span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">kleborate_dev_wide_mic</span>,</span>
+<span><span class="va">kleborate_mic_by_gene_mutation</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">kleborate_dev_wide_mic</span>,</span>
 <span>             pheno_drug<span class="op">=</span><span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
 <span>             facet_var <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species<span class="op">=</span><span class="st">"Klebsiella pneumoniae"</span>, </span>
 <span>             colour_legend_label <span class="op">=</span> <span class="st">"Omp mutations"</span>, boxplot<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>
-<span><span class="co">#&gt; $plot</span></span></code></pre></div>
+<span></span>
+<span><span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_boxplot-1.png" class="r-plt" alt="" width="100%"></p>
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $stats</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 45 × 6</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   Omp_mutations [6]</span></span></span>
-<span><span class="co">#&gt;    Omp_mutations Bla_Carb_acquired     n median   q25   q75</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -             -                   726   0.06  0.06  0.06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -             IMP-1                 3  16    12    16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -             KPC-2                17   8     8    16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -             KPC-2,VIM-1           2  24    20    28   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -             KPC-3                10   6     2    14   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -             NDM-1                38  32    16    32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> -             NDM-1,OXA-48          1  32    32    32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> -             NDM-1,VIM-1           1  16    16    16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> -             OXA-162               2   2.5   1.75  3.25</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> -             OXA-204               1   0.5   0.5   0.5 </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 35 more rows</span></span></span></code></pre>
 <p>The plot is crowded with some carbapenemase/combinations that are
 very rare, let’s collapse into enzyme families, and remove the single
 CTX gene.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kleborate_dev_wide_mic_trim</span> <span class="op">&lt;-</span> <span class="va">kleborate_dev_wide_mic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Bla_Carb_acquired<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="va">Bla_Carb_acquired</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># first 3 letters give gene family name</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Bla_Carb_acquired</span> <span class="op">!=</span> <span class="st">"CTX"</span><span class="op">)</span></span>
@@ -673,7 +661,15 @@ CTX gene.</p>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>
 <span></span>
-<span><span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">stats</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">19</span><span class="op">)</span></span>
+<span><span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_boxplot_genefam-1.png" class="r-plt" alt="" width="100%"></p>
+<p>Now we can see the impact of the mutations in the absence of any
+carbapenemase gene (panel labelled “-”); the MIC distribution associated
+with each carbapenemase in the absence of any mutation (red points in
+all other plots); and the impact of mutations in the presence of each
+type of carbapenemase (other colours).</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">stats</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">19</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 19 × 6</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Groups:   Omp_mutations [4]</span></span></span>
 <span><span class="co">#&gt;    Omp_mutations   Bla_Carb_acquired     n median    q25   q75</span></span>
@@ -697,11 +693,6 @@ CTX gene.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> OmpK36ins       -                    12   0.5   0.105  1.25</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> OmpK36ins       KPC                   3  32    20     32   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> OmpK36ins       NDM                   8  32    32     32</span></span></code></pre></div>
-<p>Now we can see the impact of the mutations in the absence of any
-carbapenemase gene (panel labelled “-”); the MIC distribution associated
-with each carbapenemase in the absence of any mutation (red points in
-all other plots); and the impact of mutations in the presence of each
-type of carbapenemase (other colours).</p>
 </div>
 </div>
 <div class="section level2">

@@ -351,7 +351,7 @@ The distribution shifts to the right and towards sensitive for isolates with the
 
 We can then split the plot based on whether the the *catB3* gene is truncated or not. This is calculated as a percentage of coverage, with 100% aligning across the entire length of the gene and <100% showing a truncation or deletion (see [Graf et al., 2024](https://doi.org/10.1038/s41467-024-53391-2) for more about the IS*26* mediated truncation of *catB3*).
 
-```{r, fig.width=8, fig.height=10, error=FALSE, warning=FALSE, message=FALSE}
+```{r, fig.width=8, fig.height=6, error=FALSE, warning=FALSE, message=FALSE}
 # add genotype data to the phenotype table for isolates with catB3 alone
 AST_CATB3_pheno_2 <- MB_CATB3_geno %>%
   select(id, gene, `% Coverage of reference`) %>%

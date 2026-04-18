@@ -254,19 +254,19 @@ mic_by_marker_count
 We can also use the `boxplot=TRUE` option in `assay_by_var()` to see the MIC distribution as boxplots, stratified by number of markers. This also summarises the median and interquartile range of MIC values, per marker count so we can quantify as well as visualise the impact of number of mutations on MIC.
 ```{r assay_by_markercount_boxplot, warning=FALSE}
 # plot the MIC distributions as boxplots, stratified by number of markers
-mic_boxpplot_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), boxplot=T)
+mic_boxplot_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), boxplot=T)
 
-mic_boxpplot_by_marker_count$plot
+mic_boxplot_by_marker_count$plot
 
-mic_boxpplot_by_marker_count$stats
+mic_boxplot_by_marker_count$stats
 ```
 
 We can also use the `boxplot=TRUE` option in `assay_by_var()` to see the MIC distribution as boxplots, stratified by number of markers. This also summarises the median and interquartile range of MIC values, per marker count so we can quantify as well as visualise the impact of number of mutations on MIC.
 ```{r assay_by_markercount_boxplot_source, warning=FALSE}
 # plot the MIC distributions as boxplots, stratified by number of markers
-mic_boxpplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_var="Source", boxplot=T)
+mic_boxplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_var="Source", boxplot=T)
 
-mic_boxpplot_by_marker_count_source$plot
+mic_boxplot_by_marker_count_source$plot
 ```
 
 ### Plot ciprofloxacin phenotype by combinations of markers

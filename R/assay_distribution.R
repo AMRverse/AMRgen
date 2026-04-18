@@ -213,6 +213,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
       }
       
       if (!is.null(facet_var)) {
+        if (is.null(facet_ncol)) {facet_ncol=1}
         if (pheno_table %>% filter(!is.na(get(facet_var))) %>% nrow() > 0) {
           plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = facet_ncol, nrow=facet_nrow, scales = "free_y")
         }
@@ -236,6 +237,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
       }
       
       if (!is.null(facet_var)) {
+        if (is.null(facet_nrow)) {facet_nrow=1}
         if (pheno_table %>% filter(!is.na(get(facet_var))) %>% nrow() > 0) {
           plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = facet_ncol, nrow=facet_nrow)
         }

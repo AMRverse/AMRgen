@@ -489,16 +489,16 @@ number of mutations on MIC.
 
 ``` r
 # plot the MIC distributions as boxplots, stratified by number of markers
-mic_boxpplot_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), boxplot=T)
+mic_boxplot_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), boxplot=T)
 
-mic_boxpplot_by_marker_count$plot
+mic_boxplot_by_marker_count$plot
 ```
 
 ![](SalmonellaExamples_files/figure-html/assay_by_markercount_boxplot-1.png)
 
 ``` r
 
-mic_boxpplot_by_marker_count$stats
+mic_boxplot_by_marker_count$stats
 #> # A tibble: 4 × 5
 #>   marker_count     n median   q25    q75
 #>          <dbl> <int>  <dbl> <dbl>  <dbl>
@@ -517,9 +517,9 @@ number of mutations on MIC.
 
 ``` r
 # plot the MIC distributions as boxplots, stratified by number of markers
-mic_boxpplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_var="Source", boxplot=T)
+mic_boxplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_var="Source", boxplot=T)
 
-mic_boxpplot_by_marker_count_source$plot
+mic_boxplot_by_marker_count_source$plot
 ```
 
 ![](SalmonellaExamples_files/figure-html/assay_by_markercount_boxplot_source-1.png)

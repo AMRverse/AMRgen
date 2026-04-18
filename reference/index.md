@@ -151,7 +151,7 @@ and genotype-phenotype relationships.
 - [`plot_solo_logReg()`](https://amrgen.org/reference/plot_solo_logReg.md)
   : Plot Combined Statistics of Logistic Regression and Solo PPV
 - [`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) :
-  Generate a Stacked Bar Plot of Assay Values Colored by a Variable
+  Plot Assay Values Colored by a Variable
 
 ## Data
 

@@ -67,7 +67,8 @@
 <span>  bp_S <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bp_R <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ecoff_bp <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  pd <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
+<span>  pd <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span>,</span>
+<span>  marker_order <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -200,6 +201,10 @@
 
 <dt id="arg-pd">pd<a class="anchor" aria-label="anchor" href="#arg-pd"></a></dt>
 <dd><p>A <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">ggplot2::position_dodge()</a></code> object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default is <code>position_dodge(width = 0.8)</code>.</p></dd>
+
+
+<dt id="arg-marker-order">marker_order<a class="anchor" aria-label="anchor" href="#arg-marker-order"></a></dt>
+<dd><p>(optional) Force order of markers in upset grid. Default <code>NULL</code> in which case markers are ordered in decreasing order of freauency.</p></dd>
 
 </dl></div>
     <div class="section level2">

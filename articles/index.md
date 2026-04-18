@@ -16,5 +16,5 @@
   hits](https://amrgen.org/articles/StaphAureusClindamycin.md):
 - [Analysing the impact of deletion variants on
   susceptibility](https://amrgen.org/articles/DeletionVariantsCatB3.md):
-- [Example comparing AMR
-  genotypers](https://amrgen.org/articles/ComparingGenotypers.md):
+- [Example exploring gene vs mutation
+  combinations](https://amrgen.org/articles/KlebsiellaMultipleGenotypers.md):

@@ -34,7 +34,8 @@ amr_upset(
   guideline = "EUCAST 2025",
   bp_S = NULL,
   bp_R = NULL,
-  ecoff_bp = NULL
+  ecoff_bp = NULL,
+  marker_order = NULL
 )
 ```
 
@@ -217,6 +218,11 @@ amr_upset(
 - ecoff_bp:
 
   (Optional) ECOFF breakpoint to add to plot (numerical).
+
+- marker_order:
+
+  (optional) Force order of markers in upset grid. Default `NULL` in
+  which case markers are ordered in decreasing order of freauency.
 
 ## Value
 

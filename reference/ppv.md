@@ -38,7 +38,8 @@ ppv(
   bp_S = NULL,
   bp_R = NULL,
   ecoff_bp = NULL,
-  pd = position_dodge(width = 0.8)
+  pd = position_dodge(width = 0.8),
+  marker_order = NULL
 )
 ```
 
@@ -250,6 +251,11 @@ ppv(
   [`ggplot2::position_dodge()`](https://ggplot2.tidyverse.org/reference/position_dodge.html)
   object controlling horizontal spacing of points and confidence
   intervals in the PPV plot. Default is `position_dodge(width = 0.8)`.
+
+- marker_order:
+
+  (optional) Force order of markers in upset grid. Default `NULL` in
+  which case markers are ordered in decreasing order of freauency.
 
 ## Value
 

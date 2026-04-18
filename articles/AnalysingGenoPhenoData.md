@@ -848,7 +848,7 @@ marker_count <- cip_bin %>%
   select(mic, marker_count)
 
 # plot the MIC distribution, coloured by count of associated genetic markers
-mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", pheno_drug = "Ciprofloxacin", bar_cols = viridisLite::viridis(max(marker_count$marker_count) + 1))
+mic_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "No. markers detected", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1))
 #> Warning in assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", : Column 'drug' not found in phenotype table, so can't filter to the specified pheno_drug.
 #> Ensure your input table is already filtered to the relevant drug.
 

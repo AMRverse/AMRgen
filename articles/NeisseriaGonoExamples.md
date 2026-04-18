@@ -557,7 +557,7 @@ assay_by_var(
   measure = "mic",
   colour_by = "NWT_pred",
   species = "Neisseria gonorrhoeae",
-  bar_cols = c("#3CAEA3", "#ED553B"),
+  colours = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "NWT prediction"
 )
 #> Error in executing command: Could not determine MIC breakpoints using AMR package, please provide your own breakpoints
@@ -764,7 +764,7 @@ assay_by_var(
   measure = "mic",
   colour_by = "R_pred",
   species = "Neisseria gonorrhoeae",
-  bar_cols = c("#3CAEA3", "#ED553B"),
+  colours = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "R prediction"
 )
 #>   MIC breakpoints determined using AMR package: S <= 0.032 and R > 0.06
@@ -775,7 +775,7 @@ assay_by_var(
   measure = "mic",
   colour_by = "NWT_pred",
   species = "Neisseria gonorrhoeae",
-  bar_cols = c("#3CAEA3", "#ED553B"),
+  colours = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "NWT prediction"
 )
 #>   MIC breakpoints determined using AMR package: S <= 0.032 and R > 0.06
@@ -1361,7 +1361,7 @@ assay_by_var(
   measure = "mic",
   colour_by = "R_pred",
   species = "Neisseria gonorrhoeae",
-  bar_cols = c("#3CAEA3", "#ED553B"),
+  colours = c("#3CAEA3", "#ED553B"),
   colour_legend_label = "R prediction"
 )
 #>   MIC breakpoints determined using AMR package: S <= 0.5 and R > 0.5

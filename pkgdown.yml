@@ -3,14 +3,14 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   AnalysingGenoPhenoData: AnalysingGenoPhenoData.html
-  ComparingGenotypers: ComparingGenotypers.html
   Concordance: Concordance.html
   DeletionVariantsCatB3: DeletionVariantsCatB3.html
   DownloadGenoPhenoData: DownloadGenoPhenoData.html
+  KlebsiellaMultipleGenotypers: KlebsiellaMultipleGenotypers.html
   NeisseriaGonoExamples: NeisseriaGonoExamples.html
   SalmonellaExamples: SalmonellaExamples.html
   StaphAureusClindamycin: StaphAureusClindamycin.html
-last_built: 2026-04-16T10:46Z
+last_built: 2026-04-18T10:01Z
 urls:
   reference: https://amrgen.org/reference
   article: https://amrgen.org/articles

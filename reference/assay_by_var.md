@@ -1,14 +1,18 @@
-# Generate a Stacked Bar Plot of Assay Values Colored by a Variable
+# Plot Assay Values Colored by a Variable
 
-This function creates a stacked bar plot using `ggplot2`, where the
-x-axis represents MIC (Minimum Inhibitory Concentration) or disk values,
-the y-axis indicates their frequency, and the bars are colored by a
-variable (by default, colours indicate whether the assay value is
+This function by deafault creates a stacked bar plot, where the x-axis
+represents assay measurements (either MIC, Minimum Inhibitory
+Concentration) or disk diffusion zones values), the y-axis indicates
+their frequency, and the bars are colored by a variable indicated using
+`colour_by` (by default, colours indicate whether the assay value is
 expressed as a range or not). Plots can optionally be faceted on an
-additional categorical variable. If breakpoints are provided, or species
-and drug are provided so we can extract EUCAST breakpoints, vertical
-lines indicating the S/R breakpoints and ECOFF will be added to the
-plot.
+additional categorical variable. Optionally, the data can be plotted as
+a grouped bar plot instead, with the assay measures shown on the y-axis,
+grouped and coloured by the `colour_by` variable, by setting barplot =
+`TRUE`. If breakpoints are provided, or species and drug are provided so
+we can extract breakpoints, lines indicating the S/R breakpoints (solid
+lines) and ECOFF (dashed line) will be added to the plot (and printed in
+the subtitle).
 
 ## Usage
 
@@ -18,7 +22,7 @@ assay_by_var(
   pheno_drug = NULL,
   measure = "mic",
   colour_by = NULL,
-  bar_cols = NULL,
+  colours = NULL,
   facet_var = NULL,
   bp_site = NULL,
   bp_S = NULL,
@@ -26,11 +30,14 @@ assay_by_var(
   bp_ecoff = NULL,
   species = NULL,
   guideline = "EUCAST 2025",
-  bp_cols = c(S = "#3CAEA3", R = "#ED553B", E = "grey"),
-  x_axis_label = "Measurement",
+  bp_colours = c(S = "grey", R = "grey", E = "grey"),
+  measure_axis_label = "Measurement",
   y_axis_label = "Count",
   colour_legend_label = NULL,
-  plot_title = NULL
+  plot_title = NULL,
+  boxplot = FALSE,
+  facet_nrow = NULL,
+  facet_ncol = NULL
 )
 ```
 
@@ -55,7 +62,7 @@ assay_by_var(
   NULL, which will colour each bar to indicate whether the value is
   expressed as a range or not).
 
-- bar_cols:
+- colours:
 
   (optional) Manual colour scale to use for bar plot. If NULL,
   `colour_by` variable is of class 'sir', bars will by default be
@@ -94,23 +101,26 @@ assay_by_var(
   (optional) Guideline to use when looking up breakpoints (default
   'EUCAST 2025').
 
-- bp_cols:
+- bp_colours:
 
-  (optional) Manual colour scale for breakpoint lines.
+  (optional) Manual colour scale for breakpoint lines (default
+  `c(S = "grey", R = "grey", E = "grey")`).
 
-- x_axis_label:
+- measure_axis_label:
 
-  (optional) String to label the x-axis (default "Measurement").
+  (optional) String to label the measurement axis (x-axis for histogram,
+  y-axis for boxplot, default `"Measurement"`).
 
 - y_axis_label:
 
-  (optional) String to label the y-axis (default "Count").
+  (optional) String to label the y-axis in histogram plot (default
+  `"Count"`).
 
 - colour_legend_label:
 
-  (optional) String to label the barplot fill colour legend (default
-  NULL, which results in plotting the variable name specified via the
-  'colour_by' parameter).
+  (optional) String to label the colour legend (default `NULL`, which
+  results in plotting the variable name specified via the 'colour_by'
+  parameter). Also used to label the x-axis if boxplot=`TRUE`.
 
 - plot_title:
 
@@ -118,9 +128,28 @@ assay_by_var(
   disk distribution is plotted, prefixed with the antibiotic name if
   provided, e.g. 'Ciprofloxacin MIC distribution')
 
+- boxplot:
+
+  (optional) If `TRUE`, plot the data as a grouped boxplot of assay
+  measures, grouped and coloured by the `colour_by` variable. Summary
+  statistics (median and interquartile range of assay measures) are also
+  computed, stratified by the `colour_by` and `facet_var` variables.
+
+- facet_nrow:
+
+  (optional) Number of rows for the facet grid (not used unless
+  `facet_var` is provided).
+
+- facet_ncol:
+
+  (optional) Number of columns for the facet grid (not used unless
+  `facet_var` is provided).
+
 ## Value
 
-The stacked bar plot
+If boxplot=`FALSE`, the plot is returned as a single unnamed value. If
+boxplot=`TRUE`, the plot is returned (\$plot) along with the summary
+statistics (\$stats).
 
 ## Examples
 
@@ -143,7 +172,7 @@ assay_by_var(
 assay_by_var(
   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
-  bar_cols = c(S = "skyblue", I = "orange", R = "maroon")
+  colours = c(S = "skyblue", I = "orange", R = "maroon")
 )
 
 

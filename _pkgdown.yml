@@ -63,8 +63,8 @@ articles:
       - NeisseriaGonoExamples
       - SalmonellaExamples
       - StaphAureusClindamycin
-      - DeletionVariantsCatB3
       - KlebsiellaMultipleGenotypers
+      - DeletionVariantsCatB3
 
 # Reference section grouping
 reference:

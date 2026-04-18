@@ -372,7 +372,7 @@ MIC_dist_by_cov <- assay_by_var(
   measure = "mic",
   colour_by = "pheno_clsi",
   species = "Escherichia coli",
-  facet_var = "truncation"
+  facet_var = "truncation", facet_ncol=1
 ) +
   labs(
     title = " ",

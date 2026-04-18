@@ -237,7 +237,7 @@ When aggregating AST data from different methods and sources, it is a good idea 
 
 ``` {r plot_mic_breakpoints_method, fig.height=8}
 # specify facet_var="method" to generate facet plots by assay method
-mic_by_platform <- assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
+mic_by_platform <- assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method", facet_ncol = 1)
 
 mic_by_platform
 ```

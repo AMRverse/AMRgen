@@ -133,7 +133,7 @@ The 'NWT' variable can be taken either from a precomputed ECOFF-based call of WT
 ## 4. Plot Ciprofloxacin phenotype data distribution
 The function `assay_by_var()` can be used to plot the distribution of MIC values coloured by a variable. In this case, the S/I/R values were coloured by the column "pheno_provided", which were interpreted by the authors with the breakpoints from CLSI 2018. We can also compare them to the updated breakpoints from CLSI 2025. 
 
-```{r pheno_dist, fig.height=8}
+```{r pheno_dist}
 # CLSI 2018 guidelines (as in the publication from Mills et al).
 # The breakpoints are provided manually.
 assay_by_var(

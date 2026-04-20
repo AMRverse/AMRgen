@@ -24,7 +24,7 @@
 #' @param facet_var (optional) Column name containing a variable to facet on (default NULL).
 #' @param pheno_drug (optional) Name of a drug to filter the `drug` column, and to retrieve breakpoints for.
 #' @param species (optional) Name of species, so we can retrieve breakpoints to print at the top of the plot to help interpret it.
-#' @param boxplot (optional) If `TRUE`, plot the data as a grouped boxplot of assay measures, grouped and coloured by the `colour_by` variable. Summary statistics (median and interquartile range of assay measures) are also computed, stratified by the `colour_by` and `facet_var` variables.
+#' @param boxplot (optional) If `TRUE`, plot the data as a grouped boxplot of assay measures, grouped and coloured by the `colour_by` variable. Summary statistics (median, mean, and interquartile range of assay measures) are also computed, stratified by the `colour_by` and `facet_var` variables.
 #' @param bp_site (optional) Breakpoint site to retrieve (only relevant if also supplying `species` and `antibiotic` to retrieve breakpoints, and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff`).
 #' @param bp_S (optional) S breakpoint to plot.
 #' @param bp_R (optional) R breakpoint to plot.
@@ -167,7 +167,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
     colnames(assay_order)[1] <- measure
     bp_S_hist <- c(1:nrow(assay_order))[assay_order[, 1] == bp_S]
     bp_R_hist <- c(1:nrow(assay_order))[assay_order[, 1] == bp_R]
-    bp_ecoff_hist <- c(1:nrow(assay_order))[assay_order[, 1] == round(bp_ecoff,2)]
+    bp_ecoff_hist <- c(1:nrow(assay_order))[assay_order[, 1] == round(bp_ecoff, 2)]
   }
 
   # plot distribution per variable
@@ -186,7 +186,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
       plot_title <- paste(pheno_drug, plot_title)
     }
   }
-  
+
   stats <- NULL
   if (nrow(pheno_table) > 0) {
     if (!boxplot) {
@@ -199,7 +199,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         ) +
         theme_bw() +
         theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1))
-      
+
       if (is(pheno_table[[colour_by]], "sir")) {
         plot_all <- plot_all +
           geom_bar(aes(fill = !!sym(colour_by))) # don't treat as factor, will colour automatically by SIR
@@ -207,23 +207,24 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         plot_all <- plot_all +
           geom_bar(aes(fill = factor(!!sym(colour_by))))
       }
-      
+
       if (!is.null(colours)) {
         plot_all <- plot_all + scale_fill_manual(values = colours)
       }
-      
+
       if (!is.null(facet_var)) {
-        if (is.null(facet_ncol)) {facet_ncol=1}
+        if (is.null(facet_ncol)) {
+          facet_ncol <- 1
+        }
         if (pheno_table %>% filter(!is.na(get(facet_var))) %>% nrow() > 0) {
-          plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = facet_ncol, nrow=facet_nrow, scales = "free_y")
+          plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = facet_ncol, nrow = facet_nrow, scales = "free_y")
         }
       }
-    }
-    else { # grouped boxplot instead
+    } else { # grouped boxplot instead
       plot_all <- pheno_table %>%
-        ggplot(aes(x = factor(!!sym(colour_by)), y = !!sym(measure))) + 
+        ggplot(aes(x = factor(!!sym(colour_by)), y = !!sym(measure))) +
         geom_boxplot() +
-        geom_jitter(aes(col=factor(!!sym(colour_by)))) +
+        geom_jitter(aes(col = factor(!!sym(colour_by)))) +
         labs(
           y = measure_axis_label, x = colour_legend_label,
           colour = colour_legend_label, subtitle = subtitle,
@@ -231,34 +232,36 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         ) +
         theme_bw() +
         theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1))
-      
+
       if (!is.null(colours)) {
         plot_all <- plot_all + scale_colour_manual(values = colours)
       }
-      
+
       if (!is.null(facet_var)) {
         if (pheno_table %>% filter(!is.na(get(facet_var))) %>% nrow() > 0) {
-          plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = facet_ncol, nrow=facet_nrow)
+          plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = facet_ncol, nrow = facet_nrow)
         }
       }
-      
+
       # calculate summary stats
       if (is.null(facet_var)) {
-        stats <- pheno_table %>% 
-          group_by(!!sym(colour_by)) %>% 
+        stats <- pheno_table %>%
+          group_by(!!sym(colour_by)) %>%
           summarise(
             n = n(),
             median = median(!!sym(measure), na.rm = TRUE),
+            mean = mean(!!sym(measure), na.rm = TRUE),
             q25 = stats::quantile(!!sym(measure), 0.25, na.rm = TRUE),
             q75 = stats::quantile(!!sym(measure), 0.75, na.rm = TRUE)
           )
         colnames(stats)[1] <- colour_by
       } else {
-        stats <- pheno_table %>% 
-          group_by(!!sym(colour_by), !!sym(facet_var)) %>% 
+        stats <- pheno_table %>%
+          group_by(!!sym(colour_by), !!sym(facet_var)) %>%
           summarise(
             n = n(),
             median = median(!!sym(measure), na.rm = TRUE),
+            mean = mean(!!sym(measure), na.rm = TRUE),
             q25 = stats::quantile(!!sym(measure), 0.25, na.rm = TRUE),
             q75 = stats::quantile(!!sym(measure), 0.75, na.rm = TRUE)
           )
@@ -294,9 +297,10 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
   }
 
   plot_all
-  
+
   if (!is.null(stats)) {
-    return(list(plot=plot_all, stats=stats))
+    return(list(plot = plot_all, stats = stats))
+  } else {
+    return(plot_all)
   }
-  else { return(plot_all) }
 }

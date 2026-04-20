@@ -80,7 +80,7 @@
 #'
 #' combo_matrix <- combo_stats(binary_matrix, min_set_size = 3, order = "value", assay = "mic")
 #' }
-combo_stats <- function(binary_matrix, min_set_size = 2, 
+combo_stats <- function(binary_matrix, min_set_size = 2,
                         order = "",
                         assay = "mic",
                         print_set_size = FALSE,
@@ -91,7 +91,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
                         pheno_drug = NULL, species = NULL, bp_site = NULL,
                         guideline = "EUCAST 2025",
                         bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
-                        pd = position_dodge(width = 0.8), 
+                        pd = position_dodge(width = 0.8),
                         marker_order = NULL) {
   if (sum(!is.na(binary_matrix$pheno)) == 0) {
     if (sum(!is.na(binary_matrix$ecoff)) > 0) {
@@ -381,13 +381,15 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
   }
 
   ##### Plots ###
-  
+
   ### assay data plot (MIC/disk distribution)
   if (!is.null(assay)) {
     g1 <- ggplot(data = binary_matrix, aes(x = combination_id, y = get(assay))) +
       geom_boxplot(colour = boxplot_col) +
-      geom_point(data = assay_plot, aes(x = combination_id, y = `get(assay)`, 
-                 size = n, colour = pheno), show.legend = TRUE) +
+      geom_point(data = assay_plot, aes(
+        x = combination_id, y = `get(assay)`,
+        size = n, colour = pheno
+      ), show.legend = TRUE) +
       theme_bw() +
       scale_size_continuous("Number of\nisolates") +
       scale_color_sir(
@@ -599,7 +601,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
                       species = NULL, bp_site = NULL,
                       guideline = "EUCAST 2025",
-                      bp_S = NULL, bp_R = NULL, ecoff_bp = NULL, 
+                      bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
                       marker_order = NULL) {
   if (is.null(assay)) {
     stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `ppv()` is more appropriate.")
@@ -678,9 +680,11 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 
   print(final_plot)
 
-  return(list(plot = final_plot, 
-              binary_matrix = combo_data$binary_matrix, 
-              summary = combo_data$summary))
+  return(list(
+    plot = final_plot,
+    binary_matrix = combo_data$binary_matrix,
+    summary = combo_data$summary
+  ))
 }
 
 
@@ -781,7 +785,7 @@ ppv <- function(binary_matrix = NULL,
                 boxplot_col = "grey", species = NULL, bp_site = NULL,
                 guideline = "EUCAST 2025",
                 bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
-                pd = position_dodge(width = 0.8), 
+                pd = position_dodge(width = 0.8),
                 marker_order = NULL) {
   # get binary matrix
   if (is.null(binary_matrix)) {

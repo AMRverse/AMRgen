@@ -62,7 +62,7 @@ assay_by_var(
 
 \item{plot_title}{(optional) String to title the plot (default indicates whether MIC or disk distribution is plotted, prefixed with the antibiotic name if provided, e.g. 'Ciprofloxacin MIC distribution')}
 
-\item{boxplot}{(optional) If \code{TRUE}, plot the data as a grouped boxplot of assay measures, grouped and coloured by the \code{colour_by} variable. Summary statistics (median and interquartile range of assay measures) are also computed, stratified by the \code{colour_by} and \code{facet_var} variables.}
+\item{boxplot}{(optional) If \code{TRUE}, plot the data as a grouped boxplot of assay measures, grouped and coloured by the \code{colour_by} variable. Summary statistics (median, mean, and interquartile range of assay measures) are also computed, stratified by the \code{colour_by} and \code{facet_var} variables.}
 
 \item{facet_nrow}{(optional) Number of rows for the facet grid (not used unless \code{facet_var} is provided).}
 

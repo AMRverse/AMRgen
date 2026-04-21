@@ -292,7 +292,7 @@ Now we can see the impact of the mutations in the absence of any carbapenemase g
 kleborate_mic_by_gene_mutation$stats %>% head(19)
 ```
 
-Reformat the stats table into wide format to more clearly see the effects of porin vs. carbapenemase status on MIC.  
+Reformat the stats table into wide format to more clearly see the effects of porin vs. carbapenemase status on MIC. Mean and median (in brackets) MIC values are grouped by porin vs. carbapenemase status. 
 
 ``` {r kleborate_boxplot_genefam_stats_table}
 kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
@@ -321,7 +321,7 @@ mean_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
 mean_MIC_table
 ```
 
-Reformat the stats table into wide format to more clearly see the effects of porin vs. carbapenemase status on MIC.
+Making the table aesthetically pleasing using the gt package.  
 
 ``` {r eval=F}
 # If you have the gt package, you can use it to make the table aesthetically pleasing

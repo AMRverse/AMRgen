@@ -525,12 +525,12 @@ as well as visualise the impact of number of mutations on MIC.</p>
 <code class="sourceCode R"><span></span>
 <span><span class="va">mic_boxplot_by_marker_count</span><span class="op">$</span><span class="va">stats</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
-<span><span class="co">#&gt;   marker_count     n median  mean   q25    q75</span></span>
-<span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>            1   180  0.125 0.142 0.041  0.205</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>            2   108  0.22  1.62  0.117  0.38 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>            3    39  3     7.07  0.5    6    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>            4    18  4.19  5.44  0.25  12</span></span></code></pre></div>
+<span><span class="co">#&gt;   marker_count     n median geom_mean   q25    q75</span></span>
+<span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>            1   180  0.125    0.088<span style="text-decoration: underline;">4</span> 0.041  0.205</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>            2   108  0.22     0.266  0.117  0.38 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>            3    39  3        2.22   0.5    6    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>            4    18  4.19     1.05   0.25  12</span></span></code></pre></div>
 <p>We can also use the <code>boxplot=TRUE</code> option in
 <code><a href="../reference/assay_by_var.html">assay_by_var()</a></code> to see the MIC distribution as boxplots,
 stratified by number of markers. This also summarises the median and

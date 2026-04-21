@@ -500,12 +500,12 @@ mic_boxplot_by_marker_count$plot
 
 mic_boxplot_by_marker_count$stats
 #> # A tibble: 4 × 6
-#>   marker_count     n median  mean   q25    q75
-#>          <dbl> <int>  <dbl> <dbl> <dbl>  <dbl>
-#> 1            1   180  0.125 0.142 0.041  0.205
-#> 2            2   108  0.22  1.62  0.117  0.38 
-#> 3            3    39  3     7.07  0.5    6    
-#> 4            4    18  4.19  5.44  0.25  12
+#>   marker_count     n median geom_mean   q25    q75
+#>          <dbl> <int>  <dbl>     <dbl> <dbl>  <dbl>
+#> 1            1   180  0.125    0.0884 0.041  0.205
+#> 2            2   108  0.22     0.266  0.117  0.38 
+#> 3            3    39  3        2.22   0.5    6    
+#> 4            4    18  4.19     1.05   0.25  12
 ```
 
 We can also use the `boxplot=TRUE` option in

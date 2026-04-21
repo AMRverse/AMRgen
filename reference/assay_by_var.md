@@ -132,9 +132,9 @@ assay_by_var(
 
   (optional) If `TRUE`, plot the data as a grouped boxplot of assay
   measures, grouped and coloured by the `colour_by` variable. Summary
-  statistics (median, mean, and interquartile range of assay measures)
-  are also computed, stratified by the `colour_by` and `facet_var`
-  variables.
+  statistics (median, geometric mean, and interquartile range of assay
+  measures) are also computed, stratified by the `colour_by` and
+  `facet_var` variables.
 
 - facet_nrow:
 

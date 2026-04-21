@@ -556,7 +556,8 @@ combinations observed at least 3 times in the dataset
 (<code>min_set_size=3</code>) makes it a little easier to see what’s
 going on.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kp_mic_upset_kleborate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">kleborate_binary_matrix</span>, assay <span class="op">=</span> <span class="st">"mic"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>, min_set_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">kp_mic_upset_kleborate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">kleborate_binary_matrix</span>, </span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>, min_set_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot-1.png" class="r-plt" alt="" width="100%"></p>
 <p>It’s still quite complex to follow the plot and spot patterns, as we
 have carbapenemase genes mixed in with mutations, making it difficult to
@@ -679,36 +680,36 @@ type of carbapenemase (other colours).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">stats</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">19</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 19 × 7</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   Omp_mutations [4]</span></span></span>
-<span><span class="co">#&gt;    Omp_mutations   Bla_Carb_acquired     n median   mean    q25   q75</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -               -                   726   0.06  0.268  0.06   0.06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -               IMP                   3  16    13.3   12     16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -               KPC                  27   8    10.6    4     16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -               NDM                  38  32    23.6   16     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -               OXA                 103   2     3.51   1      2   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -               VIM                  17   2     3.29   2      4   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> OmpK35Δ         -                    52   0.06  1.11   0.06   0.12</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> OmpK35Δ         KPC                  48  16    17.4    8     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> OmpK35Δ         NDM                  10  32    27.6   32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> OmpK35Δ         OXA                  39   2     8.28   1     16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> OmpK35Δ         VIM                  12   4     9.26   2     10   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> OmpK35Δ,OmpK36Δ -                    24   4     4.68   2      4   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> OmpK35Δ,OmpK36Δ KPC                   2  32    32     32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> OmpK35Δ,OmpK36Δ OXA                   1  32    32     32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> OmpK35Δ,OmpK36Δ VIM                   2  32    32     32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> OmpK36ins       -                    12   0.5   3.32   0.105  1.25</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> OmpK36ins       KPC                   3  32    24     20     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> OmpK36ins       NDM                   8  32    32     32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> OmpK36ins       OXA                   4  32    32     32     32</span></span></code></pre></div>
+<span><span class="co">#&gt;    Omp_mutations   Bla_Carb_acquired     n median geom_mean    q25   q75</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -               -                   726   0.06    0.084<span style="text-decoration: underline;">2</span>  0.06   0.06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -               IMP                   3  16      12.7    12     16   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -               KPC                  27   8       7.80    4     16   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -               NDM                  38  32      18.9    16     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -               OXA                 103   2       1.56    1      2   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -               VIM                  17   2       2.55    2      4   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> OmpK35Δ         -                    52   0.06    0.150   0.06   0.12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> OmpK35Δ         KPC                  48  16      13.3     8     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> OmpK35Δ         NDM                  10  32      24.3    32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> OmpK35Δ         OXA                  39   2       3.47    1     16   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> OmpK35Δ         VIM                  12   4       3.99    2     10   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> OmpK35Δ,OmpK36Δ -                    24   4       2.74    2      4   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> OmpK35Δ,OmpK36Δ KPC                   2  32      32      32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> OmpK35Δ,OmpK36Δ OXA                   1  32      32      32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> OmpK35Δ,OmpK36Δ VIM                   2  32      32      32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> OmpK36ins       -                    12   0.5     0.523   0.105  1.25</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> OmpK36ins       KPC                   3  32      20.2    20     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> OmpK36ins       NDM                   8  32      32      32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> OmpK36ins       OXA                   4  32      32      32     32</span></span></code></pre></div>
 <p>Reformat the stats table into wide format to more clearly see the
-effects of porin vs. carbapenemase status on MIC. Mean and median (in
-brackets) MIC values are grouped by porin vs. carbapenemase status.</p>
+effects of porin vs. carbapenemase status on MIC. Median and geometric
+mean (in brackets) values are grouped by porin vs. carbapenemase status,
+each corresponding to unique boxplotted distribution.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kleborate_mic_by_gene_mutation_table</span> <span class="op">&lt;-</span> <span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">stats</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">mean</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mean_median <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">mean</span>, <span class="st">" ("</span>, <span class="va">median</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">median</span>, <span class="op">-</span><span class="va">mean</span>, <span class="op">-</span><span class="va">q25</span>, <span class="op">-</span><span class="va">q75</span>, <span class="op">-</span><span class="va">n</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="co">#ungroup() %&gt;%</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>geom_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">geom_mean</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mean_median <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">median</span>, <span class="st">" ("</span>, <span class="va">geom_mean</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>OmpK35 <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"OmpK35"</span>, <span class="va">Omp_mutations</span><span class="op">)</span> <span class="op">~</span> <span class="st">"\u0394"</span>,</span>
 <span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"-"</span></span>
@@ -719,26 +720,27 @@ brackets) MIC values are grouped by porin vs. carbapenemase status.</p>
 <span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"-"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Bla_Carb_acquired <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a></span><span class="op">(</span><span class="va">Bla_Carb_acquired</span>, <span class="st">"-"</span>, <span class="st">"None"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">OmpK35</span>, <span class="va">OmpK36</span>, <span class="va">Bla_Carb_acquired</span>, <span class="va">mean_median</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">mean_MIC_table</span> <span class="op">&lt;-</span> <span class="va">kleborate_mic_by_gene_mutation_table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Omp_mutations</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
 <span>    names_from <span class="op">=</span> <span class="va">Bla_Carb_acquired</span>,</span>
-<span>    values_from <span class="op">=</span> <span class="va">mean_median</span></span>
+<span>    values_from <span class="op">=</span> <span class="va">mean_median</span>,</span>
+<span>    values_fill<span class="op">=</span><span class="st">"-"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">mean_MIC_table</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
 <span><span class="co">#&gt;   OmpK35 OmpK36    None       IMP       KPC       NDM       OXA       VIM    </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> -      -         0.3 (0.06) 13.3 (16) 10.6 (8)  23.6 (32) 3.5 (2)   3.3 (2)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Δ      -         1.1 (0.06) <span style="color: #BB0000;">NA</span>        17.4 (16) 27.6 (32) 8.3 (2)   9.3 (4)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Δ      Δ         4.7 (4)    <span style="color: #BB0000;">NA</span>        32 (32)   <span style="color: #BB0000;">NA</span>        32 (32)   32 (32)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> -      Insertion 3.3 (0.5)  <span style="color: #BB0000;">NA</span>        24 (32)   32 (32)   32 (32)   <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Δ      Insertion 9.4 (1)    <span style="color: #BB0000;">NA</span>        31.3 (32) 27.2 (32) 27.6 (32) <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> -      Δ         3.5 (2)    <span style="color: #BB0000;">NA</span>        32 (32)   32 (32)   28.8 (32) 32 (32)</span></span></code></pre></div>
-<p>Making the table aesthetically pleasing using the gt package.</p>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> -      -         0.06 (0.1) 16 (12.7) 8 (7.8)   32 (18.9) 2 (1.6)   2 (2.6)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Δ      -         0.06 (0.1) -         16 (13.3) 32 (24.3) 2 (3.5)   4 (4)  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Δ      Δ         4 (2.7)    -         32 (32)   -         32 (32)   32 (32)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> -      Insertion 0.5 (0.5)  -         32 (20.2) 32 (32)   32 (32)   -      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Δ      Insertion 1 (1.5)    -         32 (28.5) 32 (24.3) 32 (25.8) -      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> -      Δ         2 (1.8)    -         32 (32)   32 (32)   32 (27.9) 32 (32)</span></span></code></pre></div>
+<p>Making the table aesthetically pleasing using the gt package (to
+reproduce Figure 5c in the AMRgen paper).</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># If you have the gt package, you can use it to make the table aesthetically pleasing</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com" class="external-link">gt</a></span><span class="op">)</span></span>
@@ -817,13 +819,13 @@ brackets) MIC values are grouped by porin vs. carbapenemase status.</p>
 <span><span class="co"># Adding title and legend for colour</span></span>
 <span><span class="va">mean_MIC_table_aes</span> <span class="op">&lt;-</span> <span class="va">mean_MIC_table_aes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">tab_header</span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;Mean (Median) Meropenem Minimum Inhibitory Concentration (mg/L)&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    title <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;Median (Mean) Meropenem Minimum Inhibitory Concentration (mg/L)&lt;/b&gt;"</span><span class="op">)</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="fu">html</span><span class="op">(</span></span>
 <span>      <span class="st">"&lt;span style='font-size:12px;'&gt;</span></span>
 <span><span class="st">      &lt;b&gt;EUCAST clinical breakpoint:&lt;/b&gt;</span></span>
-<span><span class="st">      &lt;span style='color:#3CAEA3;'&gt;■&lt;/span&gt; Susceptible (≤ 2 mg/L) &amp;nbsp;</span></span>
-<span><span class="st">      &lt;span style='color:#F6D55C;'&gt;■&lt;/span&gt; Intermediate (susceptible, increased exposure; 2–8 mg/L) &amp;nbsp;</span></span>
-<span><span class="st">      &lt;span style='color:#ED553B;'&gt;■&lt;/span&gt; Resistant (&gt; 8 mg/L)</span></span>
+<span><span class="st">      &lt;span style='color:#3CAEA3;'&gt;■&lt;/span&gt; S (Susceptible, ≤ 2 mg/L) &amp;nbsp;</span></span>
+<span><span class="st">      &lt;span style='color:#F6D55C;'&gt;■&lt;/span&gt; I (Susceptible, Increased exposure; 4-8 mg/L) &amp;nbsp;</span></span>
+<span><span class="st">      &lt;span style='color:#ED553B;'&gt;■&lt;/span&gt; R (Resistant, &gt; 8 mg/L)</span></span>
 <span><span class="st">      &lt;/span&gt;"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>

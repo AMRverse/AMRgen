@@ -518,7 +518,8 @@ the plot to marker combinations observed at least 3 times in the dataset
 (`min_set_size=3`) makes it a little easier to see what’s going on.
 
 ``` r
-kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix, assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3)
+kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix, 
+  assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3)
 ```
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot-1.png)
@@ -657,39 +658,39 @@ type of carbapenemase (other colours).
 ``` r
 kleborate_mic_by_gene_mutation$stats %>% head(19)
 #> # A tibble: 19 × 7
-#> # Groups:   Omp_mutations [4]
-#>    Omp_mutations   Bla_Carb_acquired     n median   mean    q25   q75
-#>    <chr>           <chr>             <int>  <dbl>  <dbl>  <dbl> <dbl>
-#>  1 -               -                   726   0.06  0.268  0.06   0.06
-#>  2 -               IMP                   3  16    13.3   12     16   
-#>  3 -               KPC                  27   8    10.6    4     16   
-#>  4 -               NDM                  38  32    23.6   16     32   
-#>  5 -               OXA                 103   2     3.51   1      2   
-#>  6 -               VIM                  17   2     3.29   2      4   
-#>  7 OmpK35Δ         -                    52   0.06  1.11   0.06   0.12
-#>  8 OmpK35Δ         KPC                  48  16    17.4    8     32   
-#>  9 OmpK35Δ         NDM                  10  32    27.6   32     32   
-#> 10 OmpK35Δ         OXA                  39   2     8.28   1     16   
-#> 11 OmpK35Δ         VIM                  12   4     9.26   2     10   
-#> 12 OmpK35Δ,OmpK36Δ -                    24   4     4.68   2      4   
-#> 13 OmpK35Δ,OmpK36Δ KPC                   2  32    32     32     32   
-#> 14 OmpK35Δ,OmpK36Δ OXA                   1  32    32     32     32   
-#> 15 OmpK35Δ,OmpK36Δ VIM                   2  32    32     32     32   
-#> 16 OmpK36ins       -                    12   0.5   3.32   0.105  1.25
-#> 17 OmpK36ins       KPC                   3  32    24     20     32   
-#> 18 OmpK36ins       NDM                   8  32    32     32     32   
-#> 19 OmpK36ins       OXA                   4  32    32     32     32
+#>    Omp_mutations   Bla_Carb_acquired     n median geom_mean    q25   q75
+#>    <chr>           <chr>             <int>  <dbl>     <dbl>  <dbl> <dbl>
+#>  1 -               -                   726   0.06    0.0842  0.06   0.06
+#>  2 -               IMP                   3  16      12.7    12     16   
+#>  3 -               KPC                  27   8       7.80    4     16   
+#>  4 -               NDM                  38  32      18.9    16     32   
+#>  5 -               OXA                 103   2       1.56    1      2   
+#>  6 -               VIM                  17   2       2.55    2      4   
+#>  7 OmpK35Δ         -                    52   0.06    0.150   0.06   0.12
+#>  8 OmpK35Δ         KPC                  48  16      13.3     8     32   
+#>  9 OmpK35Δ         NDM                  10  32      24.3    32     32   
+#> 10 OmpK35Δ         OXA                  39   2       3.47    1     16   
+#> 11 OmpK35Δ         VIM                  12   4       3.99    2     10   
+#> 12 OmpK35Δ,OmpK36Δ -                    24   4       2.74    2      4   
+#> 13 OmpK35Δ,OmpK36Δ KPC                   2  32      32      32     32   
+#> 14 OmpK35Δ,OmpK36Δ OXA                   1  32      32      32     32   
+#> 15 OmpK35Δ,OmpK36Δ VIM                   2  32      32      32     32   
+#> 16 OmpK36ins       -                    12   0.5     0.523   0.105  1.25
+#> 17 OmpK36ins       KPC                   3  32      20.2    20     32   
+#> 18 OmpK36ins       NDM                   8  32      32      32     32   
+#> 19 OmpK36ins       OXA                   4  32      32      32     32
 ```
 
 Reformat the stats table into wide format to more clearly see the
-effects of porin vs. carbapenemase status on MIC. Mean and median (in
-brackets) MIC values are grouped by porin vs. carbapenemase status.
+effects of porin vs. carbapenemase status on MIC. Median and geometric
+mean (in brackets) values are grouped by porin vs. carbapenemase status,
+each corresponding to unique boxplotted distribution.
 
 ``` r
 kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
-  mutate(mean = round(mean, 1)) %>%
-  mutate(mean_median = paste0(mean, " (", median, ")")) %>%
-  select(-median, -mean, -q25, -q75, -n) %>%
+  #ungroup() %>%
+  mutate(geom_mean = round(geom_mean, 1)) %>%
+  mutate(mean_median = paste0(median, " (", geom_mean, ")")) %>%
   mutate(OmpK35 = case_when(
     grepl("OmpK35", Omp_mutations) ~ "\u0394",
     TRUE ~ "-"
@@ -700,28 +701,29 @@ kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
     TRUE ~ "-"
   )) %>%
   mutate(Bla_Carb_acquired = str_replace_all(Bla_Carb_acquired, "-", "None")) %>%
-  ungroup()
+  select(OmpK35, OmpK36, Bla_Carb_acquired, mean_median) 
 
 mean_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
-  select(-Omp_mutations) %>%
   pivot_wider(
     names_from = Bla_Carb_acquired,
-    values_from = mean_median
+    values_from = mean_median,
+    values_fill="-"
   )
 
 mean_MIC_table
 #> # A tibble: 6 × 8
 #>   OmpK35 OmpK36    None       IMP       KPC       NDM       OXA       VIM    
 #>   <chr>  <chr>     <chr>      <chr>     <chr>     <chr>     <chr>     <chr>  
-#> 1 -      -         0.3 (0.06) 13.3 (16) 10.6 (8)  23.6 (32) 3.5 (2)   3.3 (2)
-#> 2 Δ      -         1.1 (0.06) NA        17.4 (16) 27.6 (32) 8.3 (2)   9.3 (4)
-#> 3 Δ      Δ         4.7 (4)    NA        32 (32)   NA        32 (32)   32 (32)
-#> 4 -      Insertion 3.3 (0.5)  NA        24 (32)   32 (32)   32 (32)   NA     
-#> 5 Δ      Insertion 9.4 (1)    NA        31.3 (32) 27.2 (32) 27.6 (32) NA     
-#> 6 -      Δ         3.5 (2)    NA        32 (32)   32 (32)   28.8 (32) 32 (32)
+#> 1 -      -         0.06 (0.1) 16 (12.7) 8 (7.8)   32 (18.9) 2 (1.6)   2 (2.6)
+#> 2 Δ      -         0.06 (0.1) -         16 (13.3) 32 (24.3) 2 (3.5)   4 (4)  
+#> 3 Δ      Δ         4 (2.7)    -         32 (32)   -         32 (32)   32 (32)
+#> 4 -      Insertion 0.5 (0.5)  -         32 (20.2) 32 (32)   32 (32)   -      
+#> 5 Δ      Insertion 1 (1.5)    -         32 (28.5) 32 (24.3) 32 (25.8) -      
+#> 6 -      Δ         2 (1.8)    -         32 (32)   32 (32)   32 (27.9) 32 (32)
 ```
 
-Making the table aesthetically pleasing using the gt package.
+Making the table aesthetically pleasing using the gt package (to
+reproduce Figure 5c in the AMRgen paper).
 
 ``` r
 # If you have the gt package, you can use it to make the table aesthetically pleasing
@@ -801,13 +803,13 @@ mean_MIC_table_aes <- mean_MIC_table %>%
 # Adding title and legend for colour
 mean_MIC_table_aes <- mean_MIC_table_aes %>%
   tab_header(
-    title = html("<b>Mean (Median) Meropenem Minimum Inhibitory Concentration (mg/L)</b>"),
+    title = html("<b>Median (Mean) Meropenem Minimum Inhibitory Concentration (mg/L)</b>"),
     subtitle = html(
       "<span style='font-size:12px;'>
       <b>EUCAST clinical breakpoint:</b>
-      <span style='color:#3CAEA3;'>■</span> Susceptible (≤ 2 mg/L) &nbsp;
-      <span style='color:#F6D55C;'>■</span> Intermediate (susceptible, increased exposure; 2–8 mg/L) &nbsp;
-      <span style='color:#ED553B;'>■</span> Resistant (> 8 mg/L)
+      <span style='color:#3CAEA3;'>■</span> S (Susceptible, ≤ 2 mg/L) &nbsp;
+      <span style='color:#F6D55C;'>■</span> I (Susceptible, Increased exposure; 4-8 mg/L) &nbsp;
+      <span style='color:#ED553B;'>■</span> R (Resistant, > 8 mg/L)
       </span>"
     )
   )

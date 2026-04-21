@@ -161,7 +161,6 @@ assay_by_var(
 ![](KlebsiellaMultipleGenotypers_files/figure-html/phenotype_summary-1.png)
 
 ``` r
-
 # Summary of meropenem phenotypes using ECOFF
 kp_mero_euscape %>% count(ecoff)
 #> # A tibble: 2 × 2
@@ -430,7 +429,6 @@ soloPPV_kleborate_mero <- solo_ppv(binary_matrix = kleborate_binary_matrix)
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_soloPPV-1.png)
 
 ``` r
-
 soloPPV_kleborate_mero$solo_stats
 #> # A tibble: 28 × 8
 #>    marker                category     x     n    ppv     se ci.lower ci.upper
@@ -481,7 +479,6 @@ comboPPV_kleborate_mero <- ppv(
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_comboPPV-1.png)
 
 ``` r
-
 comboPPV_kleborate_mero$summary
 #> # A tibble: 56 × 21
 #>    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower
@@ -688,9 +685,8 @@ each corresponding to unique boxplotted distribution.
 
 ``` r
 kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
-  #ungroup() %>%
   mutate(geom_mean = round(geom_mean, 1)) %>%
-  mutate(mean_median = paste0(median, " (", geom_mean, ")")) %>%
+  mutate(median_mean = paste0(median, " (", geom_mean, ")")) %>%
   mutate(OmpK35 = case_when(
     grepl("OmpK35", Omp_mutations) ~ "\u0394",
     TRUE ~ "-"
@@ -701,16 +697,16 @@ kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
     TRUE ~ "-"
   )) %>%
   mutate(Bla_Carb_acquired = str_replace_all(Bla_Carb_acquired, "-", "None")) %>%
-  select(OmpK35, OmpK36, Bla_Carb_acquired, mean_median) 
+  select(OmpK35, OmpK36, Bla_Carb_acquired, median_mean) 
 
-mean_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
+median_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
   pivot_wider(
     names_from = Bla_Carb_acquired,
-    values_from = mean_median,
+    values_from = median_mean,
     values_fill="-"
   )
 
-mean_MIC_table
+median_MIC_table
 #> # A tibble: 6 × 8
 #>   OmpK35 OmpK36    None       IMP       KPC       NDM       OXA       VIM    
 #>   <chr>  <chr>     <chr>      <chr>     <chr>     <chr>     <chr>     <chr>  
@@ -727,8 +723,7 @@ reproduce Figure 5c in the AMRgen paper).
 
 ``` r
 # If you have the gt package, you can use it to make the table aesthetically pleasing
-library(gt)
-mean_MIC_table_aes <- mean_MIC_table %>%
+median_MIC_table_aes <- median_MIC_table %>%
   gt() %>%
   cols_label(
     OmpK35 = html("<b>OmpK35</b>"),
@@ -801,7 +796,7 @@ mean_MIC_table_aes <- mean_MIC_table %>%
   )
 
 # Adding title and legend for colour
-mean_MIC_table_aes <- mean_MIC_table_aes %>%
+median_MIC_table_aes <- median_MIC_table_aes %>%
   tab_header(
     title = html("<b>Median (Mean) Meropenem Minimum Inhibitory Concentration (mg/L)</b>"),
     subtitle = html(
@@ -814,7 +809,7 @@ mean_MIC_table_aes <- mean_MIC_table_aes %>%
     )
   )
 
-mean_MIC_table_aes
+median_MIC_table_aes
 ```
 
 ## Genotypes from Kleborate v3.1.3

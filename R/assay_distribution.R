@@ -24,7 +24,7 @@
 #' @param facet_var (optional) Column name containing a variable to facet on (default NULL).
 #' @param pheno_drug (optional) Name of a drug to filter the `drug` column, and to retrieve breakpoints for.
 #' @param species (optional) Name of species, so we can retrieve breakpoints to print at the top of the plot to help interpret it.
-#' @param boxplot (optional) If `TRUE`, plot the data as a grouped boxplot of assay measures, grouped and coloured by the `colour_by` variable. Summary statistics (median, mean, and interquartile range of assay measures) are also computed, stratified by the `colour_by` and `facet_var` variables.
+#' @param boxplot (optional) If `TRUE`, plot the data as a grouped boxplot of assay measures, grouped and coloured by the `colour_by` variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the `colour_by` and `facet_var` variables.
 #' @param bp_site (optional) Breakpoint site to retrieve (only relevant if also supplying `species` and `antibiotic` to retrieve breakpoints, and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff`).
 #' @param bp_S (optional) S breakpoint to plot.
 #' @param bp_R (optional) R breakpoint to plot.
@@ -250,10 +250,11 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
           summarise(
             n = n(),
             median = median(!!sym(measure), na.rm = TRUE),
-            mean = mean(!!sym(measure), na.rm = TRUE),
+            geom_mean = 2^(mean(log2(mic), na.rm = TRUE)),
             q25 = stats::quantile(!!sym(measure), 0.25, na.rm = TRUE),
             q75 = stats::quantile(!!sym(measure), 0.75, na.rm = TRUE)
-          )
+          ) %>%
+          ungroup()
         colnames(stats)[1] <- colour_by
       } else {
         stats <- pheno_table %>%
@@ -261,10 +262,11 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
           summarise(
             n = n(),
             median = median(!!sym(measure), na.rm = TRUE),
-            mean = mean(!!sym(measure), na.rm = TRUE),
+            geom_mean = 2^(mean(log2(mic), na.rm = TRUE)),
             q25 = stats::quantile(!!sym(measure), 0.25, na.rm = TRUE),
             q75 = stats::quantile(!!sym(measure), 0.75, na.rm = TRUE)
-          )
+          ) %>%
+          ungroup()
         colnames(stats)[1] <- colour_by
         colnames(stats)[2] <- facet_var
       }

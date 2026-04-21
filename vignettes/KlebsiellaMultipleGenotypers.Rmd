@@ -208,7 +208,8 @@ Similar to the previous `ppv()` function, the `amr_upset()` function will genera
 Restricting the plot to marker combinations observed at least 3 times in the dataset (`min_set_size=3`) makes it a little easier to see what's going on. 
 
 ```{r kleborate_upset_plot, fig.height=10}
-kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix, assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3)
+kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix, 
+  assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3)
 ```
 
 It's still quite complex to follow the plot and spot patterns, as we have carbapenemase genes mixed in with mutations, making it difficult to compare the effect of a given gene with and without a mutation (and vice versa).
@@ -293,13 +294,13 @@ Now we can see the impact of the mutations in the absence of any carbapenemase g
 kleborate_mic_by_gene_mutation$stats %>% head(19)
 ```
 
-Reformat the stats table into wide format to more clearly see the effects of porin vs. carbapenemase status on MIC. Mean and median (in brackets) MIC values are grouped by porin vs. carbapenemase status. 
+Reformat the stats table into wide format to more clearly see the effects of porin vs. carbapenemase status on MIC. Median and geometric mean (in brackets) values are grouped by porin vs. carbapenemase status, each corresponding to unique boxplotted distribution. 
 
 ``` {r kleborate_boxplot_genefam_stats_table}
 kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
-  mutate(mean = round(mean, 1)) %>%
-  mutate(mean_median = paste0(mean, " (", median, ")")) %>%
-  select(-median, -mean, -q25, -q75, -n) %>%
+  #ungroup() %>%
+  mutate(geom_mean = round(geom_mean, 1)) %>%
+  mutate(mean_median = paste0(median, " (", geom_mean, ")")) %>%
   mutate(OmpK35 = case_when(
     grepl("OmpK35", Omp_mutations) ~ "\u0394",
     TRUE ~ "-"
@@ -310,19 +311,19 @@ kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
     TRUE ~ "-"
   )) %>%
   mutate(Bla_Carb_acquired = str_replace_all(Bla_Carb_acquired, "-", "None")) %>%
-  ungroup()
+  select(OmpK35, OmpK36, Bla_Carb_acquired, mean_median) 
 
 mean_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
-  select(-Omp_mutations) %>%
   pivot_wider(
     names_from = Bla_Carb_acquired,
-    values_from = mean_median
+    values_from = mean_median,
+    values_fill="-"
   )
 
 mean_MIC_table
 ```
 
-Making the table aesthetically pleasing using the gt package.  
+Making the table aesthetically pleasing using the gt package (to reproduce Figure 5c in the AMRgen paper).  
 
 ``` {r eval=F}
 # If you have the gt package, you can use it to make the table aesthetically pleasing
@@ -402,13 +403,13 @@ mean_MIC_table_aes <- mean_MIC_table %>%
 # Adding title and legend for colour
 mean_MIC_table_aes <- mean_MIC_table_aes %>%
   tab_header(
-    title = html("<b>Mean (Median) Meropenem Minimum Inhibitory Concentration (mg/L)</b>"),
+    title = html("<b>Median (Mean) Meropenem Minimum Inhibitory Concentration (mg/L)</b>"),
     subtitle = html(
       "<span style='font-size:12px;'>
       <b>EUCAST clinical breakpoint:</b>
-      <span style='color:#3CAEA3;'>■</span> Susceptible (≤ 2 mg/L) &nbsp;
-      <span style='color:#F6D55C;'>■</span> Intermediate (susceptible, increased exposure; 2–8 mg/L) &nbsp;
-      <span style='color:#ED553B;'>■</span> Resistant (> 8 mg/L)
+      <span style='color:#3CAEA3;'>■</span> S (Susceptible, ≤ 2 mg/L) &nbsp;
+      <span style='color:#F6D55C;'>■</span> I (Susceptible, Increased exposure; 4-8 mg/L) &nbsp;
+      <span style='color:#ED553B;'>■</span> R (Resistant, > 8 mg/L)
       </span>"
     )
   )

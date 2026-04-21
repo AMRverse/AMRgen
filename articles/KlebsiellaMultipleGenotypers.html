@@ -556,7 +556,7 @@ combinations observed at least 3 times in the dataset
 (<code>min_set_size=3</code>) makes it a little easier to see what’s
 going on.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kp_mic_upset_kleborate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">kleborate_binary_matrix</span>, assay <span class="op">=</span> <span class="st">"mic"</span>, species<span class="op">=</span><span class="st">"Klebsiella pneumoniae"</span>, min_set_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">kp_mic_upset_kleborate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">kleborate_binary_matrix</span>, assay <span class="op">=</span> <span class="st">"mic"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>, min_set_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot-1.png" class="r-plt" alt="" width="100%"></p>
 <p>It’s still quite complex to follow the plot and spot patterns, as we
 have carbapenemase genes mixed in with mutations, making it difficult to
@@ -567,22 +567,25 @@ together.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># modify marker labels in the genotype table</span></span>
 <span><span class="va">kleborate_dev_plotting</span> <span class="op">&lt;-</span> <span class="va">kleborate_dev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>marker.label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">marker.label</span> <span class="op">==</span> <span class="st">"OmpK36:-"</span> <span class="op">~</span> <span class="st">"OmpK36Δ"</span>,</span>
-<span>                                   <span class="va">marker.label</span> <span class="op">==</span> <span class="st">"OmpK35:-"</span> <span class="op">~</span> <span class="st">"OmpK35Δ"</span>,</span>
-<span>                                  <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"OmpK36:p"</span>, <span class="va">marker.label</span><span class="op">)</span> <span class="op">~</span> <span class="st">"OmpK36ins"</span>,</span>
-<span>                                   <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">marker.label</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>marker.label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">marker.label</span> <span class="op">==</span> <span class="st">"OmpK36:-"</span> <span class="op">~</span> <span class="st">"OmpK36Δ"</span>,</span>
+<span>    <span class="va">marker.label</span> <span class="op">==</span> <span class="st">"OmpK35:-"</span> <span class="op">~</span> <span class="st">"OmpK35Δ"</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"OmpK36:p"</span>, <span class="va">marker.label</span><span class="op">)</span> <span class="op">~</span> <span class="st">"OmpK36ins"</span>,</span>
+<span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">marker.label</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># calculate binary matrix from this updated genotype table, within the amr_upset function</span></span>
 <span><span class="va">kp_mic_upset_kleborate2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
-<span>  geno_table <span class="op">=</span> <span class="va">kleborate_dev_plotting</span>, </span>
+<span>  geno_table <span class="op">=</span> <span class="va">kleborate_dev_plotting</span>,</span>
 <span>  pheno_table <span class="op">=</span> <span class="va">kp_mero_euscape</span>,</span>
 <span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>,</span>
 <span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Carbapenems"</span><span class="op">)</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span>,</span>
-<span>  assay <span class="op">=</span> <span class="st">"mic"</span>, </span>
-<span>  species<span class="op">=</span><span class="st">"Klebsiella pneumoniae"</span>, </span>
-<span>  min_set_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
+<span>  min_set_size <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Generating geno-pheno binary matrix</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
@@ -606,14 +609,16 @@ can also retrieve the clinical breakpoints and ECOFF for meropenem and
 add these to the plot.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># pivot genotype table to wide format (one row per sample) with separate columns for each class of marker, and add the MIC values for each sample</span></span>
-<span><span class="va">kleborate_dev_wide_mic</span> <span class="op">&lt;-</span> <span class="va">kleborate_dev_plotting</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">marker.label</span><span class="op">!=</span><span class="st">"OmpK36:c.25C&gt;T"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># filter out synonymous SNP</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">Kleborate_Class</span>, <span class="va">marker.label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>id_cols<span class="op">=</span><span class="va">id</span>, </span>
-<span>              names_from<span class="op">=</span><span class="va">Kleborate_Class</span>, </span>
-<span>              values_from<span class="op">=</span><span class="va">marker.label</span>, </span>
-<span>              values_fn <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">.x</span>, collapse<span class="op">=</span><span class="st">","</span><span class="op">)</span>, </span>
-<span>              values_fill <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">kleborate_dev_wide_mic</span> <span class="op">&lt;-</span> <span class="va">kleborate_dev_plotting</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">marker.label</span> <span class="op">!=</span> <span class="st">"OmpK36:c.25C&gt;T"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># filter out synonymous SNP</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">Kleborate_Class</span>, <span class="va">marker.label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
+<span>    id_cols <span class="op">=</span> <span class="va">id</span>,</span>
+<span>    names_from <span class="op">=</span> <span class="va">Kleborate_Class</span>,</span>
+<span>    values_from <span class="op">=</span> <span class="va">marker.label</span>,</span>
+<span>    values_fn <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">.x</span>, collapse <span class="op">=</span> <span class="st">","</span><span class="op">)</span>,</span>
+<span>    values_fill <span class="op">=</span> <span class="st">"-"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">kp_mero_euscape</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(id)`</span></span>
 <span></span>
@@ -637,27 +642,30 @@ add these to the plot.</p>
 <span></span>
 <span><span class="co"># this table is now ready to use with assay_by_var, to flexibly explore MIC distribution by genotype</span></span>
 <span><span class="va">kleborate_mic_by_gene_mutation</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">kleborate_dev_wide_mic</span>,</span>
-<span>             pheno_drug<span class="op">=</span><span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
-<span>             facet_var <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species<span class="op">=</span><span class="st">"Klebsiella pneumoniae"</span>, </span>
-<span>             colour_legend_label <span class="op">=</span> <span class="st">"Omp mutations"</span>, boxplot<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
+<span>  facet_var <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
+<span>  colour_legend_label <span class="op">=</span> <span class="st">"Porin status"</span>, boxplot <span class="op">=</span> <span class="cn">T</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>
 <span></span>
 <span><span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_boxplot-1.png" class="r-plt" alt="" width="100%"></p>
 <p>The plot is crowded with some carbapenemase/combinations that are
-very rare, let’s collapse into enzyme families, and remove the single
-CTX gene.</p>
+very rare, let’s collapse into enzyme families, exclude isolates that
+have multiple carbapenemases (n=11), and remove the single CTX gene.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kleborate_dev_wide_mic_trim</span> <span class="op">&lt;-</span> <span class="va">kleborate_dev_wide_mic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Bla_Carb_acquired<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="va">Bla_Carb_acquired</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># first 3 letters give gene family name</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">","</span>, <span class="va">Bla_Carb_acquired</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># exclude isolates with multiple carbapenemases</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Bla_Carb_acquired <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="va">Bla_Carb_acquired</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># first 3 letters give gene family name</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Bla_Carb_acquired</span> <span class="op">!=</span> <span class="st">"CTX"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">kleborate_mic_by_gene_mutation</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">kleborate_dev_wide_mic_trim</span>,</span>
-<span>             pheno_drug<span class="op">=</span><span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
-<span>             facet_var <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species<span class="op">=</span><span class="st">"Klebsiella pneumoniae"</span>, </span>
-<span>             colour_legend_label <span class="op">=</span> <span class="st">"Omp mutations"</span>,</span>
-<span>             boxplot<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
+<span>  facet_var <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
+<span>  colour_legend_label <span class="op">=</span> <span class="st">"Porin status"</span>,</span>
+<span>  boxplot <span class="op">=</span> <span class="cn">T</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>
 <span></span>
@@ -670,29 +678,157 @@ all other plots); and the impact of mutations in the presence of each
 type of carbapenemase (other colours).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">stats</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">19</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 19 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 19 × 7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Groups:   Omp_mutations [4]</span></span></span>
-<span><span class="co">#&gt;    Omp_mutations   Bla_Carb_acquired     n median    q25   q75</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -               -                   726   0.06  0.06   0.06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -               IMP                   3  16    12     16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -               KPC                  29   8     4     16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -               NDM                  40  32    16     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -               OXA                 103   2     1      2   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -               VIM                  17   2     2      4   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> OmpK35Δ         -                    52   0.06  0.06   0.12</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> OmpK35Δ         KPC                  48  16     8     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> OmpK35Δ         NDM                  11  32    32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> OmpK35Δ         OXA                  39   2     1     16   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> OmpK35Δ         VIM                  12   4     2     10   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> OmpK35Δ,OmpK36Δ -                    24   4     2      4   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> OmpK35Δ,OmpK36Δ KPC                   2  32    32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> OmpK35Δ,OmpK36Δ NDM                   1  32    32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> OmpK35Δ,OmpK36Δ OXA                   1  32    32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> OmpK35Δ,OmpK36Δ VIM                   2  32    32     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> OmpK36ins       -                    12   0.5   0.105  1.25</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> OmpK36ins       KPC                   3  32    20     32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> OmpK36ins       NDM                   8  32    32     32</span></span></code></pre></div>
+<span><span class="co">#&gt;    Omp_mutations   Bla_Carb_acquired     n median   mean    q25   q75</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -               -                   726   0.06  0.268  0.06   0.06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -               IMP                   3  16    13.3   12     16   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -               KPC                  27   8    10.6    4     16   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -               NDM                  38  32    23.6   16     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -               OXA                 103   2     3.51   1      2   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -               VIM                  17   2     3.29   2      4   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> OmpK35Δ         -                    52   0.06  1.11   0.06   0.12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> OmpK35Δ         KPC                  48  16    17.4    8     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> OmpK35Δ         NDM                  10  32    27.6   32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> OmpK35Δ         OXA                  39   2     8.28   1     16   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> OmpK35Δ         VIM                  12   4     9.26   2     10   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> OmpK35Δ,OmpK36Δ -                    24   4     4.68   2      4   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> OmpK35Δ,OmpK36Δ KPC                   2  32    32     32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> OmpK35Δ,OmpK36Δ OXA                   1  32    32     32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> OmpK35Δ,OmpK36Δ VIM                   2  32    32     32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> OmpK36ins       -                    12   0.5   3.32   0.105  1.25</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> OmpK36ins       KPC                   3  32    24     20     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> OmpK36ins       NDM                   8  32    32     32     32   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> OmpK36ins       OXA                   4  32    32     32     32</span></span></code></pre></div>
+<p>Reformat the stats table into wide format to more clearly see the
+effects of porin vs. carbapenemase status on MIC. Mean and median (in
+brackets) MIC values are grouped by porin vs. carbapenemase status.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">kleborate_mic_by_gene_mutation_table</span> <span class="op">&lt;-</span> <span class="va">kleborate_mic_by_gene_mutation</span><span class="op">$</span><span class="va">stats</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">mean</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mean_median <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">mean</span>, <span class="st">" ("</span>, <span class="va">median</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">median</span>, <span class="op">-</span><span class="va">mean</span>, <span class="op">-</span><span class="va">q25</span>, <span class="op">-</span><span class="va">q75</span>, <span class="op">-</span><span class="va">n</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>OmpK35 <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"OmpK35"</span>, <span class="va">Omp_mutations</span><span class="op">)</span> <span class="op">~</span> <span class="st">"\u0394"</span>,</span>
+<span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"-"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>OmpK36 <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"OmpK36ins"</span>, <span class="va">Omp_mutations</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Insertion"</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"OmpK36\u0394"</span>, <span class="va">Omp_mutations</span><span class="op">)</span> <span class="op">~</span> <span class="st">"\u0394"</span>,</span>
+<span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"-"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Bla_Carb_acquired <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a></span><span class="op">(</span><span class="va">Bla_Carb_acquired</span>, <span class="st">"-"</span>, <span class="st">"None"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mean_MIC_table</span> <span class="op">&lt;-</span> <span class="va">kleborate_mic_by_gene_mutation_table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Omp_mutations</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
+<span>    names_from <span class="op">=</span> <span class="va">Bla_Carb_acquired</span>,</span>
+<span>    values_from <span class="op">=</span> <span class="va">mean_median</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">mean_MIC_table</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
+<span><span class="co">#&gt;   OmpK35 OmpK36    None       IMP       KPC       NDM       OXA       VIM    </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> -      -         0.3 (0.06) 13.3 (16) 10.6 (8)  23.6 (32) 3.5 (2)   3.3 (2)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Δ      -         1.1 (0.06) <span style="color: #BB0000;">NA</span>        17.4 (16) 27.6 (32) 8.3 (2)   9.3 (4)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Δ      Δ         4.7 (4)    <span style="color: #BB0000;">NA</span>        32 (32)   <span style="color: #BB0000;">NA</span>        32 (32)   32 (32)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> -      Insertion 3.3 (0.5)  <span style="color: #BB0000;">NA</span>        24 (32)   32 (32)   32 (32)   <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Δ      Insertion 9.4 (1)    <span style="color: #BB0000;">NA</span>        31.3 (32) 27.2 (32) 27.6 (32) <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> -      Δ         3.5 (2)    <span style="color: #BB0000;">NA</span>        32 (32)   32 (32)   28.8 (32) 32 (32)</span></span></code></pre></div>
+<p>Making the table aesthetically pleasing using the gt package.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># If you have the gt package, you can use it to make the table aesthetically pleasing</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com" class="external-link">gt</a></span><span class="op">)</span></span>
+<span><span class="va">mean_MIC_table_aes</span> <span class="op">&lt;-</span> <span class="va">mean_MIC_table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">gt</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">cols_label</span><span class="op">(</span></span>
+<span>    OmpK35 <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;OmpK35&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    OmpK36 <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;OmpK36&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    None <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;None&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    IMP <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;IMP&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    KPC <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;KPC&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    NDM <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;NDM&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    OXA <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;OXA&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    VIM <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;VIM&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">tab_spanner</span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;Porin status&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OmpK35"</span>, <span class="st">"OmpK36"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">tab_spanner</span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;Carbapenemase status&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"KPC"</span>, <span class="st">"NDM"</span>, <span class="st">"OXA"</span>, <span class="st">"VIM"</span>, <span class="st">"IMP"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">fmt_missing</span><span class="op">(</span></span>
+<span>    columns <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    missing_text <span class="op">=</span> <span class="st">"-"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="co"># Background color based on EUCAST breakpoints</span></span>
+<span>  <span class="fu">data_color</span><span class="op">(</span></span>
+<span>    columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"KPC"</span>, <span class="st">"NDM"</span>, <span class="st">"OXA"</span>, <span class="st">"VIM"</span>, <span class="st">"IMP"</span><span class="op">)</span>,</span>
+<span>    fn <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">numeric_vals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"^[0-9.]+"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">numeric_vals</span><span class="op">)</span> <span class="op">~</span> <span class="st">"transparent"</span>,</span>
+<span>        <span class="va">numeric_vals</span> <span class="op">&lt;=</span> <span class="fl">2</span> <span class="op">~</span> <span class="st">"#3CAEA3"</span>,</span>
+<span>        <span class="va">numeric_vals</span> <span class="op">&lt;=</span> <span class="fl">8</span> <span class="op">~</span> <span class="st">"#F6D55C"</span>,</span>
+<span>        <span class="va">numeric_vals</span> <span class="op">&gt;</span> <span class="fl">8</span> <span class="op">~</span> <span class="st">"#ED553B"</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="co"># Changing orange cells to have white font so it is easier to see the numbers</span></span>
+<span>  <span class="fu">data_color</span><span class="op">(</span></span>
+<span>    columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"KPC"</span>, <span class="st">"NDM"</span>, <span class="st">"OXA"</span>, <span class="st">"VIM"</span>, <span class="st">"IMP"</span><span class="op">)</span>,</span>
+<span>    fn <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">numeric_vals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"^[0-9.]+"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">numeric_vals</span><span class="op">)</span> <span class="op">~</span> <span class="st">"black"</span>,</span>
+<span>        <span class="va">numeric_vals</span> <span class="op">&gt;</span> <span class="fl">8</span> <span class="op">~</span> <span class="st">"white"</span>,</span>
+<span>        <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"black"</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">}</span>,</span>
+<span>    apply_to <span class="op">=</span> <span class="st">"text"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="co"># aligning columns</span></span>
+<span>  <span class="fu">cols_align</span><span class="op">(</span></span>
+<span>    align <span class="op">=</span> <span class="st">"center"</span>,</span>
+<span>    columns <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="co"># text options</span></span>
+<span>  <span class="fu">tab_options</span><span class="op">(</span></span>
+<span>    table.font.names <span class="op">=</span> <span class="st">"Arial"</span>,</span>
+<span>    table.font.size <span class="op">=</span> <span class="fl">14</span>,</span>
+<span>    heading.title.font.size <span class="op">=</span> <span class="fl">16</span>,</span>
+<span>    table.border.top.color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>    table.border.bottom.color <span class="op">=</span> <span class="st">"black"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="co"># column widths</span></span>
+<span>  <span class="fu">cols_width</span><span class="op">(</span></span>
+<span>    <span class="va">OmpK35</span> <span class="op">~</span> <span class="fu">px</span><span class="op">(</span><span class="fl">125</span><span class="op">)</span>,</span>
+<span>    <span class="va">OmpK36</span> <span class="op">~</span> <span class="fu">px</span><span class="op">(</span><span class="fl">125</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fu">px</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Adding title and legend for colour</span></span>
+<span><span class="va">mean_MIC_table_aes</span> <span class="op">&lt;-</span> <span class="va">mean_MIC_table_aes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">tab_header</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="fu">html</span><span class="op">(</span><span class="st">"&lt;b&gt;Mean (Median) Meropenem Minimum Inhibitory Concentration (mg/L)&lt;/b&gt;"</span><span class="op">)</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="fu">html</span><span class="op">(</span></span>
+<span>      <span class="st">"&lt;span style='font-size:12px;'&gt;</span></span>
+<span><span class="st">      &lt;b&gt;EUCAST clinical breakpoint:&lt;/b&gt;</span></span>
+<span><span class="st">      &lt;span style='color:#3CAEA3;'&gt;■&lt;/span&gt; Susceptible (≤ 2 mg/L) &amp;nbsp;</span></span>
+<span><span class="st">      &lt;span style='color:#F6D55C;'&gt;■&lt;/span&gt; Intermediate (susceptible, increased exposure; 2–8 mg/L) &amp;nbsp;</span></span>
+<span><span class="st">      &lt;span style='color:#ED553B;'&gt;■&lt;/span&gt; Resistant (&gt; 8 mg/L)</span></span>
+<span><span class="st">      &lt;/span&gt;"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">mean_MIC_table_aes</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -710,7 +846,7 @@ whereas the updated version follows the HGVS nomenclature standard.</p>
 <p>A table of Kleborate v3.1.3 results generated for the EuSCAPE genomes
 is available in the AMRgen package as <code>kleborate_raw_v313</code>.
 Let’s import it and summarise its contents:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View Kleborate output v3.1.3 (using informal nomenclature (e.g. [gene]-[mutation], [gene]-X%, OmpK36GD))</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">kleborate_raw_v313</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 113</span></span></span>
@@ -804,7 +940,7 @@ Let’s import it and summarise its contents:</p>
 <p>Comparing only the carbapenem resistance determinants from an updated
 version Kleborate (development branch) to a previous version
 (v3.1.3).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Grouping Kleborate development branch carbapenem resistance determinants, so that there is one row per sample</span></span>
 <span><span class="va">kleborate_dev_markers_grouped</span> <span class="op">&lt;-</span> <span class="va">kleborate_dev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Kleborate_Class</span> <span class="op">==</span> <span class="st">"Omp_mutations"</span> <span class="op">|</span> <span class="va">Kleborate_Class</span> <span class="op">==</span> <span class="st">"Bla_Carb_acquired"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -911,7 +1047,7 @@ AMRFinderPlus version v4.0</a>. Noting that as of AMRFinderPlus
 function disrupting mutations in genes (i.e., ompk35 and ompk36 loss and
 truncations) that lead to resistance, which Kleborate already
 identifies.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download Klebsiella pneumoniae genotype AMRFinderPlus data and re-format the data into an AMRgen genotype table</span></span>
 <span><span class="va">amrfp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_ebi.html">download_ebi</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="st">"genotype"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
@@ -924,7 +1060,7 @@ identifies.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">contaminated_assemblies</span><span class="op">)</span></span></code></pre></div>
 <p>A copy of this data frame is avaiable in the AMRgen pacakge as
 <code>kp_mero_amrfp</code>:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">kp_mero_amrfp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 34</span></span></span>
 <span><span class="co">#&gt;   id        marker gene  mutation drug_agent drug_class marker.label assembly_ID</span></span>
@@ -1021,7 +1157,7 @@ mutations (e.g., OmpK36_c25t), nor does it detect loss of OmpK35/36
 <p>As such, these differences make it difficult to compare, so we will
 simplify and remove <code>OmpK35:-</code> and <code>OmpK36:-</code> from
 the Kleborate development branch results.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># To count and see the names of the carbapenem resistance determinants</span></span>
 <span><span class="va">kp_mero_amrfp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_class</span> <span class="op">==</span> <span class="st">"Carbapenems"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -1145,7 +1281,7 @@ conferring resistance to <code>Cephalosporins (3rd gen.)</code> instead
 of <code>Carbapenems</code>, which is why it has been excluded from the
 AMR genotype table since we filtered for
 <code>drug_class=="Carbapenems"</code>.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># CTX-M-33 is annotated as conferring resistance to Cephalosporins (3rd gen.) and is identified by AMRFinderPlus in Sample SAMEA3721133</span></span>
 <span><span class="va">kp_mero_amrfp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">gene</span> <span class="op">==</span> <span class="st">"blaCTX-M-33"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -1201,7 +1337,7 @@ genome using AMRFinderPlus and is annotated as conferring resistance to
 <code>Carbapenems</code>, which is why it has been excluded from the
 genotype table since we filtered for
 <code>drug_class=="Carbapenems"</code>.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># KPC-12 is annotated as conferring resistance to Cephalosporins (3rd gen.)  and is identified by AMRFinderPlus in Sample SAMEA3649729</span></span>
 <span><span class="va">kp_mero_amrfp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">gene</span> <span class="op">==</span> <span class="st">"blaKPC-12"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -1296,7 +1432,7 @@ function. For example,
 </ol>
 <p>The data frame <code>rgi_EuSCAPE_raw</code> included in the AMRgen
 package provides CARD RGI calls for the EuSCAPE genomes:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Sample IDs with no AMR determinants have been added to rgi_EuSCAPE_raw under the `ORF_ID` column with the rest of the rows left blank</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">rgi_EuSCAPE_raw</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 26</span></span></span>
@@ -1377,7 +1513,7 @@ package provides CARD RGI calls for the EuSCAPE genomes:</p>
 <div class="section level3">
 <h3 id="generate-binary-matrix-for-rgi-amr-markers">Generate Binary Matrix for RGI AMR Markers<a class="anchor" aria-label="anchor" href="#generate-binary-matrix-for-rgi-amr-markers"></a>
 </h3>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rgi_binary_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  geno_table <span class="op">=</span> <span class="va">rgi</span>,</span>
 <span>  pheno_table <span class="op">=</span> <span class="va">kp_mero_euscape</span>,</span>
@@ -1393,14 +1529,14 @@ package provides CARD RGI calls for the EuSCAPE genomes:</p>
 <div class="section level3">
 <h3 id="solo-ppv-analysis-for-rgi-amr-markers">Solo PPV Analysis for RGI AMR Markers<a class="anchor" aria-label="anchor" href="#solo-ppv-analysis-for-rgi-amr-markers"></a>
 </h3>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># No solo markers error when you run solo_ppv()! Since CARD/RGI includes intrinsic and acquired resistance determinants, there could be intrinsic / core resistance determinants that are found across most (if not all) genomes which obstructs our view of carbapenem resistance determinants found alone.</span></span>
 <span></span>
 <span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix</span><span class="op">)</span></span></code></pre></div>
 <p>As such, we will exclude the core/intrinsic resistance determinants,
 using their prevalence and exclude any determinants identified across
 more than 80% of genomes.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rgi_binary_matrix_prev80</span> <span class="op">&lt;-</span> <span class="va">rgi_binary_matrix</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="op">~</span> <span class="op">{</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1411,10 +1547,10 @@ more than 80% of genomes.</p>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">}</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Try running the <code><a href="../reference/solo_ppv.html">solo_ppv()</a></code> function again.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span><span class="op">)</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/rgi_soloPPV_2-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Count number of genomes that have either `MdtQ` or `MdtQ:-`</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">rgi_binary_matrix_prev80</span><span class="op">$</span><span class="va">MdtQ</span> <span class="op">==</span> <span class="st">"1"</span> <span class="op">|</span> <span class="va">rgi_binary_matrix_prev80</span><span class="op">$</span><span class="va">`MdtQ..-`</span> <span class="op">==</span> <span class="st">"1"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1429</span></span></code></pre></div>
@@ -1430,11 +1566,11 @@ genomes have MdtQ or a variant of MdtQ, therefore it could be considered
 a core gene. In summary, because is no compelling evidence that MdtQ
 confers resistance to carbapenems and that it is likely a core gene, we
 will exclude it from further analyses.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exclude MdtQ and MdtQ:- from the binary matrix</span></span>
 <span><span class="va">rgi_binary_matrix_prev80</span> <span class="op">&lt;-</span> <span class="va">rgi_binary_matrix_prev80</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">MdtQ</span>, <span class="op">-</span><span class="va">`MdtQ..-`</span><span class="op">)</span></span></code></pre></div>
 <p>Try running the <code><a href="../reference/solo_ppv.html">solo_ppv()</a></code> function… again.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soloPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span><span class="op">)</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/rgi_soloPPV_3-1.png" class="r-plt" alt="" width="100%"></p>
 <p>We can finally see carbapenem resistance determinants alone! Since
@@ -1443,7 +1579,7 @@ compared to Kleborate’s and AMRFinderPlus’ <code><a href="../reference/solo_
 below). For example, NDM-1 alone was found in 59 resistant genomes
 (using RGI), 31 resistant genomes (using Kleborate), and 41 resistant
 genomes (using AMRFinderPlus).</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soloPPV_kleborate_mero</span></span>
 <span><span class="co">#&gt; $solo_stats</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 28 × 8</span></span></span>
@@ -1515,7 +1651,7 @@ genomes (using AMRFinderPlus).</p>
 <span><span class="co">#&gt;           "(n=10,10)"             "(n=3,3)"           "(n=17,17)" </span></span>
 <span><span class="co">#&gt;                 IMP-1                 NDM-1 </span></span>
 <span><span class="co">#&gt;             "(n=3,3)"           "(n=38,38)"</span></span></code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generate binary matrix for AMRFinderPlus</span></span>
 <span><span class="va">amrfp_binary_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
 <span>  geno_table <span class="op">=</span> <span class="va">kp_mero_amrfp</span>,</span>
@@ -1534,7 +1670,7 @@ genomes (using AMRFinderPlus).</p>
 <div class="section level3">
 <h3 id="combinatorial-ppv-analysis-for-rgi-amr-markers">Combinatorial PPV Analysis for RGI AMR Markers<a class="anchor" aria-label="anchor" href="#combinatorial-ppv-analysis-for-rgi-amr-markers"></a>
 </h3>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">comboPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
@@ -1547,7 +1683,7 @@ genomes (using AMRFinderPlus).</p>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/rgi_comboPPV-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Summary of combinatorial PPV</span></span>
 <span><span class="va">comboPPV_rgi_mero</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 21 × 21</span></span></span>
@@ -1576,7 +1712,7 @@ development branch.</p>
 <div class="section level3">
 <h3 id="compare-rgi-to-kleborate-genotype-results">Compare RGI to Kleborate Genotype Results<a class="anchor" aria-label="anchor" href="#compare-rgi-to-kleborate-genotype-results"></a>
 </h3>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rgi_simplified</span> <span class="op">&lt;-</span> <span class="va">rgi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">drug_class</span> <span class="op">==</span> <span class="st">"Carbapenems"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">`Resistance Mechanism`</span> <span class="op">==</span> <span class="st">"antibiotic inactivation"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -1672,7 +1808,7 @@ that it is found by (e.g., Kpne_KpnG will be Kpne_KpnG_rgi). AMR markers
 identified by more than one genotyper will be merged, where if it was
 identified by any genotyper in that sample, the binary matrix will have
 a <code>1</code> (present), otherwise <code>0</code> (absent).</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Phenotype columns to remove (that we can put back in later)</span></span>
 <span><span class="va">cols_to_remove</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pheno"</span>, <span class="st">"ecoff"</span>, <span class="st">"mic"</span>, <span class="st">"R"</span>, <span class="st">"NWT"</span><span class="op">)</span></span>
 <span></span>
@@ -1759,7 +1895,7 @@ a <code>1</code> (present), otherwise <code>0</code> (absent).</p>
 <div class="section level3">
 <h3 id="solo-ppv-analysis-for-amrfinderplus-rgi-kleborate-amr-markers">Solo PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR Markers<a class="anchor" aria-label="anchor" href="#solo-ppv-analysis-for-amrfinderplus-rgi-kleborate-amr-markers"></a>
 </h3>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined_solo_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">combined_binary_matrix</span><span class="op">)</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/soloPPV_combined-1.png" class="r-plt" alt="" width="100%">
 From this solo_ppv() plot, we can see that there are markers that are
@@ -1778,7 +1914,7 @@ between the markers and a specified antibiotic.</p>
 <h3 id="logistic-regression-for-amrfinderplus-rgi-kleborate-amr-markers">Logistic regression for AMRFinderPlus, RGI, Kleborate AMR
 Markers<a class="anchor" aria-label="anchor" href="#logistic-regression-for-amrfinderplus-rgi-kleborate-amr-markers"></a>
 </h3>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined_logist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_logistic.html">amr_logistic</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">combined_binary_matrix</span>,</span>
 <span>  pheno_drug <span class="op">=</span> <span class="st">"meropenem"</span>,</span>
@@ -1793,7 +1929,7 @@ Markers<a class="anchor" aria-label="anchor" href="#logistic-regression-for-amrf
 <span><span class="co">#&gt; Generating plots</span></span>
 <span><span class="co">#&gt; Plotting 2 models</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/log_reg_combined-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># model coefficients</span></span>
 <span><span class="va">combined_logist</span><span class="op">$</span><span class="va">modelR</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 5</span></span></span>
@@ -1827,7 +1963,7 @@ VIM-4:- (identified by RGI).</p>
 <h3 id="combinatorial-ppv-analysis-for-amrfinderplus-rgi-kleborate-amr-markers">Combinatorial PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR
 Markers<a class="anchor" aria-label="anchor" href="#combinatorial-ppv-analysis-for-amrfinderplus-rgi-kleborate-amr-markers"></a>
 </h3>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">comboPPV_combined_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">combined_binary_matrix</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
@@ -1840,7 +1976,7 @@ Markers<a class="anchor" aria-label="anchor" href="#combinatorial-ppv-analysis-f
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/comboPPV_combined-1.png" class="r-plt" alt="" width="100%"></p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">comboPPV_combined_mero</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 86 × 21</span></span></span>

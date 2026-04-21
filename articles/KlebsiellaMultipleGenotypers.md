@@ -518,7 +518,7 @@ the plot to marker combinations observed at least 3 times in the dataset
 (`min_set_size=3`) makes it a little easier to see what’s going on.
 
 ``` r
-kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix, assay = "mic", species="Klebsiella pneumoniae", min_set_size = 3)
+kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix, assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3)
 ```
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot-1.png)
@@ -534,22 +534,25 @@ together.
 ``` r
 # modify marker labels in the genotype table
 kleborate_dev_plotting <- kleborate_dev %>%
-  mutate(marker.label = case_when(marker.label == "OmpK36:-" ~ "OmpK36Δ",
-                                   marker.label == "OmpK35:-" ~ "OmpK35Δ",
-                                  grepl("OmpK36:p", marker.label) ~ "OmpK36ins",
-                                   TRUE ~ marker.label))
+  mutate(marker.label = case_when(
+    marker.label == "OmpK36:-" ~ "OmpK36Δ",
+    marker.label == "OmpK35:-" ~ "OmpK35Δ",
+    grepl("OmpK36:p", marker.label) ~ "OmpK36ins",
+    TRUE ~ marker.label
+  ))
 
 # calculate binary matrix from this updated genotype table, within the amr_upset function
 kp_mic_upset_kleborate2 <- amr_upset(
-  geno_table = kleborate_dev_plotting, 
+  geno_table = kleborate_dev_plotting,
   pheno_table = kp_mero_euscape,
   pheno_drug = "Meropenem",
   geno_class = c("Carbapenems"),
   sir_col = "pheno_eucast",
   marker_col = "marker.label",
-  assay = "mic", 
-  species="Klebsiella pneumoniae", 
-  min_set_size = 3)
+  assay = "mic",
+  species = "Klebsiella pneumoniae",
+  min_set_size = 3
+)
 #> Generating geno-pheno binary matrix
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
@@ -576,14 +579,16 @@ plot.
 
 ``` r
 # pivot genotype table to wide format (one row per sample) with separate columns for each class of marker, and add the MIC values for each sample
-kleborate_dev_wide_mic <- kleborate_dev_plotting %>% 
-  filter(marker.label!="OmpK36:c.25C>T") %>% # filter out synonymous SNP
-  select(id, Kleborate_Class, marker.label) %>% 
-  pivot_wider(id_cols=id, 
-              names_from=Kleborate_Class, 
-              values_from=marker.label, 
-              values_fn = ~paste(.x, collapse=","), 
-              values_fill = "-") %>% 
+kleborate_dev_wide_mic <- kleborate_dev_plotting %>%
+  filter(marker.label != "OmpK36:c.25C>T") %>% # filter out synonymous SNP
+  select(id, Kleborate_Class, marker.label) %>%
+  pivot_wider(
+    id_cols = id,
+    names_from = Kleborate_Class,
+    values_from = marker.label,
+    values_fn = ~ paste(.x, collapse = ","),
+    values_fill = "-"
+  ) %>%
   left_join(kp_mero_euscape)
 #> Joining with `by = join_by(id)`
 
@@ -607,9 +612,10 @@ head(kleborate_dev_wide_mic)
 
 # this table is now ready to use with assay_by_var, to flexibly explore MIC distribution by genotype
 kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic,
-             pheno_drug="Meropenem", colour_by = "Omp_mutations",
-             facet_var = "Bla_Carb_acquired", species="Klebsiella pneumoniae", 
-             colour_legend_label = "Omp mutations", boxplot=T)
+  pheno_drug = "Meropenem", colour_by = "Omp_mutations",
+  facet_var = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
+  colour_legend_label = "Porin status", boxplot = T
+)
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
 
@@ -619,19 +625,21 @@ kleborate_mic_by_gene_mutation$plot
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_boxplot-1.png)
 
 The plot is crowded with some carbapenemase/combinations that are very
-rare, let’s collapse into enzyme families, and remove the single CTX
-gene.
+rare, let’s collapse into enzyme families, exclude isolates that have
+multiple carbapenemases (n=11), and remove the single CTX gene.
 
 ``` r
 kleborate_dev_wide_mic_trim <- kleborate_dev_wide_mic %>%
-  mutate(Bla_Carb_acquired=substr(Bla_Carb_acquired, 1, 3)) %>% # first 3 letters give gene family name
+  filter(!grepl(",", Bla_Carb_acquired)) %>% # exclude isolates with multiple carbapenemases
+  mutate(Bla_Carb_acquired = substr(Bla_Carb_acquired, 1, 3)) %>% # first 3 letters give gene family name
   filter(Bla_Carb_acquired != "CTX")
 
 kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic_trim,
-             pheno_drug="Meropenem", colour_by = "Omp_mutations",
-             facet_var = "Bla_Carb_acquired", species="Klebsiella pneumoniae", 
-             colour_legend_label = "Omp mutations",
-             boxplot=T)
+  pheno_drug = "Meropenem", colour_by = "Omp_mutations",
+  facet_var = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
+  colour_legend_label = "Porin status",
+  boxplot = T
+)
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
 
@@ -648,29 +656,163 @@ type of carbapenemase (other colours).
 
 ``` r
 kleborate_mic_by_gene_mutation$stats %>% head(19)
-#> # A tibble: 19 × 6
+#> # A tibble: 19 × 7
 #> # Groups:   Omp_mutations [4]
-#>    Omp_mutations   Bla_Carb_acquired     n median    q25   q75
-#>    <chr>           <chr>             <int>  <dbl>  <dbl> <dbl>
-#>  1 -               -                   726   0.06  0.06   0.06
-#>  2 -               IMP                   3  16    12     16   
-#>  3 -               KPC                  29   8     4     16   
-#>  4 -               NDM                  40  32    16     32   
-#>  5 -               OXA                 103   2     1      2   
-#>  6 -               VIM                  17   2     2      4   
-#>  7 OmpK35Δ         -                    52   0.06  0.06   0.12
-#>  8 OmpK35Δ         KPC                  48  16     8     32   
-#>  9 OmpK35Δ         NDM                  11  32    32     32   
-#> 10 OmpK35Δ         OXA                  39   2     1     16   
-#> 11 OmpK35Δ         VIM                  12   4     2     10   
-#> 12 OmpK35Δ,OmpK36Δ -                    24   4     2      4   
-#> 13 OmpK35Δ,OmpK36Δ KPC                   2  32    32     32   
-#> 14 OmpK35Δ,OmpK36Δ NDM                   1  32    32     32   
-#> 15 OmpK35Δ,OmpK36Δ OXA                   1  32    32     32   
-#> 16 OmpK35Δ,OmpK36Δ VIM                   2  32    32     32   
-#> 17 OmpK36ins       -                    12   0.5   0.105  1.25
-#> 18 OmpK36ins       KPC                   3  32    20     32   
-#> 19 OmpK36ins       NDM                   8  32    32     32
+#>    Omp_mutations   Bla_Carb_acquired     n median   mean    q25   q75
+#>    <chr>           <chr>             <int>  <dbl>  <dbl>  <dbl> <dbl>
+#>  1 -               -                   726   0.06  0.268  0.06   0.06
+#>  2 -               IMP                   3  16    13.3   12     16   
+#>  3 -               KPC                  27   8    10.6    4     16   
+#>  4 -               NDM                  38  32    23.6   16     32   
+#>  5 -               OXA                 103   2     3.51   1      2   
+#>  6 -               VIM                  17   2     3.29   2      4   
+#>  7 OmpK35Δ         -                    52   0.06  1.11   0.06   0.12
+#>  8 OmpK35Δ         KPC                  48  16    17.4    8     32   
+#>  9 OmpK35Δ         NDM                  10  32    27.6   32     32   
+#> 10 OmpK35Δ         OXA                  39   2     8.28   1     16   
+#> 11 OmpK35Δ         VIM                  12   4     9.26   2     10   
+#> 12 OmpK35Δ,OmpK36Δ -                    24   4     4.68   2      4   
+#> 13 OmpK35Δ,OmpK36Δ KPC                   2  32    32     32     32   
+#> 14 OmpK35Δ,OmpK36Δ OXA                   1  32    32     32     32   
+#> 15 OmpK35Δ,OmpK36Δ VIM                   2  32    32     32     32   
+#> 16 OmpK36ins       -                    12   0.5   3.32   0.105  1.25
+#> 17 OmpK36ins       KPC                   3  32    24     20     32   
+#> 18 OmpK36ins       NDM                   8  32    32     32     32   
+#> 19 OmpK36ins       OXA                   4  32    32     32     32
+```
+
+Reformat the stats table into wide format to more clearly see the
+effects of porin vs. carbapenemase status on MIC. Mean and median (in
+brackets) MIC values are grouped by porin vs. carbapenemase status.
+
+``` r
+kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
+  mutate(mean = round(mean, 1)) %>%
+  mutate(mean_median = paste0(mean, " (", median, ")")) %>%
+  select(-median, -mean, -q25, -q75, -n) %>%
+  mutate(OmpK35 = case_when(
+    grepl("OmpK35", Omp_mutations) ~ "\u0394",
+    TRUE ~ "-"
+  )) %>%
+  mutate(OmpK36 = case_when(
+    grepl("OmpK36ins", Omp_mutations) ~ "Insertion",
+    grepl("OmpK36\u0394", Omp_mutations) ~ "\u0394",
+    TRUE ~ "-"
+  )) %>%
+  mutate(Bla_Carb_acquired = str_replace_all(Bla_Carb_acquired, "-", "None")) %>%
+  ungroup()
+
+mean_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
+  select(-Omp_mutations) %>%
+  pivot_wider(
+    names_from = Bla_Carb_acquired,
+    values_from = mean_median
+  )
+
+mean_MIC_table
+#> # A tibble: 6 × 8
+#>   OmpK35 OmpK36    None       IMP       KPC       NDM       OXA       VIM    
+#>   <chr>  <chr>     <chr>      <chr>     <chr>     <chr>     <chr>     <chr>  
+#> 1 -      -         0.3 (0.06) 13.3 (16) 10.6 (8)  23.6 (32) 3.5 (2)   3.3 (2)
+#> 2 Δ      -         1.1 (0.06) NA        17.4 (16) 27.6 (32) 8.3 (2)   9.3 (4)
+#> 3 Δ      Δ         4.7 (4)    NA        32 (32)   NA        32 (32)   32 (32)
+#> 4 -      Insertion 3.3 (0.5)  NA        24 (32)   32 (32)   32 (32)   NA     
+#> 5 Δ      Insertion 9.4 (1)    NA        31.3 (32) 27.2 (32) 27.6 (32) NA     
+#> 6 -      Δ         3.5 (2)    NA        32 (32)   32 (32)   28.8 (32) 32 (32)
+```
+
+Making the table aesthetically pleasing using the gt package.
+
+``` r
+# If you have the gt package, you can use it to make the table aesthetically pleasing
+library(gt)
+mean_MIC_table_aes <- mean_MIC_table %>%
+  gt() %>%
+  cols_label(
+    OmpK35 = html("<b>OmpK35</b>"),
+    OmpK36 = html("<b>OmpK36</b>"),
+    None = html("<b>None</b>"),
+    IMP = html("<b>IMP</b>"),
+    KPC = html("<b>KPC</b>"),
+    NDM = html("<b>NDM</b>"),
+    OXA = html("<b>OXA</b>"),
+    VIM = html("<b>VIM</b>"),
+  ) %>%
+  tab_spanner(
+    label = html("<b>Porin status</b>"),
+    columns = c("OmpK35", "OmpK36")
+  ) %>%
+  tab_spanner(
+    label = html("<b>Carbapenemase status</b>"),
+    columns = c("None", "KPC", "NDM", "OXA", "VIM", "IMP")
+  ) %>%
+  fmt_missing(
+    columns = everything(),
+    missing_text = "-"
+  ) %>%
+  # Background color based on EUCAST breakpoints
+  data_color(
+    columns = c("None", "KPC", "NDM", "OXA", "VIM", "IMP"),
+    fn = function(x) {
+      numeric_vals <- as.numeric(str_extract(x, "^[0-9.]+"))
+
+      case_when(
+        is.na(numeric_vals) ~ "transparent",
+        numeric_vals <= 2 ~ "#3CAEA3",
+        numeric_vals <= 8 ~ "#F6D55C",
+        numeric_vals > 8 ~ "#ED553B"
+      )
+    }
+  ) %>%
+  # Changing orange cells to have white font so it is easier to see the numbers
+  data_color(
+    columns = c("None", "KPC", "NDM", "OXA", "VIM", "IMP"),
+    fn = function(x) {
+      numeric_vals <- as.numeric(str_extract(x, "^[0-9.]+"))
+
+      case_when(
+        is.na(numeric_vals) ~ "black",
+        numeric_vals > 8 ~ "white",
+        TRUE ~ "black"
+      )
+    },
+    apply_to = "text"
+  ) %>%
+  # aligning columns
+  cols_align(
+    align = "center",
+    columns = everything()
+  ) %>%
+  # text options
+  tab_options(
+    table.font.names = "Arial",
+    table.font.size = 14,
+    heading.title.font.size = 16,
+    table.border.top.color = "black",
+    table.border.bottom.color = "black"
+  ) %>%
+  # column widths
+  cols_width(
+    OmpK35 ~ px(125),
+    OmpK36 ~ px(125),
+    everything() ~ px(100)
+  )
+
+# Adding title and legend for colour
+mean_MIC_table_aes <- mean_MIC_table_aes %>%
+  tab_header(
+    title = html("<b>Mean (Median) Meropenem Minimum Inhibitory Concentration (mg/L)</b>"),
+    subtitle = html(
+      "<span style='font-size:12px;'>
+      <b>EUCAST clinical breakpoint:</b>
+      <span style='color:#3CAEA3;'>■</span> Susceptible (≤ 2 mg/L) &nbsp;
+      <span style='color:#F6D55C;'>■</span> Intermediate (susceptible, increased exposure; 2–8 mg/L) &nbsp;
+      <span style='color:#ED553B;'>■</span> Resistant (> 8 mg/L)
+      </span>"
+    )
+  )
+
+mean_MIC_table_aes
 ```
 
 ## Genotypes from Kleborate v3.1.3

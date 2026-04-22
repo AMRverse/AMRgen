@@ -234,11 +234,13 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         }
       }
     } else { # grouped boxplot instead
-      if (is.null(group_by)) {group_by = colour_by}
+      if (is.null(group_by)) {
+        group_by <- colour_by
+      }
       plot_all <- pheno_table %>%
         ggplot(aes(x = factor(!!sym(group_by)), y = !!sym(measure))) +
         geom_boxplot() +
-        geom_jitter(aes(col = !!sym(colour_by))) +
+        geom_jitter(aes(col = factor(!!sym(colour_by)))) +
         labs(
           y = measure_axis_label, x = colour_legend_label,
           colour = colour_legend_label, subtitle = subtitle,
@@ -246,7 +248,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         ) +
         theme_bw() +
         theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1))
-    
+
       if (!is.null(colours)) {
         plot_all <- plot_all + scale_colour_manual(values = colours)
       } else if (is(pheno_table[[colour_by]], "sir")) {
@@ -271,10 +273,10 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
             q75 = stats::quantile(as.numeric(!!sym(measure)), 0.75, na.rm = TRUE)
           ) %>%
           ungroup()
-        colnames(stats)[1] <- colour_by
+        colnames(stats)[1] <- group_by
       } else {
         stats <- pheno_table %>%
-          group_by(!!sym(colour_by), !!sym(facet_var)) %>%
+          group_by(!!sym(group_by), !!sym(facet_var)) %>%
           summarise(
             n = n(),
             median = median(as.numeric(!!sym(measure)), na.rm = TRUE),
@@ -283,7 +285,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
             q75 = stats::quantile(as.numeric(!!sym(measure)), 0.75, na.rm = TRUE)
           ) %>%
           ungroup()
-        colnames(stats)[1] <- colour_by
+        colnames(stats)[1] <- group_by
         colnames(stats)[2] <- facet_var
       }
     }

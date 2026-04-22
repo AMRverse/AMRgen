@@ -610,7 +610,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       sir_col = NULL, ecoff_col = "ecoff",
                       marker_col = "marker",
                       plot_marker_count = TRUE,
-                      plot_set_size = FALSE, 
+                      plot_set_size = FALSE,
                       plot_category = TRUE,
                       print_category_counts = FALSE, print_set_size = FALSE,
                       boxplot_col = "grey",
@@ -618,7 +618,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       species = NULL, bp_site = NULL,
                       guideline = "EUCAST 2025",
                       bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
-                      marker_order = NULL, 
+                      marker_order = NULL,
                       plot_title = NULL, plot_subtitle = NULL) {
   if (is.null(assay)) {
     stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `ppv()` is more appropriate.")
@@ -664,7 +664,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
   )
 
   # assemble plot
-  
+
   # assay plot title
   if (is.null(plot_title)) {
     if (assay == "mic") {
@@ -676,37 +676,39 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
       plot_title <- paste(pheno_drug, plot_title)
     }
   }
-  if (!is.null(geno_class)) {plot_subtitle <- paste("vs markers for", paste0(geno_class, collapse=", "))}
-  
+  if (!is.null(geno_class)) {
+    plot_subtitle <- paste("vs markers for", paste0(geno_class, collapse = ", "))
+  }
+
   final_plot <-
-    combo_data$assay_plot + 
+    combo_data$assay_plot +
     ggtitle(plot_title, subtitle = plot_subtitle) +
     theme(axis.text.x = element_blank(), axis.title.x = element_blank(), axis.ticks.x = element_blank())
-  
+
   if (plot_category) {
-    final_plot <- final_plot + 
+    final_plot <- final_plot +
       combo_data$category_plot +
       theme(legend.position = "none") + # legend already done for assay plot
       theme(axis.text.x = element_blank(), axis.title.x = element_blank(), axis.ticks.x = element_blank())
   }
-  
+
   final_plot <- final_plot +
-    combo_data$marker_grid_plot + 
+    combo_data$marker_grid_plot +
     theme(axis.text.x = element_blank(), axis.title.x = element_blank(), axis.ticks.x = element_blank())
-  
+
   if (plot_set_size) {
     final_plot <- final_plot +
-      combo_data$setsize_plot + 
+      combo_data$setsize_plot +
       scale_y_reverse("Set size") +
       theme(axis.text.x = element_blank(), axis.title.x = element_blank(), axis.ticks.x = element_blank())
   }
-  
+
   # set relative plotting heights
   if (plot_category & plot_set_size) {
-    final_plot <- final_plot + plot_layout(heights = c(2, 1, 2, 1), guides="collect")
+    final_plot <- final_plot + plot_layout(heights = c(2, 1, 2, 1), guides = "collect")
   }
   if (plot_category & !plot_set_size) {
-    final_plot <- final_plot + plot_layout(heights = c(2, 1, 2), guides="collect")
+    final_plot <- final_plot + plot_layout(heights = c(2, 1, 2), guides = "collect")
   }
   if (!plot_category & plot_set_size) {
     final_plot <- final_plot + plot_layout(heights = c(2, 2, 1))
@@ -714,27 +716,27 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
   if (!plot_category & !plot_set_size) {
     final_plot <- final_plot + plot_layout(heights = c(2, 2))
   }
-  
+
   if (plot_marker_count) {
     marker_plot <- combo_data$marker_count_plot + theme(axis.text.y = element_blank(), axis.title.y = element_blank(), axis.ticks.y = element_blank())
     if (plot_category & plot_set_size) {
-      left_plot <- plot_spacer() / 
-        plot_spacer() / 
+      left_plot <- plot_spacer() /
+        plot_spacer() /
         marker_plot /
         plot_spacer() +
         plot_layout(heights = c(2, 1, 2, 1))
     } else if (plot_category & !plot_set_size) {
-      left_plot <- plot_spacer() / 
-        plot_spacer() / 
-        marker_plot + 
+      left_plot <- plot_spacer() /
+        plot_spacer() /
+        marker_plot +
         plot_layout(heights = c(2, 1, 2))
     } else if (!plot_category & plot_set_size) {
-      left_plot <- plot_spacer() /  
-        marker_plot / 
+      left_plot <- plot_spacer() /
+        marker_plot /
         plot_spacer() +
         plot_layout(heights = c(2, 2, 1))
     } else if (!plot_category & !plot_set_size) {
-      left_plot <- plot_spacer() / 
+      left_plot <- plot_spacer() /
         marker_plot +
         plot_layout(heights = c(2, 2))
     }

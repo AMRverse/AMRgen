@@ -143,8 +143,10 @@ cli_geno_pheno <- afp_CLI_public %>%
   left_join(pheno_CLI_public)
 
 
-cli_mic_byhit <- assay_by_var(cli_geno_pheno, group_by = "variant_hit", 
-                              boxplot = T, colour_by="pheno_eucast")$plot +
+cli_mic_byhit <- assay_by_var(cli_geno_pheno,
+  group_by = "variant_hit",
+  boxplot = T, colour_by = "pheno_eucast"
+)$plot +
   facet_wrap(~marker.label, scales = "free_y", ncol = 2) +
   coord_flip() +
   theme(legend.position = "none")

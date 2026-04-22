@@ -160,14 +160,25 @@ clindamycin resistance in *S. aureus*, where the presence of an erm gene
 can lead to inducible resistance that may not be detected in a standard
 AST test.
 
+### MIC distribution associated with allelic variants
+
+We can use the
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md)
+function to visualise the MIC distributions associated with different
+variants of the same gene. First we need to join the key genotype fields
+into the phenotype table, and then use
+[`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) to plot
+MIC assay measures grouped by variant and faceted into one panel per
+gene.
+
 ``` r
 cli_geno_pheno <- afp_CLI_public %>%
   filter(`variation type` == "Gene presence detected") %>%
-  mutate(node_hit = if_else(exact_match == "",
+  mutate(variant_hit = if_else(exact_match == "",
     `Accession of closest sequence`,
     paste0(`Accession of closest sequence`, "_x")
   )) %>%
-  select(id, marker.label, node_hit, variant.label) %>%
+  select(id, marker.label, variant_hit) %>%
   left_join(pheno_CLI_public)
 ## Joining with `by = join_by(id)`
 ## Warning in left_join(., pheno_CLI_public): Detected an unexpected many-to-many relationship between `x` and `y`.
@@ -177,7 +188,7 @@ cli_geno_pheno <- afp_CLI_public %>%
 ##   "many-to-many"` to silence this warning.
 
 
-cli_mic_byhit <- assay_by_var(cli_geno_pheno, colour_by = "node_hit", boxplot = T)$plot +
+cli_mic_byhit <- assay_by_var(cli_geno_pheno, colour_by = "variant_hit", boxplot = T)$plot +
   facet_wrap(~marker.label, scales = "free_y", ncol = 2) +
   coord_flip() +
   theme(legend.position = "none")

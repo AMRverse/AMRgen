@@ -707,7 +707,7 @@ median_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
   pivot_wider(
     names_from = Bla_Carb_acquired,
     values_from = median_mean,
-    values_fill="-"
+    values_fill = "-"
   )
 
 median_MIC_table

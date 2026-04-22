@@ -597,7 +597,8 @@ cip_upset <- amr_upset(
   order = "value",
   assay = "mic",
   pheno_drug = "Ciprofloxacin",
-  species = "Neisseria gonorrhoeae"
+  species = "Neisseria gonorrhoeae",
+  plot_subtitle = "vs quinolone associated markers"
 )
 #> Removing 336 rows with no phenotype call
 #> Ordering markers by frequency

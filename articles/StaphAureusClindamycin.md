@@ -169,7 +169,7 @@ variants of the same gene. First we need to join the key genotype fields
 into the phenotype table, and then use
 [`assay_by_var()`](https://amrgen.org/reference/assay_by_var.md) to plot
 MIC assay measures grouped by variant and faceted into one panel per
-gene.
+gene, coloured by S/I/R phenotype.
 
 ``` r
 cli_geno_pheno <- afp_CLI_public %>%
@@ -188,7 +188,10 @@ cli_geno_pheno <- afp_CLI_public %>%
 ##   "many-to-many"` to silence this warning.
 
 
-cli_mic_byhit <- assay_by_var(cli_geno_pheno, colour_by = "variant_hit", boxplot = T)$plot +
+cli_mic_byhit <- assay_by_var(cli_geno_pheno,
+  group_by = "variant_hit",
+  boxplot = T, colour_by = "pheno_eucast"
+)$plot +
   facet_wrap(~marker.label, scales = "free_y", ncol = 2) +
   coord_flip() +
   theme(legend.position = "none")

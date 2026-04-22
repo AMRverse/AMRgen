@@ -49,6 +49,7 @@
 <span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
 <span>  icat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker"</span>,</span>
+<span>  order_ppv <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  reverse_order <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  binary_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  min <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -106,6 +107,10 @@
 
 <dt id="arg-marker-col">marker_col<a class="anchor" aria-label="anchor" href="#arg-marker-col"></a></dt>
 <dd><p>A character string specifying the column name in <code>geno_table</code> containing the marker identifiers. Default <code>"marker"</code>. Only used if <code>binary_matrix</code> not provided.</p></dd>
+
+
+<dt id="arg-order-ppv">order_ppv<a class="anchor" aria-label="anchor" href="#arg-order-ppv"></a></dt>
+<dd><p>A logical indicating whether to order markers in the plot by PPV value. Default <code>TRUE</code>. If set to <code>FALSE</code> markers will be ordered alphabetically.</p></dd>
 
 
 <dt id="arg-reverse-order">reverse_order<a class="anchor" aria-label="anchor" href="#arg-reverse-order"></a></dt>

@@ -13,7 +13,7 @@ DASSIM_geno
 
 `DASSIM_geno` A data frame with 12414 rows and 31 columns:
 
-- `Name`: Name.
+- `id`: Name.
 
 - `gene`: gene.
 

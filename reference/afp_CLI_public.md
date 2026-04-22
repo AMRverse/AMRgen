@@ -15,7 +15,7 @@ afp_CLI_public
 
 `afp_CLI_public` A data frame with 43,287 rows and 42 columns:
 
-- `Name`: Sample identifier (ENA run accession).
+- `id`: Sample identifier (ENA run accession).
 
 - `Protein id`: Protein identifier (all `NA`).
 

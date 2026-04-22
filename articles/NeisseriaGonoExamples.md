@@ -411,6 +411,7 @@ azi_upset <- amr_upset(
   species = "Neisseria gonorrhoeae"
 )
 #> Removing 306 rows with no phenotype call
+#> Ordering markers by frequency
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/azm_upset-1.png)
@@ -449,6 +450,7 @@ azm_ppv <- ppv(
   assay = "mic"
 )
 #> Removing 306 rows with no phenotype call
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -598,6 +600,7 @@ cip_upset <- amr_upset(
   species = "Neisseria gonorrhoeae"
 )
 #> Removing 336 rows with no phenotype call
+#> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 0.032 and R > 0.06
 #>   MIC breakpoints determined using AMR package: S <= 0.032 and R > 0.06
 ```
@@ -635,6 +638,7 @@ cip_ppv <- ppv(
   assay = "mic"
 )
 #> Removing 336 rows with no phenotype call
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -833,6 +837,7 @@ cfm_upset <- amr_upset(
   pheno_drug = "Cefixime",
   species = "Neisseria gonorrhoeae"
 )
+#> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 ```
@@ -849,6 +854,7 @@ cro_upset <- amr_upset(
   pheno_drug = "Ceftriaxone",
   species = "Neisseria gonorrhoeae"
 )
+#> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 ```
@@ -901,6 +907,7 @@ cfm_ppv <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -917,6 +924,7 @@ cro_ppv <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -1037,6 +1045,7 @@ cro_upset_2 <- amr_upset(
   pheno_drug = "Ceftriaxone",
   species = "Neisseria gonorrhoeae"
 )
+#> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 ```
@@ -1054,6 +1063,7 @@ cro_ppv_2 <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -1187,6 +1197,7 @@ tet_upset <- amr_upset(
   print_set_size = TRUE,
   print_category_counts = TRUE
 )
+#> Ordering markers by frequency
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/tet_binary_upset-1.png)
@@ -1274,6 +1285,7 @@ tet_ppv <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```

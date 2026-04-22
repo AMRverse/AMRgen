@@ -418,26 +418,26 @@ for download from NCBI using the above functions.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">staph_geno_ebi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 45945</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">staph_geno_ebi</span><span class="op">$</span><span class="va">BioSample_ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">staph_geno_ebi</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7547</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">staph_geno_ebi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 34</span></span></span>
-<span><span class="co">#&gt;   BioSample_ID gene    mutation node   marker marker.label drug_agent drug_class</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMEA5330271 tet(38) -        tet(3… tet(3… tet(38)      <span style="color: #BB0000;">NA</span>         Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMEA5330271 tet(K)  -        tet(K) tet(K) tet(K)       <span style="color: #BB0000;">NA</span>         Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMEA5330271 mepA    -        mepA   mepA   mepA         TGC        Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMEA5330297 tet(38) -        tet(3… tet(3… tet(38)      <span style="color: #BB0000;">NA</span>         Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMEA5330297 mepA    -        mepA   mepA   mepA         TGC        Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMEA5330308 tet(K)  -        tet(K) tet(K) tet(K)       <span style="color: #BB0000;">NA</span>         Tetracycl…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 26 more variables: assembly_ID &lt;chr&gt;, genus &lt;chr&gt;, species &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   organism &lt;chr&gt;, isolate &lt;chr&gt;, taxon_id &lt;int&gt;, region &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   region_start &lt;int&gt;, region_end &lt;int&gt;, strand &lt;chr&gt;, `_bin` &lt;int&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   id2 &lt;chr&gt;, gene_symbol &lt;chr&gt;, amr_element_symbol &lt;chr&gt;, element_type &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   element_subtype &lt;chr&gt;, class &lt;chr&gt;, subclass &lt;chr&gt;, split_subclass &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   antibiotic_name &lt;chr&gt;, antibiotic_ontology &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   antibiotic_ontology_link &lt;chr&gt;, evidence_accession &lt;chr&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt;   id       marker gene  mutation drug drug_class  marker.label assembly_ID genus</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SAMEA53… tet(3… tet(… -        <span style="color: #BB0000;">NA</span>   Tetracycli… tet(38)      ERZ25282410 Stap…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SAMEA53… tet(K) tet(… -        <span style="color: #BB0000;">NA</span>   Tetracycli… tet(K)       ERZ25282410 Stap…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> SAMEA53… mepA   mepA  -        TGC  Tetracycli… mepA         ERZ25282410 Stap…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> SAMEA53… tet(3… tet(… -        <span style="color: #BB0000;">NA</span>   Tetracycli… tet(38)      ERZ25282723 Stap…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> SAMEA53… mepA   mepA  -        TGC  Tetracycli… mepA         ERZ25282723 Stap…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> SAMEA53… tet(K) tet(… -        <span style="color: #BB0000;">NA</span>   Tetracycli… tet(K)       ERZ25282853 Stap…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 25 more variables: species &lt;chr&gt;, organism &lt;chr&gt;, isolate &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   taxon_id &lt;int&gt;, region &lt;chr&gt;, region_start &lt;int&gt;, region_end &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   strand &lt;chr&gt;, `_bin` &lt;int&gt;, id2 &lt;chr&gt;, gene_symbol &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   amr_element_symbol &lt;chr&gt;, element_type &lt;chr&gt;, element_subtype &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   class &lt;chr&gt;, subclass &lt;chr&gt;, split_subclass &lt;chr&gt;, antibiotic_name &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   antibiotic_ontology &lt;chr&gt;, antibiotic_ontology_link &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   evidence_accession &lt;chr&gt;, evidence_type &lt;chr&gt;, evidence_link &lt;chr&gt;, …</span></span></span></code></pre></div>
 <div class="section level4">
 <h4 id="compare-downloaded-phenotypes-and-genotypes">Compare downloaded phenotypes and genotypes<a class="anchor" aria-label="anchor" href="#compare-downloaded-phenotypes-and-genotypes"></a>
 </h4>
@@ -483,7 +483,8 @@ can then be extracted and combined using the
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot positive predictive value for each marker/combination</span></span>
 <span><span class="va">tet_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">tet_bin</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Removing 69 rows with no phenotype call</span></span></code></pre></div>
+<span><span class="co">#&gt; Removing 69 rows with no phenotype call</span></span>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span></code></pre></div>
 <p><img src="DownloadGenoPhenoData_files/figure-html/ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>

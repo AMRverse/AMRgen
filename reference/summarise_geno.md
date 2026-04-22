@@ -94,41 +94,52 @@ column is not recognized as an `"ab"` object.
 ``` r
 summarise_geno(staph_geno_ebi)
 #> $uniques
-#> # A tibble: 3 × 2
+#> # A tibble: 5 × 2
 #>   column     n_unique
 #>   <chr>         <int>
-#> 1 marker           22
-#> 2 drug_class        6
-#> 3 gene             22
+#> 1 id             7547
+#> 2 marker           22
+#> 3 drug             13
+#> 4 drug_class        6
+#> 5 gene             22
 #> 
 #> $per_type
 #> NULL
 #> 
 #> $drugs
-#> # A tibble: 6 × 3
-#>   drug_class              markers     n
-#>   <chr>                     <int> <int>
-#> 1 Aminoglycosides              14 25009
-#> 2 Macrolides/lincosamides       1    16
-#> 3 Other antibacterials          2  1671
-#> 4 Pleuromutilins                1     8
-#> 5 Tetracyclines                 8 19225
-#> 6 NA                            1    16
+#> # A tibble: 15 × 6
+#>    drug drug_name     drug_class      markers samples  hits
+#>    <ab> <chr>         <chr>             <int>   <int> <int>
+#>  1 AMK  Amikacin      Aminoglycosides       6    1941  7745
+#>  2 APR  Apramycin     Aminoglycosides       1      12    12
+#>  3 CLI  Clindamycin   Lincosamides          1       1     8
+#>  4 DOX  Doxycycline   Tetracyclines         1       1     8
+#>  5 ERY  Erythromycin  Macrolides            1       1     8
+#>  6 GEN  Gentamicin    Aminoglycosides       5     981  4321
+#>  7 KAN  Kanamycin     Aminoglycosides       6    1963  7861
+#>  8 MNO  Minocycline   Tetracyclines         1       1     8
+#>  9 SPT  Spectinomycin Other                 2    1475  1671
+#> 10 STR1 Streptomycin  Aminoglycosides       3     497   582
+#> 11 TGC  Tigecycline   Tetracyclines         2    7538  7576
+#> 12 TOB  Tobramycin    Aminoglycosides       5    1004  4445
+#> 13 NA   NA            Aminoglycosides       2      43    43
+#> 14 NA   NA            Pleuromutilins        1       1     8
+#> 15 NA   NA            Tetracyclines         6    7525 11649
 #> 
 #> $markers
-#> # A tibble: 27 × 3
-#>    marker                 drug_class               n
-#>    <chr>                  <chr>                <int>
-#>  1 aac(6')-Ie             Aminoglycosides         27
-#>  2 aac(6')-Ie/aph(2'')-Ia Aminoglycosides      17088
-#>  3 aadD1                  Aminoglycosides        248
-#>  4 ant(3'')-IIa           Aminoglycosides          2
-#>  5 ant(3'')-IIa           Other antibacterials     2
-#>  6 ant(6)-Ia              Aminoglycosides        442
-#>  7 ant(9)-Ia              Other antibacterials  1669
-#>  8 aph(2'')-I             Aminoglycosides         16
-#>  9 aph(2'')-Ia            Aminoglycosides        144
-#> 10 aph(3')-IIIa           Aminoglycosides       6832
-#> # ℹ 17 more rows
+#> # A tibble: 43 × 5
+#>    marker                 drug drug_name     drug_class          n
+#>    <chr>                  <ab> <chr>         <chr>           <int>
+#>  1 aac(6')-Ie             AMK  Amikacin      Aminoglycosides     9
+#>  2 aac(6')-Ie             KAN  Kanamycin     Aminoglycosides     9
+#>  3 aac(6')-Ie             TOB  Tobramycin    Aminoglycosides     9
+#>  4 aac(6')-Ie/aph(2'')-Ia AMK  Amikacin      Aminoglycosides  4272
+#>  5 aac(6')-Ie/aph(2'')-Ia GEN  Gentamicin    Aminoglycosides  4272
+#>  6 aac(6')-Ie/aph(2'')-Ia KAN  Kanamycin     Aminoglycosides  4272
+#>  7 aac(6')-Ie/aph(2'')-Ia TOB  Tobramycin    Aminoglycosides  4272
+#>  8 aadD1                  KAN  Kanamycin     Aminoglycosides   124
+#>  9 aadD1                  TOB  Tobramycin    Aminoglycosides   124
+#> 10 ant(3'')-IIa           SPT  Spectinomycin Other               2
+#> # ℹ 33 more rows
 #> 
 ```

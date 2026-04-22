@@ -239,22 +239,22 @@ genotypes.</p>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">DASSIM_geno</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 31</span></span></span>
-<span><span class="co">#&gt;   Name        gene      mutation node  marker marker.label drug_agent drug_class</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 26141_1_134 aadA5     <span style="color: #BB0000;">NA</span>       aadA5 aadA5  aadA5        STR1       Aminoglyc…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 26141_1_134 dfrA17    <span style="color: #BB0000;">NA</span>       dfrA… dfrA17 dfrA17       <span style="color: #BB0000;">NA</span>         Trimethop…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 26141_1_134 arr       <span style="color: #BB0000;">NA</span>       arr   arr    arr:-        RFM        Rifamycins</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 26141_1_134 catB3     <span style="color: #BB0000;">NA</span>       catB3 catB3  catB3        CHL        Phenicols </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 26141_1_134 blaOXA-1  <span style="color: #BB0000;">NA</span>       blaO… blaOX… blaOXA-1     <span style="color: #BB0000;">NA</span>         Cephalosp…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 26141_1_134 aac(6')-… <span style="color: #BB0000;">NA</span>       aac(… aac(6… aac(6')-Ib-… AMK        Aminoglyc…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 23 more variables: `Protein id` &lt;lgl&gt;, `Contig id` &lt;chr&gt;, Start &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Stop &lt;dbl&gt;, Strand &lt;chr&gt;, `Gene symbol` &lt;chr&gt;, `Element name` &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Scope &lt;chr&gt;, Type &lt;chr&gt;, Subtype &lt;chr&gt;, Class &lt;chr&gt;, Subclass &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Method &lt;chr&gt;, `Target length` &lt;dbl&gt;, `Reference sequence length` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 32</span></span></span>
+<span><span class="co">#&gt;   id          marker      gene  mutation drug drug_class  `variation type` node </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;ab&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 26141_1_134 aadA5       aadA5 <span style="color: #BB0000;">NA</span>       STR1 Aminoglyco… Gene presence d… aadA5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 26141_1_134 dfrA17      dfrA… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>   Trimethopr… Gene presence d… dfrA…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 26141_1_134 arr         arr   <span style="color: #BB0000;">NA</span>       RFM  Rifamycins  Inactivating mu… arr  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 26141_1_134 catB3       catB3 <span style="color: #BB0000;">NA</span>       CHL  Phenicols   Gene presence d… catB3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 26141_1_134 blaOXA-1    blaO… <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>   Cephalospo… Gene presence d… blaO…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 26141_1_134 aac(6')-Ib… aac(… <span style="color: #BB0000;">NA</span>       AMK  Aminoglyco… Gene presence d… aac(…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 24 more variables: marker.label &lt;chr&gt;, `Protein id` &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `Contig id` &lt;chr&gt;, Start &lt;dbl&gt;, Stop &lt;dbl&gt;, Strand &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `Gene symbol` &lt;chr&gt;, `Element name` &lt;chr&gt;, Scope &lt;chr&gt;, Type &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Subtype &lt;chr&gt;, Class &lt;chr&gt;, Subclass &lt;chr&gt;, Method &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `Target length` &lt;dbl&gt;, `Reference sequence length` &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `% Coverage of reference` &lt;dbl&gt;, `% Identity to reference` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   `Alignment length` &lt;dbl&gt;, `Closest reference accession` &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   `Closest reference name` &lt;chr&gt;, `HMM accession` &lt;lgl&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `Alignment length` &lt;dbl&gt;, `Closest reference accession` &lt;chr&gt;, …</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="ppv-analysis-of-dassim-dataset">2.4 PPV Analysis of DASSIM dataset<a class="anchor" aria-label="anchor" href="#ppv-analysis-of-dassim-dataset"></a>
@@ -571,18 +571,13 @@ for more about the IS<em>26</em> mediated truncation of
 <span><span class="co"># plot the MIC distribution for these 2 groups</span></span>
 <span><span class="va">MIC_dist_by_cov</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span></span>
 <span>  pheno_table <span class="op">=</span> <span class="va">AST_CATB3_pheno_3</span>,</span>
-<span>  pheno_drug <span class="op">=</span> <span class="st">"CHL"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Chloramphenicol"</span>,</span>
 <span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span>
-<span>  species <span class="op">=</span> <span class="st">"Escherichia coli"</span>,</span>
-<span>  facet_var <span class="op">=</span> <span class="st">"truncation"</span></span>
-<span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">" "</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">" "</span>,</span>
-<span>    x <span class="op">=</span> <span class="st">"MIC measurement"</span>,</span>
-<span>    fill <span class="op">=</span> <span class="st">"phenotype (CLSI)"</span></span>
-<span>  <span class="op">)</span></span>
+<span>  facet_var <span class="op">=</span> <span class="st">"truncation"</span>,</span>
+<span>  measure_axis_label <span class="op">=</span> <span class="st">"MIC (mg/L)"</span>,</span>
+<span>  colour_legend_label <span class="op">=</span> <span class="st">"Phenotype (CLSI)"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">MIC_dist_by_cov</span></span></code></pre></div>
 <p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="100%"></p>

@@ -16,8 +16,8 @@ ST_data_CLI
 
 `ST_data_CLI` A data frame with 37934 rows and 10 columns:
 
-- `Name`: Sample identifier, imported from the `#BioSample` column in
-  the raw input.
+- `id`: Sample identifier, imported from the `#BioSample` column in the
+  raw input.
 
 - `schema`: Typing scheme used to determine sequence type (ST), in this
   case `pubmlst_saureus`.

@@ -428,6 +428,7 @@ eco_cip_upset <- amr_upset(
   assay = "mic",
   order = "value"
 )
+#> Ordering markers by frequency
 ```
 
 ![](Concordance_files/figure-html/cip_upset-1.png) The upset plot shows
@@ -456,6 +457,7 @@ eco_cip_ppv <- ppv(eco_cip_matrix,
   assay = "mic",
   order = "ppv"
 )
+#> Ordering markers by frequency
 ```
 
 ![](Concordance_files/figure-html/ppv-1.png)
@@ -806,6 +808,7 @@ concordance_cip_log$data %>%
   filter(R_pred != R) %>%
   select(-R_pred) %>%
   ppv()
+#> Ordering markers by frequency
 ```
 
 ![](Concordance_files/figure-html/logistic_wrong_predictions-1.png)

@@ -492,9 +492,16 @@ of mutations.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">mic</span>, <span class="va">gyrA_mut</span>, <span class="va">Source</span>, <span class="va">Serovar</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot the MIC distribution, coloured by count of gyrA mutations</span></span>
-<span><span class="va">mic_by_gyrA_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">gyrA_mut</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"gyrA_mut"</span>, colour_legend_label <span class="op">=</span> <span class="st">"Number of\ngyrA mutations"</span>, pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, colours <span class="op">=</span> <span class="fu">viridisLite</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Serovar</span><span class="op">)</span></span>
+<span><span class="va">mic_by_gyrA_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">gyrA_mut</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"gyrA_mut"</span>, colour_legend_label <span class="op">=</span> <span class="st">"Number of\ngyrA mutations"</span>, measure_axis_label <span class="op">=</span> <span class="st">"MIC (mg/L)"</span>, pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, colours <span class="op">=</span> <span class="fu">viridisLite</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">Serovar</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mic_by_gyrA_count</span></span></code></pre></div>
+<span><span class="co"># add title with italicised species and drug names</span></span>
+<span><span class="va">mic_by_gyrA_count</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Ciprofloxacin MIC in "</span>,</span>
+<span>  <span class="fu">italic</span><span class="op">(</span><span class="st">"Salmonella"</span><span class="op">)</span>,</span>
+<span>  <span class="st">" serovars, by number of "</span>,</span>
+<span>  <span class="fu">italic</span><span class="op">(</span><span class="st">"gyrA"</span><span class="op">)</span>,</span>
+<span>  <span class="st">" mutations"</span></span>
+<span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/assay_by_genotype_Serovar-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Similarly, we can plot the total number of markers per isolate and
 facet by <code>Source</code>.</p>
@@ -561,7 +568,8 @@ all the combinations, including those with a single isolate
 <span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/amr_upset-1.png" class="r-plt" alt="" width="100%"></p>
 <p>We can generate UpSet plots of a subset of isolates by filtering on
 one of our additional metadata variables and then running
@@ -577,7 +585,8 @@ isolates only:</p>
 <span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span></code></pre></div>
 <p><img src="SalmonellaExamples_files/figure-html/amr_upset_animal_only-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 </div>

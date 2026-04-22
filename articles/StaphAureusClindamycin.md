@@ -24,61 +24,38 @@ EBI through the ESGEM-AMR Staphylococcus subgroup. Phenotypic data were
 collated into a single table (one row per isolate). The genotype data
 was generated using AMRFinderPlus. The pre-loaded objects
 `pheno_CLI_public` and `afp_CLI_public` serve as the **input** for
-`AMRgen`. First, we will create a new marker.label column that includes
-the marker gene and its closest accession number (this will be named
-variant from now on).
+`AMRgen`. First, we will create a new `variant.label` column that
+includes the marker gene name and its closest accession number, and also
+indicate whether the match to the accession is exact or not.
 
 ``` r
 # Create the new marker.label column
-cli_accession <- afp_CLI_public %>%
-  mutate(obs_id = row_number()) %>%
+afp_CLI_public <- afp_CLI_public %>%
   mutate(exact_match = if_else(
     `% Coverage of reference sequence` == 100 &
       `% Identity to reference sequence` == 100.00,
     "", "x_"
   )) %>%
   mutate(node_hit = paste0(node, "__", exact_match, `Accession of closest sequence`)) %>%
-  mutate(marker.label = case_when(
+  mutate(variant.label = case_when(
     `variation type` == "Inactivating mutation detected" ~ paste0(node_hit, ":-"),
     !is.na(mutation) ~ paste0(node_hit, ":", mutation),
     TRUE ~ node_hit
-  )) %>%
-  select(-obs_id)
+  ))
 ```
 
 ### Genotype-phenotype analysis
 
-Next, we will create a binary matrix for clindamycin resistance. We can
-do this with the just the markers and with the variants of the markers.
-This will allow us to see if the variants of the markers have different
-associations with clindamycin resistance.
+Now let’s create some upset plots, to see how genes, and their allelic
+variants, relate to clindamycin MICs.
 
 ``` r
-# Generate binary matrix with markers
-cli_bin <- get_binary_matrix(
-  afp_CLI_public,
-  pheno_CLI_public,
-  pheno_drug = "Clindamycin",
-  geno_class = c("Lincosamides"),
-  sir_col = "pheno_eucast",
-  keep_assay_values = TRUE,
-  marker_col = "marker.label"
-)
-
-# Generate binary matrix with variants
-cli_bin_accession <- get_binary_matrix(
-  cli_accession,
-  pheno_CLI_public,
-  pheno_drug = "Clindamycin",
-  geno_class = c("Lincosamides"),
-  sir_col = "pheno_eucast",
-  keep_assay_values = TRUE,
-  marker_col = "marker.label"
-)
-
 # Visualise with UpSet plot (markers)
 cli_mic_upset <- amr_upset(
-  cli_bin,
+  geno_table = afp_CLI_public,
+  pheno_table = pheno_CLI_public,
+  marker_col = "marker.label",
+  pheno_drug = "Clindamycin",
   min_set_size = 2,
   assay = "mic",
   order = "value",
@@ -90,16 +67,20 @@ cli_mic_upset <- amr_upset(
 )
 ```
 
-![](StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-1.png)
+![](StaphAureusClindamycin_files/figure-html/upset_gene-1.png)
 
 ``` r
-
-# Visualise with UpSet plot (variants)
-cli_mic_upset <- amr_upset(
-  cli_bin_accession,
+# Visualise with UpSet plot (markers)
+# order markers alphabetically so we can more easily see where there are different variants of the same gene
+cli_mic_upset_variant <- amr_upset(
+  geno_table = afp_CLI_public,
+  pheno_table = pheno_CLI_public,
+  marker_col = "variant.label",
+  pheno_drug = "Clindamycin",
   min_set_size = 2,
   assay = "mic",
   order = "value",
+  marker_order = "alpha", # order markers alphabetically
   print_set_size = TRUE,
   plot_set_size = TRUE,
   print_category_counts = TRUE,
@@ -108,7 +89,7 @@ cli_mic_upset <- amr_upset(
 )
 ```
 
-![](StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-2.png)
+![](StaphAureusClindamycin_files/figure-html/upset_variant-1.png)
 
 ### Solo PPV analysis
 
@@ -118,7 +99,14 @@ variants are most predictive of clindamycin resistance.
 
 ``` r
 # soloPPV analysis for markers
-PPV_cli <- ppv(cli_bin, upset_grid = TRUE, plot_assay = TRUE)
+# order markers alphabetically so we can more easily see where there are different variants of the same gene
+cli_soloPPV <- solo_ppv(
+  geno_table = afp_CLI_public,
+  pheno_table = pheno_CLI_public,
+  marker_col = "marker.label",
+  pheno_drug = "Clindamycin",
+  order_ppv = FALSE
+)
 ```
 
 ![](StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-1.png)
@@ -126,28 +114,87 @@ PPV_cli <- ppv(cli_bin, upset_grid = TRUE, plot_assay = TRUE)
 ``` r
 
 # soloPPV analysis for variants
-PPV_cli <- ppv(cli_bin_accession, upset_grid = TRUE, plot_assay = TRUE)
+# order markers alphabetically so we can more easily see where there are different variants of the same gene
+cli_soloPPV_variant <- solo_ppv(
+  geno_table = afp_CLI_public,
+  pheno_table = pheno_CLI_public,
+  marker_col = "variant.label",
+  pheno_drug = "Clindamycin",
+  order_ppv = FALSE
+)
 ```
 
 ![](StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-2.png)
 
-We can clearly see from this analysis that the variants of the markers
-have different associations with clindamycin resistance. For example,
-the erm(C)\_WP0012363.1 and erm(C)\_WP0012364.1 were not above the 0.5
-threshold. This highlights the importance of considering the specific
-variants of the markers when predicting clindamycin resistance. Note:
-this discrepancy may be caused by inducible resistance, which is not
-always captured by a standard AST test. This is because the resistance
-gene may not be expressed under the conditions of the AST test, but can
-be induced in the presence of certain antibiotics (e.g., erythromycin).
-This is a known phenomenon for clindamycin resistance in *S. aureus*,
-where the presence of an erm gene can lead to inducible resistance that
-may not be detected in a standard AST test.
+``` r
+
+cli_soloPPV_variant$solo_stats
+## # A tibble: 38 × 8
+##    marker                   category     x     n    ppv     se ci.lower ci.upper
+##    <chr>                    <chr>    <dbl> <int>  <dbl>  <dbl>    <dbl>    <dbl>
+##  1 erm(A)__WP_001072197.1   R            0     1 0      0        0         0    
+##  2 erm(A)__WP_001072201.1   R          220   365 0.603  0.0256   0.553     0.653
+##  3 erm(A)__x_WP_001072197.… R            0     1 0      0        0         0    
+##  4 erm(A)__x_WP_001072201.1 R            6    17 0.353  0.116    0.126     0.580
+##  5 erm(A)__x_WP_001072201.… R            0     4 0      0        0         0    
+##  6 erm(B)__WP_001038790.1   R            1     1 1      0        1         1    
+##  7 erm(B)__WP_002292226.1   R            2     2 1      0        1         1    
+##  8 erm(C)__WP_001003260.1   R            1     1 1      0        1         1    
+##  9 erm(C)__WP_001003263.1   R           61   705 0.0865 0.0106   0.0658    0.107
+## 10 erm(C)__WP_001003264.1   R            2    12 0.167  0.108    0         0.378
+## # ℹ 28 more rows
+```
+
+We can see from this analysis that the variants of the markers have
+different associations with clindamycin resistance. For example, the
+isolates with exact matches to erm(C)\_WP001003263.1 or
+erm(C)\_WP001003264.1 are associated with low PPV for resistance (8.5%,
+n=60/705 and 17%, n=2/12, respectively). This highlights the importance
+of considering the specific variants of the markers when predicting
+clindamycin resistance. Note: this discrepancy may be caused by
+inducible resistance, which is not always captured by a standard AST
+test. This is because the resistance gene may not be expressed under the
+conditions of the AST test, but can be induced in the presence of
+certain antibiotics (e.g., erythromycin). This is a known phenomenon for
+clindamycin resistance in *S. aureus*, where the presence of an erm gene
+can lead to inducible resistance that may not be detected in a standard
+AST test.
+
+``` r
+cli_geno_pheno <- afp_CLI_public %>%
+  filter(`variation type` == "Gene presence detected") %>%
+  mutate(node_hit = if_else(exact_match == "",
+    `Accession of closest sequence`,
+    paste0(`Accession of closest sequence`, "_x")
+  )) %>%
+  select(id, marker.label, node_hit, variant.label) %>%
+  left_join(pheno_CLI_public)
+## Joining with `by = join_by(id)`
+## Warning in left_join(., pheno_CLI_public): Detected an unexpected many-to-many relationship between `x` and `y`.
+## ℹ Row 7609 of `x` matches multiple rows in `y`.
+## ℹ Row 3161 of `y` matches multiple rows in `x`.
+## ℹ If a many-to-many relationship is expected, set `relationship =
+##   "many-to-many"` to silence this warning.
+
+
+cli_mic_byhit <- assay_by_var(cli_geno_pheno, colour_by = "node_hit", boxplot = T)$plot +
+  facet_wrap(~marker.label, scales = "free_y", ncol = 2) +
+  coord_flip() +
+  theme(legend.position = "none")
+
+cli_mic_byhit + ggtitle(expression(paste(
+  "Clindamycin MIC in ",
+  italic("S. aureus"),
+  ", by gene symbol and closest reference"
+)))
+```
+
+![](StaphAureusClindamycin_files/figure-html/unnamed-chunk-2-1.png)
 
 ### Association of specific variants with sequence types
 
 Finally, we can also look at the association of specific marker variants
-with sequence types, if this data are available. This can be done by
+with sequence types, if these data are available. This can be done by
 creating a binary matrix for the variants and then visualizing the
 associations with a bubble plot.
 
@@ -159,20 +206,20 @@ high_freq_sts <- ST_data_CLI %>%
   pull(ST)
 
 # Merge with ST data
-cli_accession_st <- cli_accession %>%
-  inner_join(ST_data_CLI, by = "Name") %>%
+cli_accession_st <- afp_CLI_public %>%
+  inner_join(ST_data_CLI) %>%
   filter(ST %in% high_freq_sts)
 
 # Calculate prevalence of variant in each ST
 balloon_data <- cli_accession_st %>%
-  group_by(ST, marker.label) %>%
-  summarise(n_samples = n_distinct(Name), .groups = "drop") %>%
+  group_by(ST, variant.label) %>%
+  summarise(n_samples = n_distinct(id), .groups = "drop") %>%
   left_join(ST_data_CLI %>% count(ST, name = "total_st_n"), by = "ST") %>%
   mutate(percent_prevalence = (n_samples / total_st_n) * 100) %>%
   filter(percent_prevalence >= 10)
 
 # Create the Balloon Plot showing only marker-ST combinations with at least 10% prevalence
-ggplot(balloon_data, aes(x = ST, y = marker.label)) +
+ggplot(balloon_data, aes(x = ST, y = variant.label)) +
   geom_point(aes(size = n_samples, color = percent_prevalence)) +
   scale_color_viridis_c(option = "viridis", direction = -1) +
   scale_size_continuous(range = c(1, 10)) +

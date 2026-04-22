@@ -20,6 +20,7 @@ solo_ppv(
   ecoff_col = "ecoff",
   icat = FALSE,
   marker_col = "marker",
+  order_ppv = TRUE,
   reverse_order = FALSE,
   binary_matrix = NULL,
   min = 1,
@@ -111,6 +112,12 @@ solo_ppv(
   A character string specifying the column name in `geno_table`
   containing the marker identifiers. Default `"marker"`. Only used if
   `binary_matrix` not provided.
+
+- order_ppv:
+
+  A logical indicating whether to order markers in the plot by PPV
+  value. Default `TRUE`. If set to `FALSE` markers will be ordered
+  alphabetically.
 
 - reverse_order:
 

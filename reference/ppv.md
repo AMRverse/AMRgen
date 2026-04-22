@@ -254,8 +254,15 @@ ppv(
 
 - marker_order:
 
-  (optional) Force order of markers in upset grid. Default `NULL` in
-  which case markers are ordered in decreasing order of freauency.
+  (optional) A character string or vector indicating the order of the
+  marker rows in the UpSet grid. Options are:
+
+  - `"freq"` or `NULL` (default): order markers by decreasing frequency
+
+  - `"alpha"`: order markers alphabetically
+
+  - `character vector`: vector of markers in the order in which they
+    should appear
 
 ## Value
 

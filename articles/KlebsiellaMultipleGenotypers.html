@@ -514,6 +514,7 @@ range) where relevant.</p>
 <span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_comboPPV-1.png" class="r-plt" alt="" width="100%"></p>
@@ -553,8 +554,10 @@ combinations observed at least 3 times in the dataset
 (<code>min_set_size=3</code>) makes it a little easier to see what’s
 going on.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kp_mic_upset_kleborate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">kleborate_binary_matrix</span>, </span>
-<span>  assay <span class="op">=</span> <span class="st">"mic"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>, min_set_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">kp_mic_upset_kleborate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">kleborate_binary_matrix</span>,</span>
+<span>  assay <span class="op">=</span> <span class="st">"mic"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>, min_set_size <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot-1.png" class="r-plt" alt="" width="100%"></p>
 <p>It’s still quite complex to follow the plot and spot patterns, as we
 have carbapenemase genes mixed in with mutations, making it difficult to
@@ -586,6 +589,7 @@ together.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Generating geno-pheno binary matrix</span></span>
 <span><span class="co">#&gt;  Defining NWT in binary matrix using ecoff column provided: ecoff</span></span>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
@@ -716,7 +720,7 @@ each corresponding to unique boxplotted distribution.</p>
 <span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"-"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Bla_Carb_acquired <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a></span><span class="op">(</span><span class="va">Bla_Carb_acquired</span>, <span class="st">"-"</span>, <span class="st">"None"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">OmpK35</span>, <span class="va">OmpK36</span>, <span class="va">Bla_Carb_acquired</span>, <span class="va">median_mean</span><span class="op">)</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">OmpK35</span>, <span class="va">OmpK36</span>, <span class="va">Bla_Carb_acquired</span>, <span class="va">median_mean</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">median_MIC_table</span> <span class="op">&lt;-</span> <span class="va">kleborate_mic_by_gene_mutation_table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
@@ -1677,6 +1681,7 @@ genomes (using AMRFinderPlus).</p>
 <span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/rgi_comboPPV-1.png" class="r-plt" alt="" width="100%"></p>
@@ -1970,6 +1975,7 @@ Markers<a class="anchor" aria-label="anchor" href="#combinatorial-ppv-analysis-f
 <span>  plot_assay <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/comboPPV_combined-1.png" class="r-plt" alt="" width="100%"></p>

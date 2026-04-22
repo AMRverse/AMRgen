@@ -178,22 +178,22 @@ head(DASSIM_pheno)
 
 ``` r
 head(DASSIM_geno)
-#> # A tibble: 6 × 31
-#>   Name        gene      mutation node  marker marker.label drug_agent drug_class
-#>   <chr>       <chr>     <chr>    <chr> <chr>  <chr>        <ab>       <chr>     
-#> 1 26141_1_134 aadA5     NA       aadA5 aadA5  aadA5        STR1       Aminoglyc…
-#> 2 26141_1_134 dfrA17    NA       dfrA… dfrA17 dfrA17       NA         Trimethop…
-#> 3 26141_1_134 arr       NA       arr   arr    arr:-        RFM        Rifamycins
-#> 4 26141_1_134 catB3     NA       catB3 catB3  catB3        CHL        Phenicols 
-#> 5 26141_1_134 blaOXA-1  NA       blaO… blaOX… blaOXA-1     NA         Cephalosp…
-#> 6 26141_1_134 aac(6')-… NA       aac(… aac(6… aac(6')-Ib-… AMK        Aminoglyc…
-#> # ℹ 23 more variables: `Protein id` <lgl>, `Contig id` <chr>, Start <dbl>,
-#> #   Stop <dbl>, Strand <chr>, `Gene symbol` <chr>, `Element name` <chr>,
-#> #   Scope <chr>, Type <chr>, Subtype <chr>, Class <chr>, Subclass <chr>,
-#> #   Method <chr>, `Target length` <dbl>, `Reference sequence length` <dbl>,
+#> # A tibble: 6 × 32
+#>   id          marker      gene  mutation drug drug_class  `variation type` node 
+#>   <chr>       <chr>       <chr> <chr>    <ab> <chr>       <chr>            <chr>
+#> 1 26141_1_134 aadA5       aadA5 NA       STR1 Aminoglyco… Gene presence d… aadA5
+#> 2 26141_1_134 dfrA17      dfrA… NA       NA   Trimethopr… Gene presence d… dfrA…
+#> 3 26141_1_134 arr         arr   NA       RFM  Rifamycins  Inactivating mu… arr  
+#> 4 26141_1_134 catB3       catB3 NA       CHL  Phenicols   Gene presence d… catB3
+#> 5 26141_1_134 blaOXA-1    blaO… NA       NA   Cephalospo… Gene presence d… blaO…
+#> 6 26141_1_134 aac(6')-Ib… aac(… NA       AMK  Aminoglyco… Gene presence d… aac(…
+#> # ℹ 24 more variables: marker.label <chr>, `Protein id` <lgl>,
+#> #   `Contig id` <chr>, Start <dbl>, Stop <dbl>, Strand <chr>,
+#> #   `Gene symbol` <chr>, `Element name` <chr>, Scope <chr>, Type <chr>,
+#> #   Subtype <chr>, Class <chr>, Subclass <chr>, Method <chr>,
+#> #   `Target length` <dbl>, `Reference sequence length` <dbl>,
 #> #   `% Coverage of reference` <dbl>, `% Identity to reference` <dbl>,
-#> #   `Alignment length` <dbl>, `Closest reference accession` <chr>,
-#> #   `Closest reference name` <chr>, `HMM accession` <lgl>, …
+#> #   `Alignment length` <dbl>, `Closest reference accession` <chr>, …
 ```
 
 ### 2.4 PPV Analysis of DASSIM dataset
@@ -559,18 +559,13 @@ AST_CATB3_pheno_3 <- AST_CATB3_pheno_2 %>%
 # plot the MIC distribution for these 2 groups
 MIC_dist_by_cov <- assay_by_var(
   pheno_table = AST_CATB3_pheno_3,
-  pheno_drug = "CHL",
+  pheno_drug = "Chloramphenicol",
   measure = "mic",
   colour_by = "pheno_clsi",
-  species = "Escherichia coli",
-  facet_var = "truncation"
-) +
-  labs(
-    title = " ",
-    subtitle = " ",
-    x = "MIC measurement",
-    fill = "phenotype (CLSI)"
-  )
+  facet_var = "truncation",
+  measure_axis_label = "MIC (mg/L)",
+  colour_legend_label = "Phenotype (CLSI)"
+)
 
 MIC_dist_by_cov
 ```

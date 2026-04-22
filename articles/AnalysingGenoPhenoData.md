@@ -1273,6 +1273,7 @@ cipro_mic_upset <- amr_upset(
   assay = "mic",
   order = "value"
 )
+#> Ordering markers by frequency
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/amr_upset-1.png)

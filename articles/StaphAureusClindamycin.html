@@ -92,58 +92,36 @@ were collated into a single table (one row per isolate). The genotype
 data was generated using AMRFinderPlus. The pre-loaded objects
 <code>pheno_CLI_public</code> and <code>afp_CLI_public</code> serve as
 the <strong>input</strong> for <code>AMRgen</code>. First, we will
-create a new marker.label column that includes the marker gene and its
-closest accession number (this will be named variant from now on).</p>
+create a new <code>variant.label</code> column that includes the marker
+gene name and its closest accession number, and also indicate whether
+the match to the accession is exact or not.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create the new marker.label column</span></span>
-<span><span class="va">cli_accession</span> <span class="op">&lt;-</span> <span class="va">afp_CLI_public</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>obs_id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">afp_CLI_public</span> <span class="op">&lt;-</span> <span class="va">afp_CLI_public</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>exact_match <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span></span>
 <span>    <span class="va">`% Coverage of reference sequence`</span> <span class="op">==</span> <span class="fl">100</span> <span class="op">&amp;</span></span>
 <span>      <span class="va">`% Identity to reference sequence`</span> <span class="op">==</span> <span class="fl">100.00</span>,</span>
 <span>    <span class="st">""</span>, <span class="st">"x_"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>node_hit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">node</span>, <span class="st">"__"</span>, <span class="va">exact_match</span>, <span class="va">`Accession of closest sequence`</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>marker.label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>variant.label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
 <span>    <span class="va">`variation type`</span> <span class="op">==</span> <span class="st">"Inactivating mutation detected"</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">node_hit</span>, <span class="st">":-"</span><span class="op">)</span>,</span>
 <span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">mutation</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">node_hit</span>, <span class="st">":"</span>, <span class="va">mutation</span><span class="op">)</span>,</span>
 <span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">node_hit</span></span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">obs_id</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="genotype-phenotype-analysis">Genotype-phenotype analysis<a class="anchor" aria-label="anchor" href="#genotype-phenotype-analysis"></a>
 </h3>
-<p>Next, we will create a binary matrix for clindamycin resistance. We
-can do this with the just the markers and with the variants of the
-markers. This will allow us to see if the variants of the markers have
-different associations with clindamycin resistance.</p>
+<p>Now let’s create some upset plots, to see how genes, and their
+allelic variants, relate to clindamycin MICs.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Generate binary matrix with markers</span></span>
-<span><span class="va">cli_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
-<span>  <span class="va">afp_CLI_public</span>,</span>
-<span>  <span class="va">pheno_CLI_public</span>,</span>
-<span>  pheno_drug <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
-<span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lincosamides"</span><span class="op">)</span>,</span>
-<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Generate binary matrix with variants</span></span>
-<span><span class="va">cli_bin_accession</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span></span>
-<span>  <span class="va">cli_accession</span>,</span>
-<span>  <span class="va">pheno_CLI_public</span>,</span>
-<span>  pheno_drug <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
-<span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Lincosamides"</span><span class="op">)</span>,</span>
-<span>  sir_col <span class="op">=</span> <span class="st">"pheno_eucast"</span>,</span>
-<span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Visualise with UpSet plot (markers)</span></span>
+<code class="sourceCode R"><span><span class="co"># Visualise with UpSet plot (markers)</span></span>
 <span><span class="va">cli_mic_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
-<span>  <span class="va">cli_bin</span>,</span>
+<span>  geno_table <span class="op">=</span> <span class="va">afp_CLI_public</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">pheno_CLI_public</span>,</span>
+<span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
@@ -153,22 +131,26 @@ different associations with clindamycin resistance.</p>
 <span>  bp_S <span class="op">=</span> <span class="fl">0.25</span>,</span>
 <span>  bp_R <span class="op">=</span> <span class="fl">0.5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="StaphAureusClindamycin_files/figure-html/upset_gene-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Visualise with UpSet plot (variants)</span></span>
-<span><span class="va">cli_mic_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
-<span>  <span class="va">cli_bin_accession</span>,</span>
+<code class="sourceCode R"><span><span class="co"># Visualise with UpSet plot (markers)</span></span>
+<span><span class="co"># order markers alphabetically so we can more easily see where there are different variants of the same gene</span></span>
+<span><span class="va">cli_mic_upset_variant</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">afp_CLI_public</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">pheno_CLI_public</span>,</span>
+<span>  marker_col <span class="op">=</span> <span class="st">"variant.label"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
+<span>  marker_order <span class="op">=</span> <span class="st">"alpha"</span>, <span class="co"># order markers alphabetically</span></span>
 <span>  print_set_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_set_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  print_category_counts <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  bp_S <span class="op">=</span> <span class="fl">0.25</span>,</span>
 <span>  bp_R <span class="op">=</span> <span class="fl">0.5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="StaphAureusClindamycin_files/figure-html/create%20binary%20matrix-2.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="StaphAureusClindamycin_files/figure-html/upset_variant-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="solo-ppv-analysis">Solo PPV analysis<a class="anchor" aria-label="anchor" href="#solo-ppv-analysis"></a>
@@ -178,35 +160,95 @@ for each marker and variant. This will allow us to see which markers and
 variants are most predictive of clindamycin resistance.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># soloPPV analysis for markers</span></span>
-<span><span class="va">PPV_cli</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">cli_bin</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span>, plot_assay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># order markers alphabetically so we can more easily see where there are different variants of the same gene</span></span>
+<span><span class="va">cli_soloPPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">afp_CLI_public</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">pheno_CLI_public</span>,</span>
+<span>  marker_col <span class="op">=</span> <span class="st">"marker.label"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
+<span>  order_ppv <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># soloPPV analysis for variants</span></span>
-<span><span class="va">PPV_cli</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">cli_bin_accession</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span>, plot_assay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># order markers alphabetically so we can more easily see where there are different variants of the same gene</span></span>
+<span><span class="va">cli_soloPPV_variant</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/solo_ppv.html">solo_ppv</a></span><span class="op">(</span></span>
+<span>  geno_table <span class="op">=</span> <span class="va">afp_CLI_public</span>,</span>
+<span>  pheno_table <span class="op">=</span> <span class="va">pheno_CLI_public</span>,</span>
+<span>  marker_col <span class="op">=</span> <span class="st">"variant.label"</span>,</span>
+<span>  pheno_drug <span class="op">=</span> <span class="st">"Clindamycin"</span>,</span>
+<span>  order_ppv <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-2.png" class="r-plt" alt="" width="100%"></p>
-<p>We can clearly see from this analysis that the variants of the
-markers have different associations with clindamycin resistance. For
-example, the erm(C)_WP0012363.1 and erm(C)_WP0012364.1 were not above
-the 0.5 threshold. This highlights the importance of considering the
-specific variants of the markers when predicting clindamycin resistance.
-Note: this discrepancy may be caused by inducible resistance, which is
-not always captured by a standard AST test. This is because the
-resistance gene may not be expressed under the conditions of the AST
-test, but can be induced in the presence of certain antibiotics (e.g.,
-erythromycin). This is a known phenomenon for clindamycin resistance in
-<em>S. aureus</em>, where the presence of an erm gene can lead to
-inducible resistance that may not be detected in a standard AST
-test.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">cli_soloPPV_variant</span><span class="op">$</span><span class="va">solo_stats</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 38 × 8</span></span></span>
+<span><span class="co">##    marker                   category     x     n    ppv     se ci.lower ci.upper</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> erm(A)__WP_001072197.1   R            0     1 0      0        0         0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> erm(A)__WP_001072201.1   R          220   365 0.603  0.025<span style="text-decoration: underline;">6</span>   0.553     0.653</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> erm(A)__x_WP_001072197.… R            0     1 0      0        0         0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> erm(A)__x_WP_001072201.1 R            6    17 0.353  0.116    0.126     0.580</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> erm(A)__x_WP_001072201.… R            0     4 0      0        0         0    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> erm(B)__WP_001038790.1   R            1     1 1      0        1         1    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> erm(B)__WP_002292226.1   R            2     2 1      0        1         1    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> erm(C)__WP_001003260.1   R            1     1 1      0        1         1    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> erm(C)__WP_001003263.1   R           61   705 0.086<span style="text-decoration: underline;">5</span> 0.010<span style="text-decoration: underline;">6</span>   0.065<span style="text-decoration: underline;">8</span>    0.107</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> erm(C)__WP_001003264.1   R            2    12 0.167  0.108    0         0.378</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 28 more rows</span></span></span></code></pre></div>
+<p>We can see from this analysis that the variants of the markers have
+different associations with clindamycin resistance. For example, the
+isolates with exact matches to erm(C)_WP001003263.1 or
+erm(C)_WP001003264.1 are associated with low PPV for resistance (8.5%,
+n=60/705 and 17%, n=2/12, respectively). This highlights the importance
+of considering the specific variants of the markers when predicting
+clindamycin resistance. Note: this discrepancy may be caused by
+inducible resistance, which is not always captured by a standard AST
+test. This is because the resistance gene may not be expressed under the
+conditions of the AST test, but can be induced in the presence of
+certain antibiotics (e.g., erythromycin). This is a known phenomenon for
+clindamycin resistance in <em>S. aureus</em>, where the presence of an
+erm gene can lead to inducible resistance that may not be detected in a
+standard AST test.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cli_geno_pheno</span> <span class="op">&lt;-</span> <span class="va">afp_CLI_public</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">`variation type`</span> <span class="op">==</span> <span class="st">"Gene presence detected"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>node_hit <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">exact_match</span> <span class="op">==</span> <span class="st">""</span>,</span>
+<span>    <span class="va">`Accession of closest sequence`</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">`Accession of closest sequence`</span>, <span class="st">"_x"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">marker.label</span>, <span class="va">node_hit</span>, <span class="va">variant.label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">pheno_CLI_public</span><span class="op">)</span></span>
+<span><span class="co">## Joining with `by = join_by(id)`</span></span>
+<span><span class="co">## Warning in left_join(., pheno_CLI_public): Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Row 7609 of `x` matches multiple rows in `y`.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Row 3161 of `y` matches multiple rows in `x`.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
+<span><span class="co">##   "many-to-many"` to silence this warning.</span></span>
+<span></span>
+<span></span>
+<span><span class="va">cli_mic_byhit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">cli_geno_pheno</span>, colour_by <span class="op">=</span> <span class="st">"node_hit"</span>, boxplot <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">marker.label</span>, scales <span class="op">=</span> <span class="st">"free_y"</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cli_mic_byhit</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Clindamycin MIC in "</span>,</span>
+<span>  <span class="fu">italic</span><span class="op">(</span><span class="st">"S. aureus"</span><span class="op">)</span>,</span>
+<span>  <span class="st">", by gene symbol and closest reference"</span></span>
+<span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="StaphAureusClindamycin_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="association-of-specific-variants-with-sequence-types">Association of specific variants with sequence types<a class="anchor" aria-label="anchor" href="#association-of-specific-variants-with-sequence-types"></a>
 </h3>
 <p>Finally, we can also look at the association of specific marker
-variants with sequence types, if this data are available. This can be
+variants with sequence types, if these data are available. This can be
 done by creating a binary matrix for the variants and then visualizing
 the associations with a bubble plot.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Identify "High-Frequency" STs because we have many STs with only a few samples, which can make the plot cluttered and less informative. By filtering to include only STs with a certain number of samples (e.g., n &gt;= 100), we can focus on the most prevalent STs in the dataset, which are likely to provide more meaningful insights into the associations between specific variants and sequence types.</span></span>
 <span><span class="va">high_freq_sts</span> <span class="op">&lt;-</span> <span class="va">ST_data_CLI</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">ST</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -214,20 +256,20 @@ the associations with a bubble plot.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">ST</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Merge with ST data</span></span>
-<span><span class="va">cli_accession_st</span> <span class="op">&lt;-</span> <span class="va">cli_accession</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">ST_data_CLI</span>, by <span class="op">=</span> <span class="st">"Name"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">cli_accession_st</span> <span class="op">&lt;-</span> <span class="va">afp_CLI_public</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">ST_data_CLI</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ST</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">high_freq_sts</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate prevalence of variant in each ST</span></span>
 <span><span class="va">balloon_data</span> <span class="op">&lt;-</span> <span class="va">cli_accession_st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ST</span>, <span class="va">marker.label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_samples <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">Name</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ST</span>, <span class="va">variant.label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_samples <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ST_data_CLI</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">ST</span>, name <span class="op">=</span> <span class="st">"total_st_n"</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"ST"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>percent_prevalence <span class="op">=</span> <span class="op">(</span><span class="va">n_samples</span> <span class="op">/</span> <span class="va">total_st_n</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">percent_prevalence</span> <span class="op">&gt;=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create the Balloon Plot showing only marker-ST combinations with at least 10% prevalence</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">balloon_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ST</span>, y <span class="op">=</span> <span class="va">marker.label</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">balloon_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ST</span>, y <span class="op">=</span> <span class="va">variant.label</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>size <span class="op">=</span> <span class="va">n_samples</span>, color <span class="op">=</span> <span class="va">percent_prevalence</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_color_viridis_c</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"viridis"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_size.html" class="external-link">scale_size_continuous</a></span><span class="op">(</span>range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>

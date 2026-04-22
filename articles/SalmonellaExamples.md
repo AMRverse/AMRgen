@@ -455,9 +455,16 @@ gyrA_mut <- cip_bin_meta %>%
   select(mic, gyrA_mut, Source, Serovar)
 
 # plot the MIC distribution, coloured by count of gyrA mutations
-mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
+mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", measure_axis_label = "MIC (mg/L)", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
 
-mic_by_gyrA_count
+# add title with italicised species and drug names
+mic_by_gyrA_count + ggtitle(expression(paste(
+  "Ciprofloxacin MIC in ",
+  italic("Salmonella"),
+  " serovars, by number of ",
+  italic("gyrA"),
+  " mutations"
+)))
 ```
 
 ![](SalmonellaExamples_files/figure-html/assay_by_genotype_Serovar-1.png)
@@ -542,6 +549,7 @@ cipro_mic_upset <- amr_upset(
   assay = "mic",
   order = "value"
 )
+#> Ordering markers by frequency
 ```
 
 ![](SalmonellaExamples_files/figure-html/amr_upset-1.png)
@@ -562,6 +570,7 @@ cipro_mic_upset_animal <- amr_upset(
   assay = "mic",
   order = "value"
 )
+#> Ordering markers by frequency
 ```
 
 ![](SalmonellaExamples_files/figure-html/amr_upset_animal_only-1.png)

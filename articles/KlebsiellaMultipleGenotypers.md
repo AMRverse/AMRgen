@@ -472,6 +472,7 @@ comboPPV_kleborate_mero <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -515,8 +516,10 @@ the plot to marker combinations observed at least 3 times in the dataset
 (`min_set_size=3`) makes it a little easier to see what’s going on.
 
 ``` r
-kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix, 
-  assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3)
+kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix,
+  assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3
+)
+#> Ordering markers by frequency
 ```
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot-1.png)
@@ -553,6 +556,7 @@ kp_mic_upset_kleborate2 <- amr_upset(
 )
 #> Generating geno-pheno binary matrix
 #>  Defining NWT in binary matrix using ecoff column provided: ecoff
+#> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
@@ -697,7 +701,7 @@ kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
     TRUE ~ "-"
   )) %>%
   mutate(Bla_Carb_acquired = str_replace_all(Bla_Carb_acquired, "-", "None")) %>%
-  select(OmpK35, OmpK36, Bla_Carb_acquired, median_mean) 
+  select(OmpK35, OmpK36, Bla_Carb_acquired, median_mean)
 
 median_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
   pivot_wider(
@@ -1708,6 +1712,7 @@ comboPPV_rgi_mero <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -2012,6 +2017,7 @@ comboPPV_combined_mero <- ppv(
   plot_assay = TRUE,
   assay = "mic"
 )
+#> Ordering markers by frequency
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```

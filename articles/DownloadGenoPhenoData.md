@@ -397,26 +397,26 @@ staph_geno_ebi <- download_ebi(
 nrow(staph_geno_ebi)
 #> [1] 45945
 
-length(unique(staph_geno_ebi$BioSample_ID))
+length(unique(staph_geno_ebi$id))
 #> [1] 7547
 
 head(staph_geno_ebi)
 #> # A tibble: 6 × 34
-#>   BioSample_ID gene    mutation node   marker marker.label drug_agent drug_class
-#>   <chr>        <chr>   <chr>    <chr>  <chr>  <chr>        <ab>       <chr>     
-#> 1 SAMEA5330271 tet(38) -        tet(3… tet(3… tet(38)      NA         Tetracycl…
-#> 2 SAMEA5330271 tet(K)  -        tet(K) tet(K) tet(K)       NA         Tetracycl…
-#> 3 SAMEA5330271 mepA    -        mepA   mepA   mepA         TGC        Tetracycl…
-#> 4 SAMEA5330297 tet(38) -        tet(3… tet(3… tet(38)      NA         Tetracycl…
-#> 5 SAMEA5330297 mepA    -        mepA   mepA   mepA         TGC        Tetracycl…
-#> 6 SAMEA5330308 tet(K)  -        tet(K) tet(K) tet(K)       NA         Tetracycl…
-#> # ℹ 26 more variables: assembly_ID <chr>, genus <chr>, species <chr>,
-#> #   organism <chr>, isolate <chr>, taxon_id <int>, region <chr>,
-#> #   region_start <int>, region_end <int>, strand <chr>, `_bin` <int>,
-#> #   id2 <chr>, gene_symbol <chr>, amr_element_symbol <chr>, element_type <chr>,
-#> #   element_subtype <chr>, class <chr>, subclass <chr>, split_subclass <chr>,
-#> #   antibiotic_name <chr>, antibiotic_ontology <chr>,
-#> #   antibiotic_ontology_link <chr>, evidence_accession <chr>, …
+#>   id       marker gene  mutation drug drug_class  marker.label assembly_ID genus
+#>   <chr>    <chr>  <chr> <chr>    <ab> <chr>       <chr>        <chr>       <chr>
+#> 1 SAMEA53… tet(3… tet(… -        NA   Tetracycli… tet(38)      ERZ25282410 Stap…
+#> 2 SAMEA53… tet(K) tet(… -        NA   Tetracycli… tet(K)       ERZ25282410 Stap…
+#> 3 SAMEA53… mepA   mepA  -        TGC  Tetracycli… mepA         ERZ25282410 Stap…
+#> 4 SAMEA53… tet(3… tet(… -        NA   Tetracycli… tet(38)      ERZ25282723 Stap…
+#> 5 SAMEA53… mepA   mepA  -        TGC  Tetracycli… mepA         ERZ25282723 Stap…
+#> 6 SAMEA53… tet(K) tet(… -        NA   Tetracycli… tet(K)       ERZ25282853 Stap…
+#> # ℹ 25 more variables: species <chr>, organism <chr>, isolate <chr>,
+#> #   taxon_id <int>, region <chr>, region_start <int>, region_end <int>,
+#> #   strand <chr>, `_bin` <int>, id2 <chr>, gene_symbol <chr>,
+#> #   amr_element_symbol <chr>, element_type <chr>, element_subtype <chr>,
+#> #   class <chr>, subclass <chr>, split_subclass <chr>, antibiotic_name <chr>,
+#> #   antibiotic_ontology <chr>, antibiotic_ontology_link <chr>,
+#> #   evidence_accession <chr>, evidence_type <chr>, evidence_link <chr>, …
 ```
 
 #### Compare downloaded phenotypes and genotypes
@@ -467,6 +467,7 @@ head(tet_bin)
 # plot positive predictive value for each marker/combination
 tet_ppv <- ppv(tet_bin)
 #> Removing 69 rows with no phenotype call
+#> Ordering markers by frequency
 ```
 
 ![](DownloadGenoPhenoData_files/figure-html/ppv-1.png)

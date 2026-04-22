@@ -183,7 +183,10 @@
 
 
 <dt id="arg-marker-order">marker_order<a class="anchor" aria-label="anchor" href="#arg-marker-order"></a></dt>
-<dd><p>(optional) Force order of markers in upset grid. Default <code>NULL</code> in which case markers are ordered in decreasing order of freauency.</p></dd>
+<dd><p>(optional) A character string or vector indicating the order of the marker rows in the UpSet grid. Options are:</p><ul><li><p><code>"freq"</code> or <code>NULL</code> (default): order markers by decreasing frequency</p></li>
+<li><p><code>"alpha"</code>: order markers alphabetically</p></li>
+<li><p><code>character vector</code>: vector of markers in the order in which they should appear</p></li>
+</ul></dd>
 
 </dl></div>
     <div class="section level2">

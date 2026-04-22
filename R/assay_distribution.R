@@ -19,12 +19,15 @@
 #' This function by deafault creates a stacked bar plot, where the x-axis represents assay measurements (either MIC, Minimum Inhibitory Concentration) or disk diffusion zones values), the y-axis indicates their frequency, and the bars are colored by a variable indicated using `colour_by` (by default, colours indicate whether the assay value is expressed as a range or not). Plots can optionally be faceted on an additional categorical variable. Optionally, the data can be plotted as a grouped bar plot instead, with the assay measures shown on the y-axis, grouped and coloured by the `colour_by` variable, by setting barplot = `TRUE`. If breakpoints are provided, or species and drug are provided so we can extract breakpoints, lines indicating the S/R breakpoints (solid lines) and ECOFF (dashed line) will be added to the plot (and printed in the subtitle).
 #' @param pheno_table Phenotype table in standard format as per import_pheno().
 #' @param measure Name of the column with assay measurements to plot (default "mic").
-#' @param colour_by (optional) Field name containing a variable to colour bars by (default NULL, which will colour each bar to indicate whether the value is expressed as a range or not).
-#' @param colours (optional) Manual colour scale to use for bar plot. If NULL, `colour_by` variable is of class 'sir', bars will by default be coloured using standard SIR colours.
-#' @param facet_var (optional) Column name containing a variable to facet on (default NULL).
+#' @param colour_by (optional) String giving the name of a column whose values should be used to colour data points (default `NULL`, which will colour each data point to indicate whether the value is expressed as a range or not).
+#' @param colours (optional) Manual colour scale to use for bar plot. If `NULL`, and `colour_by` variable is of class `sir`, bars will by default be coloured using standard SIR colours.
+#' @param facet_var (optional) String giving the name of a column containing a variable to facet on (default `NULL`).
+#' @param facet_nrow (optional) Number of rows for the facet grid (not used unless `facet_var` is provided).
+#' @param facet_ncol (optional) Number of columns for the facet grid (not used unless `facet_var` is provided).
 #' @param pheno_drug (optional) Name of a drug to filter the `drug` column, and to retrieve breakpoints for.
 #' @param species (optional) Name of species, so we can retrieve breakpoints to print at the top of the plot to help interpret it.
-#' @param boxplot (optional) If `TRUE`, plot the data as a grouped boxplot of assay measures, grouped and coloured by the `colour_by` variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the `colour_by` and `facet_var` variables.
+#' @param boxplot (optional) If `TRUE`, plot the data as a grouped boxplot of assay measures, grouped by the `group_by` variable and coloured by the `colour_by` variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the `group_by` and `facet_var` variables.
+#' @param group_by (optional, only used if boxplot=`TRUE`) String giving the name of a column whose values should be used to group boxes by (default `NULL`, in which case the `colour_by` variable will be used for grouping also).
 #' @param bp_site (optional) Breakpoint site to retrieve (only relevant if also supplying `species` and `antibiotic` to retrieve breakpoints, and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff`).
 #' @param bp_S (optional) S breakpoint to plot.
 #' @param bp_R (optional) R breakpoint to plot.
@@ -35,8 +38,6 @@
 #' @param y_axis_label (optional) String to label the y-axis in histogram plot (default `"Count"`).
 #' @param colour_legend_label (optional) String to label the colour legend (default `NULL`, which results in plotting the variable name specified via the 'colour_by' parameter). Also used to label the x-axis if boxplot=`TRUE`.
 #' @param plot_title (optional) String to title the plot (default indicates whether MIC or disk distribution is plotted, prefixed with the antibiotic name if provided, e.g. 'Ciprofloxacin MIC distribution')
-#' @param facet_nrow (optional) Number of rows for the facet grid (not used unless `facet_var` is provided).
-#' @param facet_ncol (optional) Number of columns for the facet grid (not used unless `facet_var` is provided).
 #' @importFrom ggplot2 aes element_text facet_wrap geom_bar geom_vline ggplot labs theme scale_fill_manual sym geom_jitter
 #' @importFrom methods is
 #' @return If boxplot=`FALSE`, the plot is returned as a single unnamed value. If boxplot=`TRUE`, the plot is returned ($plot) along with the summary statistics ($stats).
@@ -83,7 +84,8 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
                          bp_colours = c(S = "grey", R = "grey", E = "grey"),
                          measure_axis_label = "Measurement", y_axis_label = "Count",
                          colour_legend_label = NULL, plot_title = NULL,
-                         boxplot = FALSE, facet_nrow = NULL, facet_ncol = NULL) {
+                         boxplot = FALSE, group_by = NULL,
+                         facet_nrow = NULL, facet_ncol = NULL) {
   if (!is.null(pheno_drug)) {
     if ("drug" %in% colnames(pheno_table)) {
       pheno_table <- pheno_table %>% filter(drug == as.ab(pheno_drug))
@@ -202,8 +204,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
   if (nrow(pheno_table) > 0) {
     if (!boxplot) {
       plot_all <- pheno_table %>%
-        # ggplot(aes(x = factor(!!sym(measure)))) +
-        ggplot(aes(x = !!sym(measure))) +
+        ggplot(aes(x = factor(!!sym(measure)))) +
         labs(
           x = measure_axis_label, y = y_axis_label,
           fill = colour_legend_label, subtitle = subtitle,
@@ -233,8 +234,9 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         }
       }
     } else { # grouped boxplot instead
+      if (is.null(group_by)) {group_by = colour_by}
       plot_all <- pheno_table %>%
-        ggplot(aes(x = factor(!!sym(colour_by)), y = !!sym(measure))) +
+        ggplot(aes(x = factor(!!sym(group_by)), y = !!sym(measure))) +
         geom_boxplot() +
         geom_jitter(aes(col = factor(!!sym(colour_by)))) +
         labs(
@@ -258,13 +260,13 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
       # calculate summary stats
       if (is.null(facet_var)) {
         stats <- pheno_table %>%
-          group_by(!!sym(colour_by)) %>%
+          group_by(!!sym(group_by)) %>%
           summarise(
             n = n(),
-            median = median(!!sym(measure), na.rm = TRUE),
-            geom_mean = 2^(mean(log2(mic), na.rm = TRUE)),
-            q25 = stats::quantile(!!sym(measure), 0.25, na.rm = TRUE),
-            q75 = stats::quantile(!!sym(measure), 0.75, na.rm = TRUE)
+            median = median(as.numeric(!!sym(measure)), na.rm = TRUE),
+            geom_mean = 2^(mean(log2(as.numeric(!!sym(measure))), na.rm = TRUE)),
+            q25 = stats::quantile(as.numeric(!!sym(measure)), 0.25, na.rm = TRUE),
+            q75 = stats::quantile(as.numeric(!!sym(measure)), 0.75, na.rm = TRUE)
           ) %>%
           ungroup()
         colnames(stats)[1] <- colour_by
@@ -273,10 +275,10 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
           group_by(!!sym(colour_by), !!sym(facet_var)) %>%
           summarise(
             n = n(),
-            median = median(!!sym(measure), na.rm = TRUE),
-            geom_mean = 2^(mean(log2(mic), na.rm = TRUE)),
-            q25 = stats::quantile(!!sym(measure), 0.25, na.rm = TRUE),
-            q75 = stats::quantile(!!sym(measure), 0.75, na.rm = TRUE)
+            median = median(as.numeric(!!sym(measure)), na.rm = TRUE),
+            geom_mean = 2^(mean(log2(as.numeric(!!sym(measure))), na.rm = TRUE)),
+            q25 = stats::quantile(as.numeric(!!sym(measure)), 0.25, na.rm = TRUE),
+            q75 = stats::quantile(as.numeric(!!sym(measure)), 0.75, na.rm = TRUE)
           ) %>%
           ungroup()
         colnames(stats)[1] <- colour_by

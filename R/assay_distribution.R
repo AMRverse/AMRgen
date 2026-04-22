@@ -147,17 +147,28 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
   colnames(pheno_data)[1] <- measure
 
   # create subtitle reporting breakpoints
-  if (!is.null(bp_S) | !is.null(bp_R) | !is.null(bp_ecoff)) {
-    if (measure == "mic" & grepl("EUCAST", guideline)) {
-      subtitle <- paste(guideline, "S <=", bp_S, "R>", bp_R, "ECOFF:", bp_ecoff)
-    } else if (measure == "mic") {
-      subtitle <- paste(guideline, "S <=", bp_S, "R>=", bp_R, "ECOFF:", bp_ecoff)
-    } else if (measure == "disk" & grepl("EUCAST", guideline)) {
-      subtitle <- paste(guideline, "S >=", bp_S, "R<", bp_R, "ECOFF:", bp_ecoff)
-    } else if (measure == "disk") {
-      subtitle <- paste(guideline, "S >=", bp_S, "R<=", bp_R, "ECOFF:", bp_ecoff)
+  subtitle <- ""
+  # !is.null(bp_ecoff) ", ECOFF ", bp_ecoff
+  if (!is.null(bp_S) | !is.null(bp_R)) {
+    if (!is.null(guideline)) {
+      subtitle <- paste0(guideline, ": ")
     }
-  } else {
+    if (measure == "mic" & grepl("EUCAST", guideline)) {
+      subtitle <- paste0(subtitle, "S <=", bp_S, ", R >", bp_R, ". ")
+    } else if (measure == "mic" & grepl("CLSI", guideline)) {
+      subtitle <- paste0(subtitle, "S <=", bp_S, ", R >=", bp_R, ". ")
+    } else if (measure == "disk" & grepl("EUCAST", guideline)) {
+      subtitle <- paste0(subtitle, "S >=", bp_S, ", R <", bp_R, ". ")
+    } else if (measure == "disk" & grepl("CLSI", guideline)) {
+      subtitle <- paste0(subtitle, "S >=", bp_S, ", R <=", bp_R, ". ")
+    } else { # don't know which greater than/less than signs to use so just print breakpoints
+      subtitle <- paste0(subtitle, "S = ", bp_S, ", R = ", bp_R, ". ")
+    }
+  }
+  if (!is.null(bp_ecoff)) {
+    subtitle <- paste0(subtitle, "ECOFF: ", bp_ecoff, ".")
+  }
+  if (subtitle == "") {
     subtitle <- NULL
   }
 
@@ -191,7 +202,8 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
   if (nrow(pheno_table) > 0) {
     if (!boxplot) {
       plot_all <- pheno_table %>%
-        ggplot(aes(x = factor(!!sym(measure)))) +
+        # ggplot(aes(x = factor(!!sym(measure)))) +
+        ggplot(aes(x = !!sym(measure))) +
         labs(
           x = measure_axis_label, y = y_axis_label,
           fill = colour_legend_label, subtitle = subtitle,

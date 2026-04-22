@@ -7,7 +7,7 @@
 \format{
 \code{afp_CLI_public} A data frame with 43,287 rows and 42 columns:
 \itemize{
-\item \code{Name}: Sample identifier (ENA run accession).
+\item \code{id}: Sample identifier (ENA run accession).
 \item \verb{Protein id}: Protein identifier (all \code{NA}).
 \item \verb{Contig id}: Assembly contig identifier.
 \item \code{Start}, \code{Stop}: Start and stop positions of the AMR element on the contig.

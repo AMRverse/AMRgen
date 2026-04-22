@@ -7,7 +7,7 @@
 \format{
 \code{ST_data_CLI} A data frame with 37934 rows and 10 columns:
 \itemize{
-\item \code{Name}: Sample identifier, imported from the \verb{#BioSample} column in the raw input.
+\item \code{id}: Sample identifier, imported from the \verb{#BioSample} column in the raw input.
 \item \code{schema}: Typing scheme used to determine sequence type (ST), in this case \code{pubmlst_saureus}.
 \item \code{ST}: Sequence type, determined by PubMLST scheme for S. aureus.
 \item \verb{arc allele}: Allele identifier for the \code{arc} locus in the PubMLST scheme.

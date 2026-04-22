@@ -234,7 +234,14 @@ gyrA_mut <- cip_bin_meta %>%
 # plot the MIC distribution, coloured by count of gyrA mutations
 mic_by_gyrA_count <- assay_by_var(gyrA_mut, measure = "mic", colour_by = "gyrA_mut", colour_legend_label = "Number of\ngyrA mutations", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(5)[c(4, 3, 2)]) + facet_wrap(~Serovar)
 
-mic_by_gyrA_count
+# add title with italicised species and drug names
+mic_by_gyrA_count + ggtitle(expression(paste(
+  "Ciprofloxacin MIC in ",
+  italic("Salmonella"),
+  " serovars, by number of ",
+  italic("gyrA"),
+  " mutations"
+)))
 ```
 
 Similarly, we can plot the total number of markers per isolate and facet by `Source`.

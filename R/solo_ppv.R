@@ -28,6 +28,7 @@
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
 #' @param ecoff_col A character string specifying the column name in `pheno_table` that contains the ECOFF interpretation of phenotype. The values should be interpretable as `"WT"` (wildtype) and `"NWT"` (nonwildtype), or `"S"` / `"I"` / `"R"`. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Default `"marker"`. Only used if `binary_matrix` not provided.
+#' @param order_ppv A logical indicating whether to order markers in the plot by PPV value. Default `TRUE`. If set to `FALSE` markers will be ordered alphabetically.
 #' @param reverse_order A logical indicating whether to reverse the order of rows in the plot, so that markers are ordered from lowest R PPV to highest (default `FALSE`, i.e. markers are ordered from highest to lowest PPV).
 #' @param icat A logical indicating whether to calculate PPV for `"I"` (if such a category exists in the phenotype column) (default `FALSE`).
 #' @param min Minimum number of genomes with the solo marker, to include the marker in the plot (default `1`).
@@ -79,7 +80,9 @@ solo_ppv <- function(geno_table, pheno_table,
                      pheno_drug = NULL, geno_class = NULL, geno_drug = NULL,
                      geno_sample_col = NULL, pheno_sample_col = NULL,
                      sir_col = NULL, ecoff_col = "ecoff", icat = FALSE,
-                     marker_col = "marker", reverse_order = FALSE,
+                     marker_col = "marker",
+                     order_ppv = TRUE,
+                     reverse_order = FALSE,
                      binary_matrix = NULL,
                      min = 1,
                      axis_label_size = 9,
@@ -191,9 +194,11 @@ solo_ppv <- function(geno_table, pheno_table,
     )
   }
 
-  solo_stats_R <- solo_stats_R %>% arrange(p)
-  if (reverse_order) {
-    solo_stats_R <- solo_stats_R %>% arrange(desc(p))
+  if (order_ppv) {
+    solo_stats_R <- solo_stats_R %>% arrange(p)
+    if (reverse_order) {
+      solo_stats_R <- solo_stats_R %>% arrange(desc(p))
+    }
   }
 
   if (icat & sum(!is.na(solo_binary$pheno)) > 0) {

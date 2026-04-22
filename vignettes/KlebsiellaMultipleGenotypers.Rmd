@@ -208,8 +208,9 @@ Similar to the previous `ppv()` function, the `amr_upset()` function will genera
 Restricting the plot to marker combinations observed at least 3 times in the dataset (`min_set_size=3`) makes it a little easier to see what's going on. 
 
 ```{r kleborate_upset_plot, fig.height=10}
-kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix, 
-  assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3)
+kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix,
+  assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3
+)
 ```
 
 It's still quite complex to follow the plot and spot patterns, as we have carbapenemase genes mixed in with mutations, making it difficult to compare the effect of a given gene with and without a mutation (and vice versa).
@@ -298,7 +299,7 @@ Reformat the stats table into wide format to more clearly see the effects of por
 
 ``` {r kleborate_boxplot_genefam_stats_table}
 kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
-  #ungroup() %>%
+  # ungroup() %>%
   mutate(geom_mean = round(geom_mean, 1)) %>%
   mutate(mean_median = paste0(median, " (", geom_mean, ")")) %>%
   mutate(OmpK35 = case_when(
@@ -311,13 +312,13 @@ kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
     TRUE ~ "-"
   )) %>%
   mutate(Bla_Carb_acquired = str_replace_all(Bla_Carb_acquired, "-", "None")) %>%
-  select(OmpK35, OmpK36, Bla_Carb_acquired, mean_median) 
+  select(OmpK35, OmpK36, Bla_Carb_acquired, mean_median)
 
 mean_MIC_table <- kleborate_mic_by_gene_mutation_table %>%
   pivot_wider(
     names_from = Bla_Carb_acquired,
     values_from = mean_median,
-    values_fill="-"
+    values_fill = "-"
   )
 
 mean_MIC_table

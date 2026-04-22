@@ -217,7 +217,7 @@ staph_geno_ebi <- download_ebi(
 ``` {r download_ebi_geno_dummy}
 nrow(staph_geno_ebi)
 
-length(unique(staph_geno_ebi$BioSample_ID))
+length(unique(staph_geno_ebi$id))
 
 head(staph_geno_ebi)
 ```

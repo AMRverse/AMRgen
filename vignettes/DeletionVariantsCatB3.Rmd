@@ -368,18 +368,13 @@ AST_CATB3_pheno_3 <- AST_CATB3_pheno_2 %>%
 # plot the MIC distribution for these 2 groups
 MIC_dist_by_cov <- assay_by_var(
   pheno_table = AST_CATB3_pheno_3,
-  pheno_drug = "CHL",
+  pheno_drug = "Chloramphenicol",
   measure = "mic",
   colour_by = "pheno_clsi",
-  species = "Escherichia coli",
-  facet_var = "truncation"
-) +
-  labs(
-    title = " ",
-    subtitle = " ",
-    x = "MIC measurement",
-    fill = "phenotype (CLSI)"
-  )
+  facet_var = "truncation",
+  measure_axis_label = "MIC (mg/L)",
+  colour_legend_label = "Phenotype (CLSI)"
+)
 
 MIC_dist_by_cov
 

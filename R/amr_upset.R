@@ -41,7 +41,10 @@
 #' @param species Optional. Species name used for breakpoint lookup.
 #' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
-#' @param marker_order (optional) Force order of markers in upset grid. Default `NULL` in which case markers are ordered in decreasing order of freauency.
+#' @param marker_order (optional) A character string or vector indicating the order of the marker rows in the UpSet grid. Options are:
+#' - `"freq"` or `NULL` (default): order markers by decreasing frequency
+#' - `"alpha"`: order markers alphabetically
+#' - `character vector`: vector of markers in the order in which they should appear
 #' @importFrom AMR as.mic as.ab as.mo as.disk scale_color_sir scale_fill_sir scale_y_mic
 #' @importFrom dplyr any_of arrange desc distinct filter group_by if_else left_join right_join mutate n pull relocate row_number select summarise ungroup
 #' @importFrom forcats fct_rev fct_relevel
@@ -182,12 +185,20 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
 
   ### Set order of genes for y axis in combination dot plot
   ## (amongst strains with marker combinations exceeding the minimum set size, that will be included in plot)
-  if (is.null(marker_order)) {
+  if (is.null(marker_order) || marker_order == "freq") {
+    message("Ordering markers by frequency")
     gene.order.desc <- gene.prev %>%
       arrange(desc(gene.prev)) %>%
       filter(gene.prev > 0) %>%
       pull(genes)
+  } else if (marker_order == "alpha") {
+    message("Ordering markers alphabetically")
+    gene.order.desc <- gene.prev %>%
+      filter(gene.prev > 0) %>%
+      pull(genes) %>%
+      sort() # alphabetical
   } else {
+    message("Ordering markers by user-supplied list")
     # expect a user-supplied vector of markers to force inclusion
     gene.order.desc <- marker_order
   }
@@ -551,7 +562,10 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
 #' @param species Optional. Species name used for breakpoint lookup.
 #' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
-#' @param marker_order (optional) Force order of markers in upset grid. Default `NULL` in which case markers are ordered in decreasing order of freauency.
+#' @param marker_order (optional) A character string or vector indicating the order of the marker rows in the UpSet grid. Options are:
+#' - `"freq"` or `NULL` (default): order markers by decreasing frequency
+#' - `"alpha"`: order markers alphabetically
+#' - `character vector`: vector of markers in the order in which they should appear
 #' @importFrom ggplot2 theme theme_bw theme_light element_blank element_text labs scale_y_reverse
 #' @importFrom patchwork plot_layout plot_spacer
 #' @return A list containing the following elements:
@@ -728,7 +742,10 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' @param bp_R (Optional) R breakpoint to add to assay distribution plot (numerical).
 #' @param ecoff_bp (Optional) ECOFF breakpoint to add to assay distribution plot (numerical).
 #' @param pd A `ggplot2::position_dodge()` object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default is `position_dodge(width = 0.8)`.
-#' @param marker_order (optional) Force order of markers in upset grid. Default `NULL` in which case markers are ordered in decreasing order of freauency.
+#' @param marker_order (optional) A character string or vector indicating the order of the marker rows in the UpSet grid. Options are:
+#' - `"freq"` or `NULL` (default): order markers by decreasing frequency
+#' - `"alpha"`: order markers alphabetically
+#' - `character vector`: vector of markers in the order in which they should appear
 #' @importFrom dplyr distinct filter group_by if_else left_join mutate n pull relocate row_number select summarise ungroup starts_with
 #' @importFrom ggplot2 aes after_stat coord_flip element_blank geom_bar geom_boxplot geom_col geom_point geom_segment geom_text ggplot labs position_fill scale_size_continuous scale_x_discrete scale_y_discrete scale_y_reverse theme theme_bw theme_light ylab scale_x_continuous theme_void guides margin coord_cartesian
 #' @importFrom patchwork plot_layout plot_spacer

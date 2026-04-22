@@ -110,7 +110,12 @@ ppv(
 
 \item{pd}{A \code{ggplot2::position_dodge()} object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default is \code{position_dodge(width = 0.8)}.}
 
-\item{marker_order}{(optional) Force order of markers in upset grid. Default \code{NULL} in which case markers are ordered in decreasing order of freauency.}
+\item{marker_order}{(optional) A character string or vector indicating the order of the marker rows in the UpSet grid. Options are:
+\itemize{
+\item \code{"freq"} or \code{NULL} (default): order markers by decreasing frequency
+\item \code{"alpha"}: order markers alphabetically
+\item \verb{character vector}: vector of markers in the order in which they should appear
+}}
 }
 \value{
 A list containing the following elements:

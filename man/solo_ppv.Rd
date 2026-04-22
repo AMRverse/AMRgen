@@ -16,6 +16,7 @@ solo_ppv(
   ecoff_col = "ecoff",
   icat = FALSE,
   marker_col = "marker",
+  order_ppv = TRUE,
   reverse_order = FALSE,
   binary_matrix = NULL,
   min = 1,
@@ -48,6 +49,8 @@ solo_ppv(
 \item{icat}{A logical indicating whether to calculate PPV for \code{"I"} (if such a category exists in the phenotype column) (default \code{FALSE}).}
 
 \item{marker_col}{A character string specifying the column name in \code{geno_table} containing the marker identifiers. Default \code{"marker"}. Only used if \code{binary_matrix} not provided.}
+
+\item{order_ppv}{A logical indicating whether to order markers in the plot by PPV value. Default \code{TRUE}. If set to \code{FALSE} markers will be ordered alphabetically.}
 
 \item{reverse_order}{A logical indicating whether to reverse the order of rows in the plot, so that markers are ordered from lowest R PPV to highest (default \code{FALSE}, i.e. markers are ordered from highest to lowest PPV).}
 

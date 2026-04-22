@@ -7,7 +7,7 @@
 \format{
 \code{DASSIM_geno} A data frame with 12414 rows and 31 columns:
 \itemize{
-\item \code{Name}:  Name.
+\item \code{id}:  Name.
 \item \code{gene}:  gene.
 \item \code{mutation}:  mutation.
 \item \code{node}:  node.

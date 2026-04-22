@@ -589,7 +589,7 @@
 #' the genetic basis of clindamycin resistance.
 #'
 #' @format `afp_CLI_public` A data frame with 43,287 rows and 42 columns:
-#' - `Name`: Sample identifier (ENA run accession).
+#' - `id`: Sample identifier (ENA run accession).
 #' - `Protein id`: Protein identifier (all `NA`).
 #' - `Contig id`: Assembly contig identifier.
 #' - `Start`, `Stop`: Start and stop positions of the AMR element on the contig.
@@ -643,7 +643,7 @@
 #' S. aureus <https://pubmlst.org/bigsdb/page/schemes>, using bactopia run by Robert Petit.
 #'
 #' @format `ST_data_CLI` A data frame with 37934 rows and 10 columns:
-#' - `Name`: Sample identifier, imported from the `#BioSample` column in the raw input.
+#' - `id`: Sample identifier, imported from the `#BioSample` column in the raw input.
 #' - `schema`: Typing scheme used to determine sequence type (ST), in this case `pubmlst_saureus`.
 #' - `ST`: Sequence type, determined by PubMLST scheme for S. aureus.
 #' - `arc allele`: Allele identifier for the `arc` locus in the PubMLST scheme.
@@ -710,7 +710,7 @@
 #' The DASSIM dataset screened for Antimicrobial resistance genes (ARGs) using AMRFinderPlus v4.0.23
 #'
 #' @format `DASSIM_geno` A data frame with 12414 rows and 31 columns:
-#' - `Name`:  Name.
+#' - `id`:  Name.
 #' - `gene`:  gene.
 #' - `mutation`:  mutation.
 #' - `node`:  node.

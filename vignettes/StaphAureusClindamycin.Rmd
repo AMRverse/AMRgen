@@ -131,7 +131,7 @@ cli_soloPPV_variant$solo_stats
 We can see from this analysis that the variants of the markers have different associations with clindamycin resistance. For example, the isolates with exact matches to erm(C)\_WP001003263.1 or erm(C)\_WP001003264.1 are associated with low PPV for resistance (8.5%, n=60/705 and 17%, n=2/12, respectively). This highlights the importance of considering the specific variants of the markers when predicting clindamycin resistance. Note: this discrepancy may be caused by inducible resistance, which is not always captured by a standard AST test. This is because the resistance gene may not be expressed under the conditions of the AST test, but can be induced in the presence of certain antibiotics (e.g., erythromycin). This is a known phenomenon for clindamycin resistance in *S. aureus*, where the presence of an erm gene can lead to inducible resistance that may not be detected in a standard AST test.
 
 ## MIC distribution associated with allelic variants
-We can use the `assay_by_var()` function to visualise the MIC distributions associated with different variants of the same gene. First we need to join the key genotype fields into the phenotype table, and then use `assay_by_var()` to plot MIC assay measures grouped by variant and faceted into one panel per gene.
+We can use the `assay_by_var()` function to visualise the MIC distributions associated with different variants of the same gene. First we need to join the key genotype fields into the phenotype table, and then use `assay_by_var()` to plot MIC assay measures grouped by variant and faceted into one panel per gene, coloured by S/I/R phenotype.
 ``` {r}
 cli_geno_pheno <- afp_CLI_public %>%
   filter(`variation type` == "Gene presence detected") %>%
@@ -143,7 +143,8 @@ cli_geno_pheno <- afp_CLI_public %>%
   left_join(pheno_CLI_public)
 
 
-cli_mic_byhit <- assay_by_var(cli_geno_pheno, colour_by = "variant_hit", boxplot = T)$plot +
+cli_mic_byhit <- assay_by_var(cli_geno_pheno, group_by = "variant_hit", 
+                              boxplot = T, colour_by="pheno_eucast")$plot +
   facet_wrap(~marker.label, scales = "free_y", ncol = 2) +
   coord_flip() +
   theme(legend.position = "none")

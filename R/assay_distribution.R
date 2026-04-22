@@ -238,7 +238,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
       plot_all <- pheno_table %>%
         ggplot(aes(x = factor(!!sym(group_by)), y = !!sym(measure))) +
         geom_boxplot() +
-        geom_jitter(aes(col = factor(!!sym(colour_by)))) +
+        geom_jitter(aes(col = !!sym(colour_by))) +
         labs(
           y = measure_axis_label, x = colour_legend_label,
           colour = colour_legend_label, subtitle = subtitle,
@@ -246,9 +246,11 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         ) +
         theme_bw() +
         theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1))
-
+    
       if (!is.null(colours)) {
         plot_all <- plot_all + scale_colour_manual(values = colours)
+      } else if (is(pheno_table[[colour_by]], "sir")) {
+        plot_all <- plot_all + scale_color_sir()
       }
 
       if (!is.null(facet_var)) {

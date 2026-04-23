@@ -441,10 +441,10 @@ mutation alone, do not. PPV \> 0.50 indicates that more than 50% of
 isolates carrying a given marker fall in the NWT category..
 
 Now evaluate PPVs for marker combinations with
-[`ppv()`](https://amrgen.org/reference/ppv.md):
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md):
 
 ``` r
-azm_ppv <- ppv(
+azm_ppv <- amr_ppv(
   binary_matrix = azm_bin,
   order = "value",
   min_set_size = 2,
@@ -493,8 +493,8 @@ do.
 
 Calculate concordance and resistance prediction metrics using results
 from the logistic regression. The results of the `solo_ppv_analisis()`
-or [`ppv()`](https://amrgen.org/reference/ppv.md) functions can be
-provided to the `ppv_results` parameter.
+or [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) functions can
+be provided to the `ppv_results` parameter.
 
 ``` r
 azm_concordance <- concordance(
@@ -633,7 +633,7 @@ cip_solo_ppv <- solo_ppv(
 Evaluate PPVs for marker combinations:
 
 ``` r
-cip_ppv <- ppv(
+cip_ppv <- amr_ppv(
   binary_matrix = cip_bin,
   order = "value",
   min_set_size = 2,
@@ -904,7 +904,7 @@ cro_solo_ppv <- solo_ppv(
 Instead, combination PPVs are a more informative metric:
 
 ``` r
-cfm_ppv <- ppv(
+cfm_ppv <- amr_ppv(
   binary_matrix = cfm_bin,
   min_set_size = 2,
   order = "ppv",
@@ -921,7 +921,7 @@ cfm_ppv <- ppv(
 
 ``` r
 
-cro_ppv <- ppv(
+cro_ppv <- amr_ppv(
   binary_matrix = cro_bin,
   min_set_size = 1,
   order = "ppv",
@@ -1060,7 +1060,7 @@ cro_upset_2 <- amr_upset(
 Calculate combination PPVs:
 
 ``` r
-cro_ppv_2 <- ppv(
+cro_ppv_2 <- amr_ppv(
   binary_matrix = cro_bin_2,
   min_set_size = 1,
   order = "ppv",
@@ -1282,7 +1282,7 @@ tet_upset$summary %>%
 Calculate PPVs for marker combinations:
 
 ``` r
-tet_ppv <- ppv(
+tet_ppv <- amr_ppv(
   binary_matrix = tet_bin,
   min_set_size = 1,
   order = "ppv",

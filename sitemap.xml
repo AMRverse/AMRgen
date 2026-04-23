@@ -20,6 +20,7 @@
 <url><loc>https://amrgen.org/reference/ST_data_CLI.html</loc></url>
 <url><loc>https://amrgen.org/reference/afp_CLI_public.html</loc></url>
 <url><loc>https://amrgen.org/reference/amr_logistic.html</loc></url>
+<url><loc>https://amrgen.org/reference/amr_ppv.html</loc></url>
 <url><loc>https://amrgen.org/reference/amr_upset.html</loc></url>
 <url><loc>https://amrgen.org/reference/amrfp_drugs_table.html</loc></url>
 <url><loc>https://amrgen.org/reference/assay_by_var.html</loc></url>
@@ -93,7 +94,6 @@
 <url><loc>https://amrgen.org/reference/plot_combined_stats.html</loc></url>
 <url><loc>https://amrgen.org/reference/plot_estimates.html</loc></url>
 <url><loc>https://amrgen.org/reference/plot_solo_logReg.html</loc></url>
-<url><loc>https://amrgen.org/reference/ppv.html</loc></url>
 <url><loc>https://amrgen.org/reference/print.amr_concordance.html</loc></url>
 <url><loc>https://amrgen.org/reference/query_ncbi_bq_geno.html</loc></url>
 <url><loc>https://amrgen.org/reference/query_ncbi_bq_pheno.html</loc></url>

@@ -441,19 +441,19 @@ combination of this mutations is common in non-susceptpible isolates
 
 To identify the combinations of AMR markers that are associated with
 resistance, we can use the
-[`ppv()`](https://amrgen.org/reference/ppv.md) function of the `AMRgen`
-package
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) function of the
+`AMRgen` package
 
 ### 7. Identify markers or combination of markers associated with resistance
 
-The [`ppv()`](https://amrgen.org/reference/ppv.md) function calculates
-the possible combinations of markers, and returns the positive
-predictive value (PPV) for each combination (with 95% CI) and the basic
-plot elements (including PPV).
+The [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) function
+calculates the possible combinations of markers, and returns the
+positive predictive value (PPV) for each combination (with 95% CI) and
+the basic plot elements (including PPV).
 
 ``` r
 # Generate a summary plot of PPV for each solo and combination of markers observed in the mic assay data and order by decreasing ppv value
-eco_cip_ppv <- ppv(eco_cip_matrix,
+eco_cip_ppv <- amr_ppv(eco_cip_matrix,
   assay = "mic",
   order = "ppv"
 )
@@ -519,13 +519,13 @@ and parC_S80I.
 
 We can use all this information to refine our concordance analysis.
 
-Note: the [`ppv()`](https://amrgen.org/reference/ppv.md) function
-applies by default a `min_set_size` threshold of 2, meaning that only
-solo markers or marker combinations with at least 2 occurrences in the
-dataset are included in the plots. Nevertheless solo markers or marker
-combinations that occur only once in the dataset are included in the
-stats table. In this example, there are 10 marker combinations
-represented by only 1 isolate in the dataset.
+Note: the [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md)
+function applies by default a `min_set_size` threshold of 2, meaning
+that only solo markers or marker combinations with at least 2
+occurrences in the dataset are included in the plots. Nevertheless solo
+markers or marker combinations that occur only once in the dataset are
+included in the stats table. In this example, there are 10 marker
+combinations represented by only 1 isolate in the dataset.
 
 ### 8. Analyse concordance refining the definition of the genotypic prediction variable
 
@@ -807,7 +807,7 @@ concordance_cip_log$data %>%
 concordance_cip_log$data %>%
   filter(R_pred != R) %>%
   select(-R_pred) %>%
-  ppv()
+  amr_ppv()
 #> Ordering markers by frequency
 ```
 

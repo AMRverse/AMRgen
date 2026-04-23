@@ -459,9 +459,9 @@ mg/L). Mutations in the <em>mtrR</em> gene or its promoter, or the
 more than 50% of isolates carrying a given marker fall in the NWT
 category..</p>
 <p>Now evaluate PPVs for marker combinations with
-<code><a href="../reference/ppv.html">ppv()</a></code>:</p>
+<code><a href="../reference/amr_ppv.html">amr_ppv()</a></code>:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">azm_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">azm_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -500,8 +500,8 @@ not contribute to increased azithromycin MICs, while <em>23S</em> rDNA
 mutations do.</p>
 <p>Calculate concordance and resistance prediction metrics using results
 from the logistic regression. The results of the
-<code>solo_ppv_analisis()</code> or <code><a href="../reference/ppv.html">ppv()</a></code> functions can be
-provided to the <code>ppv_results</code> parameter.</p>
+<code>solo_ppv_analisis()</code> or <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> functions can
+be provided to the <code>ppv_results</code> parameter.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">azm_concordance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/concordance.html">concordance</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">azm_bin</span>,</span>
@@ -624,7 +624,7 @@ the ECOFF.</p>
 <p><img src="NeisseriaGonoExamples_files/figure-html/cip_solo_ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Evaluate PPVs for marker combinations:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">cip_bin</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -861,7 +861,7 @@ case:</p>
 <p><img src="NeisseriaGonoExamples_files/figure-html/esc_solo_ppv-2.png" class="r-plt" alt="" width="100%"></p>
 <p>Instead, combination PPVs are a more informative metric:</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cfm_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">cfm_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">cfm_bin</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
@@ -875,7 +875,7 @@ case:</p>
 <p><img src="NeisseriaGonoExamples_files/figure-html/esc_ppv-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">cro_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<span><span class="va">cro_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">cro_bin</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
@@ -1023,7 +1023,7 @@ n=29 genomes.</li>
 <p><img src="NeisseriaGonoExamples_files/figure-html/pbp_binary_upset-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Calculate combination PPVs:</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cro_ppv_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">cro_ppv_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">cro_bin_2</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>
@@ -1221,7 +1221,7 @@ conjugative plasmid.</p></li>
 <span><span class="co">#&gt; <span style="color: #949494;">#   median_ignoreRanges &lt;dbl&gt;, q25_ignoreRanges &lt;dbl&gt;, q75_ignoreRanges &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>Calculate PPVs for marker combinations:</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tet_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">tet_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">tet_bin</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"ppv"</span>,</span>

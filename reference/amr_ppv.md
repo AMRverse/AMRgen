@@ -8,7 +8,7 @@ data.
 ## Usage
 
 ``` r
-ppv(
+amr_ppv(
   binary_matrix = NULL,
   min_set_size = 2,
   order = "ppv",
@@ -311,10 +311,10 @@ binary_matrix <- get_binary_matrix(
 )
 
 # Run ppv analysis using this binary_matrix
-ppv <- ppv(binary_matrix)
+ppv <- amr_ppv(binary_matrix)
 
 # Alternatively, generate binary matrix and run ppv() in one step
-ppv <- ppv(
+ppv <- amr_ppv(
   geno_table = ecoli_geno,
   pheno_table = ecoli_pheno,
   pheno_drug = "Ciprofloxacin",

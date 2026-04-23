@@ -465,20 +465,20 @@ with other mutations, raises the MIC values above the susceptible range,
 i.e. the combination of this mutations is common in non-susceptpible
 isolates (I/R).</p>
 <p>To identify the combinations of AMR markers that are associated with
-resistance, we can use the <code><a href="../reference/ppv.html">ppv()</a></code> function of the
+resistance, we can use the <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> function of the
 <code>AMRgen</code> package</p>
 </div>
 <div class="section level3">
 <h3 id="identify-markers-or-combination-of-markers-associated-with-resistance">7. Identify markers or combination of markers associated with
 resistance<a class="anchor" aria-label="anchor" href="#identify-markers-or-combination-of-markers-associated-with-resistance"></a>
 </h3>
-<p>The <code><a href="../reference/ppv.html">ppv()</a></code> function calculates the possible combinations
-of markers, and returns the positive predictive value (PPV) for each
-combination (with 95% CI) and the basic plot elements (including
-PPV).</p>
+<p>The <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> function calculates the possible
+combinations of markers, and returns the positive predictive value (PPV)
+for each combination (with 95% CI) and the basic plot elements
+(including PPV).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generate a summary plot of PPV for each solo and combination of markers observed in the mic assay data and order by decreasing ppv value</span></span>
-<span><span class="va">eco_cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">eco_cip_matrix</span>,</span>
+<span><span class="va">eco_cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span><span class="va">eco_cip_matrix</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"ppv"</span></span>
 <span><span class="op">)</span></span>
@@ -537,7 +537,7 @@ these combinations is as follows: No. of markers No.of combinations 2 1
 gyrA_S83L and parC_S80I.</p>
 <p>We can use all this information to refine our concordance
 analysis.</p>
-<p>Note: the <code><a href="../reference/ppv.html">ppv()</a></code> function applies by default a
+<p>Note: the <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> function applies by default a
 <code>min_set_size</code> threshold of 2, meaning that only solo markers
 or marker combinations with at least 2 occurrences in the dataset are
 included in the plots. Nevertheless solo markers or marker combinations
@@ -805,7 +805,7 @@ predicted wrongly, to explore their genotypes.</p>
 <span><span class="va">concordance_cip_log</span><span class="op">$</span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">R_pred</span> <span class="op">!=</span> <span class="va">R</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">R_pred</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Ordering markers by frequency</span></span></code></pre></div>
 <p><img src="Concordance_files/figure-html/logistic_wrong_predictions-1.png" class="r-plt" alt="" width="100%"></p>
 <pre><code><span><span class="co">#&gt; $plot</span></span></code></pre>

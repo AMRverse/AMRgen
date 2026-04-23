@@ -198,9 +198,10 @@ head(DASSIM_geno)
 
 ### 2.4 PPV Analysis of DASSIM dataset
 
-The function [`ppv()`](https://amrgen.org/reference/ppv.md) predicts
-positive predictive value of genetic markers (i.e. genes/mutations) for
-resistance among strains that carry these markers.
+The function [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md)
+predicts positive predictive value of genetic markers
+(i.e. genes/mutations) for resistance among strains that carry these
+markers.
 
 We will look at the markers associated with the antibiotics used in the
 AST assays for the DASSIM study.
@@ -217,13 +218,13 @@ which takes our genotype (AMRfinderplus etc.) and phenotype (AST
 profile) datasets.
 
 We can then plot the PPV graphs using
-[`ppv()`](https://amrgen.org/reference/ppv.md).
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md).
 
 ``` r
 # Get binary matrix
 DASSIM_CHL_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "chloramphenicol", sir_col = "pheno")
 # Plot ppv
-DASSIM_CHL_PPV <- ppv(DASSIM_CHL_bin_mat, pheno_drug = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
+DASSIM_CHL_PPV <- amr_ppv(DASSIM_CHL_bin_mat, pheno_drug = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-5-1.png)
@@ -236,7 +237,7 @@ amikacin and gentamicin.
 
 ``` r
 DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "amikacin", sir_col = "pheno")
-DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_AMK_PPV <- amr_ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-1.png)
@@ -244,7 +245,7 @@ DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col = "ph
 ``` r
 
 DASSIM_GEN_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "gentamicin", sir_col = "pheno")
-DASSIM_GEN_PPV <- ppv(DASSIM_GEN_bin_mat, pheno_drug = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_GEN_PPV <- amr_ppv(DASSIM_GEN_bin_mat, pheno_drug = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-2.png)
@@ -263,7 +264,7 @@ sulfonamides predict resistance to co-trimoxazole.
 
 ``` r
 DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "cotrimoxazole", sir_col = "pheno")
-DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, pheno_drug = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_SXT_PPV <- amr_ppv(DASSIM_SXT_bin_mat, pheno_drug = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-1.png)
@@ -276,17 +277,17 @@ combination drug it requires both Sulfamethoxazole resistance genes
 (e.g., *sul*) and Trimethoprim resistance genes (e.g., *dfrA*).
 
 Meropenem is a last resort carbapenem antibiotic.
-[`ppv()`](https://amrgen.org/reference/ppv.md) by default returns all
-markers associated with beta-lactam resistance, for comparison with
-meropenem phenotypes. However while many beta-lactamases were detected,
-none are known carbapenemases (e.g., *bla_(NDM)*, *bla_(KPC)*,
-*bla_(VIM)*, *bla_(IMP)*, *bla_(OXA-48-like)*). Consistent with this
-only a single isolate, carrying multiple beta-lactamases, was phenotyped
-as resistant to meropenem.
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) by default
+returns all markers associated with beta-lactam resistance, for
+comparison with meropenem phenotypes. However while many beta-lactamases
+were detected, none are known carbapenemases (e.g., *bla_(NDM)*,
+*bla_(KPC)*, *bla_(VIM)*, *bla_(IMP)*, *bla_(OXA-48-like)*). Consistent
+with this only a single isolate, carrying multiple beta-lactamases, was
+phenotyped as resistant to meropenem.
 
 ``` r
 DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "meropenem", sir_col = "pheno")
-DASSIM_MEM_PPV <- ppv(DASSIM_MEM_bin_mat, pheno_drug = "meropenem", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_MEM_PPV <- amr_ppv(DASSIM_MEM_bin_mat, pheno_drug = "meropenem", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-8-1.png)
@@ -590,7 +591,7 @@ MIC of 4 mg/L, and most (n=100) were classed as susceptible (MIC \<16
 mg/L). In contrast, those with full-length *catB3* genes (n=6) had
 higher values, and only 3 were classed as susceptible.
 
-### 3.4 Analysing genotype and phenotype data with `ppv()`
+### 3.4 Analysing genotype and phenotype data with `amr_ppv()`
 
 Now let’s look at the geno-pheno associations across all the isolates
 with matched data. We first build a binary matrix using the genotype and
@@ -599,7 +600,7 @@ phenotype tables as input with
 
 Then we can view it as an upset grid, with a upset plot, SIR stacked
 barplot and positive predictive value (ppv) using the
-[`ppv()`](https://amrgen.org/reference/ppv.md) function.
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) function.
 
 ``` r
 MB_CHLR_geno <- MB_CHLR_geno %>%
@@ -613,7 +614,7 @@ CHL_bin_mat <- get_binary_matrix(MB_CHLR_geno,
   keep_assay_values = TRUE
 )
 
-CHL_PPV <- ppv(CHL_bin_mat,
+CHL_PPV <- amr_ppv(CHL_bin_mat,
   pheno_drug = "Chloramphenicol",
   geno_class = c("Phenicols"),
   sir_col = "pheno_clsi",

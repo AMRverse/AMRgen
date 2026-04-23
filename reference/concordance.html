@@ -128,7 +128,7 @@ marker filtering when <code>ppv_threshold</code> is set.</p></dd>
 
 
 <dt id="arg-ppv-results">ppv_results<a class="anchor" aria-label="anchor" href="#arg-ppv-results"></a></dt>
-<dd><p>Output of <code><a href="ppv.html">ppv()</a></code>, required when
+<dd><p>Output of <code><a href="amr_ppv.html">amr_ppv()</a></code>, required when
 <code>prediction_rule = "combo_ppv"</code>. The <code>summary</code> table from this object is
 used to identify marker combinations with PPV &gt;= <code>ppv_threshold</code> for the
 relevant outcome (<code>R.ppv</code> or <code>NWT.ppv</code>). Samples whose marker combination
@@ -195,7 +195,7 @@ p-value-based filters are category/outcome-specific.</p>
 <p>When <code>prediction_col</code> is supplied, all marker filtering and prediction
 generation are bypassed. The named column (0/1-coded) is used directly as
 the genotypic prediction. This is useful when the user has computed a
-custom prediction (e.g. based on marker combinations from <code><a href="ppv.html">ppv()</a></code>) and
+custom prediction (e.g. based on marker combinations from <code><a href="amr_ppv.html">amr_ppv()</a></code>) and
 wants to evaluate concordance metrics against the truth columns.</p>
 <p>When <code>prediction_rule = "combo_ppv"</code>, the function calls <code><a href="get_combo_matrix.html">get_combo_matrix()</a></code>
 internally to derive a combination identifier for each sample. Samples whose
@@ -211,7 +211,7 @@ truly susceptible isolates incorrectly predicted resistant from genotype.</p></l
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>, <code><a href="solo_ppv.html">solo_ppv()</a></code>, <code><a href="amr_logistic.html">amr_logistic()</a></code>, <a href="https://yardstick.tidymodels.org/reference/yardstick-package.html" class="external-link">yardstick::yardstick</a></p></div>
+    <div class="dont-index"><p><code><a href="get_binary_matrix.html">get_binary_matrix()</a></code>, <code><a href="solo_ppv.html">solo_ppv()</a></code>, <code><a href="amr_ppv.html">amr_ppv()</a></code>, <code><a href="amr_logistic.html">amr_logistic()</a></code>, <a href="https://yardstick.tidymodels.org/reference/yardstick-package.html" class="external-link">yardstick::yardstick</a></p></div>
     </div>
 
     <div class="section level2">
@@ -256,8 +256,8 @@ truly susceptible isolates incorrectly predicted resistant from genotype.</p></l
 <span class="r-in"><span>  logreg_results <span class="op">=</span> <span class="va">logreg</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Predict based on marker combinations with PPV &gt;= 0.5 (from ppv())</span></span></span>
-<span class="r-in"><span><span class="va">ppv_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="ppv.html">ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">binary_matrix</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Predict based on marker combinations with PPV &gt;= 0.5 (from amr_ppv())</span></span></span>
+<span class="r-in"><span><span class="va">ppv_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="amr_ppv.html">amr_ppv</a></span><span class="op">(</span>binary_matrix <span class="op">=</span> <span class="va">binary_matrix</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">concordance</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">binary_matrix</span>,</span></span>
 <span class="r-in"><span>  prediction_rule <span class="op">=</span> <span class="st">"combo_ppv"</span>,</span></span>

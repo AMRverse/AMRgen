@@ -9,7 +9,7 @@ recognised by the AMR pkg, to facilitate extracting relevant genotype
 markers for comparison to phenotype data for a specific antibiotic (e.g.
 using `AMRgen` functions
 [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md),
-[`ppv()`](https://amrgen.org/reference/ppv.md),
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md),
 [`amr_upset()`](https://amrgen.org/reference/amr_upset.md) and
 [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md)).
 

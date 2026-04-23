@@ -497,7 +497,7 @@ resistance.</p>
 <h3 id="combinatorial-ppv-analysis-for-kleborate-amr-markers">Combinatorial PPV Analysis for Kleborate AMR Markers<a class="anchor" aria-label="anchor" href="#combinatorial-ppv-analysis-for-kleborate-amr-markers"></a>
 </h3>
 <p>To understand the contribution of AMR markers found in combination
-with one another, we use the <code><a href="../reference/ppv.html">ppv()</a></code> function. The
+with one another, we use the <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> function. The
 <code>plot</code> is a visual summary of each AMR marker combination
 observed in an UpSet plot format, including phenotypic distribution and
 PPVs for each combination. The <code>summary</code> table includes each
@@ -505,7 +505,7 @@ AMR marker combination observed, including number of resistant isolates,
 positive predictive values, and median assay values (and interquartile
 range) where relevant.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">comboPPV_kleborate_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">comboPPV_kleborate_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">kleborate_binary_matrix</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -543,12 +543,12 @@ range) where relevant.</p>
 <div class="section level3">
 <h3 id="upset-plot-for-kleborate-amr-markers">UpSet Plot for Kleborate AMR Markers<a class="anchor" aria-label="anchor" href="#upset-plot-for-kleborate-amr-markers"></a>
 </h3>
-<p>Similar to the previous <code><a href="../reference/ppv.html">ppv()</a></code> function, the
+<p>Similar to the previous <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> function, the
 <code><a href="../reference/amr_upset.html">amr_upset()</a></code> function will generate a <code>summary</code>
 table and <code>plot</code> that shows the combinations of AMR markers
 found in the isolates and their phenotypic distribution. The UpSet
 <code>plot</code> produced by <code><a href="../reference/amr_upset.html">amr_upset()</a></code> is similar to
-that generated using <code><a href="../reference/ppv.html">ppv()</a></code> function, but oriented
+that generated using <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> function, but oriented
 vertically and without the PPV panel. Restricting the plot to marker
 combinations observed at least 3 times in the dataset
 (<code>min_set_size=3</code>) makes it a little easier to see what’s
@@ -1672,7 +1672,7 @@ genomes (using AMRFinderPlus).</p>
 <h3 id="combinatorial-ppv-analysis-for-rgi-amr-markers">Combinatorial PPV Analysis for RGI AMR Markers<a class="anchor" aria-label="anchor" href="#combinatorial-ppv-analysis-for-rgi-amr-markers"></a>
 </h3>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">comboPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">comboPPV_rgi_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">rgi_binary_matrix_prev80</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1966,7 +1966,7 @@ VIM-4:- (identified by RGI).</p>
 Markers<a class="anchor" aria-label="anchor" href="#combinatorial-ppv-analysis-for-amrfinderplus-rgi-kleborate-amr-markers"></a>
 </h3>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">comboPPV_combined_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">comboPPV_combined_mero</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span></span>
 <span>  binary_matrix <span class="op">=</span> <span class="va">combined_binary_matrix</span>,</span>
 <span>  order <span class="op">=</span> <span class="st">"value"</span>,</span>
 <span>  min_set_size <span class="op">=</span> <span class="fl">2</span>,</span>

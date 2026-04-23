@@ -129,7 +129,7 @@
 <span><span class="va">cip_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/amr_upset.html">amr_upset</a></span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span>, assay<span class="op">=</span><span class="st">"mic"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate positive predictive value for individual markers and combinations</span></span>
-<span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ppv.html">ppv</a></span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">cip_ppv</span> <span class="op">&lt;-</span> <span class="fu">ppv</span><span class="op">(</span>binary_matrix<span class="op">=</span><span class="va">soloPPV_cipro</span><span class="op">$</span><span class="va">amr_binary</span>, min_set_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Do logistic regression of ciprofloxacin resistance as a function of presence/absence of quinolone-associated markers</span></span>
 <span><span class="co">#  (for markers observed at least 10 times)</span></span>

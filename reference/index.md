@@ -120,7 +120,8 @@ logistic regression and Firth regression.
   Upset Plot
 - [`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md) : Perform
   Solo PPV Analysis for AMR Markers
-- [`ppv()`](https://amrgen.org/reference/ppv.md) : Generate PPV Plot
+- [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) : Generate PPV
+  Plot
 - [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md) : AMR
   Logistic Regression Analysis
 - [`glm_details()`](https://amrgen.org/reference/glm_details.md) :

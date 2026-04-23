@@ -454,16 +454,17 @@ resistance.
 ### Combinatorial PPV Analysis for Kleborate AMR Markers
 
 To understand the contribution of AMR markers found in combination with
-one another, we use the [`ppv()`](https://amrgen.org/reference/ppv.md)
-function. The `plot` is a visual summary of each AMR marker combination
-observed in an UpSet plot format, including phenotypic distribution and
-PPVs for each combination. The `summary` table includes each AMR marker
-combination observed, including number of resistant isolates, positive
-predictive values, and median assay values (and interquartile range)
-where relevant.
+one another, we use the
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) function. The
+`plot` is a visual summary of each AMR marker combination observed in an
+UpSet plot format, including phenotypic distribution and PPVs for each
+combination. The `summary` table includes each AMR marker combination
+observed, including number of resistant isolates, positive predictive
+values, and median assay values (and interquartile range) where
+relevant.
 
 ``` r
-comboPPV_kleborate_mero <- ppv(
+comboPPV_kleborate_mero <- amr_ppv(
   binary_matrix = kleborate_binary_matrix,
   order = "value",
   min_set_size = 1,
@@ -504,15 +505,17 @@ comboPPV_kleborate_mero$summary
 
 ### UpSet Plot for Kleborate AMR Markers
 
-Similar to the previous [`ppv()`](https://amrgen.org/reference/ppv.md)
-function, the [`amr_upset()`](https://amrgen.org/reference/amr_upset.md)
-function will generate a `summary` table and `plot` that shows the
-combinations of AMR markers found in the isolates and their phenotypic
-distribution. The UpSet `plot` produced by
+Similar to the previous
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) function, the
+[`amr_upset()`](https://amrgen.org/reference/amr_upset.md) function will
+generate a `summary` table and `plot` that shows the combinations of AMR
+markers found in the isolates and their phenotypic distribution. The
+UpSet `plot` produced by
 [`amr_upset()`](https://amrgen.org/reference/amr_upset.md) is similar to
-that generated using [`ppv()`](https://amrgen.org/reference/ppv.md)
-function, but oriented vertically and without the PPV panel. Restricting
-the plot to marker combinations observed at least 3 times in the dataset
+that generated using
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) function, but
+oriented vertically and without the PPV panel. Restricting the plot to
+marker combinations observed at least 3 times in the dataset
 (`min_set_size=3`) makes it a little easier to see what’s going on.
 
 ``` r
@@ -1703,7 +1706,7 @@ soloPPV_amrfp_mero <- solo_ppv(binary_matrix = amrfp_binary_matrix)
 ### Combinatorial PPV Analysis for RGI AMR Markers
 
 ``` r
-comboPPV_rgi_mero <- ppv(
+comboPPV_rgi_mero <- amr_ppv(
   binary_matrix = rgi_binary_matrix_prev80,
   order = "value",
   min_set_size = 2,
@@ -2008,7 +2011,7 @@ VIM-4:- (identified by RGI).
 ### Combinatorial PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR Markers
 
 ``` r
-comboPPV_combined_mero <- ppv(
+comboPPV_combined_mero <- amr_ppv(
   binary_matrix = combined_binary_matrix,
   order = "value",
   min_set_size = 2,

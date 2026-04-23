@@ -465,7 +465,7 @@ head(tet_bin)
 
 ``` r
 # plot positive predictive value for each marker/combination
-tet_ppv <- ppv(tet_bin)
+tet_ppv <- amr_ppv(tet_bin)
 #> Removing 69 rows with no phenotype call
 #> Ordering markers by frequency
 ```

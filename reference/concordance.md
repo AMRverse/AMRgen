@@ -68,9 +68,9 @@ concordance(
 
 - ppv_results:
 
-  Output of [`ppv()`](https://amrgen.org/reference/ppv.md), required
-  when `prediction_rule = "combo_ppv"`. The `summary` table from this
-  object is used to identify marker combinations with PPV \>=
+  Output of [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md),
+  required when `prediction_rule = "combo_ppv"`. The `summary` table
+  from this object is used to identify marker combinations with PPV \>=
   `ppv_threshold` for the relevant outcome (`R.ppv` or `NWT.ppv`).
   Samples whose marker combination matches any passing combination are
   predicted positive.
@@ -160,8 +160,8 @@ When `prediction_col` is supplied, all marker filtering and prediction
 generation are bypassed. The named column (0/1-coded) is used directly
 as the genotypic prediction. This is useful when the user has computed a
 custom prediction (e.g. based on marker combinations from
-[`ppv()`](https://amrgen.org/reference/ppv.md)) and wants to evaluate
-concordance metrics against the truth columns.
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md)) and wants to
+evaluate concordance metrics against the truth columns.
 
 When `prediction_rule = "combo_ppv"`, the function calls
 [`get_combo_matrix()`](https://amrgen.org/reference/get_combo_matrix.md)
@@ -187,6 +187,7 @@ rates are computed internally:
 
 [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md),
 [`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md),
+[`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md),
 [`amr_logistic()`](https://amrgen.org/reference/amr_logistic.md),
 [yardstick::yardstick](https://yardstick.tidymodels.org/reference/yardstick-package.html)
 
@@ -233,8 +234,8 @@ result <- concordance(
   logreg_results = logreg
 )
 
-# Predict based on marker combinations with PPV >= 0.5 (from ppv())
-ppv_res <- ppv(binary_matrix = binary_matrix)
+# Predict based on marker combinations with PPV >= 0.5 (from amr_ppv())
+ppv_res <- amr_ppv(binary_matrix = binary_matrix)
 result <- concordance(
   binary_matrix,
   prediction_rule = "combo_ppv",

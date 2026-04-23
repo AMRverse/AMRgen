@@ -259,9 +259,9 @@ genotypes.</p>
 <div class="section level3">
 <h3 id="ppv-analysis-of-dassim-dataset">2.4 PPV Analysis of DASSIM dataset<a class="anchor" aria-label="anchor" href="#ppv-analysis-of-dassim-dataset"></a>
 </h3>
-<p>The function <code><a href="../reference/ppv.html">ppv()</a></code> predicts positive predictive value of
-genetic markers (i.e. genes/mutations) for resistance among strains that
-carry these markers.</p>
+<p>The function <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> predicts positive predictive
+value of genetic markers (i.e. genes/mutations) for resistance among
+strains that carry these markers.</p>
 <p>We will look at the markers associated with the antibiotics used in
 the AST assays for the DASSIM study.</p>
 <ul>
@@ -274,12 +274,12 @@ the AST assays for the DASSIM study.</p>
 <p>For each of these first we create a binary matrix using
 <code><a href="../reference/get_binary_matrix.html">get_binary_matrix()</a></code> which takes our genotype (AMRfinderplus
 etc.) and phenotype (AST profile) datasets.</p>
-<p>We can then plot the PPV graphs using <code><a href="../reference/ppv.html">ppv()</a></code>.</p>
+<p>We can then plot the PPV graphs using <code><a href="../reference/amr_ppv.html">amr_ppv()</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get binary matrix</span></span>
 <span><span class="va">DASSIM_CHL_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"chloramphenicol"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
 <span><span class="co"># Plot ppv</span></span>
-<span><span class="va">DASSIM_CHL_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_CHL_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"Chloramphenicol"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">DASSIM_CHL_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span><span class="va">DASSIM_CHL_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"Chloramphenicol"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="100%"></p>
 <p>This result clearly shows how the detection of <em>catB3</em> is not
 a good predictor of resistance, whereas the detection of <em>catA2</em>
@@ -288,12 +288,12 @@ is.</p>
 amikacin and gentamicin.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DASSIM_AMK_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"amikacin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
-<span><span class="va">DASSIM_AMK_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_AMK_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"amikacin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">DASSIM_AMK_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span><span class="va">DASSIM_AMK_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"amikacin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="100%"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">DASSIM_GEN_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"gentamicin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
-<span><span class="va">DASSIM_GEN_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_GEN_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"gentamicin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">DASSIM_GEN_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span><span class="va">DASSIM_GEN_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"gentamicin"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-2.png" class="r-plt" alt="" width="100%"></p>
 <p>Here we see many of the aminoglycoside-associated resistance genes
 detected in these genomes are predictive of resistance to gentamicin,
@@ -307,7 +307,7 @@ their deactivating tags.</p>
 sulfonamides predict resistance to co-trimoxazole.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DASSIM_SXT_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"cotrimoxazole"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
-<span><span class="va">DASSIM_SXT_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_SXT_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"cotrimoxazole"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">DASSIM_SXT_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span><span class="va">DASSIM_SXT_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"cotrimoxazole"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Co-trimoxazole is a combination drug made of sulfamethoxazole and
 trimethoprim. It is prescribed prophylactically in Malawi for
@@ -315,18 +315,18 @@ HIV-positive individuals (<a href="https://doi.org/10.1371/journal.pone.0017765"
 al. 2011</a>). Since it is a combination drug it requires both
 Sulfamethoxazole resistance genes (e.g., <em>sul</em>) and Trimethoprim
 resistance genes (e.g., <em>dfrA</em>).</p>
-<p>Meropenem is a last resort carbapenem antibiotic. <code><a href="../reference/ppv.html">ppv()</a></code>
-by default returns all markers associated with beta-lactam resistance,
-for comparison with meropenem phenotypes. However while many
-beta-lactamases were detected, none are known carbapenemases (e.g.,
-<em>bla<sub>NDM</sub></em>, <em>bla<sub>KPC</sub></em>,
-<em>bla<sub>VIM</sub></em>, <em>bla<sub>IMP</sub></em>,
-<em>bla<sub>OXA-48-like</sub></em>). Consistent with this only a single
-isolate, carrying multiple beta-lactamases, was phenotyped as resistant
-to meropenem.</p>
+<p>Meropenem is a last resort carbapenem antibiotic.
+<code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> by default returns all markers associated with
+beta-lactam resistance, for comparison with meropenem phenotypes.
+However while many beta-lactamases were detected, none are known
+carbapenemases (e.g., <em>bla<sub>NDM</sub></em>,
+<em>bla<sub>KPC</sub></em>, <em>bla<sub>VIM</sub></em>,
+<em>bla<sub>IMP</sub></em>, <em>bla<sub>OXA-48-like</sub></em>).
+Consistent with this only a single isolate, carrying multiple
+beta-lactamases, was phenotyped as resistant to meropenem.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DASSIM_MEM_bin_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_binary_matrix.html">get_binary_matrix</a></span><span class="op">(</span><span class="va">DASSIM_geno</span>, <span class="va">DASSIM_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"meropenem"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span><span class="op">)</span></span>
-<span><span class="va">DASSIM_MEM_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">DASSIM_MEM_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"meropenem"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">DASSIM_MEM_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span><span class="va">DASSIM_MEM_bin_mat</span>, pheno_drug <span class="op">=</span> <span class="st">"meropenem"</span>, sir_col <span class="op">=</span> <span class="st">"pheno"</span>, upset_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DeletionVariantsCatB3_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
 <p>This analysis highlights how AMRgen can be used to explore
 genotype/phenotype associations for specific genetic markers related to
@@ -599,15 +599,15 @@ genes (n=6) had higher values, and only 3 were classed as
 susceptible.</p>
 </div>
 <div class="section level3">
-<h3 id="analysing-genotype-and-phenotype-data-with-ppv">3.4 Analysing genotype and phenotype data with
-<code>ppv()</code><a class="anchor" aria-label="anchor" href="#analysing-genotype-and-phenotype-data-with-ppv"></a>
+<h3 id="analysing-genotype-and-phenotype-data-with-amr_ppv">3.4 Analysing genotype and phenotype data with
+<code>amr_ppv()</code><a class="anchor" aria-label="anchor" href="#analysing-genotype-and-phenotype-data-with-amr_ppv"></a>
 </h3>
 <p>Now let’s look at the geno-pheno associations across all the isolates
 with matched data. We first build a binary matrix using the genotype and
 phenotype tables as input with <code><a href="../reference/get_binary_matrix.html">get_binary_matrix()</a></code></p>
 <p>Then we can view it as an upset grid, with a upset plot, SIR stacked
-barplot and positive predictive value (ppv) using the <code><a href="../reference/ppv.html">ppv()</a></code>
-function.</p>
+barplot and positive predictive value (ppv) using the
+<code><a href="../reference/amr_ppv.html">amr_ppv()</a></code> function.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">MB_CHLR_geno</span> <span class="op">&lt;-</span> <span class="va">MB_CHLR_geno</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>marker <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">marker</span> <span class="op">==</span> <span class="st">"catB3"</span> <span class="op">&amp;</span> <span class="va">`% Coverage of reference`</span> <span class="op">&lt;</span> <span class="fl">100</span>, <span class="st">"catB3 (truncated)"</span>, <span class="va">marker</span><span class="op">)</span><span class="op">)</span></span>
@@ -620,7 +620,7 @@ function.</p>
 <span>  keep_assay_values <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">CHL_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ppv.html">ppv</a></span><span class="op">(</span><span class="va">CHL_bin_mat</span>,</span>
+<span><span class="va">CHL_PPV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_ppv.html">amr_ppv</a></span><span class="op">(</span><span class="va">CHL_bin_mat</span>,</span>
 <span>  pheno_drug <span class="op">=</span> <span class="st">"Chloramphenicol"</span>,</span>
 <span>  geno_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Phenicols"</span><span class="op">)</span>,</span>
 <span>  sir_col <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span>

@@ -1244,6 +1244,8 @@ soloPPV_cipro$amr_binary
 So far we have considered only the impact of individual markers, and
 their association with categorical S/I/R or WT/NWT calls.
 
+#### UpSet plots
+
 The function [`amr_upset()`](https://amrgen.org/reference/amr_upset.md)
 takes as binary matrix table `cip_bin` summarising ciprofloxacin
 resistance vs quinolone markers, generated using
@@ -1301,4 +1303,93 @@ cipro_mic_upset$summary
 #> #   median_excludeRangeValues <dbl>, q25_excludeRangeValues <dbl>,
 #> #   q75_excludeRangeValues <dbl>, n_excludeRangeValues <int>,
 #> #   median_ignoreRanges <dbl>, q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
+```
+
+#### PPV plots
+
+The function [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) uses
+the same underlying approach as
+[`amr_upset()`](https://amrgen.org/reference/amr_upset.md) but
+transposes the orientation of the data so it looks more like the
+[`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md) plot but for
+combinations of markers as well as those found solo.
+
+Like `amr_upset` it takes as binary matrix table `cip_bin` summarising
+ciprofloxacin resistance vs quinolone markers, generated using
+[`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md),
+and creates a multi-panel plot and summary statistics table.
+
+The left-most panel indicates which marker/combinations are shown in
+each row of the plot, either as a list of marker names (default) or as
+an upset-style grid (set upset_grid=`TRUE` to turn this on).
+
+The other panels available are
+
+- category plot: stacked bar plot showing S/I/R calls (ON by default,
+  set plot_category=`FALSE` to turn this off)
+
+- PPV plot: forest-style plot showing point estimates for R/NWT PPV,
+  with horizontal lines indicating 95% confidence intervals (ON by
+  default, set plot_ppv=`FALSE` to turn this off)
+
+- assay plot: boxplot of assay (MIC/disk) values (OFF by default, set
+  plot_assay=`TRUE` and assay=`"mic"` or assay=`"disk"` to turn this on)
+
+The function returns 2 objects:
+
+- `summary`: data frame containing summarising the data associated with
+  each combination of markers
+
+- `plot`: an upset plot showing the distribution of assay values, and
+  breakdown of S/I/R calls, for each observed marker combination
+
+``` r
+# Default plot
+cipro_mic_ppv <- amr_ppv(
+  cip_bin,
+  min_set_size = 10,
+  upset_grid = T
+)
+#> Ordering markers by frequency
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/amr_ppv-1.png)
+
+``` r
+
+# add MIC, remove category plot, label rows with marker list
+cipro_mic_ppv2 <- amr_ppv(
+  cip_bin,
+  min_set_size = 10,
+  upset_grid = F,
+  plot_assay = T, assay = "mic",
+  plot_category = F
+)
+#> Ordering markers by frequency
+```
+
+![](AnalysingGenoPhenoData_files/figure-html/amr_ppv-2.png)
+
+``` r
+
+# Output table
+cipro_mic_ppv$summary
+#> # A tibble: 103 × 14
+#>    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower
+#>    <chr>                     <dbl> <int> <fct>          <dbl>   <dbl>      <dbl>
+#>  1 ""                            0  2590 0_0_0_0_0_0_0…    10 0.00386    0.00147
+#>  2 "qnrB"                        1     1 0_0_0_0_0_0_0…     1 1          1      
+#>  3 "parE_E460K, gyrA…            2     1 0_0_0_0_0_0_0…     1 1          1      
+#>  4 "parE_D475E"                  1    61 0_0_0_0_0_0_0…     0 0          0      
+#>  5 "qnrA1"                       1     2 0_0_0_0_0_0_0…     0 0          0      
+#>  6 "gyrA_S83A"                   1     3 0_0_0_0_0_0_0…     0 0          0      
+#>  7 "qnrB4"                       1     2 0_0_0_0_0_0_0…     2 1          1      
+#>  8 "parE_I355T"                  1    24 0_0_0_0_0_0_0…     0 0          0      
+#>  9 "marR_S3N"                    1    38 0_0_0_0_0_0_0…     4 0.105      0.00769
+#> 10 "marR_S3N, parE_D…            2     4 0_0_0_0_0_0_0…     0 0          0      
+#> # ℹ 93 more rows
+#> # ℹ 7 more variables: R.ci_upper <dbl>, R.denom <int>, NWT.n <dbl>,
+#> #   NWT.ppv <dbl>, NWT.ci_lower <dbl>, NWT.ci_upper <dbl>, NWT.denom <int>
 ```

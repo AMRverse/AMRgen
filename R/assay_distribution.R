@@ -21,12 +21,12 @@
 #' @param measure Name of the column with assay measurements to plot (default "mic").
 #' @param colour_by (optional) String giving the name of a column whose values should be used to colour data points (default `NULL`, which will colour each data point to indicate whether the value is expressed as a range or not).
 #' @param colours (optional) Manual colour scale to use for bar plot. If `NULL`, and `colour_by` variable is of class `sir`, bars will by default be coloured using standard SIR colours.
-#' @param facet_var (optional) String giving the name of a column containing a variable to facet on (default `NULL`).
-#' @param facet_nrow (optional) Number of rows for the facet grid (not used unless `facet_var` is provided).
-#' @param facet_ncol (optional) Number of columns for the facet grid (not used unless `facet_var` is provided).
+#' @param facet_by (optional) String giving the name of a column containing a variable to facet on (default `NULL`).
+#' @param facet_nrow (optional) Number of rows for the facet grid (not used unless `facet_by` is provided).
+#' @param facet_ncol (optional) Number of columns for the facet grid (not used unless `facet_by` is provided).
 #' @param pheno_drug (optional) Name of a drug to filter the `drug` column, and to retrieve breakpoints for.
 #' @param species (optional) Name of species, so we can retrieve breakpoints to print at the top of the plot to help interpret it.
-#' @param boxplot (optional) If `TRUE`, plot the data as a grouped boxplot of assay measures, grouped by the `group_by` variable and coloured by the `colour_by` variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the `group_by` and `facet_var` variables.
+#' @param boxplot (optional) If `TRUE`, plot the data as a grouped boxplot of assay measures, grouped by the `group_by` variable and coloured by the `colour_by` variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the `group_by` and `facet_by` variables.
 #' @param group_by (optional, only used if boxplot=`TRUE`) String giving the name of a column whose values should be used to group boxes by (default `NULL`, in which case the `colour_by` variable will be used for grouping also).
 #' @param bp_site (optional) Breakpoint site to retrieve (only relevant if also supplying `species` and `antibiotic` to retrieve breakpoints, and not supplying breakpoints via `bp_S`, `bp_R`, `ecoff`).
 #' @param bp_S (optional) S breakpoint to plot.
@@ -73,12 +73,12 @@
 #'   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
 #'   measure = "mic", colour_by = "pheno_clsi",
 #'   species = "E. coli", guideline = "CLSI 2025",
-#'   facet_var = "method"
+#'   facet_by = "method"
 #' )
 #'
 #' @export
 assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
-                         colour_by = NULL, colours = NULL, facet_var = NULL,
+                         colour_by = NULL, colours = NULL, facet_by = NULL,
                          bp_site = NULL, bp_S = NULL, bp_R = NULL, bp_ecoff = NULL,
                          species = NULL, guideline = "EUCAST 2025",
                          bp_colours = c(S = "grey", R = "grey", E = "grey"),
@@ -105,9 +105,9 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
     stop(paste0("No '", measure, "' column in input table"))
   }
 
-  if (!is.null(facet_var)) {
-    if (!(facet_var %in% colnames(pheno_table))) {
-      stop(paste0("Facet variable '", facet_var, "' not found in input table"))
+  if (!is.null(facet_by)) {
+    if (!(facet_by %in% colnames(pheno_table))) {
+      stop(paste0("Facet variable '", facet_by, "' not found in input table"))
     }
   }
 
@@ -225,12 +225,12 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         plot_all <- plot_all + scale_fill_manual(values = colours)
       }
 
-      if (!is.null(facet_var)) {
+      if (!is.null(facet_by)) {
         if (is.null(facet_ncol)) {
           facet_ncol <- 1
         }
-        if (pheno_table %>% filter(!is.na(get(facet_var))) %>% nrow() > 0) {
-          plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = facet_ncol, nrow = facet_nrow, scales = "free_y")
+        if (pheno_table %>% filter(!is.na(get(facet_by))) %>% nrow() > 0) {
+          plot_all <- plot_all + facet_wrap(~ get(facet_by), ncol = facet_ncol, nrow = facet_nrow, scales = "free_y")
         }
       }
     } else { # grouped boxplot instead
@@ -255,14 +255,14 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         plot_all <- plot_all + scale_color_sir()
       }
 
-      if (!is.null(facet_var)) {
-        if (pheno_table %>% filter(!is.na(get(facet_var))) %>% nrow() > 0) {
-          plot_all <- plot_all + facet_wrap(~ get(facet_var), ncol = facet_ncol, nrow = facet_nrow)
+      if (!is.null(facet_by)) {
+        if (pheno_table %>% filter(!is.na(get(facet_by))) %>% nrow() > 0) {
+          plot_all <- plot_all + facet_wrap(~ get(facet_by), ncol = facet_ncol, nrow = facet_nrow)
         }
       }
 
       # calculate summary stats
-      if (is.null(facet_var)) {
+      if (is.null(facet_by)) {
         stats <- pheno_table %>%
           group_by(!!sym(group_by)) %>%
           summarise(
@@ -276,7 +276,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
         colnames(stats)[1] <- group_by
       } else {
         stats <- pheno_table %>%
-          group_by(!!sym(group_by), !!sym(facet_var)) %>%
+          group_by(!!sym(group_by), !!sym(facet_by)) %>%
           summarise(
             n = n(),
             median = median(as.numeric(!!sym(measure)), na.rm = TRUE),
@@ -286,7 +286,7 @@ assay_by_var <- function(pheno_table, pheno_drug = NULL, measure = "mic",
           ) %>%
           ungroup()
         colnames(stats)[1] <- group_by
-        colnames(stats)[2] <- facet_var
+        colnames(stats)[2] <- facet_by
       }
     }
 

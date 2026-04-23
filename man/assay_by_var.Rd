@@ -10,7 +10,7 @@ assay_by_var(
   measure = "mic",
   colour_by = NULL,
   colours = NULL,
-  facet_var = NULL,
+  facet_by = NULL,
   bp_site = NULL,
   bp_S = NULL,
   bp_R = NULL,
@@ -23,6 +23,7 @@ assay_by_var(
   colour_legend_label = NULL,
   plot_title = NULL,
   boxplot = FALSE,
+  group_by = NULL,
   facet_nrow = NULL,
   facet_ncol = NULL
 )
@@ -34,11 +35,11 @@ assay_by_var(
 
 \item{measure}{Name of the column with assay measurements to plot (default "mic").}
 
-\item{colour_by}{(optional) Field name containing a variable to colour bars by (default NULL, which will colour each bar to indicate whether the value is expressed as a range or not).}
+\item{colour_by}{(optional) String giving the name of a column whose values should be used to colour data points (default \code{NULL}, which will colour each data point to indicate whether the value is expressed as a range or not).}
 
-\item{colours}{(optional) Manual colour scale to use for bar plot. If NULL, \code{colour_by} variable is of class 'sir', bars will by default be coloured using standard SIR colours.}
+\item{colours}{(optional) Manual colour scale to use for bar plot. If \code{NULL}, and \code{colour_by} variable is of class \code{sir}, bars will by default be coloured using standard SIR colours.}
 
-\item{facet_var}{(optional) Column name containing a variable to facet on (default NULL).}
+\item{facet_by}{(optional) String giving the name of a column containing a variable to facet on (default \code{NULL}).}
 
 \item{bp_site}{(optional) Breakpoint site to retrieve (only relevant if also supplying \code{species} and \code{antibiotic} to retrieve breakpoints, and not supplying breakpoints via \code{bp_S}, \code{bp_R}, \code{ecoff}).}
 
@@ -62,11 +63,13 @@ assay_by_var(
 
 \item{plot_title}{(optional) String to title the plot (default indicates whether MIC or disk distribution is plotted, prefixed with the antibiotic name if provided, e.g. 'Ciprofloxacin MIC distribution')}
 
-\item{boxplot}{(optional) If \code{TRUE}, plot the data as a grouped boxplot of assay measures, grouped and coloured by the \code{colour_by} variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the \code{colour_by} and \code{facet_var} variables.}
+\item{boxplot}{(optional) If \code{TRUE}, plot the data as a grouped boxplot of assay measures, grouped by the \code{group_by} variable and coloured by the \code{colour_by} variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the \code{group_by} and \code{facet_by} variables.}
 
-\item{facet_nrow}{(optional) Number of rows for the facet grid (not used unless \code{facet_var} is provided).}
+\item{group_by}{(optional, only used if boxplot=\code{TRUE}) String giving the name of a column whose values should be used to group boxes by (default \code{NULL}, in which case the \code{colour_by} variable will be used for grouping also).}
 
-\item{facet_ncol}{(optional) Number of columns for the facet grid (not used unless \code{facet_var} is provided).}
+\item{facet_nrow}{(optional) Number of rows for the facet grid (not used unless \code{facet_by} is provided).}
+
+\item{facet_ncol}{(optional) Number of columns for the facet grid (not used unless \code{facet_by} is provided).}
 }
 \value{
 If boxplot=\code{FALSE}, the plot is returned as a single unnamed value. If boxplot=\code{TRUE}, the plot is returned ($plot) along with the summary statistics ($stats).
@@ -106,7 +109,7 @@ assay_by_var(
   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
   species = "E. coli", guideline = "CLSI 2025",
-  facet_var = "method"
+  facet_by = "method"
 )
 
 }

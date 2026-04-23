@@ -19,10 +19,11 @@ amr_upset(
   sir_col = NULL,
   ecoff_col = "ecoff",
   marker_col = "marker",
+  plot_marker_count = TRUE,
   plot_set_size = FALSE,
+  print_set_size = FALSE,
   plot_category = TRUE,
   print_category_counts = FALSE,
-  print_set_size = FALSE,
   boxplot_col = "grey",
   SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
   species = NULL,
@@ -31,7 +32,9 @@ amr_upset(
   bp_S = NULL,
   bp_R = NULL,
   ecoff_bp = NULL,
-  marker_order = NULL
+  marker_order = NULL,
+  plot_title = NULL,
+  plot_subtitle = NULL
 )
 }
 \arguments{
@@ -73,21 +76,23 @@ amr_upset(
 
 \item{marker_col}{A character string specifying the column name in \code{geno_table} containing the marker identifiers. Default \code{"marker"}. Only used if \code{binary_matrix} not provided.}
 
+\item{plot_marker_count}{Logical indicating whether to include a bar plot showing the frequency of each marker. Default is \code{TRUE}.}
+
 \item{plot_set_size}{Logical indicating whether to include a bar plot showing the set size (i.e., number of times each combination of markers is observed). Default is \code{FALSE}.}
+
+\item{print_set_size}{Logical indicating whether, if \code{plot_set_size=TRUE}, to print the number of strains with each marker combination on the plot. Default is \code{FALSE}.}
 
 \item{plot_category}{Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the \code{pheno} column in the input file). Default is \code{TRUE}.}
 
 \item{print_category_counts}{Logical indicating whether, if \code{plot_category=TRUE}, to print the number of strains in each resistance category for each marker combination in the plot. Default is \code{FALSE}.}
 
-\item{print_set_size}{Logical indicating whether, if \code{plot_set_size=TRUE}, to print the number of strains with each marker combination on the plot. Default is \code{FALSE}.}
-
 \item{boxplot_col}{Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is \code{"grey"}.}
 
 \item{SIR_col}{A named vector of colours for the percentage bar plot. The names should be the phenotype categories (e.g., \code{"R"}, \code{"I"}, \code{"S"}), and the values should be valid colour names or hexadecimal colour codes. Default values are those used in the AMR package \code{\link[AMR:plot]{AMR::scale_colour_sir()}}.}
 
-\item{species}{Optional. Species name used for breakpoint lookup.}
+\item{species}{(Optional) Species name used for breakpoint lookup.}
 
-\item{bp_site}{Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.}
+\item{bp_site}{(Optional) Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.}
 
 \item{guideline}{Guideline used for breakpoint lookup. Default is \code{"EUCAST 2025"}.}
 
@@ -103,6 +108,10 @@ amr_upset(
 \item \code{"alpha"}: order markers alphabetically
 \item \verb{character vector}: vector of markers in the order in which they should appear
 }}
+
+\item{plot_title}{(Optional) A character string specifying a title for the plot. Default \code{NULL}, in which case a default title is constructed of the form \verb{paste(pheno_drug, "MIC"/"Disk", "Distribution"). Set to }""` to remove title entirely.}
+
+\item{plot_subtitle}{(Optional) A character string specifying a subtitle for the plot. Default \code{NULL}, in which case default subtitle will be constructed: \code{paste("vs markers for", paste0(geno_class, collapse = ", "))}. Set to \code{""} to remove subtitle entirely.}
 }
 \value{
 A list containing the following elements:

@@ -169,10 +169,10 @@ assay_by_var(pheno_table = salm_ast, pheno_drug = "Moxifloxacin", measure = "mic
 While these plots show the MIC distributions of all isolates in our dataset, we can break this down further by isolation source (human, animal, other) and by *S. enterica* serovar. This can be done in a few different ways, notably by faceting and/or by modifying the colour variable.
 
 ### Phenotype distributions by categorical variable
-The `assay_by_var` function can separate plots by an additional categorical variable by specifying `facet_var` within the function. For example, we can split the ciprofloxacin plot by isolation source like this:
+The `assay_by_var` function can separate plots by an additional categorical variable by specifying `facet_by` within the function. For example, we can split the ciprofloxacin plot by isolation source like this:
 
-```{r facet_var}
-assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast", facet_var = "Source")
+```{r facet_by}
+assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast", facet_by = "Source")
 ```
 
 Alternatively, because `assay_by_var` is a `ggplot2` function, it can be extended by adding `ggplot2` layers, including `facet_wrap()` for a single faceting variable (to allow more control over how the facets are displayed) or `facet_grid()` to facet on two variables.
@@ -271,7 +271,7 @@ mic_boxplot_by_marker_count$stats
 We can also use the `boxplot=TRUE` option in `assay_by_var()` to see the MIC distribution as boxplots, stratified by number of markers. This also summarises the median and interquartile range of MIC values, per marker count so we can quantify as well as visualise the impact of number of mutations on MIC.
 ```{r assay_by_markercount_boxplot_source, warning=FALSE}
 # plot the MIC distributions as boxplots, stratified by number of markers
-mic_boxplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_var = "Source", boxplot = T)
+mic_boxplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_by = "Source", boxplot = T)
 
 mic_boxplot_by_marker_count_source$plot
 ```

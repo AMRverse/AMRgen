@@ -236,8 +236,8 @@ assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = 
 When aggregating AST data from different methods and sources, it is a good idea to check the distributions broken down by method or source. This can be done easily by passing the `assay_by_var()` function a variable name to facet by, which means a separate distribution will be plotted for each value of that variable (e.g. each type of 'method' in our AST test data). Note that this public data from NCBI includes non-standard values in the platform (e.g., `"Sensititre"` / `"Sensititer"`) in the platform.
 
 ``` {r plot_mic_breakpoints_method, fig.height=8}
-# specify facet_var="method" to generate facet plots by assay method
-mic_by_platform <- assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
+# specify facet_by="method" to generate facet plots by assay method
+mic_by_platform <- assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_by = "method")
 
 mic_by_platform
 ```

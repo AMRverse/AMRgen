@@ -550,6 +550,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
 #' @param sir_col A character string specifying the column name in `pheno_table` that contains the resistance interpretation (SIR) data. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. If not provided, the first column prefixed with "phenotype*" will be used if present, otherwise an error is thrown.  Only used if `binary_matrix` not provided.
 #' @param ecoff_col A character string specifying the column name in `pheno_table` that contains resistance interpretations (SIR) made against the ECOFF rather than a clinical breakpoint. The values should be `"S"`, `"I"`, `"R"` or otherwise interpretable by [AMR::as.sir()]. Default `ecoff`. Set to `NULL` if not available.  Only used if `binary_matrix` not provided.
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Default `"marker"`. Only used if `binary_matrix` not provided.
+#' @param plot_marker_count Logical indicating whether to include a bar plot showing the frequency of each marker. Default is `TRUE`.
 #' @param plot_set_size Logical indicating whether to include a bar plot showing the set size (i.e., number of times each combination of markers is observed). Default is `FALSE`.
 #' @param print_set_size Logical indicating whether, if `plot_set_size=TRUE`, to print the number of strains with each marker combination on the plot. Default is `FALSE`.
 #' @param plot_category Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the `pheno` column in the input file). Default is `TRUE`.
@@ -559,13 +560,15 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
 #' @param bp_S (Optional) S breakpoint to add to plot (numerical).
 #' @param bp_R (Optional) R breakpoint to add to plot (numerical).
 #' @param ecoff_bp (Optional) ECOFF breakpoint to add to plot (numerical).
-#' @param species Optional. Species name used for breakpoint lookup.
-#' @param bp_site Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
+#' @param species (Optional) Species name used for breakpoint lookup.
+#' @param bp_site (Optional) Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.
 #' @param guideline Guideline used for breakpoint lookup. Default is `"EUCAST 2025"`.
 #' @param marker_order (optional) A character string or vector indicating the order of the marker rows in the UpSet grid. Options are:
 #' - `"freq"` or `NULL` (default): order markers by decreasing frequency
 #' - `"alpha"`: order markers alphabetically
 #' - `character vector`: vector of markers in the order in which they should appear
+#' @param plot_title (Optional) A character string specifying a title for the plot. Default `NULL`, in which case a default title is constructed of the form `paste(pheno_drug, "MIC"/"Disk", "Distribution"). Set to `""` to remove title entirely.
+#' @param plot_subtitle (Optional) A character string specifying a subtitle for the plot. Default `NULL`, in which case default subtitle will be constructed: `paste("vs markers for", paste0(geno_class, collapse = ", "))`. Set to `""` to remove subtitle entirely.
 #' @importFrom ggplot2 theme theme_bw theme_light element_blank element_text labs scale_y_reverse
 #' @importFrom patchwork plot_layout plot_spacer
 #' @return A list containing the following elements:
@@ -611,15 +614,17 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       marker_col = "marker",
                       plot_marker_count = TRUE,
                       plot_set_size = FALSE,
+                      print_set_size = FALSE,
                       plot_category = TRUE,
-                      print_category_counts = FALSE, print_set_size = FALSE,
+                      print_category_counts = FALSE, 
                       boxplot_col = "grey",
                       SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
                       species = NULL, bp_site = NULL,
                       guideline = "EUCAST 2025",
                       bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
                       marker_order = NULL,
-                      plot_title = NULL, plot_subtitle = NULL) {
+                      plot_title = NULL, 
+                      plot_subtitle = NULL) {
   if (is.null(assay)) {
     stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `ppv()` is more appropriate.")
   } else if (!(assay %in% c("mic", "disk"))) {
@@ -894,6 +899,7 @@ ppv <- function(binary_matrix = NULL,
   )
 
   # assemble plot
+  
   if (upset_grid) {
     final_plot <- combo_data$marker_grid_plot + coord_flip() +
       scale_y_discrete(position = "right") +

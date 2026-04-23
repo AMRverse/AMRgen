@@ -502,7 +502,7 @@ The function returns 2 objects:
 
 * `plot`: an upset plot showing the distribution of assay values, and breakdown of S/I/R calls, for each observed marker combination
 
-``` {r amr_upset, fig.height=8}
+``` {r amr_ppv, fig.height=8}
 # Default plot
 cipro_mic_ppv <- amr_ppv(
   cip_bin,

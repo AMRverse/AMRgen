@@ -403,15 +403,19 @@ combinations with
 
 ``` r
 # Calculate upset plots of MIC distributions vs genotype marker combinations
+# (specify species and drug in order to look up and plot the ecoff)
 azi_upset <- amr_upset(
   binary_matrix = azm_bin,
   assay = "mic",
   min_set_size = 2,
   order = "value",
+  pheno_drug = "azithromycin",
   species = "Neisseria gonorrhoeae"
 )
 #> Removing 306 rows with no phenotype call
 #> Ordering markers by frequency
+#> Error in executing command: Could not determine MIC breakpoints using AMR package, please provide your own breakpoints
+#> Error in executing command: Could not determine MIC breakpoints using AMR package, please provide your own breakpoints
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/azm_upset-1.png)

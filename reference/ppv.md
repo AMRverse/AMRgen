@@ -39,7 +39,9 @@ ppv(
   bp_R = NULL,
   ecoff_bp = NULL,
   pd = position_dodge(width = 0.8),
-  marker_order = NULL
+  marker_order = NULL,
+  plot_title = NULL,
+  plot_subtitle = NULL
 )
 ```
 
@@ -263,6 +265,20 @@ ppv(
 
   - `character vector`: vector of markers in the order in which they
     should appear
+
+- plot_title:
+
+  (Optional) A character string specifying a title for the plot. Default
+  `NULL`, in which case a default title is constructed of the form
+  `paste(pheno_drug, "phenotypes"). Set to `""\` to remove title
+  entirely.
+
+- plot_subtitle:
+
+  (Optional) A character string specifying a subtitle for the plot.
+  Default `NULL`, in which case default subtitle will be constructed:
+  `paste("vs markers for", paste0(geno_class, collapse = ", "))`. Set to
+  `""` to remove subtitle entirely.
 
 ## Value
 

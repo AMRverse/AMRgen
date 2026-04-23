@@ -68,7 +68,9 @@
 <span>  bp_R <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ecoff_bp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pd <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">position_dodge</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span>,</span>
-<span>  marker_order <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  marker_order <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  plot_title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  plot_subtitle <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -208,6 +210,14 @@
 <li><p><code>"alpha"</code>: order markers alphabetically</p></li>
 <li><p><code>character vector</code>: vector of markers in the order in which they should appear</p></li>
 </ul></dd>
+
+
+<dt id="arg-plot-title">plot_title<a class="anchor" aria-label="anchor" href="#arg-plot-title"></a></dt>
+<dd><p>(Optional) A character string specifying a title for the plot. Default <code>NULL</code>, in which case a default title is constructed of the form <code>paste(pheno_drug, "phenotypes"). Set to </code>""` to remove title entirely.</p></dd>
+
+
+<dt id="arg-plot-subtitle">plot_subtitle<a class="anchor" aria-label="anchor" href="#arg-plot-subtitle"></a></dt>
+<dd><p>(Optional) A character string specifying a subtitle for the plot. Default <code>NULL</code>, in which case default subtitle will be constructed: <code>paste("vs markers for", paste0(geno_class, collapse = ", "))</code>. Set to <code>""</code> to remove subtitle entirely.</p></dd>
 
 </dl></div>
     <div class="section level2">

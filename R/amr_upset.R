@@ -616,14 +616,14 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       plot_set_size = FALSE,
                       print_set_size = FALSE,
                       plot_category = TRUE,
-                      print_category_counts = FALSE, 
+                      print_category_counts = FALSE,
                       boxplot_col = "grey",
                       SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
                       species = NULL, bp_site = NULL,
                       guideline = "EUCAST 2025",
                       bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
                       marker_order = NULL,
-                      plot_title = NULL, 
+                      plot_title = NULL,
                       plot_subtitle = NULL) {
   if (is.null(assay)) {
     stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `ppv()` is more appropriate.")
@@ -681,7 +681,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
       plot_title <- paste(pheno_drug, plot_title)
     }
   }
-  if (!is.null(geno_class)) {
+  if (is.null(plot_subtitle) & !is.null(geno_class)) {
     plot_subtitle <- paste("vs markers for", paste0(geno_class, collapse = ", "))
   }
 
@@ -723,7 +723,8 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
   }
 
   if (plot_marker_count) {
-    marker_plot <- combo_data$marker_count_plot + theme(axis.text.y = element_blank(), axis.title.y = element_blank(), axis.ticks.y = element_blank())
+    marker_plot <- combo_data$marker_count_plot +
+      theme(axis.text.y = element_blank(), axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 60, hjust = 1))
     if (plot_category & plot_set_size) {
       left_plot <- plot_spacer() /
         plot_spacer() /
@@ -802,6 +803,8 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' - `"freq"` or `NULL` (default): order markers by decreasing frequency
 #' - `"alpha"`: order markers alphabetically
 #' - `character vector`: vector of markers in the order in which they should appear
+#' @param plot_title (Optional) A character string specifying a title for the plot. Default `NULL`, in which case a default title is constructed of the form `paste(pheno_drug, "phenotypes"). Set to `""` to remove title entirely.
+#' @param plot_subtitle (Optional) A character string specifying a subtitle for the plot. Default `NULL`, in which case default subtitle will be constructed: `paste("vs markers for", paste0(geno_class, collapse = ", "))`. Set to `""` to remove subtitle entirely.
 #' @importFrom dplyr distinct filter group_by if_else left_join mutate n pull relocate row_number select summarise ungroup starts_with
 #' @importFrom ggplot2 aes after_stat coord_flip element_blank geom_bar geom_boxplot geom_col geom_point geom_segment geom_text ggplot labs position_fill scale_size_continuous scale_x_discrete scale_y_discrete scale_y_reverse theme theme_bw theme_light ylab scale_x_continuous theme_void guides margin coord_cartesian
 #' @importFrom patchwork plot_layout plot_spacer
@@ -859,7 +862,8 @@ ppv <- function(binary_matrix = NULL,
                 guideline = "EUCAST 2025",
                 bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
                 pd = position_dodge(width = 0.8),
-                marker_order = NULL) {
+                marker_order = NULL,
+                plot_title = NULL, plot_subtitle = NULL) {
   # get binary matrix
   if (is.null(binary_matrix)) {
     message("Generating geno-pheno binary matrix")
@@ -899,7 +903,15 @@ ppv <- function(binary_matrix = NULL,
   )
 
   # assemble plot
-  
+
+  # assay plot title
+  if (is.null(plot_title) & !is.null(pheno_drug)) {
+    plot_title <- paste(pheno_drug, "phenotypes")
+  }
+  if (is.null(plot_subtitle) & !is.null(geno_class)) {
+    plot_subtitle <- paste("vs markers for", paste0(geno_class, collapse = ", "))
+  }
+
   if (upset_grid) {
     final_plot <- combo_data$marker_grid_plot + coord_flip() +
       scale_y_discrete(position = "right") +
@@ -923,6 +935,7 @@ ppv <- function(binary_matrix = NULL,
         plot.margin = margin(5.5, 1, 5.5, 0)
       )
   }
+  final_plot <- final_plot + ggtitle(plot_title, subtitle = plot_subtitle)
 
   if (plot_category) {
     final_plot <- final_plot +

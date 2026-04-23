@@ -275,6 +275,7 @@ autoplot.compare_eucast <- function(object, ...) {
   ggplot(long, aes(x = value, y = count, fill = Source)) +
     geom_col(width = 0.9, position = position_dodge(width = 0.9)) +
     labs(x = "Measurement Value", y = "Density") +
+    theme_bw() +
     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
     scale_fill_manual(values = c("navy", "maroon"))
 }

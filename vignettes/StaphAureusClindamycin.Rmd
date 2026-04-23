@@ -132,7 +132,7 @@ We can see from this analysis that the variants of the markers have different as
 
 ## MIC distribution associated with allelic variants
 We can use the `assay_by_var()` function to visualise the MIC distributions associated with different variants of the same gene. First we need to join the key genotype fields into the phenotype table, and then use `assay_by_var()` to plot MIC assay measures grouped by variant and faceted into one panel per gene, coloured by S/I/R phenotype.
-``` {r}
+``` {r, fig.height=8}
 cli_geno_pheno <- afp_CLI_public %>%
   filter(`variation type` == "Gene presence detected") %>%
   mutate(variant_hit = if_else(exact_match == "",

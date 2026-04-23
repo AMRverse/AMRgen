@@ -35,7 +35,9 @@ ppv(
   bp_R = NULL,
   ecoff_bp = NULL,
   pd = position_dodge(width = 0.8),
-  marker_order = NULL
+  marker_order = NULL,
+  plot_title = NULL,
+  plot_subtitle = NULL
 )
 }
 \arguments{
@@ -116,6 +118,10 @@ ppv(
 \item \code{"alpha"}: order markers alphabetically
 \item \verb{character vector}: vector of markers in the order in which they should appear
 }}
+
+\item{plot_title}{(Optional) A character string specifying a title for the plot. Default \code{NULL}, in which case a default title is constructed of the form \verb{paste(pheno_drug, "phenotypes"). Set to }""` to remove title entirely.}
+
+\item{plot_subtitle}{(Optional) A character string specifying a subtitle for the plot. Default \code{NULL}, in which case default subtitle will be constructed: \code{paste("vs markers for", paste0(geno_class, collapse = ", "))}. Set to \code{""} to remove subtitle entirely.}
 }
 \value{
 A list containing the following elements:

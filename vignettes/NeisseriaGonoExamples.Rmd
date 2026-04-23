@@ -336,10 +336,10 @@ azm_solo_ppv <- solo_ppv(
 
 Only known mutations in the *23S* rDNA gene are associated with MIC increases sufficient to reach the NWT category (ECOFF > 1 mg/L). Mutations in the *mtrR* gene or its promoter, or the *rplD* G70D mutation alone, do not. PPV > 0.50 indicates that more than 50% of isolates carrying a given marker fall in the NWT category..
 
-Now evaluate PPVs for marker combinations with `ppv()`:
+Now evaluate PPVs for marker combinations with `amr_ppv()`:
 
 ```{r azm_ppv, fig.height=8, warning=FALSE}
-azm_ppv <- ppv(
+azm_ppv <- amr_ppv(
   binary_matrix = azm_bin,
   order = "value",
   min_set_size = 2,
@@ -366,7 +366,7 @@ azm_logist <- amr_logistic(
 
 The regression confirms that *mtrR* G45D, A39T, and A-53del do not contribute to increased azithromycin MICs, while *23S* rDNA mutations do.
 
-Calculate concordance and resistance prediction metrics using results from the logistic regression. The results of the `solo_ppv_analisis()` or `ppv()` functions can be provided to the `ppv_results` parameter.
+Calculate concordance and resistance prediction metrics using results from the logistic regression. The results of the `solo_ppv_analisis()` or `amr_ppv()` functions can be provided to the `ppv_results` parameter.
 
 ```{r azm_concordance, warning=FALSE}
 azm_concordance <- concordance(
@@ -444,7 +444,7 @@ cip_solo_ppv <- solo_ppv(
 Evaluate PPVs for marker combinations:
 
 ```{r cip_ppv, fig.height=8, warning=FALSE}
-cip_ppv <- ppv(
+cip_ppv <- amr_ppv(
   binary_matrix = cip_bin,
   order = "value",
   min_set_size = 2,
@@ -596,7 +596,7 @@ cro_solo_ppv <- solo_ppv(
 Instead, combination PPVs are a more informative metric:
 
 ```{r esc_ppv, fig.height=8, warning=FALSE}
-cfm_ppv <- ppv(
+cfm_ppv <- amr_ppv(
   binary_matrix = cfm_bin,
   min_set_size = 2,
   order = "ppv",
@@ -605,7 +605,7 @@ cfm_ppv <- ppv(
   assay = "mic"
 )
 
-cro_ppv <- ppv(
+cro_ppv <- amr_ppv(
   binary_matrix = cro_bin,
   min_set_size = 1,
   order = "ppv",
@@ -692,7 +692,7 @@ cro_upset_2 <- amr_upset(
 Calculate combination PPVs:
 
 ```{r pbp_ppv, fig.height=8, warning=FALSE}
-cro_ppv_2 <- ppv(
+cro_ppv_2 <- amr_ppv(
   binary_matrix = cro_bin_2,
   min_set_size = 1,
   order = "ppv",
@@ -821,7 +821,7 @@ tet_upset$summary %>%
 Calculate PPVs for marker combinations:
 
 ```{r, fig.height=8, warning=FALSE}
-tet_ppv <- ppv(
+tet_ppv <- amr_ppv(
   binary_matrix = tet_bin,
   min_set_size = 1,
   order = "ppv",

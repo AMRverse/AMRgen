@@ -457,6 +457,7 @@ soloPPV_cipro$amr_binary
 
 So far we have considered only the impact of individual markers, and their association with categorical S/I/R or WT/NWT calls.
 
+### UpSet plots
 The function `amr_upset()` takes as binary matrix table `cip_bin` summarising ciprofloxacin resistance vs quinolone markers, generated using `get_binary_matrix()`, and explores the distribution of MIC or disk diffusion assay values for all observed combinations of markers (solo or multiple markers). It visualises the data in the form of an upset plot, showing the distribution of assay values and S/I/R calls for each observed marker combination, and returns a summary of these distributions (including sample size, median and interquartile range, number and proportion classified as R).
 
 The function returns 2 objects:
@@ -477,4 +478,47 @@ cipro_mic_upset <- amr_upset(
 
 # Output table
 cipro_mic_upset$summary
+```
+
+
+### PPV plots
+The function `amr_ppv()` uses the same underlying approach as `amr_upset()` but transposes the orientation of the data so it looks more like the `solo_ppv()` plot but for combinations of markers as well as those found solo.
+
+Like `amr_upset` it takes as binary matrix table `cip_bin` summarising ciprofloxacin resistance vs quinolone markers, generated using `get_binary_matrix()`, and creates a multi-panel plot and summary statistics table. 
+
+The left-most panel indicates which marker/combinations are shown in each row of the plot, either as a list of marker names (default) or as an upset-style grid (set upset_grid=`TRUE` to turn this on).
+
+The other panels available are
+
+* category plot: stacked bar plot showing S/I/R calls (ON by default, set plot_category=`FALSE` to turn this off)
+
+* PPV plot: forest-style plot showing point estimates for R/NWT PPV, with horizontal lines indicating 95% confidence intervals (ON by default, set plot_ppv=`FALSE` to turn this off)
+
+* assay plot: boxplot of assay (MIC/disk) values (OFF by default, set plot_assay=`TRUE` and assay=`"mic"` or assay=`"disk"` to turn this on)
+
+The function returns 2 objects:
+
+* `summary`: data frame containing summarising the data associated with each combination of markers
+
+* `plot`: an upset plot showing the distribution of assay values, and breakdown of S/I/R calls, for each observed marker combination
+
+``` {r amr_upset, fig.height=8}
+# Default plot
+cipro_mic_ppv <- amr_ppv(
+  cip_bin,
+  min_set_size = 10,
+  upset_grid = T
+)
+
+# add MIC, remove category plot, label rows with marker list
+cipro_mic_ppv2 <- amr_ppv(
+  cip_bin,
+  min_set_size = 10,
+  upset_grid = F,
+  plot_assay = T, assay = "mic",
+  plot_category = F
+)
+
+# Output table
+cipro_mic_ppv$summary
 ```

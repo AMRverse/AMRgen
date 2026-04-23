@@ -16,7 +16,7 @@
 
 #' Generate a Series of Plots for AMR Gene and Combination Analysis
 #'
-#' This internal function generates a set of visualisations to analyse AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The [amr_upset()] and [ppv()] functions can be used to generate standard data visualisations using the component plots.
+#' This internal function generates a set of visualisations to analyse AMR gene combinations, MIC values, and gene prevalence from an input genotype-phenotype binary matrix. It creates several plots, including assay distributions, phenotype breakdown, and positive predictive values for each marker combination. The [amr_upset()] and [amr_ppv()] functions can be used to generate standard data visualisations using the component plots.
 #' @param binary_matrix A data frame containing the original binary matrix output from the [get_binary_matrix()] function. Expected columns are an identifier (column 1, any name), `pheno` (class sir, with S/I/R categories to colour points), `mic` (class mic, with MIC values to plot), and other columns representing gene presence/absence (binary coded, i.e., 1 = present, 0 = absent).
 #' @param min_set_size An integer specifying the minimum size for a gene set to be included in the analysis and plots. Default is 2. Only marker combinations with at least this number of occurrences are included in the plots.
 #' @param order A character string indicating the order of the combinations on the x-axis. Options are:
@@ -594,7 +594,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
 #' # Run upset plot analysis using this binary_matrix
 #' cip_mic_upset <- amr_upset(binary_matrix, assay = "mic")
 #'
-#' # Alternatively, generate binary matrix and run ppv() in one step
+#' # Alternatively, generate binary matrix and run amr_upset() in one step
 #' cip_mic_upset <- amr_upset(
 #'   assay = "mic",
 #'   geno_table = ecoli_geno,
@@ -626,9 +626,9 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       plot_title = NULL,
                       plot_subtitle = NULL) {
   if (is.null(assay)) {
-    stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `ppv()` is more appropriate.")
+    stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `amr_ppv()` is more appropriate.")
   } else if (!(assay %in% c("mic", "disk"))) {
-    stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `ppv()` is more appropriate.")
+    stop("`assay` must be 'mic' or 'disk'.\nIf you don't want to plot assay data, function `amr_ppv()` is more appropriate.")
   }
 
   # get binary matrix
@@ -831,39 +831,39 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
 #' )
 #'
 #' # Run ppv analysis using this binary_matrix
-#' ppv <- ppv(binary_matrix)
+#' ppv <- amr_ppv(binary_matrix)
 #'
 #' # Alternatively, generate binary matrix and run ppv() in one step
-#' ppv <- ppv(
+#' ppv <- amr_ppv(
 #'   geno_table = ecoli_geno,
 #'   pheno_table = ecoli_pheno,
 #'   pheno_drug = "Ciprofloxacin",
 #'   sir_col = "pheno_clsi"
 #' )
 #' }
-ppv <- function(binary_matrix = NULL,
-                min_set_size = 2,
-                order = "ppv",
-                geno_table, pheno_table, pheno_drug = NULL,
-                geno_class = NULL, geno_drug = NULL,
-                geno_sample_col = NULL, pheno_sample_col = NULL,
-                sir_col = NULL, ecoff_col = "ecoff",
-                marker_col = "marker",
-                colours_ppv = c("R" = "maroon", "NWT" = "navy"),
-                SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
-                upset_grid = FALSE,
-                marker_label_space = NULL,
-                plot_category = TRUE,
-                print_category_counts = TRUE,
-                plot_ppv = TRUE,
-                plot_assay = FALSE,
-                assay = NULL,
-                boxplot_col = "grey", species = NULL, bp_site = NULL,
-                guideline = "EUCAST 2025",
-                bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
-                pd = position_dodge(width = 0.8),
-                marker_order = NULL,
-                plot_title = NULL, plot_subtitle = NULL) {
+amr_ppv <- function(binary_matrix = NULL,
+                    min_set_size = 2,
+                    order = "ppv",
+                    geno_table, pheno_table, pheno_drug = NULL,
+                    geno_class = NULL, geno_drug = NULL,
+                    geno_sample_col = NULL, pheno_sample_col = NULL,
+                    sir_col = NULL, ecoff_col = "ecoff",
+                    marker_col = "marker",
+                    colours_ppv = c("R" = "maroon", "NWT" = "navy"),
+                    SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
+                    upset_grid = FALSE,
+                    marker_label_space = NULL,
+                    plot_category = TRUE,
+                    print_category_counts = TRUE,
+                    plot_ppv = TRUE,
+                    plot_assay = FALSE,
+                    assay = NULL,
+                    boxplot_col = "grey", species = NULL, bp_site = NULL,
+                    guideline = "EUCAST 2025",
+                    bp_S = NULL, bp_R = NULL, ecoff_bp = NULL,
+                    pd = position_dodge(width = 0.8),
+                    marker_order = NULL,
+                    plot_title = NULL, plot_subtitle = NULL) {
   # get binary matrix
   if (is.null(binary_matrix)) {
     message("Generating geno-pheno binary matrix")

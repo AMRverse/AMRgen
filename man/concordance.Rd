@@ -38,7 +38,7 @@ PPV threshold when \code{prediction_rule = "combo_ppv"}.}
 \item{solo_ppv_results}{Output of \code{\link[=solo_ppv]{solo_ppv()}}, used for PPV-based
 marker filtering when \code{ppv_threshold} is set.}
 
-\item{ppv_results}{Output of \code{\link[=ppv]{ppv()}}, required when
+\item{ppv_results}{Output of \code{\link[=amr_ppv]{amr_ppv()}}, required when
 \code{prediction_rule = "combo_ppv"}. The \code{summary} table from this object is
 used to identify marker combinations with PPV >= \code{ppv_threshold} for the
 relevant outcome (\code{R.ppv} or \code{NWT.ppv}). Samples whose marker combination
@@ -112,7 +112,7 @@ p-value-based filters are category/outcome-specific.
 When \code{prediction_col} is supplied, all marker filtering and prediction
 generation are bypassed. The named column (0/1-coded) is used directly as
 the genotypic prediction. This is useful when the user has computed a
-custom prediction (e.g. based on marker combinations from \code{\link[=ppv]{ppv()}}) and
+custom prediction (e.g. based on marker combinations from \code{\link[=amr_ppv]{amr_ppv()}}) and
 wants to evaluate concordance metrics against the truth columns.
 
 When \code{prediction_rule = "combo_ppv"}, the function calls \code{\link[=get_combo_matrix]{get_combo_matrix()}}
@@ -172,8 +172,8 @@ result <- concordance(
   logreg_results = logreg
 )
 
-# Predict based on marker combinations with PPV >= 0.5 (from ppv())
-ppv_res <- ppv(binary_matrix = binary_matrix)
+# Predict based on marker combinations with PPV >= 0.5 (from amr_ppv())
+ppv_res <- amr_ppv(binary_matrix = binary_matrix)
 result <- concordance(
   binary_matrix,
   prediction_rule = "combo_ppv",
@@ -195,5 +195,5 @@ result$data \%>\% count(R_pred, pheno)
 }
 }
 \seealso{
-\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv]{solo_ppv()}}, \code{\link[=amr_logistic]{amr_logistic()}}, \link[yardstick:yardstick-package]{yardstick::yardstick}
+\code{\link[=get_binary_matrix]{get_binary_matrix()}}, \code{\link[=solo_ppv]{solo_ppv()}}, \code{\link[=amr_ppv]{amr_ppv()}}, \code{\link[=amr_logistic]{amr_logistic()}}, \link[yardstick:yardstick-package]{yardstick::yardstick}
 }

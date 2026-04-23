@@ -142,7 +142,7 @@ binary_matrix <- get_binary_matrix(
 # Run upset plot analysis using this binary_matrix
 cip_mic_upset <- amr_upset(binary_matrix, assay = "mic")
 
-# Alternatively, generate binary matrix and run ppv() in one step
+# Alternatively, generate binary matrix and run amr_upset() in one step
 cip_mic_upset <- amr_upset(
   assay = "mic",
   geno_table = ecoli_geno,

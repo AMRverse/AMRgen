@@ -143,7 +143,7 @@ head(DASSIM_geno)
 
 ## 2.4 PPV Analysis of DASSIM dataset
 
-The function `ppv()` predicts positive predictive value of genetic markers (i.e. genes/mutations) for resistance among strains that carry these markers. 
+The function `amr_ppv()` predicts positive predictive value of genetic markers (i.e. genes/mutations) for resistance among strains that carry these markers. 
 
 We will look at the markers associated with the antibiotics used in the AST assays for the DASSIM study. 
 
@@ -155,13 +155,13 @@ We will look at the markers associated with the antibiotics used in the AST assa
 
 For each of these first we create a binary matrix using `get_binary_matrix()` which takes our genotype (AMRfinderplus etc.) and phenotype (AST profile) datasets. 
 
-We can then plot the PPV graphs using `ppv()`.
+We can then plot the PPV graphs using `amr_ppv()`.
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 # Get binary matrix
 DASSIM_CHL_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "chloramphenicol", sir_col = "pheno")
 # Plot ppv
-DASSIM_CHL_PPV <- ppv(DASSIM_CHL_bin_mat, pheno_drug = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
+DASSIM_CHL_PPV <- amr_ppv(DASSIM_CHL_bin_mat, pheno_drug = "Chloramphenicol", sir_col = "pheno", upset_grid = FALSE)
 ```
 
 This result clearly shows how the detection of *catB3* is not a good predictor of resistance, whereas the detection of *catA2* is. 
@@ -172,10 +172,10 @@ Now let's check how well aminoglycoside markers predict resistance to amikacin a
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "amikacin", sir_col = "pheno")
-DASSIM_AMK_PPV <- ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_AMK_PPV <- amr_ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col = "pheno", upset_grid = TRUE)
 
 DASSIM_GEN_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "gentamicin", sir_col = "pheno")
-DASSIM_GEN_PPV <- ppv(DASSIM_GEN_bin_mat, pheno_drug = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_GEN_PPV <- amr_ppv(DASSIM_GEN_bin_mat, pheno_drug = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 Here we see many of the aminoglycoside-associated resistance genes detected in these genomes are predictive of resistance to gentamicin, but none are associated with amikacin resistance. This is because amikacin is a semi-synthetic drug with an addition of a specific side chain, called the L-hydroxyaminobutyryl amide (HABA) group. This HABA side chain blocks the Aminoglycoside-Modifying Enzymes (AMEs) from reaching the sites on the molecule where they would normally attach their deactivating tags.
@@ -185,16 +185,16 @@ Now let's check how well markers associated with trimethoprims or sulfonamides p
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "cotrimoxazole", sir_col = "pheno")
-DASSIM_SXT_PPV <- ppv(DASSIM_SXT_bin_mat, pheno_drug = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_SXT_PPV <- amr_ppv(DASSIM_SXT_bin_mat, pheno_drug = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 Co-trimoxazole is a combination drug made of sulfamethoxazole and trimethoprim. It is prescribed prophylactically in Malawi for HIV-positive individuals ([Everett et al. 2011](https://doi.org/10.1371/journal.pone.0017765)). Since it is a combination drug it requires both Sulfamethoxazole resistance genes (e.g., *sul*) and Trimethoprim resistance genes (e.g., *dfrA*).
 
-Meropenem is a last resort carbapenem antibiotic. `ppv()` by default returns all markers associated with beta-lactam resistance, for comparison with meropenem phenotypes. However while many beta-lactamases were detected, none are known carbapenemases (e.g., *bla~NDM~*, *bla~KPC~*, *bla~VIM~*, *bla~IMP~*, *bla~OXA-48-like~*). Consistent with this only a single isolate, carrying multiple beta-lactamases, was phenotyped as resistant to meropenem.
+Meropenem is a last resort carbapenem antibiotic. `amr_ppv()` by default returns all markers associated with beta-lactam resistance, for comparison with meropenem phenotypes. However while many beta-lactamases were detected, none are known carbapenemases (e.g., *bla~NDM~*, *bla~KPC~*, *bla~VIM~*, *bla~IMP~*, *bla~OXA-48-like~*). Consistent with this only a single isolate, carrying multiple beta-lactamases, was phenotyped as resistant to meropenem.
 
 ```{r, fig.width=13, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "meropenem", sir_col = "pheno")
-DASSIM_MEM_PPV <- ppv(DASSIM_MEM_bin_mat, pheno_drug = "meropenem", sir_col = "pheno", upset_grid = TRUE)
+DASSIM_MEM_PPV <- amr_ppv(DASSIM_MEM_bin_mat, pheno_drug = "meropenem", sir_col = "pheno", upset_grid = TRUE)
 ```
 
 This analysis highlights how AMRgen can be used to explore genotype/phenotype associations for specific genetic markers related to a variety of antibiotics. 
@@ -386,11 +386,11 @@ AST_CATB3_pheno_3 %>%
 
 As we can see, isolates with truncated *catB3* genes (n=110) have median MIC of 4 mg/L, and most (n=100) were classed as susceptible (MIC <16 mg/L). In contrast, those with full-length *catB3* genes (n=6) had higher values, and only 3 were classed as susceptible.
 
-## 3.4 Analysing genotype and phenotype data with `ppv()`
+## 3.4 Analysing genotype and phenotype data with `amr_ppv()`
 
 Now let's look at the geno-pheno associations across all the isolates with matched data. We first build a binary matrix using the genotype and phenotype tables as input with `get_binary_matrix()`
 
-Then we can view it as an upset grid, with a upset plot, SIR stacked barplot and positive predictive value (ppv) using the `ppv()` function. 
+Then we can view it as an upset grid, with a upset plot, SIR stacked barplot and positive predictive value (ppv) using the `amr_ppv()` function. 
 
 ```{r, fig.width=10, fig.height=5, error=FALSE, warning=FALSE, message=FALSE}
 MB_CHLR_geno <- MB_CHLR_geno %>%
@@ -404,7 +404,7 @@ CHL_bin_mat <- get_binary_matrix(MB_CHLR_geno,
   keep_assay_values = TRUE
 )
 
-CHL_PPV <- ppv(CHL_bin_mat,
+CHL_PPV <- amr_ppv(CHL_bin_mat,
   pheno_drug = "Chloramphenicol",
   geno_class = c("Phenicols"),
   sir_col = "pheno_clsi",

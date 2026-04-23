@@ -97,7 +97,7 @@ reference:
     contents:
       - amr_upset
       - solo_ppv
-      - ppv
+      - amr_ppv
       - amr_logistic
       - glm_details
       - logistf_details

@@ -252,7 +252,7 @@ head(tet_bin)
 
 ``` {r ppv, fig.height=8}
 # plot positive predictive value for each marker/combination
-tet_ppv <- ppv(tet_bin)
+tet_ppv <- amr_ppv(tet_bin)
 
 tet_ppv$plot
 ```

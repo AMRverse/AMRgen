@@ -53,7 +53,7 @@
 #'   PPV threshold when `prediction_rule = "combo_ppv"`.
 #' @param solo_ppv_results Output of [solo_ppv()], used for PPV-based
 #'   marker filtering when `ppv_threshold` is set.
-#' @param ppv_results Output of [ppv()], required when
+#' @param ppv_results Output of [amr_ppv()], required when
 #'   `prediction_rule = "combo_ppv"`. The `summary` table from this object is
 #'   used to identify marker combinations with PPV >= `ppv_threshold` for the
 #'   relevant outcome (`R.ppv` or `NWT.ppv`). Samples whose marker combination
@@ -83,7 +83,7 @@
 #' When `prediction_col` is supplied, all marker filtering and prediction
 #' generation are bypassed. The named column (0/1-coded) is used directly as
 #' the genotypic prediction. This is useful when the user has computed a
-#' custom prediction (e.g. based on marker combinations from [ppv()]) and
+#' custom prediction (e.g. based on marker combinations from [amr_ppv()]) and
 #' wants to evaluate concordance metrics against the truth columns.
 #'
 #' When `prediction_rule = "combo_ppv"`, the function calls [get_combo_matrix()]
@@ -114,7 +114,7 @@
 #' @importFrom stats predict
 #' @importFrom tibble tibble
 #' @importFrom yardstick conf_mat sens spec ppv npv accuracy kap f_meas
-#' @seealso [get_binary_matrix()], [solo_ppv()], [amr_logistic()], [yardstick]
+#' @seealso [get_binary_matrix()], [solo_ppv()], [amr_ppv()], [amr_logistic()], [yardstick]
 #' @export
 #' @examples
 #' \dontrun{
@@ -157,8 +157,8 @@
 #'   logreg_results = logreg
 #' )
 #'
-#' # Predict based on marker combinations with PPV >= 0.5 (from ppv())
-#' ppv_res <- ppv(binary_matrix = binary_matrix)
+#' # Predict based on marker combinations with PPV >= 0.5 (from amr_ppv())
+#' ppv_res <- amr_ppv(binary_matrix = binary_matrix)
 #' result <- concordance(
 #'   binary_matrix,
 #'   prediction_rule = "combo_ppv",

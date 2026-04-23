@@ -573,7 +573,7 @@ function to explore the MIC distribution stratified by enzyme, and by
 mutation. Setting `boxplot=T` we can view boxplots of MIC, grouped and
 coloured by mutation (setting `colour_by="Omp_mutations"`), and faceted
 to one plotting panel per carbapenemase gene (setting
-`facet_var = "Bla_Carb_acquired"`). This also returns summary stats
+`facet_by = "Bla_Carb_acquired"`). This also returns summary stats
 (median, interquartile range for MIC) stratified by gene and mutation.
 By specifying `species="Klebsiella pneumoniae'`, we can also retrieve
 the clinical breakpoints and ECOFF for meropenem and add these to the
@@ -615,7 +615,7 @@ head(kleborate_dev_wide_mic)
 # this table is now ready to use with assay_by_var, to flexibly explore MIC distribution by genotype
 kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic,
   pheno_drug = "Meropenem", colour_by = "Omp_mutations",
-  facet_var = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
+  facet_by = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
   colour_legend_label = "Porin status", boxplot = T
 )
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
@@ -638,7 +638,7 @@ kleborate_dev_wide_mic_trim <- kleborate_dev_wide_mic %>%
 
 kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic_trim,
   pheno_drug = "Meropenem", colour_by = "Omp_mutations",
-  facet_var = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
+  facet_by = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
   colour_legend_label = "Porin status",
   boxplot = T
 )

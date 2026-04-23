@@ -324,15 +324,15 @@ variable.
 #### Phenotype distributions by categorical variable
 
 The `assay_by_var` function can separate plots by an additional
-categorical variable by specifying `facet_var` within the function. For
+categorical variable by specifying `facet_by` within the function. For
 example, we can split the ciprofloxacin plot by isolation source like
 this:
 
 ``` r
-assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast", facet_var = "Source")
+assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast", facet_by = "Source")
 ```
 
-![](SalmonellaExamples_files/figure-html/facet_var-1.png)
+![](SalmonellaExamples_files/figure-html/facet_by-1.png)
 
 Alternatively, because `assay_by_var` is a `ggplot2` function, it can be
 extended by adding `ggplot2` layers, including
@@ -524,7 +524,7 @@ number of mutations on MIC.
 
 ``` r
 # plot the MIC distributions as boxplots, stratified by number of markers
-mic_boxplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_var = "Source", boxplot = T)
+mic_boxplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_by = "Source", boxplot = T)
 
 mic_boxplot_by_marker_count_source$plot
 ```

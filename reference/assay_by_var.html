@@ -43,7 +43,7 @@
 <span>  measure <span class="op">=</span> <span class="st">"mic"</span>,</span>
 <span>  colour_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  colours <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  facet_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bp_site <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bp_S <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bp_R <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -56,6 +56,7 @@
 <span>  colour_legend_label <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plot_title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  boxplot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  facet_nrow <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  facet_ncol <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -78,15 +79,15 @@
 
 
 <dt id="arg-colour-by">colour_by<a class="anchor" aria-label="anchor" href="#arg-colour-by"></a></dt>
-<dd><p>(optional) Field name containing a variable to colour bars by (default NULL, which will colour each bar to indicate whether the value is expressed as a range or not).</p></dd>
+<dd><p>(optional) String giving the name of a column whose values should be used to colour data points (default <code>NULL</code>, which will colour each data point to indicate whether the value is expressed as a range or not).</p></dd>
 
 
 <dt id="arg-colours">colours<a class="anchor" aria-label="anchor" href="#arg-colours"></a></dt>
-<dd><p>(optional) Manual colour scale to use for bar plot. If NULL, <code>colour_by</code> variable is of class 'sir', bars will by default be coloured using standard SIR colours.</p></dd>
+<dd><p>(optional) Manual colour scale to use for bar plot. If <code>NULL</code>, and <code>colour_by</code> variable is of class <code>sir</code>, bars will by default be coloured using standard SIR colours.</p></dd>
 
 
-<dt id="arg-facet-var">facet_var<a class="anchor" aria-label="anchor" href="#arg-facet-var"></a></dt>
-<dd><p>(optional) Column name containing a variable to facet on (default NULL).</p></dd>
+<dt id="arg-facet-by">facet_by<a class="anchor" aria-label="anchor" href="#arg-facet-by"></a></dt>
+<dd><p>(optional) String giving the name of a column containing a variable to facet on (default <code>NULL</code>).</p></dd>
 
 
 <dt id="arg-bp-site">bp_site<a class="anchor" aria-label="anchor" href="#arg-bp-site"></a></dt>
@@ -134,15 +135,19 @@
 
 
 <dt id="arg-boxplot">boxplot<a class="anchor" aria-label="anchor" href="#arg-boxplot"></a></dt>
-<dd><p>(optional) If <code>TRUE</code>, plot the data as a grouped boxplot of assay measures, grouped and coloured by the <code>colour_by</code> variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the <code>colour_by</code> and <code>facet_var</code> variables.</p></dd>
+<dd><p>(optional) If <code>TRUE</code>, plot the data as a grouped boxplot of assay measures, grouped by the <code>group_by</code> variable and coloured by the <code>colour_by</code> variable. Summary statistics (median, geometric mean, and interquartile range of assay measures) are also computed, stratified by the <code>group_by</code> and <code>facet_by</code> variables.</p></dd>
+
+
+<dt id="arg-group-by">group_by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
+<dd><p>(optional, only used if boxplot=<code>TRUE</code>) String giving the name of a column whose values should be used to group boxes by (default <code>NULL</code>, in which case the <code>colour_by</code> variable will be used for grouping also).</p></dd>
 
 
 <dt id="arg-facet-nrow">facet_nrow<a class="anchor" aria-label="anchor" href="#arg-facet-nrow"></a></dt>
-<dd><p>(optional) Number of rows for the facet grid (not used unless <code>facet_var</code> is provided).</p></dd>
+<dd><p>(optional) Number of rows for the facet grid (not used unless <code>facet_by</code> is provided).</p></dd>
 
 
 <dt id="arg-facet-ncol">facet_ncol<a class="anchor" aria-label="anchor" href="#arg-facet-ncol"></a></dt>
-<dd><p>(optional) Number of columns for the facet grid (not used unless <code>facet_var</code> is provided).</p></dd>
+<dd><p>(optional) Number of columns for the facet grid (not used unless <code>facet_by</code> is provided).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -188,7 +193,7 @@
 <span class="r-in"><span>  pheno_table <span class="op">=</span> <span class="va">ecoli_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span></span>
 <span class="r-in"><span>  measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>,</span></span>
 <span class="r-in"><span>  species <span class="op">=</span> <span class="st">"E. coli"</span>, guideline <span class="op">=</span> <span class="st">"CLSI 2025"</span>,</span></span>
-<span class="r-in"><span>  facet_var <span class="op">=</span> <span class="st">"method"</span></span></span>
+<span class="r-in"><span>  facet_by <span class="op">=</span> <span class="st">"method"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span>
 <span class="r-plt img"><img src="assay_by_var-5.png" alt="" width="700" height="433"></span>

@@ -23,10 +23,11 @@ amr_upset(
   sir_col = NULL,
   ecoff_col = "ecoff",
   marker_col = "marker",
+  plot_marker_count = TRUE,
   plot_set_size = FALSE,
+  print_set_size = FALSE,
   plot_category = TRUE,
   print_category_counts = FALSE,
-  print_set_size = FALSE,
   boxplot_col = "grey",
   SIR_col = c(S = "#3CAEA3", I = "#F6D55C", R = "#ED553B"),
   species = NULL,
@@ -35,7 +36,9 @@ amr_upset(
   bp_S = NULL,
   bp_R = NULL,
   ecoff_bp = NULL,
-  marker_order = NULL
+  marker_order = NULL,
+  plot_title = NULL,
+  plot_subtitle = NULL
 )
 ```
 
@@ -156,11 +159,22 @@ amr_upset(
   containing the marker identifiers. Default `"marker"`. Only used if
   `binary_matrix` not provided.
 
+- plot_marker_count:
+
+  Logical indicating whether to include a bar plot showing the frequency
+  of each marker. Default is `TRUE`.
+
 - plot_set_size:
 
   Logical indicating whether to include a bar plot showing the set size
   (i.e., number of times each combination of markers is observed).
   Default is `FALSE`.
+
+- print_set_size:
+
+  Logical indicating whether, if `plot_set_size=TRUE`, to print the
+  number of strains with each marker combination on the plot. Default is
+  `FALSE`.
 
 - plot_category:
 
@@ -174,12 +188,6 @@ amr_upset(
   Logical indicating whether, if `plot_category=TRUE`, to print the
   number of strains in each resistance category for each marker
   combination in the plot. Default is `FALSE`.
-
-- print_set_size:
-
-  Logical indicating whether, if `plot_set_size=TRUE`, to print the
-  number of strains with each marker combination on the plot. Default is
-  `FALSE`.
 
 - boxplot_col:
 
@@ -196,12 +204,12 @@ amr_upset(
 
 - species:
 
-  Optional. Species name used for breakpoint lookup.
+  (Optional) Species name used for breakpoint lookup.
 
 - bp_site:
 
-  Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving
-  clinical breakpoints.
+  (Optional) Breakpoint site (e.g. "Non-meningitis") used when
+  retrieving clinical breakpoints.
 
 - guideline:
 
@@ -230,6 +238,20 @@ amr_upset(
 
   - `character vector`: vector of markers in the order in which they
     should appear
+
+- plot_title:
+
+  (Optional) A character string specifying a title for the plot. Default
+  `NULL`, in which case a default title is constructed of the form
+  `paste(pheno_drug, "MIC"/"Disk", "Distribution"). Set to `""\` to
+  remove title entirely.
+
+- plot_subtitle:
+
+  (Optional) A character string specifying a subtitle for the plot.
+  Default `NULL`, in which case default subtitle will be constructed:
+  `paste("vs markers for", paste0(geno_class, collapse = ", "))`. Set to
+  `""` to remove subtitle entirely.
 
 ## Value
 

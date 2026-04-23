@@ -598,8 +598,8 @@ NCBI includes non-standard values in the platform (e.g.,
 <code>"Sensititre"</code> / <code>"Sensititer"</code>) in the
 platform.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># specify facet_var="method" to generate facet plots by assay method</span></span>
-<span><span class="va">mic_by_platform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">ecoli_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>, species <span class="op">=</span> <span class="st">"E. coli"</span>, guideline <span class="op">=</span> <span class="st">"CLSI 2025"</span>, facet_var <span class="op">=</span> <span class="st">"method"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># specify facet_by="method" to generate facet plots by assay method</span></span>
+<span><span class="va">mic_by_platform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span>pheno_table <span class="op">=</span> <span class="va">ecoli_pheno</span>, pheno_drug <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>, measure <span class="op">=</span> <span class="st">"mic"</span>, colour_by <span class="op">=</span> <span class="st">"pheno_clsi"</span>, species <span class="op">=</span> <span class="st">"E. coli"</span>, guideline <span class="op">=</span> <span class="st">"CLSI 2025"</span>, facet_by <span class="op">=</span> <span class="st">"method"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 0.25 and R &gt; 1</span></span>
 <span></span>
 <span><span class="va">mic_by_platform</span></span></code></pre></div>

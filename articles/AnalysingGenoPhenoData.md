@@ -586,8 +586,8 @@ NCBI includes non-standard values in the platform (e.g., `"Sensititre"`
 / `"Sensititer"`) in the platform.
 
 ``` r
-# specify facet_var="method" to generate facet plots by assay method
-mic_by_platform <- assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_var = "method")
+# specify facet_by="method" to generate facet plots by assay method
+mic_by_platform <- assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_by = "method")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 
 mic_by_platform

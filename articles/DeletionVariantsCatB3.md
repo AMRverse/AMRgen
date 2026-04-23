@@ -562,7 +562,7 @@ MIC_dist_by_cov <- assay_by_var(
   pheno_drug = "Chloramphenicol",
   measure = "mic",
   colour_by = "pheno_clsi",
-  facet_var = "truncation",
+  facet_by = "truncation",
   measure_axis_label = "MIC (mg/L)",
   colour_legend_label = "Phenotype (CLSI)"
 )

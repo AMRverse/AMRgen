@@ -604,7 +604,7 @@ MIC distribution stratified by enzyme, and by mutation. Setting
 <code>boxplot=T</code> we can view boxplots of MIC, grouped and coloured
 by mutation (setting <code>colour_by="Omp_mutations"</code>), and
 faceted to one plotting panel per carbapenemase gene (setting
-<code>facet_var = "Bla_Carb_acquired"</code>). This also returns summary
+<code>facet_by = "Bla_Carb_acquired"</code>). This also returns summary
 stats (median, interquartile range for MIC) stratified by gene and
 mutation. By specifying <code>species="Klebsiella pneumoniae'</code>, we
 can also retrieve the clinical breakpoints and ECOFF for meropenem and
@@ -645,7 +645,7 @@ add these to the plot.</p>
 <span><span class="co"># this table is now ready to use with assay_by_var, to flexibly explore MIC distribution by genotype</span></span>
 <span><span class="va">kleborate_mic_by_gene_mutation</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">kleborate_dev_wide_mic</span>,</span>
 <span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
-<span>  facet_var <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
+<span>  facet_by <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
 <span>  colour_legend_label <span class="op">=</span> <span class="st">"Porin status"</span>, boxplot <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
@@ -664,7 +664,7 @@ have multiple carbapenemases (n=11), and remove the single CTX gene.</p>
 <span></span>
 <span><span class="va">kleborate_mic_by_gene_mutation</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">kleborate_dev_wide_mic_trim</span>,</span>
 <span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
-<span>  facet_var <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
+<span>  facet_by <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
 <span>  colour_legend_label <span class="op">=</span> <span class="st">"Porin status"</span>,</span>
 <span>  boxplot <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span>

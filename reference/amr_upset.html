@@ -52,10 +52,11 @@
 <span>  sir_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ecoff_col <span class="op">=</span> <span class="st">"ecoff"</span>,</span>
 <span>  marker_col <span class="op">=</span> <span class="st">"marker"</span>,</span>
+<span>  plot_marker_count <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_set_size <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  print_set_size <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  plot_category <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  print_category_counts <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  print_set_size <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  boxplot_col <span class="op">=</span> <span class="st">"grey"</span>,</span>
 <span>  SIR_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>S <span class="op">=</span> <span class="st">"#3CAEA3"</span>, I <span class="op">=</span> <span class="st">"#F6D55C"</span>, R <span class="op">=</span> <span class="st">"#ED553B"</span><span class="op">)</span>,</span>
 <span>  species <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -64,7 +65,9 @@
 <span>  bp_S <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bp_R <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ecoff_bp <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  marker_order <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  marker_order <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  plot_title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  plot_subtitle <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -134,8 +137,16 @@
 <dd><p>A character string specifying the column name in <code>geno_table</code> containing the marker identifiers. Default <code>"marker"</code>. Only used if <code>binary_matrix</code> not provided.</p></dd>
 
 
+<dt id="arg-plot-marker-count">plot_marker_count<a class="anchor" aria-label="anchor" href="#arg-plot-marker-count"></a></dt>
+<dd><p>Logical indicating whether to include a bar plot showing the frequency of each marker. Default is <code>TRUE</code>.</p></dd>
+
+
 <dt id="arg-plot-set-size">plot_set_size<a class="anchor" aria-label="anchor" href="#arg-plot-set-size"></a></dt>
 <dd><p>Logical indicating whether to include a bar plot showing the set size (i.e., number of times each combination of markers is observed). Default is <code>FALSE</code>.</p></dd>
+
+
+<dt id="arg-print-set-size">print_set_size<a class="anchor" aria-label="anchor" href="#arg-print-set-size"></a></dt>
+<dd><p>Logical indicating whether, if <code>plot_set_size=TRUE</code>, to print the number of strains with each marker combination on the plot. Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-plot-category">plot_category<a class="anchor" aria-label="anchor" href="#arg-plot-category"></a></dt>
@@ -144,10 +155,6 @@
 
 <dt id="arg-print-category-counts">print_category_counts<a class="anchor" aria-label="anchor" href="#arg-print-category-counts"></a></dt>
 <dd><p>Logical indicating whether, if <code>plot_category=TRUE</code>, to print the number of strains in each resistance category for each marker combination in the plot. Default is <code>FALSE</code>.</p></dd>
-
-
-<dt id="arg-print-set-size">print_set_size<a class="anchor" aria-label="anchor" href="#arg-print-set-size"></a></dt>
-<dd><p>Logical indicating whether, if <code>plot_set_size=TRUE</code>, to print the number of strains with each marker combination on the plot. Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-boxplot-col">boxplot_col<a class="anchor" aria-label="anchor" href="#arg-boxplot-col"></a></dt>
@@ -159,11 +166,11 @@
 
 
 <dt id="arg-species">species<a class="anchor" aria-label="anchor" href="#arg-species"></a></dt>
-<dd><p>Optional. Species name used for breakpoint lookup.</p></dd>
+<dd><p>(Optional) Species name used for breakpoint lookup.</p></dd>
 
 
 <dt id="arg-bp-site">bp_site<a class="anchor" aria-label="anchor" href="#arg-bp-site"></a></dt>
-<dd><p>Optional. Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.</p></dd>
+<dd><p>(Optional) Breakpoint site (e.g. "Non-meningitis") used when retrieving clinical breakpoints.</p></dd>
 
 
 <dt id="arg-guideline">guideline<a class="anchor" aria-label="anchor" href="#arg-guideline"></a></dt>
@@ -187,6 +194,14 @@
 <li><p><code>"alpha"</code>: order markers alphabetically</p></li>
 <li><p><code>character vector</code>: vector of markers in the order in which they should appear</p></li>
 </ul></dd>
+
+
+<dt id="arg-plot-title">plot_title<a class="anchor" aria-label="anchor" href="#arg-plot-title"></a></dt>
+<dd><p>(Optional) A character string specifying a title for the plot. Default <code>NULL</code>, in which case a default title is constructed of the form <code>paste(pheno_drug, "MIC"/"Disk", "Distribution"). Set to </code>""` to remove title entirely.</p></dd>
+
+
+<dt id="arg-plot-subtitle">plot_subtitle<a class="anchor" aria-label="anchor" href="#arg-plot-subtitle"></a></dt>
+<dd><p>(Optional) A character string specifying a subtitle for the plot. Default <code>NULL</code>, in which case default subtitle will be constructed: <code>paste("vs markers for", paste0(geno_class, collapse = ", "))</code>. Set to <code>""</code> to remove subtitle entirely.</p></dd>
 
 </dl></div>
     <div class="section level2">

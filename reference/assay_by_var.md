@@ -23,7 +23,7 @@ assay_by_var(
   measure = "mic",
   colour_by = NULL,
   colours = NULL,
-  facet_var = NULL,
+  facet_by = NULL,
   bp_site = NULL,
   bp_S = NULL,
   bp_R = NULL,
@@ -36,6 +36,7 @@ assay_by_var(
   colour_legend_label = NULL,
   plot_title = NULL,
   boxplot = FALSE,
+  group_by = NULL,
   facet_nrow = NULL,
   facet_ncol = NULL
 )
@@ -58,20 +59,21 @@ assay_by_var(
 
 - colour_by:
 
-  (optional) Field name containing a variable to colour bars by (default
-  NULL, which will colour each bar to indicate whether the value is
-  expressed as a range or not).
+  (optional) String giving the name of a column whose values should be
+  used to colour data points (default `NULL`, which will colour each
+  data point to indicate whether the value is expressed as a range or
+  not).
 
 - colours:
 
-  (optional) Manual colour scale to use for bar plot. If NULL,
-  `colour_by` variable is of class 'sir', bars will by default be
+  (optional) Manual colour scale to use for bar plot. If `NULL`, and
+  `colour_by` variable is of class `sir`, bars will by default be
   coloured using standard SIR colours.
 
-- facet_var:
+- facet_by:
 
-  (optional) Column name containing a variable to facet on (default
-  NULL).
+  (optional) String giving the name of a column containing a variable to
+  facet on (default `NULL`).
 
 - bp_site:
 
@@ -131,20 +133,27 @@ assay_by_var(
 - boxplot:
 
   (optional) If `TRUE`, plot the data as a grouped boxplot of assay
-  measures, grouped and coloured by the `colour_by` variable. Summary
-  statistics (median, geometric mean, and interquartile range of assay
-  measures) are also computed, stratified by the `colour_by` and
-  `facet_var` variables.
+  measures, grouped by the `group_by` variable and coloured by the
+  `colour_by` variable. Summary statistics (median, geometric mean, and
+  interquartile range of assay measures) are also computed, stratified
+  by the `group_by` and `facet_by` variables.
+
+- group_by:
+
+  (optional, only used if boxplot=`TRUE`) String giving the name of a
+  column whose values should be used to group boxes by (default `NULL`,
+  in which case the `colour_by` variable will be used for grouping
+  also).
 
 - facet_nrow:
 
   (optional) Number of rows for the facet grid (not used unless
-  `facet_var` is provided).
+  `facet_by` is provided).
 
 - facet_ncol:
 
   (optional) Number of columns for the facet grid (not used unless
-  `facet_var` is provided).
+  `facet_by` is provided).
 
 ## Value
 
@@ -191,7 +200,7 @@ assay_by_var(
   pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin",
   measure = "mic", colour_by = "pheno_clsi",
   species = "E. coli", guideline = "CLSI 2025",
-  facet_var = "method"
+  facet_by = "method"
 )
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
 

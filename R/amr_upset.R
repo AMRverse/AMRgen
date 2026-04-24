@@ -30,7 +30,7 @@
 #' - `"mic"` (default): plot MIC data stored in column `mic`
 #' - `"disk"`: plot disk diffusion data stored in column `disk`
 #' - `NULL`: don't plot or summarise assay data
-#' @param print_set_size Logical indicating whether, if `plot_set_size=TRUE`, to print the number of strains with each marker combination on the plot. Default is `FALSE`.
+#' @param print_set_size Logical indicating whether to print the set size directly on the plot, instead of printing axis labels. Default is `TRUE`.
 #' @param print_category_counts Logical indicating whether, if `plot_category=TRUE`, to print the number of strains in each resistance category for each marker combination in the plot. Default is `FALSE`.
 #' @param colours_ppv A named vector of colours for the plot of PPV estimates. The names should be `"R"`, `"I"` and `"NWT"`, and the values should be valid colour names or hexadecimal colour codes.
 #' @param pd A `ggplot2::position_dodge()` object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default is `position_dodge(width = 0.8)`.
@@ -272,46 +272,52 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
       )
   }
   if ("NWT" %in% colnames(binary_matrix_wide)) {
-    summary <- binary_matrix_wide %>%
-      group_by(combination_id) %>%
-      summarise(
-        NWT.n = sum(NWT, na.rm = TRUE),
-        NWT.denom = sum(!is.na(NWT))
-      ) %>%
-      right_join(summary, by = "combination_id") %>%
-      mutate(NWT.ppv = NWT.n / NWT.denom, .after = NWT.n) %>%
-      mutate(NWT.se = sqrt(NWT.ppv * (1 - NWT.ppv) / NWT.denom)) %>%
-      mutate(NWT.ci_upper = pmin(1, NWT.ppv + 1.96 * NWT.se), .after = NWT.ppv) %>%
-      mutate(NWT.ci_lower = pmax(0, NWT.ppv - 1.96 * NWT.se), .after = NWT.ppv) %>%
-      select(-NWT.se)
+    if (sum(!is.na(binary_matrix_wide$NWT)) > 0) {
+      summary <- binary_matrix_wide %>%
+        group_by(combination_id) %>%
+        summarise(
+          NWT.n = sum(NWT, na.rm = TRUE),
+          NWT.denom = sum(!is.na(NWT))
+        ) %>%
+        right_join(summary, by = "combination_id") %>%
+        mutate(NWT.ppv = NWT.n / NWT.denom, .after = NWT.n) %>%
+        mutate(NWT.se = sqrt(NWT.ppv * (1 - NWT.ppv) / NWT.denom)) %>%
+        mutate(NWT.ci_upper = pmin(1, NWT.ppv + 1.96 * NWT.se), .after = NWT.ppv) %>%
+        mutate(NWT.ci_lower = pmax(0, NWT.ppv - 1.96 * NWT.se), .after = NWT.ppv) %>%
+        select(-NWT.se)
+    }
   }
   if ("I" %in% colnames(binary_matrix_wide)) {
-    summary <- binary_matrix_wide %>%
-      group_by(combination_id) %>%
-      summarise(
-        I.n = sum(I, na.rm = TRUE),
-        I.denom = sum(!is.na(I))
-      ) %>%
-      right_join(summary, by = "combination_id") %>%
-      mutate(I.ppv = I.n / I.denom, .after = I.n) %>%
-      mutate(I.se = sqrt(I.ppv * (1 - I.ppv) / I.denom)) %>%
-      mutate(I.ci_upper = pmin(1, I.ppv + 1.96 * I.se), .after = I.ppv) %>%
-      mutate(I.ci_lower = pmax(0, I.ppv - 1.96 * I.se), .after = I.ppv) %>%
-      select(-I.se)
+    if (sum(!is.na(binary_matrix_wide$I)) > 0) {
+      summary <- binary_matrix_wide %>%
+        group_by(combination_id) %>%
+        summarise(
+          I.n = sum(I, na.rm = TRUE),
+          I.denom = sum(!is.na(I))
+        ) %>%
+        right_join(summary, by = "combination_id") %>%
+        mutate(I.ppv = I.n / I.denom, .after = I.n) %>%
+        mutate(I.se = sqrt(I.ppv * (1 - I.ppv) / I.denom)) %>%
+        mutate(I.ci_upper = pmin(1, I.ppv + 1.96 * I.se), .after = I.ppv) %>%
+        mutate(I.ci_lower = pmax(0, I.ppv - 1.96 * I.se), .after = I.ppv) %>%
+        select(-I.se)
+    }
   }
   if ("R" %in% colnames(binary_matrix_wide)) {
-    summary <- binary_matrix_wide %>%
-      group_by(combination_id) %>%
-      summarise(
-        R.n = sum(R, na.rm = TRUE),
-        R.denom = sum(!is.na(R))
-      ) %>%
-      right_join(summary, by = "combination_id") %>%
-      mutate(R.ppv = R.n / R.denom, .after = R.n) %>%
-      mutate(R.se = sqrt(R.ppv * (1 - R.ppv) / R.denom)) %>%
-      mutate(R.ci_upper = pmin(1, R.ppv + 1.96 * R.se), .after = R.ppv) %>%
-      mutate(R.ci_lower = pmax(0, R.ppv - 1.96 * R.se), .after = R.ppv) %>%
-      select(-R.se)
+    if (sum(!is.na(binary_matrix_wide$R)) > 0) {
+      summary <- binary_matrix_wide %>%
+        group_by(combination_id) %>%
+        summarise(
+          R.n = sum(R, na.rm = TRUE),
+          R.denom = sum(!is.na(R))
+        ) %>%
+        right_join(summary, by = "combination_id") %>%
+        mutate(R.ppv = R.n / R.denom, .after = R.n) %>%
+        mutate(R.se = sqrt(R.ppv * (1 - R.ppv) / R.denom)) %>%
+        mutate(R.ci_upper = pmin(1, R.ppv + 1.96 * R.se), .after = R.ppv) %>%
+        mutate(R.ci_lower = pmax(0, R.ppv - 1.96 * R.se), .after = R.ppv) %>%
+        select(-R.se)
+    }
   }
 
   # get names for summary
@@ -347,7 +353,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
         pull(combination_id)
     } else if ("NWT.ppv" %in% colnames(summary)) {
       ordered_comb_order <- summary %>%
-        arrange(R.ppv) %>%
+        arrange(NWT.ppv) %>%
         pull(combination_id)
     }
   }
@@ -447,9 +453,14 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
   g2 <- ggplot(combination_freq, aes(x = combination_id, y = n)) +
     geom_bar(stat = "identity") +
     theme_bw() +
-    scale_x_discrete("group")
+    scale_x_discrete("group") +
+    scale_y_reverse("Set size")
   if (print_set_size) {
-    g2 <- g2 + geom_text(aes(label = n), nudge_y = -.5, size = 3)
+    g2 <- g2 + geom_text(aes(label = n), vjust = 1, size = 3) +
+      theme_void() +
+      scale_y_reverse("Set size",
+        limits = c(0, max(combination_freq$n * 2))
+      ) # make room for labels
   }
 
   # pheno category stacked barplot
@@ -493,6 +504,9 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
     coord_flip() +
     scale_y_reverse("")
 
+  if (print_set_size) {
+    g4 <- g4 + scale_y_reverse("", limits = c(0, max(gene.prev$gene.prev * 1.5)))
+  }
 
   ppv_plot <- summary %>%
     rename(total = n) %>%
@@ -552,7 +566,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
 #' @param marker_col A character string specifying the column name in `geno_table` containing the marker identifiers. Default `"marker"`. Only used if `binary_matrix` not provided.
 #' @param plot_marker_count Logical indicating whether to include a bar plot showing the frequency of each marker. Default is `TRUE`.
 #' @param plot_set_size Logical indicating whether to include a bar plot showing the set size (i.e., number of times each combination of markers is observed). Default is `FALSE`.
-#' @param print_set_size Logical indicating whether, if `plot_set_size=TRUE`, to print the number of strains with each marker combination on the plot. Default is `FALSE`.
+#' @param print_set_size Logical indicating whether to print the set size directly on the plot, instead of printing axis labels. Default is `TRUE`.
 #' @param plot_category Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the `pheno` column in the input file). Default is `TRUE`.
 #' @param print_category_counts Logical indicating whether, if `plot_category=TRUE`, to print the number of strains in each resistance category for each marker combination in the plot. Default is `FALSE`.
 #' @param boxplot_col Colour for lines of the box plots summarising the MIC distribution for each marker combination. Default is `"grey"`.
@@ -570,7 +584,7 @@ combo_stats <- function(binary_matrix, min_set_size = 2,
 #' @param plot_title (Optional) A character string specifying a title for the plot. Default `NULL`, in which case a default title is constructed of the form `paste(pheno_drug, "MIC"/"Disk", "Distribution"). Set to `""` to remove title entirely.
 #' @param plot_subtitle (Optional) A character string specifying a subtitle for the plot. Default `NULL`, in which case default subtitle will be constructed: `paste("vs markers for", paste0(geno_class, collapse = ", "))`. Set to `""` to remove subtitle entirely.
 #' @importFrom ggplot2 theme theme_bw theme_light element_blank element_text labs scale_y_reverse
-#' @importFrom patchwork plot_layout plot_spacer
+#' @importFrom patchwork plot_layout plot_spacer wrap_plots
 #' @return A list containing the following elements:
 #' - `plot`: A grid of plots displaying: (i) grid showing the marker combinations observed, MIC distribution per marker combination, frequency per marker and (optionally) phenotype classification and/or number of samples for each marker combination.
 #' - `binary_matrix`: A copy of the genotype-phenotype binary matrix (either provided as input or generated by the function)
@@ -614,7 +628,7 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
                       marker_col = "marker",
                       plot_marker_count = TRUE,
                       plot_set_size = FALSE,
-                      print_set_size = FALSE,
+                      print_set_size = TRUE,
                       plot_category = TRUE,
                       print_category_counts = FALSE,
                       boxplot_col = "grey",
@@ -668,8 +682,6 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
     marker_order = marker_order
   )
 
-  # assemble plot
-
   # assay plot title
   if (is.null(plot_title)) {
     if (assay == "mic") {
@@ -685,68 +697,103 @@ amr_upset <- function(binary_matrix = NULL, assay = "mic",
     plot_subtitle <- paste("vs markers for", paste0(geno_class, collapse = ", "))
   }
 
-  final_plot <-
+  # tidy component plots
+  assay_plot <-
     combo_data$assay_plot +
     ggtitle(plot_title, subtitle = plot_subtitle) +
     theme(axis.text.x = element_blank(), axis.title.x = element_blank(), axis.ticks.x = element_blank())
 
   if (plot_category) {
-    final_plot <- final_plot +
-      combo_data$category_plot +
+    category_plot <- combo_data$category_plot +
       theme(legend.position = "none") + # legend already done for assay plot
       theme(axis.text.x = element_blank(), axis.title.x = element_blank(), axis.ticks.x = element_blank())
   }
 
-  final_plot <- final_plot +
-    combo_data$marker_grid_plot +
+  grid_plot <- combo_data$marker_grid_plot +
     theme(axis.text.x = element_blank(), axis.title.x = element_blank(), axis.ticks.x = element_blank())
 
   if (plot_set_size) {
-    final_plot <- final_plot +
-      combo_data$setsize_plot +
-      scale_y_reverse("Set size") +
+    setsize_plot <- combo_data$setsize_plot +
       theme(axis.text.x = element_blank(), axis.title.x = element_blank(), axis.ticks.x = element_blank())
   }
 
-  # set relative plotting heights
-  if (plot_category & plot_set_size) {
-    final_plot <- final_plot + plot_layout(heights = c(2, 1, 2, 1), guides = "collect")
-  }
-  if (plot_category & !plot_set_size) {
-    final_plot <- final_plot + plot_layout(heights = c(2, 1, 2), guides = "collect")
-  }
-  if (!plot_category & plot_set_size) {
-    final_plot <- final_plot + plot_layout(heights = c(2, 2, 1))
-  }
-  if (!plot_category & !plot_set_size) {
-    final_plot <- final_plot + plot_layout(heights = c(2, 2))
+  if (plot_marker_count) {
+    if (print_set_size) { # instead of x axis labels
+      marker_plot <- combo_data$marker_count_plot +
+        geom_text(aes(label = gene.prev), hjust = 1, size = 3) +
+        theme_void()
+    } else {
+      marker_plot <- combo_data$marker_count_plot +
+        theme(
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.text.x = element_text(angle = 60, hjust = 1)
+        )
+    }
   }
 
+  # assemble plot
   if (plot_marker_count) {
-    marker_plot <- combo_data$marker_count_plot +
-      theme(axis.text.y = element_blank(), axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(angle = 60, hjust = 1))
     if (plot_category & plot_set_size) {
-      left_plot <- plot_spacer() /
-        plot_spacer() /
-        marker_plot /
-        plot_spacer() +
-        plot_layout(heights = c(2, 1, 2, 1))
+      final_plot <- patchwork::wrap_plots(
+        plot_spacer(), assay_plot,
+        plot_spacer(), category_plot,
+        marker_plot, grid_plot,
+        plot_spacer(), setsize_plot
+      ) +
+        plot_layout(nrow = 4, ncol = 2, widths = c(1, 4), heights = c(2, 1, 2, 1), guides = "collect")
     } else if (plot_category & !plot_set_size) {
-      left_plot <- plot_spacer() /
-        plot_spacer() /
-        marker_plot +
-        plot_layout(heights = c(2, 1, 2))
+      final_plot <- patchwork::wrap_plots(
+        plot_spacer(), assay_plot,
+        plot_spacer(), category_plot,
+        marker_plot, grid_plot
+      ) +
+        plot_layout(nrow = 3, ncol = 2, widths = c(1, 4), heights = c(2, 1, 2), guides = "collect")
     } else if (!plot_category & plot_set_size) {
-      left_plot <- plot_spacer() /
-        marker_plot /
-        plot_spacer() +
-        plot_layout(heights = c(2, 2, 1))
-    } else if (!plot_category & !plot_set_size) {
-      left_plot <- plot_spacer() /
-        marker_plot +
-        plot_layout(heights = c(2, 2))
+      final_plot <- patchwork::wrap_plots(
+        plot_spacer(), assay_plot,
+        marker_plot, grid_plot,
+        plot_spacer(), setsize_plot
+      ) +
+        plot_layout(nrow = 3, ncol = 2, widths = c(1, 4), heights = c(2, 2, 1), guides = "collect")
+    } else {
+      final_plot <- patchwork::wrap_plots(
+        plot_spacer(), assay_plot,
+        marker_plot, grid_plot
+      ) +
+        plot_layout(nrow = 2, ncol = 2, widths = c(1, 4), heights = c(2, 2), guides = "collect")
     }
-    final_plot <- merge(left_plot) + merge(final_plot) + plot_layout(ncol = 2, widths = c(1, 4))
+  } else { # single column layout
+    if (plot_category & plot_set_size) {
+      final_plot <- patchwork::wrap_plots(
+        assay_plot,
+        category_plot,
+        grid_plot,
+        setsize_plot
+      ) +
+        plot_layout(nrow = 4, ncol = 1, heights = c(2, 1, 2, 1), guides = "collect")
+    } else if (plot_category & !plot_set_size) {
+      final_plot <- patchwork::wrap_plots(
+        assay_plot,
+        category_plot,
+        grid_plot
+      ) +
+        plot_layout(nrow = 3, ncol = 1, heights = c(2, 1, 2), guides = "collect")
+    } else if (!plot_category & plot_set_size) {
+      final_plot <- patchwork::wrap_plots(
+        assay_plot,
+        grid_plot,
+        setsize_plot
+      ) +
+        plot_layout(nrow = 3, ncol = 1, heights = c(2, 2, 1), guides = "collect")
+    } else {
+      final_plot <- patchwork::wrap_plots(
+        assay_plot,
+        grid_plot
+      ) +
+        plot_layout(nrow = 2, ncol = 1, heights = c(2, 2), guides = "collect")
+    }
   }
 
   print(final_plot)

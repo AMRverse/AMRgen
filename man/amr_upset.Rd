@@ -21,7 +21,7 @@ amr_upset(
   marker_col = "marker",
   plot_marker_count = TRUE,
   plot_set_size = FALSE,
-  print_set_size = FALSE,
+  print_set_size = TRUE,
   plot_category = TRUE,
   print_category_counts = FALSE,
   boxplot_col = "grey",
@@ -80,7 +80,7 @@ amr_upset(
 
 \item{plot_set_size}{Logical indicating whether to include a bar plot showing the set size (i.e., number of times each combination of markers is observed). Default is \code{FALSE}.}
 
-\item{print_set_size}{Logical indicating whether, if \code{plot_set_size=TRUE}, to print the number of strains with each marker combination on the plot. Default is \code{FALSE}.}
+\item{print_set_size}{Logical indicating whether to print the set size directly on the plot, instead of printing axis labels. Default is \code{TRUE}.}
 
 \item{plot_category}{Logical indicating whether to include a stacked bar plot showing, for each marker combination, the proportion of samples with each phenotype classification (specified by the \code{pheno} column in the input file). Default is \code{TRUE}.}
 

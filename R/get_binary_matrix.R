@@ -75,7 +75,7 @@ get_binary_matrix <- function(geno_table,
                               keep_assay_values_from = c("mic", "disk"),
                               geno_sample_col = NULL,
                               pheno_sample_col = NULL,
-                              sir_col = "pheno_clsi",
+                              sir_col = NULL,
                               ecoff_col = "ecoff",
                               marker_col = "marker",
                               most_resistant = TRUE) {

@@ -104,7 +104,9 @@ utils::globalVariables(c(
   "Freq",
   "Gene symbol",
   "gene",
+  "gene.prev",
   "gene_symbol_col",
+  "genes_list",
   "geno_prediction",
   "get(assay)",
   "get(marker_col)",
@@ -259,8 +261,7 @@ utils::globalVariables(c(
   "user",
   "value",
   "variation type",
-  "x",
-  "genes_list"
+  "x"
 ))
 
 

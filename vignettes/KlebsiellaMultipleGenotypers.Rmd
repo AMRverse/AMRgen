@@ -263,7 +263,7 @@ head(kleborate_dev_wide_mic)
 kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic,
   pheno_drug = "Meropenem", colour_by = "Omp_mutations",
   facet_by = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
-  colour_legend_label = "Porin status", boxplot = T
+  colour_legend_label = "Porin status", boxplot = T, measure_axis_label = "MIC (mg/L)"
 )
 
 kleborate_mic_by_gene_mutation$plot
@@ -280,7 +280,7 @@ kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic_trim,
   pheno_drug = "Meropenem", colour_by = "Omp_mutations",
   facet_by = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
   colour_legend_label = "Porin status",
-  boxplot = T
+  boxplot = T, measure_axis_label = "MIC (mg/L)"
 )
 
 kleborate_mic_by_gene_mutation$plot

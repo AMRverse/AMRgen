@@ -821,13 +821,16 @@ tet_upset$summary %>%
 Calculate PPVs for marker combinations:
 
 ```{r, fig.height=8, warning=FALSE}
+# add species and pheno_drug to retrieve and plot breakpoint
 tet_ppv <- amr_ppv(
   binary_matrix = tet_bin,
   min_set_size = 1,
   order = "ppv",
   upset_grid = TRUE,
   plot_assay = TRUE,
-  assay = "mic"
+  assay = "mic",
+  species = "Neisseria gonorrhoeae",
+  pheno_drug = "Tetracycline"
 )
 ```
 

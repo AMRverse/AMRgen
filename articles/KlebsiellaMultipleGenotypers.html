@@ -557,7 +557,11 @@ going on.</p>
 <code class="sourceCode R"><span><span class="va">kp_mic_upset_kleborate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/amr_upset.html">amr_upset</a></span><span class="op">(</span><span class="va">kleborate_binary_matrix</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"mic"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>, min_set_size <span class="op">=</span> <span class="fl">3</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Ordering markers by frequency</span></span></code></pre></div>
+<span><span class="co">#&gt; Ordering markers by frequency</span></span>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot-1.png" class="r-plt" alt="" width="100%"></p>
 <p>It’s still quite complex to follow the plot and spot patterns, as we
 have carbapenemase genes mixed in with mutations, making it difficult to
@@ -593,7 +597,11 @@ together.</p>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
-<span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span></code></pre></div>
+<span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot_groupins-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
@@ -646,7 +654,7 @@ add these to the plot.</p>
 <span><span class="va">kleborate_mic_by_gene_mutation</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assay_by_var.html">assay_by_var</a></span><span class="op">(</span><span class="va">kleborate_dev_wide_mic</span>,</span>
 <span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
 <span>  facet_by <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
-<span>  colour_legend_label <span class="op">=</span> <span class="st">"Porin status"</span>, boxplot <span class="op">=</span> <span class="cn">T</span></span>
+<span>  colour_legend_label <span class="op">=</span> <span class="st">"Porin status"</span>, boxplot <span class="op">=</span> <span class="cn">T</span>, measure_axis_label <span class="op">=</span> <span class="st">"MIC (mg/L)"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>
@@ -666,7 +674,7 @@ have multiple carbapenemases (n=11), and remove the single CTX gene.</p>
 <span>  pheno_drug <span class="op">=</span> <span class="st">"Meropenem"</span>, colour_by <span class="op">=</span> <span class="st">"Omp_mutations"</span>,</span>
 <span>  facet_by <span class="op">=</span> <span class="st">"Bla_Carb_acquired"</span>, species <span class="op">=</span> <span class="st">"Klebsiella pneumoniae"</span>,</span>
 <span>  colour_legend_label <span class="op">=</span> <span class="st">"Porin status"</span>,</span>
-<span>  boxplot <span class="op">=</span> <span class="cn">T</span></span>
+<span>  boxplot <span class="op">=</span> <span class="cn">T</span>, measure_axis_label <span class="op">=</span> <span class="st">"MIC (mg/L)"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   MIC breakpoints determined using AMR package: S &lt;= 2 and R &gt; 8</span></span>
 <span><span class="co">#&gt;   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).</span></span>

@@ -550,6 +550,10 @@ cipro_mic_upset <- amr_upset(
   order = "value"
 )
 #> Ordering markers by frequency
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](SalmonellaExamples_files/figure-html/amr_upset-1.png)
@@ -571,6 +575,10 @@ cipro_mic_upset_animal <- amr_upset(
   order = "value"
 )
 #> Ordering markers by frequency
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](SalmonellaExamples_files/figure-html/amr_upset_animal_only-1.png)

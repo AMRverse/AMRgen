@@ -523,6 +523,10 @@ kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix,
   assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3
 )
 #> Ordering markers by frequency
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot-1.png)
@@ -564,6 +568,10 @@ kp_mic_upset_kleborate2 <- amr_upset(
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_upset_plot_groupins-1.png)
@@ -619,7 +627,7 @@ head(kleborate_dev_wide_mic)
 kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic,
   pheno_drug = "Meropenem", colour_by = "Omp_mutations",
   facet_by = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
-  colour_legend_label = "Porin status", boxplot = T
+  colour_legend_label = "Porin status", boxplot = T, measure_axis_label = "MIC (mg/L)"
 )
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).
@@ -643,7 +651,7 @@ kleborate_mic_by_gene_mutation <- assay_by_var(kleborate_dev_wide_mic_trim,
   pheno_drug = "Meropenem", colour_by = "Omp_mutations",
   facet_by = "Bla_Carb_acquired", species = "Klebsiella pneumoniae",
   colour_legend_label = "Porin status",
-  boxplot = T
+  boxplot = T, measure_axis_label = "MIC (mg/L)"
 )
 #>   MIC breakpoints determined using AMR package: S <= 2 and R > 8
 #>   NOTE: Multiple breakpoint entries, for different sites: Non-meningitis; Meningitis. Using the one with the highest S breakpoint (Non-meningitis).

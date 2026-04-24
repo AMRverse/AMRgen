@@ -25,7 +25,7 @@ amr_upset(
   marker_col = "marker",
   plot_marker_count = TRUE,
   plot_set_size = FALSE,
-  print_set_size = FALSE,
+  print_set_size = TRUE,
   plot_category = TRUE,
   print_category_counts = FALSE,
   boxplot_col = "grey",
@@ -172,9 +172,8 @@ amr_upset(
 
 - print_set_size:
 
-  Logical indicating whether, if `plot_set_size=TRUE`, to print the
-  number of strains with each marker combination on the plot. Default is
-  `FALSE`.
+  Logical indicating whether to print the set size directly on the plot,
+  instead of printing axis labels. Default is `TRUE`.
 
 - plot_category:
 

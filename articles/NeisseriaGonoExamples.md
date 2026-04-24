@@ -416,6 +416,10 @@ azi_upset <- amr_upset(
 #> Ordering markers by frequency
 #> Error in executing command: Could not determine MIC breakpoints using AMR package, please provide your own breakpoints
 #> Error in executing command: Could not determine MIC breakpoints using AMR package, please provide your own breakpoints
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/azm_upset-1.png)
@@ -608,6 +612,10 @@ cip_upset <- amr_upset(
 #> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 0.032 and R > 0.06
 #>   MIC breakpoints determined using AMR package: S <= 0.032 and R > 0.06
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/cip_binary-1.png)
@@ -845,6 +853,10 @@ cfm_upset <- amr_upset(
 #> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/esc_upset-1.png)
@@ -862,6 +874,9 @@ cro_upset <- amr_upset(
 #> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/esc_upset-2.png)
@@ -1053,6 +1068,10 @@ cro_upset_2 <- amr_upset(
 #> Ordering markers by frequency
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
 #>   MIC breakpoints determined using AMR package: S <= 0.125 and R > 0.125
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/pbp_binary_upset-1.png)
@@ -1203,6 +1222,10 @@ tet_upset <- amr_upset(
   print_category_counts = TRUE
 )
 #> Ordering markers by frequency
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](NeisseriaGonoExamples_files/figure-html/tet_binary_upset-1.png)
@@ -1240,7 +1263,7 @@ Explore marker combinations in the upset summary:
 tet_upset$summary %>%
   arrange(desc(marker_count)) %>%
   filter(grepl("rpsJ_V57M", marker_list))
-#> # A tibble: 13 × 21
+#> # A tibble: 13 × 16
 #>    marker_list          marker_count     n combination_id   R.n R.ppv R.ci_lower
 #>    <chr>                       <dbl> <int> <fct>          <dbl> <dbl>      <dbl>
 #>  1 mtrR_A39T, rpsJ_V57…            4    11 1_1_1_1_0_0       11 1          1    
@@ -1256,8 +1279,7 @@ tet_upset$summary %>%
 #> 11 rpsJ_V57M, tet(M)               2     1 0_1_1_0_0_0        1 1          1    
 #> 12 mtrR_A39T, rpsJ_V57M            2   152 1_1_0_0_0_0      121 0.796      0.732
 #> 13 rpsJ_V57M                       1    97 0_1_0_0_0_0       79 0.814      0.737
-#> # ℹ 14 more variables: R.ci_upper <dbl>, R.denom <int>, NWT.n <dbl>,
-#> #   NWT.ppv <dbl>, NWT.ci_lower <dbl>, NWT.ci_upper <dbl>, NWT.denom <int>,
+#> # ℹ 9 more variables: R.ci_upper <dbl>, R.denom <int>,
 #> #   median_excludeRangeValues <dbl>, q25_excludeRangeValues <dbl>,
 #> #   q75_excludeRangeValues <dbl>, n_excludeRangeValues <int>,
 #> #   median_ignoreRanges <dbl>, q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
@@ -1265,15 +1287,14 @@ tet_upset$summary %>%
 tet_upset$summary %>%
   arrange(desc(marker_count)) %>%
   filter(grepl("tet\\(M\\)", marker_list))
-#> # A tibble: 4 × 21
+#> # A tibble: 4 × 16
 #>   marker_list           marker_count     n combination_id   R.n R.ppv R.ci_lower
 #>   <chr>                        <dbl> <int> <fct>          <dbl> <dbl>      <dbl>
 #> 1 mtrR_A39T, rpsJ_V57M…            4    11 1_1_1_1_0_0       11     1          1
 #> 2 rpsJ_V57M, tet(M), m…            3     1 0_1_1_0_1_0        1     1          1
 #> 3 mtrR_A39T, rpsJ_V57M…            3    21 1_1_1_0_0_0       21     1          1
 #> 4 rpsJ_V57M, tet(M)                2     1 0_1_1_0_0_0        1     1          1
-#> # ℹ 14 more variables: R.ci_upper <dbl>, R.denom <int>, NWT.n <dbl>,
-#> #   NWT.ppv <dbl>, NWT.ci_lower <dbl>, NWT.ci_upper <dbl>, NWT.denom <int>,
+#> # ℹ 9 more variables: R.ci_upper <dbl>, R.denom <int>,
 #> #   median_excludeRangeValues <dbl>, q25_excludeRangeValues <dbl>,
 #> #   q75_excludeRangeValues <dbl>, n_excludeRangeValues <int>,
 #> #   median_ignoreRanges <dbl>, q25_ignoreRanges <dbl>, q75_ignoreRanges <dbl>
@@ -1282,15 +1303,20 @@ tet_upset$summary %>%
 Calculate PPVs for marker combinations:
 
 ``` r
+# add species and pheno_drug to retrieve and plot breakpoint
 tet_ppv <- amr_ppv(
   binary_matrix = tet_bin,
   min_set_size = 1,
   order = "ppv",
   upset_grid = TRUE,
   plot_assay = TRUE,
-  assay = "mic"
+  assay = "mic",
+  species = "Neisseria gonorrhoeae",
+  pheno_drug = "Tetracycline"
 )
 #> Ordering markers by frequency
+#>   MIC breakpoints determined using AMR package: S <= 0.5 and R > 0.5
+#>   MIC breakpoints determined using AMR package: S <= 0.5 and R > 0.5
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```

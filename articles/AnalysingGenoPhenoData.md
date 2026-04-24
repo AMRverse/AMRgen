@@ -1276,6 +1276,10 @@ cipro_mic_upset <- amr_upset(
   order = "value"
 )
 #> Ordering markers by frequency
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 ![](AnalysingGenoPhenoData_files/figure-html/amr_upset-1.png)

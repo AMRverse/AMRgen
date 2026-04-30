@@ -92,6 +92,7 @@ column is not recognized as an `"ab"` object.
 ## Examples
 
 ``` r
+
 summarise_geno(staph_geno_ebi)
 #> $uniques
 #> # A tibble: 5 × 2

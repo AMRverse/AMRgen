@@ -125,6 +125,7 @@ This data is included in the AMRgen package as data object:
 First we set up R and load our libraries.
 
 ``` r
+
 library(AMRgen)
 library(dplyr)
 library(tidyr)
@@ -138,6 +139,7 @@ format, and sequence identifiers imported from `DASSIM_pheno_raw` so we
 can match the phenotype data to the genotypes.
 
 ``` r
+
 # Convert the S/I/R phenotype data to long format for easy use with AMRgen functions
 DASSIM_pheno <- btESBL_pheno %>%
   pivot_longer(
@@ -177,6 +179,7 @@ head(DASSIM_pheno)
 ### 2.3 Check the genotype data
 
 ``` r
+
 head(DASSIM_geno)
 #> # A tibble: 6 × 32
 #>   id          marker      gene  mutation drug drug_class  `variation type` node 
@@ -221,6 +224,7 @@ We can then plot the PPV graphs using
 [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md).
 
 ``` r
+
 # Get binary matrix
 DASSIM_CHL_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "chloramphenicol", sir_col = "pheno")
 # Plot ppv
@@ -236,6 +240,7 @@ Now let’s check how well aminoglycoside markers predict resistance to
 amikacin and gentamicin.
 
 ``` r
+
 DASSIM_AMK_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "amikacin", sir_col = "pheno")
 DASSIM_AMK_PPV <- amr_ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col = "pheno", upset_grid = TRUE)
 ```
@@ -243,6 +248,7 @@ DASSIM_AMK_PPV <- amr_ppv(DASSIM_AMK_bin_mat, pheno_drug = "amikacin", sir_col =
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-6-1.png)
 
 ``` r
+
 
 DASSIM_GEN_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "gentamicin", sir_col = "pheno")
 DASSIM_GEN_PPV <- amr_ppv(DASSIM_GEN_bin_mat, pheno_drug = "gentamicin", sir_col = "pheno", upset_grid = TRUE)
@@ -263,6 +269,7 @@ Now let’s check how well markers associated with trimethoprims or
 sulfonamides predict resistance to co-trimoxazole.
 
 ``` r
+
 DASSIM_SXT_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "cotrimoxazole", sir_col = "pheno")
 DASSIM_SXT_PPV <- amr_ppv(DASSIM_SXT_bin_mat, pheno_drug = "cotrimoxazole", sir_col = "pheno", upset_grid = TRUE)
 ```
@@ -286,6 +293,7 @@ with this only a single isolate, carrying multiple beta-lactamases, was
 phenotyped as resistant to meropenem.
 
 ``` r
+
 DASSIM_MEM_bin_mat <- get_binary_matrix(DASSIM_geno, DASSIM_pheno, pheno_drug = "meropenem", sir_col = "pheno")
 DASSIM_MEM_PPV <- amr_ppv(DASSIM_MEM_bin_mat, pheno_drug = "meropenem", sir_col = "pheno", upset_grid = TRUE)
 ```
@@ -324,6 +332,7 @@ Browser. For more details see the [Analysing Geno-Pheno
 Data](https://amrgen.org/articles/AnalysingGenoPhenoData.html) vignette.
 
 ``` r
+
 # Download E. coli phenotype data from NCBI, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
 ecoli_pheno_ncbi_via_biosample <- download_ncbi_pheno(
   species = "E. coli",
@@ -334,6 +343,7 @@ ecoli_pheno_ncbi_via_biosample <- download_ncbi_pheno(
 ```
 
 ``` r
+
 # Download E. coli AST data from NCBI via Google Cloud, filtering for chloramphenicol, and re-interpret with CLSI breakpoints
 
 install.packages("bigrquery")
@@ -364,6 +374,7 @@ Save this as a `tsv` file: `CHL_Ecoli_asts.tsv`, and import it using the
 AMRgen function `import_pheno`.
 
 ``` r
+
 # import phenotype data
 NCBI_Ecoli_pheno_chl <- import_pheno("data-raw/CHL_Ecoli_asts.tsv", format = "ncbi")
 ```
@@ -372,6 +383,7 @@ A copy of this imported data (downloaded March 2026) is included in
 AMRgen as data frame `NCBI_Ecoli_pheno_chl`.
 
 ``` r
+
 head(NCBI_Ecoli_pheno_chl)
 #> # A tibble: 6 × 25
 #>   id    drug    mic  disk guideline method  platform pheno_provided spp_pheno   
@@ -411,6 +423,7 @@ Save this as a `tsv` file: `CHL-R_Ecoli_microbigge.tsv`, and import it
 using the AMRgen function `import_gheno`.
 
 ``` r
+
 # import phenotype data
 MICROBIGGE_Ecoli_CHLR <- import_geno("data-raw/CHL-R_Ecoli_microbigge.tsv", format = "amrfp", sample_col = "BioSample")
 ```
@@ -419,6 +432,7 @@ A copy of this imported data (downloaded March 2026) is included in
 AMRgen as data frame `MICROBIGGE_Ecoli_CHLR`.
 
 ``` r
+
 head(MICROBIGGE_Ecoli_CHLR)
 #> # A tibble: 6 × 27
 #>   id          marker gene  mutation drug_agent drug_class `variation type` node 
@@ -440,6 +454,7 @@ head(MICROBIGGE_Ecoli_CHLR)
 ### 3.2 Filter data to samples with chloramphenicol phenotype data, and chloramphenicol genotypic markers detected
 
 ``` r
+
 # filter AST data, re-interpret using CLSI breakpoints
 AST_pheno <- NCBI_Ecoli_pheno_chl %>%
   filter(id %in% MICROBIGGE_Ecoli_CHLR$id) %>%
@@ -492,6 +507,7 @@ We visualise the MIC distribution with
 chloramphenicol AST data.
 
 ``` r
+
 AST_pheno <- AST_pheno %>%
   mutate(across(all_of("mic"), ~ AMR::as.mic(.x, round_to_next_log2 = TRUE)))
 
@@ -511,6 +527,7 @@ Next we can visualise the MIC distribution with
 AST data of isolates containing the *catB3* gene only
 
 ``` r
+
 # CATB3 specific
 
 assay_by_var(
@@ -537,6 +554,7 @@ truncation or deletion (see [Graf et al.,
 IS*26* mediated truncation of *catB3*).
 
 ``` r
+
 # add genotype data to the phenotype table for isolates with catB3 alone
 AST_CATB3_pheno_2 <- MB_CATB3_geno %>%
   select(id, gene, `% Coverage of reference`) %>%
@@ -575,6 +593,7 @@ MIC_dist_by_cov
 
 ``` r
 
+
 # check counts and median MIC per group
 AST_CATB3_pheno_3 %>%
   group_by(truncation) %>%
@@ -587,9 +606,10 @@ AST_CATB3_pheno_3 %>%
 ```
 
 As we can see, isolates with truncated *catB3* genes (n=110) have median
-MIC of 4 mg/L, and most (n=100) were classed as susceptible (MIC \<16
-mg/L). In contrast, those with full-length *catB3* genes (n=6) had
-higher values, and only 3 were classed as susceptible.
+MIC of 4 mg/L, and most (n=100) were classed as susceptible (CLSI
+breakpoint ≤8 mg/L; note there are no EUCAST breakpoints). In contrast,
+those with full-length *catB3* genes (n=6) had higher values, and only 3
+were classed as susceptible.
 
 ### 3.4 Analysing genotype and phenotype data with `amr_ppv()`
 
@@ -603,6 +623,7 @@ barplot and positive predictive value (ppv) using the
 [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) function.
 
 ``` r
+
 MB_CHLR_geno <- MB_CHLR_geno %>%
   mutate(marker = ifelse(marker == "catB3" & `% Coverage of reference` < 100, "catB3 (truncated)", marker))
 
@@ -640,6 +661,7 @@ and we can define the antibiotic, the column containing the ecoff and a
 threshold for the number of samples a marker is present in.
 
 ``` r
+
 CHL_logist <- amr_logistic(
   binary_matrix = CHL_bin_mat,
   pheno_drug = "chloramphenicol",
@@ -652,6 +674,7 @@ CHL_logist <- amr_logistic(
 ![](DeletionVariantsCatB3_files/figure-html/unnamed-chunk-15-1.png)
 
 ``` r
+
 
 # model coefficients
 CHL_logist$modelR

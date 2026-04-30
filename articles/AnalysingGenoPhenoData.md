@@ -24,6 +24,7 @@ data files into the right formats to use the same workflow.
 Start by loading the package:
 
 ``` r
+
 library(AMRgen)
 library(dplyr)
 #> 
@@ -46,6 +47,7 @@ and process it to generate an object with the key columns needed to work
 with the `AMRgen` package.
 
 ``` r
+
 # Example AMRFinderPlus genotyping output (from AllTheBacteria project)
 ecoli_geno_raw
 #> # A tibble: 45,228 × 28
@@ -150,6 +152,7 @@ You can summarise the content of a genotype table using the inbuilt
 function.
 
 ``` r
+
 ecoli_geno_summary <- summarise_geno(ecoli_geno)
 
 # Number of unique samples, markers, genes, drugs, classes, and variation types
@@ -187,6 +190,7 @@ beta-lactams… there are 22 different markers with 6,379 hits across
 4,989 of our 5,258 samples.
 
 ``` r
+
 ecoli_geno_summary$drugs
 #> # A tibble: 44 × 6
 #>    drug drug_name                   drug_class       markers samples  hits
@@ -228,6 +232,7 @@ markers detected across 1,065 unique samples) and beta-lactams (22
 unique markers detected across 4,989 unique samples).
 
 ``` r
+
 ecoli_geno_summary$drugs %>% arrange(-markers)
 #> # A tibble: 44 × 6
 #>    drug drug_name       drug_class                markers samples  hits
@@ -253,6 +258,7 @@ this column, we see the most common markers are acrF, blaEC and
 glpT_E448K.
 
 ``` r
+
 ecoli_geno_summary$markers %>% arrange(-n)
 #> # A tibble: 349 × 6
 #>    marker     drug drug_name  drug_class    `variation type`             n
@@ -281,6 +287,7 @@ presence detected” we can that the most common acquired gene was
 aac(6’)-Ib-cr5.
 
 ``` r
+
 # Count the different types of variants found
 ecoli_geno_summary$markers %>%
   filter(drug_class == "Quinolones") %>%
@@ -340,6 +347,7 @@ The [`import_pheno()`](https://amrgen.org/reference/import_pheno.md)
 function imports phenotype data from NCBI or other standard formats.
 
 ``` r
+
 # Example E. coli phenotype data from NCBI
 # This one has already been imported and phenotypes interpreted from assay data
 ecoli_pheno
@@ -388,6 +396,7 @@ input data files into the necessary format, manually and/or with the
 help of the `format_pheno` function.
 
 ``` r
+
 ?import_pheno
 
 ?format_pheno
@@ -455,6 +464,7 @@ You can summarise the content of a phenotype table using the inbuilt
 function.
 
 ``` r
+
 ecoli_pheno_summary <- summarise_pheno(ecoli_pheno, pheno_cols = c("pheno_clsi", "pheno_provided", "ecoff"))
 
 # Number of samples, drugs, species, and methods included in phenotype table
@@ -477,6 +487,7 @@ and the associated number of samples with MIC measures, disk measures,
 both, or neither (S/I/R calls only).
 
 ``` r
+
 # Number of samples with measurements from MIC vs disk vs both or neither, per bug-drug combination
 ecoli_pheno_summary$drugs
 #> # A tibble: 1 × 4
@@ -508,6 +519,7 @@ your data set has sufficient numbers of R vs S, or NWT vs NWT, to be
 informative for downstream analyses of genotypes.
 
 ``` r
+
 ecoli_pheno_summary$pheno_counts_list
 #> $pheno_clsi
 #> # A tibble: 1 × 6
@@ -537,6 +549,7 @@ used to plot the distribution of MIC or disk measurements, coloured by a
 variable.
 
 ``` r
+
 # Example E. coli AST data from NCBI
 
 # Plot MIC distribution, coloured by CLSI S/I/R call
@@ -556,6 +569,7 @@ species and guideline, it can look up the breakpoints and ECOFF and
 annotate these directly on the plot.
 
 ``` r
+
 # Look up breakpoints recorded in the AMR package
 checkBreakpoints(species = "E. coli", guide = "CLSI 2025", antibiotic = "Ciprofloxacin", assay = "MIC")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
@@ -586,6 +600,7 @@ NCBI includes non-standard values in the platform (e.g., `"Sensititre"`
 / `"Sensititer"`) in the platform.
 
 ``` r
+
 # specify facet_by="method" to generate facet plots by assay method
 mic_by_platform <- assay_by_var(pheno_table = ecoli_pheno, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_clsi", species = "E. coli", guideline = "CLSI 2025", facet_by = "method")
 #>   MIC breakpoints determined using AMR package: S <= 0.25 and R > 1
@@ -605,6 +620,7 @@ distributions from EUCAST (mic.eucast.org), and plot them on their own
 or with your data overlaid.
 
 ``` r
+
 # get MIC distribution for ciprofloxacin, for all organisms
 cip_mic_data <- get_eucast_mic_distribution("cipro")
 
@@ -616,6 +632,7 @@ ecoli_cip_disk_data <- get_eucast_disk_distribution("cipro", "E. coli")
 ```
 
 ``` r
+
 # Ciprofloxacin MIC reference distribution for E. coli
 ecoli_cip_mic_data
 #> # A tibble: 19 × 2
@@ -643,6 +660,7 @@ ecoli_cip_mic_data
 ```
 
 ``` r
+
 # Compare reference distribution to example E. coli data
 ecoli_cip <- ecoli_pheno$mic[ecoli_pheno$drug == "CIP"]
 
@@ -650,6 +668,7 @@ ecoli_cip_vs_ref <- compare_mic_with_eucast(ecoli_cip, ab = "cipro", mo = "E. co
 ```
 
 ``` r
+
 ecoli_cip_vs_ref
 #> # A tibble: 32 × 3
 #>    value    user eucast
@@ -680,6 +699,7 @@ phenotype table using the inbuilt
 function.
 
 ``` r
+
 ecoli_geno_pheno <- summarise_geno_pheno(ecoli_geno,
   ecoli_pheno,
   pheno_cols = c("pheno_clsi", "ecoff")
@@ -762,6 +782,7 @@ This binary matrix can be used as the starting a lot of downstream
 analyses, discussed below.
 
 ``` r
+
 # Get matrix combining phenotype data for ciprofloxacin, binary calls for R/NWT phenotype,
 #    and genotype presence/absence data for all markers associated with the relevant drug
 #    class (which are labelled "Quinolones" in AMRFinderPlus).
@@ -816,6 +837,7 @@ For example, we can use it as input to `assay_by_var` to plot the assay
 distribution coloured by presence of a particular genetic marker
 
 ``` r
+
 assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", pheno_drug = "Ciprofloxacin")
 #> Warning in assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", : Column 'drug' not found in phenotype table, so can't filter to the specified pheno_drug.
 #> Ensure your input table is already filtered to the relevant drug.
@@ -824,6 +846,7 @@ assay_by_var(cip_bin, measure = "mic", colour_by = "parC_S80I", pheno_drug = "Ci
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-1.png)
 
 ``` r
+
 
 # count the number of gyrA mutations per genome
 gyrA_mut <- cip_bin %>%
@@ -841,6 +864,7 @@ mic_by_gyrA_count
 ![](AnalysingGenoPhenoData_files/figure-html/assay_by_genotype-2.png)
 
 ``` r
+
 
 # count the number of genetic determinants per genome
 marker_count <- cip_bin %>%
@@ -918,6 +942,7 @@ The function returns 4 objects:
 - `bin_mat`: the binary matrix used as input to the regression models
 
 ``` r
+
 # Manually run Firth's logistic regression model using the binary matrix produced above
 dataR <- cip_bin[, setdiff(names(cip_bin), c("id", "pheno", "ecoff", "mic", "NWT"))]
 dataR <- dataR[, colSums(dataR, na.rm = TRUE) > 5]
@@ -1015,6 +1040,7 @@ plot_estimates(modelR_summary)
 ![](AnalysingGenoPhenoData_files/figure-html/manual_logistic-1.png)
 
 ``` r
+
 # Alternatively, use the amr_logistic() function to model R and NWT and plot the results together
 models <- amr_logistic(
   geno_table = ecoli_geno,
@@ -1045,6 +1071,7 @@ models <- amr_logistic(
 ![](AnalysingGenoPhenoData_files/figure-html/amr_logistic-1.png)
 
 ``` r
+
 
 # Output tables
 models$modelR
@@ -1162,6 +1189,7 @@ The function returns 4 objects:
   the solo PPV for R and NWT, for each solo marker
 
 ``` r
+
 # Run a solo PPV analysis
 soloPPV_cipro <- solo_ppv(
   ecoli_geno,
@@ -1181,6 +1209,7 @@ soloPPV_cipro <- solo_ppv(
 ![](AnalysingGenoPhenoData_files/figure-html/solo_ppv-1.png)
 
 ``` r
+
 
 # Output table
 soloPPV_cipro$solo_stats
@@ -1267,6 +1296,7 @@ The function returns 2 objects:
   breakdown of S/I/R calls, for each observed marker combination
 
 ``` r
+
 # Compare ciprofloxacin MIC data with quinolone marker combinations,
 #    using the binary matrix we constructed earlier via get_binary_matrix()
 cipro_mic_upset <- amr_upset(
@@ -1285,6 +1315,7 @@ cipro_mic_upset <- amr_upset(
 ![](AnalysingGenoPhenoData_files/figure-html/amr_upset-1.png)
 
 ``` r
+
 
 # Output table
 cipro_mic_upset$summary
@@ -1348,6 +1379,7 @@ The function returns 2 objects:
   breakdown of S/I/R calls, for each observed marker combination
 
 ``` r
+
 # Default plot
 cipro_mic_ppv <- amr_ppv(
   cip_bin,
@@ -1363,6 +1395,7 @@ cipro_mic_ppv <- amr_ppv(
 
 ``` r
 
+
 # add MIC, remove category plot, label rows with marker list
 cipro_mic_ppv2 <- amr_ppv(
   cip_bin,
@@ -1377,6 +1410,7 @@ cipro_mic_ppv2 <- amr_ppv(
 ![](AnalysingGenoPhenoData_files/figure-html/amr_ppv-2.png)
 
 ``` r
+
 
 # Output table
 cipro_mic_ppv$summary

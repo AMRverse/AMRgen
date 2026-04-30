@@ -100,6 +100,7 @@ column is not recognized as an `"ab"` object.
 ## Examples
 
 ``` r
+
 summarise_pheno(staph_pheno_ebi)
 #> No phenotype column names provided via 'pheno_cols'
 #> These are needed to summarise counts of phenotype category calls per drug.

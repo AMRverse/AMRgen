@@ -9,6 +9,7 @@ different clinical breakpoints.
 Start by loading the `AMRgen` package:
 
 ``` r
+
 library(AMRgen)
 library(dplyr)
 #> 
@@ -42,6 +43,7 @@ access to NCBI data but require authentication via a Google Cloud
 account.
 
 ``` r
+
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline, and re-interpret with EUCAST breakpoints
 staph_pheno_ncbi <- download_ncbi_pheno(
   species = "Staphylococcus aureus",
@@ -52,6 +54,7 @@ staph_pheno_ncbi <- download_ncbi_pheno(
 ```
 
 ``` r
+
 # check how many samples retrieved
 nrow(staph_pheno_ncbi)
 #> [1] 143
@@ -75,6 +78,7 @@ head(staph_pheno_ncbi)
 ```
 
 ``` r
+
 # This is the same as downloading the data then re-interpreting it separately:
 staph_pheno_ncbi_raw <- download_ncbi_pheno(
   species = "Staphylococcus aureus",
@@ -85,6 +89,7 @@ staph_pheno_ncbi_raw <- download_ncbi_pheno(
 ```
 
 ``` r
+
 head(staph_pheno_ncbi_raw)
 #> # A tibble: 6 × 13
 #>   id    BioProject organism Antibiotic `Resistance phenotype` `Measurement sign`
@@ -177,6 +182,7 @@ will also need to install the `bigrquery` package and authorize it to
 use your Google cloud account.
 
 ``` r
+
 install.packages("bigrquery")
 library(bigrquery)
 bigrquery::bq_auth()
@@ -185,6 +191,7 @@ bigrquery::bq_auth()
 ##### To download AST data
 
 ``` r
+
 # Download Staphylococcus aureus AST data from NCBI, filtering for amikacin and doxycycline
 # NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
 staph_pheno_ncbi_cloud_raw <- query_ncbi_bq_pheno(
@@ -194,6 +201,7 @@ staph_pheno_ncbi_cloud_raw <- query_ncbi_bq_pheno(
 ```
 
 ``` r
+
 # Import and reinterpret using CLSI breakpoints
 # NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
 staph_pheno_ncbi_cloud <- import_ncbi_pheno(staph_pheno_ncbi_cloud_raw, interpret_clsi = TRUE)
@@ -227,6 +235,7 @@ older versions of AMRFinderPlus, and newer genomes will have genotype
 results obtained with more recent versions.
 
 ``` r
+
 # Download Staphylococcus aureus genotype data from NCBI, filtering for variants associated with class 'AMINOGLYCOSIDES' or 'TETRACYCLINES'
 # NOTE: you may need to add 'project_id="xxx"' to the command if you have not set up application default credentials
 staph_geno_ncbi_cloud_raw <- query_ncbi_bq_geno(
@@ -236,6 +245,7 @@ staph_geno_ncbi_cloud_raw <- query_ncbi_bq_geno(
 ```
 
 ``` r
+
 staph_geno_ncbi_cloud_raw
 #> # A tibble: 119 × 9
 #>    biosample_acc `Gene symbol`   Class Subclass `Element type` `Element subtype`
@@ -280,6 +290,7 @@ staph_geno_ncbi_cloud
 #### Visualise the downloaded phenotype data to check the distribution of the AST data
 
 ``` r
+
 # Select one antibiotic at a time
 # Specify species and guideline, to annotate with EUCAST breakpoints
 
@@ -300,6 +311,7 @@ staph_dox_mic_plot
 ![](DownloadGenoPhenoData_files/figure-html/assay_by_var_staph_doxy-1.png)
 
 ``` r
+
 # Amikacin
 staph_ami_mic_plot <- assay_by_var(
   pheno_table = staph_pheno_ncbi,
@@ -337,6 +349,7 @@ content, they are not identical and each includes biosamples that the
 other does not.
 
 ``` r
+
 # Download EBI phenotype data for all Staphylococcus, using the same example drugs as above. Reformat and re-interpret using EUCAST breakpoints
 staph_pheno_ebi <- download_ebi(
   genus = "Staphylococcus",
@@ -349,6 +362,7 @@ staph_pheno_ebi <- download_ebi(
 ```
 
 ``` r
+
 # check output
 nrow(staph_pheno_ebi)
 #> [1] 218
@@ -384,6 +398,7 @@ AMRFinderPlus, in the EBI portal can be different from what’s available
 for download from NCBI using the above functions.
 
 ``` r
+
 # Download genotype data for Staphylococcus, filter to markers associated with aminoglycosides or tetracyclines, and re-format the data into an AMRgen genotype table. Note that not all samples with phenotype data have genotype data.
 staph_geno_ebi <- download_ebi(
   data = "genotype",
@@ -394,6 +409,7 @@ staph_geno_ebi <- download_ebi(
 ```
 
 ``` r
+
 nrow(staph_geno_ebi)
 #> [1] 45945
 
@@ -426,6 +442,7 @@ can then be extracted and combined using the `get_binary_matrix`
 function.
 
 ``` r
+
 # first filter both EBI pheno and geno dataframes for Staph aureus only
 # filter pheno data
 staph_pheno_ebi_filtered <- staph_pheno_ebi %>%
@@ -464,6 +481,7 @@ head(tet_bin)
 ```
 
 ``` r
+
 # plot positive predictive value for each marker/combination
 tet_ppv <- amr_ppv(tet_bin)
 #> Removing 69 rows with no phenotype call
@@ -473,6 +491,7 @@ tet_ppv <- amr_ppv(tet_bin)
 ![](DownloadGenoPhenoData_files/figure-html/ppv-1.png)
 
 ``` r
+
 
 tet_ppv$plot
 ```

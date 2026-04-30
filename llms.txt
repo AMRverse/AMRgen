@@ -63,6 +63,7 @@ issues.
 Install the latest version of this package with:
 
 ``` r
+
 install.packages("remotes") # if you haven't already
 remotes::install_github("AMRverse/AMRgen")
 ```
@@ -75,6 +76,7 @@ If you have issues, we recommend you install the latest version of the
 AMR package directly, then try again to install AMRgen:
 
 ``` r
+
 install.packages("remotes") # if you haven't already
 remotes::install_github("msberends/AMR")
 remotes::install_github("AMRverse/AMRgen")
@@ -87,6 +89,7 @@ and we want to make it as accessible as possible for new users.
 ## Quick Usage Examples
 
 ``` r
+
 library(AMRgen)
 ```
 
@@ -97,6 +100,7 @@ and how they can be used to compare ciprofloxacin resistance phenotypes
 with quinolone genotype markers, in *E. coli*.
 
 ``` r
+
 # Example public E. coli AST data from NCBI
 #  (already imported via import_ncbi_pheno() and re-interpreted with as.sir())
 ecoli_pheno
@@ -176,6 +180,7 @@ functions.
 ### Download reference MIC distribution from eucast.org and compare to example data
 
 ``` r
+
 # Get MIC reference distribution for ciprofloxacin in E. coli
 ecoli_cip_mic_data <- get_eucast_mic_distribution("cipro", "E. coli")
 

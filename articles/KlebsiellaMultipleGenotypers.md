@@ -40,6 +40,7 @@ version 2025-07-16.1.
 ### Load the required packages
 
 ``` r
+
 library(AMRgen)
 library(dplyr)
 library(ggplot2)
@@ -56,6 +57,7 @@ ECOFF. A copy of the data objected produced below is available in the
 AMRgen package as `kp_mero_euscape`.
 
 ``` r
+
 # Download Klebsiella pneumoniae AST data from EBI, filtering for meropenem and re-interpret with EUCAST breakpoints and ECOFF
 
 kp_mero <- download_ebi(
@@ -81,6 +83,7 @@ kp_mero_euscape <- kp_mero_euscape %>%
 Check the data frame
 
 ``` r
+
 head(kp_mero_euscape)
 #> # A tibble: 6 × 43
 #>   id        drug   mic  disk pheno_provided pheno_eucast ecoff guideline method 
@@ -106,6 +109,7 @@ Summarize the downloaded phenotype data and plot the minimum inhibitory
 concentration (MIC) distributions with EUCAST breakpoints and ECOFF.
 
 ``` r
+
 # Summary of meropenem phenotype data including S/I/R count using EUCAST breakpoint and ECOFF
 summarise_pheno(kp_mero_euscape, pheno_cols = c("pheno_eucast", "ecoff"))
 #> $uniques
@@ -161,6 +165,7 @@ assay_by_var(
 ![](KlebsiellaMultipleGenotypers_files/figure-html/phenotype_summary-1.png)
 
 ``` r
+
 # Summary of meropenem phenotypes using ECOFF
 kp_mero_euscape %>% count(ecoff)
 #> # A tibble: 2 × 2
@@ -227,6 +232,7 @@ available in the AMRgen package as `kleborate_raw`. Let’s import this to
 AMRgen genotype table format and summarise the content:
 
 ``` r
+
 # Updated Kleborate results from the development branch as of March 17, 2026 (commit #4ec1dcb)
 head(kleborate_raw, n = 10)
 #> # A tibble: 10 × 122
@@ -317,6 +323,7 @@ carbapenem drug class since Kleborate only operates at a drug class
 level.
 
 ``` r
+
 summarise_geno_pheno(kleborate_dev, kp_mero_euscape,
   pheno_cols = c("pheno_eucast", "ecoff")
 )
@@ -378,6 +385,7 @@ absence of the phenotype or genotypic marker in that sample. This is
 produced using the `get_binary_matrix` function:
 
 ``` r
+
 kleborate_binary_matrix <- get_binary_matrix(
   geno_table = kleborate_dev,
   pheno_table = kp_mero_euscape,
@@ -423,12 +431,14 @@ PPVs, standard error (`se`), lower confidence interval (`ci.lower`), and
 upper confidence interval (`ci.upper`).
 
 ``` r
+
 soloPPV_kleborate_mero <- solo_ppv(binary_matrix = kleborate_binary_matrix)
 ```
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_soloPPV-1.png)
 
 ``` r
+
 soloPPV_kleborate_mero$solo_stats
 #> # A tibble: 28 × 8
 #>    marker                category     x     n    ppv     se ci.lower ci.upper
@@ -464,6 +474,7 @@ values, and median assay values (and interquartile range) where
 relevant.
 
 ``` r
+
 comboPPV_kleborate_mero <- amr_ppv(
   binary_matrix = kleborate_binary_matrix,
   order = "value",
@@ -481,6 +492,7 @@ comboPPV_kleborate_mero <- amr_ppv(
 ![](KlebsiellaMultipleGenotypers_files/figure-html/kleborate_comboPPV-1.png)
 
 ``` r
+
 comboPPV_kleborate_mero$summary
 #> # A tibble: 56 × 21
 #>    marker_list        marker_count     n combination_id   R.n   R.ppv R.ci_lower
@@ -519,6 +531,7 @@ marker combinations observed at least 3 times in the dataset
 (`min_set_size=3`) makes it a little easier to see what’s going on.
 
 ``` r
+
 kp_mic_upset_kleborate <- amr_upset(kleborate_binary_matrix,
   assay = "mic", species = "Klebsiella pneumoniae", min_set_size = 3
 )
@@ -540,6 +553,7 @@ To simplify things, let’s group the various insertion mutations
 together.
 
 ``` r
+
 # modify marker labels in the genotype table
 kleborate_dev_plotting <- kleborate_dev %>%
   mutate(marker.label = case_when(
@@ -591,6 +605,7 @@ the clinical breakpoints and ECOFF for meropenem and add these to the
 plot.
 
 ``` r
+
 # pivot genotype table to wide format (one row per sample) with separate columns for each class of marker, and add the MIC values for each sample
 kleborate_dev_wide_mic <- kleborate_dev_plotting %>%
   filter(marker.label != "OmpK36:c.25C>T") %>% # filter out synonymous SNP
@@ -642,6 +657,7 @@ rare, let’s collapse into enzyme families, exclude isolates that have
 multiple carbapenemases (n=11), and remove the single CTX gene.
 
 ``` r
+
 kleborate_dev_wide_mic_trim <- kleborate_dev_wide_mic %>%
   filter(!grepl(",", Bla_Carb_acquired)) %>% # exclude isolates with multiple carbapenemases
   mutate(Bla_Carb_acquired = substr(Bla_Carb_acquired, 1, 3)) %>% # first 3 letters give gene family name
@@ -668,6 +684,7 @@ all other plots); and the impact of mutations in the presence of each
 type of carbapenemase (other colours).
 
 ``` r
+
 kleborate_mic_by_gene_mutation$stats %>% head(19)
 #> # A tibble: 19 × 7
 #>    Omp_mutations   Bla_Carb_acquired     n median geom_mean    q25   q75
@@ -699,6 +716,7 @@ mean (in brackets) values are grouped by porin vs. carbapenemase status,
 each corresponding to unique boxplotted distribution.
 
 ``` r
+
 kleborate_mic_by_gene_mutation_table <- kleborate_mic_by_gene_mutation$stats %>%
   mutate(geom_mean = round(geom_mean, 1)) %>%
   mutate(median_mean = paste0(median, " (", geom_mean, ")")) %>%
@@ -737,6 +755,7 @@ Making the table aesthetically pleasing using the gt package (to
 reproduce Figure 5c in the AMRgen paper).
 
 ``` r
+
 # If you have the gt package, you can use it to make the table aesthetically pleasing
 median_MIC_table_aes <- median_MIC_table %>%
   gt() %>%
@@ -844,6 +863,7 @@ available in the AMRgen package as `kleborate_raw_v313`. Let’s import it
 and summarise its contents:
 
 ``` r
+
 # View Kleborate output v3.1.3 (using informal nomenclature (e.g. [gene]-[mutation], [gene]-X%, OmpK36GD))
 head(kleborate_raw_v313, n = 10)
 #> # A tibble: 10 × 113
@@ -937,6 +957,7 @@ Comparing only the carbapenem resistance determinants from an updated
 version Kleborate (development branch) to a previous version (v3.1.3).
 
 ``` r
+
 # Grouping Kleborate development branch carbapenem resistance determinants, so that there is one row per sample
 kleborate_dev_markers_grouped <- kleborate_dev %>%
   filter(Kleborate_Class == "Omp_mutations" | Kleborate_Class == "Bla_Carb_acquired") %>%
@@ -1050,6 +1071,7 @@ ompk36 loss and truncations) that lead to resistance, which Kleborate
 already identifies.
 
 ``` r
+
 # Download Klebsiella pneumoniae genotype AMRFinderPlus data and re-format the data into an AMRgen genotype table
 amrfp <- download_ebi(
   data = "genotype", species = "Klebsiella pneumoniae",
@@ -1066,6 +1088,7 @@ A copy of this data frame is avaiable in the AMRgen pacakge as
 `kp_mero_amrfp`:
 
 ``` r
+
 head(kp_mero_amrfp)
 #> # A tibble: 6 × 34
 #>   id        marker gene  mutation drug_agent drug_class marker.label assembly_ID
@@ -1165,6 +1188,7 @@ simplify and remove `OmpK35:-` and `OmpK36:-` from the Kleborate
 development branch results.
 
 ``` r
+
 # To count and see the names of the carbapenem resistance determinants
 kp_mero_amrfp %>%
   filter(drug_class == "Carbapenems") %>%
@@ -1289,6 +1313,7 @@ instead of `Carbapenems`, which is why it has been excluded from the AMR
 genotype table since we filtered for `drug_class=="Carbapenems"`.
 
 ``` r
+
 # CTX-M-33 is annotated as conferring resistance to Cephalosporins (3rd gen.) and is identified by AMRFinderPlus in Sample SAMEA3721133
 kp_mero_amrfp %>%
   filter(gene == "blaCTX-M-33") %>%
@@ -1346,6 +1371,7 @@ has been excluded from the genotype table since we filtered for
 `drug_class=="Carbapenems"`.
 
 ``` r
+
 # KPC-12 is annotated as conferring resistance to Cephalosporins (3rd gen.)  and is identified by AMRFinderPlus in Sample SAMEA3649729
 kp_mero_amrfp %>%
   filter(gene == "blaKPC-12") %>%
@@ -1449,6 +1475,7 @@ The data frame `rgi_EuSCAPE_raw` included in the AMRgen package provides
 CARD RGI calls for the EuSCAPE genomes:
 
 ``` r
+
 # Sample IDs with no AMR determinants have been added to rgi_EuSCAPE_raw under the `ORF_ID` column with the rest of the rows left blank
 tail(rgi_EuSCAPE_raw, n = 10)
 #> # A tibble: 10 × 26
@@ -1530,6 +1557,7 @@ summarise_geno(rgi)
 ### Generate Binary Matrix for RGI AMR Markers
 
 ``` r
+
 rgi_binary_matrix <- get_binary_matrix(
   geno_table = rgi,
   pheno_table = kp_mero_euscape,
@@ -1546,6 +1574,7 @@ rgi_binary_matrix <- get_binary_matrix(
 ### Solo PPV Analysis for RGI AMR Markers
 
 ``` r
+
 # No solo markers error when you run solo_ppv()! Since CARD/RGI includes intrinsic and acquired resistance determinants, there could be intrinsic / core resistance determinants that are found across most (if not all) genomes which obstructs our view of carbapenem resistance determinants found alone.
 
 soloPPV_rgi_mero <- solo_ppv(binary_matrix = rgi_binary_matrix)
@@ -1556,6 +1585,7 @@ using their prevalence and exclude any determinants identified across
 more than 80% of genomes.
 
 ``` r
+
 rgi_binary_matrix_prev80 <- rgi_binary_matrix %>%
   select(where(~ {
     if (is.numeric(.x)) {
@@ -1571,12 +1601,14 @@ Try running the [`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md)
 function again.
 
 ``` r
+
 soloPPV_rgi_mero <- solo_ppv(binary_matrix = rgi_binary_matrix_prev80)
 ```
 
 ![](KlebsiellaMultipleGenotypers_files/figure-html/rgi_soloPPV_2-1.png)
 
 ``` r
+
 # Count number of genomes that have either `MdtQ` or `MdtQ:-`
 sum(rgi_binary_matrix_prev80$MdtQ == "1" | rgi_binary_matrix_prev80$`MdtQ..-` == "1", na.rm = TRUE)
 #> [1] 1429
@@ -1596,6 +1628,7 @@ compelling evidence that MdtQ confers resistance to carbapenems and that
 it is likely a core gene, we will exclude it from further analyses.
 
 ``` r
+
 # Exclude MdtQ and MdtQ:- from the binary matrix
 rgi_binary_matrix_prev80 <- rgi_binary_matrix_prev80 %>% select(-MdtQ, -`MdtQ..-`)
 ```
@@ -1604,6 +1637,7 @@ Try running the [`solo_ppv()`](https://amrgen.org/reference/solo_ppv.md)
 function… again.
 
 ``` r
+
 soloPPV_rgi_mero <- solo_ppv(binary_matrix = rgi_binary_matrix_prev80)
 ```
 
@@ -1618,6 +1652,7 @@ For example, NDM-1 alone was found in 59 resistant genomes (using RGI),
 AMRFinderPlus).
 
 ``` r
+
 soloPPV_kleborate_mero
 #> $solo_stats
 #> # A tibble: 28 × 8
@@ -1694,6 +1729,7 @@ soloPPV_kleborate_mero
     #>             "(n=3,3)"           "(n=38,38)"
 
 ``` r
+
 # Generate binary matrix for AMRFinderPlus
 amrfp_binary_matrix <- get_binary_matrix(
   geno_table = kp_mero_amrfp,
@@ -1714,6 +1750,7 @@ soloPPV_amrfp_mero <- solo_ppv(binary_matrix = amrfp_binary_matrix)
 ### Combinatorial PPV Analysis for RGI AMR Markers
 
 ``` r
+
 comboPPV_rgi_mero <- amr_ppv(
   binary_matrix = rgi_binary_matrix_prev80,
   order = "value",
@@ -1731,6 +1768,7 @@ comboPPV_rgi_mero <- amr_ppv(
 ![](KlebsiellaMultipleGenotypers_files/figure-html/rgi_comboPPV-1.png)
 
 ``` r
+
 # Summary of combinatorial PPV
 comboPPV_rgi_mero$summary
 #> # A tibble: 21 × 21
@@ -1761,6 +1799,7 @@ development branch.
 ### Compare RGI to Kleborate Genotype Results
 
 ``` r
+
 rgi_simplified <- rgi %>%
   filter(drug_class == "Carbapenems") %>%
   filter(`Resistance Mechanism` == "antibiotic inactivation") %>%
@@ -1859,6 +1898,7 @@ identified by any genotyper in that sample, the binary matrix will have
 a `1` (present), otherwise `0` (absent).
 
 ``` r
+
 # Phenotype columns to remove (that we can put back in later)
 cols_to_remove <- c("pheno", "ecoff", "mic", "R", "NWT")
 
@@ -1946,6 +1986,7 @@ combined_binary_matrix <- combined_binary_matrix %>%
 ### Solo PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR Markers
 
 ``` r
+
 combined_solo_ppv <- solo_ppv(binary_matrix = combined_binary_matrix)
 ```
 
@@ -1967,6 +2008,7 @@ between the markers and a specified antibiotic.
 ### Logistic regression for AMRFinderPlus, RGI, Kleborate AMR Markers
 
 ``` r
+
 combined_logist <- amr_logistic(
   binary_matrix = combined_binary_matrix,
   pheno_drug = "meropenem",
@@ -1985,6 +2027,7 @@ combined_logist <- amr_logistic(
 ![](KlebsiellaMultipleGenotypers_files/figure-html/log_reg_combined-1.png)
 
 ``` r
+
 # model coefficients
 combined_logist$modelR
 #> # A tibble: 15 × 5
@@ -2019,6 +2062,7 @@ VIM-4:- (identified by RGI).
 ### Combinatorial PPV Analysis for AMRFinderPlus, RGI, Kleborate AMR Markers
 
 ``` r
+
 comboPPV_combined_mero <- amr_ppv(
   binary_matrix = combined_binary_matrix,
   order = "value",
@@ -2036,6 +2080,7 @@ comboPPV_combined_mero <- amr_ppv(
 ![](KlebsiellaMultipleGenotypers_files/figure-html/comboPPV_combined-1.png)
 
 ``` r
+
 
 comboPPV_combined_mero$summary
 #> # A tibble: 86 × 21

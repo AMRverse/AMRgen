@@ -14,6 +14,7 @@ quinolone resistance markers.
 Start by loading the package:
 
 ``` r
+
 library(AMRgen)
 library(dplyr)
 library(ggplot2)
@@ -39,11 +40,13 @@ pre-loaded with the package so there is no need to read in the `.csv`
 file.
 
 ``` r
+
 # Importing raw data from .csv file (not needed to run vignette)
 salm_raw <- read_csv("Salmonella_pheno_geno_data.csv")
 ```
 
 ``` r
+
 head(salm_raw)
 #> # A tibble: 6 × 7
 #>   Sample Source Serovar     CpL_Genotype Ciprofloxacin Levofloxacin Moxifloxacin
@@ -89,6 +92,7 @@ following steps to generate a genotype table that is compatible with
   resistance to quinolones
 
 ``` r
+
 # Extract geno data, separate by delimiter, pivot longer, and add drug_class column
 salm_geno <- salm_raw %>%
   select(Sample, CpL_Genotype) %>%
@@ -130,6 +134,7 @@ the total number of unique markers and a table showing each marker’s
 prevalence in the dataset.
 
 ``` r
+
 # Create geno_summary object
 salm_geno_summary <- summarise_geno(salm_geno)
 
@@ -191,6 +196,7 @@ character vectors to avoid issues caused by occasional presence of
 non-numeric prefixes (`>` or `<`). We then pivot the table to long form.
 
 ``` r
+
 # Pheno table: select columns with sample ID, metadata, and antimicrobials tested,
 # then pivot to long form
 salm_pheno <- salm_raw %>%
@@ -214,6 +220,7 @@ that are potentially problematic in human infections, including zoonotic
 ones.
 
 ``` r
+
 salm_ast <- format_pheno(
   input = salm_pheno,
   sample_col = "Sample",
@@ -248,6 +255,7 @@ function can be used for datasets with multiple species, methods, drug
 classes, and interpretation guidelines.
 
 ``` r
+
 salm_pheno_summary <- summarise_pheno(salm_ast, pheno_cols = c("pheno_eucast"))
 #> No disk data colummn provided
 
@@ -295,6 +303,7 @@ could then be combined into a multipanel figure using packages like
 `patchwork` or `ggpubr`.
 
 ``` r
+
 # Plot MIC distributions coloured by S/I/R call
 assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast")
 ```
@@ -303,12 +312,14 @@ assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mi
 
 ``` r
 
+
 assay_by_var(pheno_table = salm_ast, pheno_drug = "Levofloxacin", measure = "mic", colour_by = "pheno_eucast")
 ```
 
 ![](SalmonellaExamples_files/figure-html/plot_mic-2.png)
 
 ``` r
+
 
 assay_by_var(pheno_table = salm_ast, pheno_drug = "Moxifloxacin", measure = "mic", colour_by = "pheno_eucast")
 ```
@@ -329,6 +340,7 @@ example, we can split the ciprofloxacin plot by isolation source like
 this:
 
 ``` r
+
 assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast", facet_by = "Source")
 ```
 
@@ -343,6 +355,7 @@ facets are displayed) or
 to facet on two variables.
 
 ``` r
+
 assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "pheno_eucast") +
   facet_grid(Source ~ Serovar)
 ```
@@ -356,6 +369,7 @@ If desired, you can also modify other aspects of the plot using standard
 ggplot2 extensions (e.g. using `viridis` to change the colour palette).
 
 ``` r
+
 # Specify species and guideline to show breakpoints, but colour bars by isolation source
 assay_by_var(pheno_table = salm_ast, pheno_drug = "Ciprofloxacin", measure = "mic", colour_by = "Source", species = "Salmonella enterica", guideline = "EUCAST 2025") +
   scale_fill_viridis_d(end = 0.8)
@@ -376,6 +390,7 @@ small *S. enterica* dataset, but this could also be done for
 levofloxacin and moxifloxacin.
 
 ``` r
+
 ### get_binary_matrix throws an error unless the variable drug_class is in salm_geno, even if it's empty
 cip_bin <- get_binary_matrix(
   salm_geno,
@@ -432,6 +447,7 @@ metadata so `cip_bin` should be used in those instead of
 `cip_bin_meta`).
 
 ``` r
+
 salm_metadata <- salm_pheno %>%
   select(Sample, Source, Serovar) %>%
   rename(id = Sample)
@@ -449,6 +465,7 @@ mutation and all S. Kentucky isolates had two *gyrA* mutations, whereas
 other serovars had variable numbers of mutations.
 
 ``` r
+
 # count the number of gyrA mutations per genome
 gyrA_mut <- cip_bin_meta %>%
   dplyr::mutate(gyrA_mut = rowSums(across(contains("gyrA_") & where(is.numeric)), na.rm = T)) %>%
@@ -473,6 +490,7 @@ Similarly, we can plot the total number of markers per isolate and facet
 by `Source`.
 
 ``` r
+
 # count the number of genetic determinants per genome
 marker_count <- cip_bin_meta %>%
   mutate(marker_count = rowSums(across(where(is.numeric) & !any_of(c("R", "NWT"))), na.rm = T)) %>%
@@ -495,6 +513,7 @@ marker count so we can quantify as well as visualise the impact of
 number of mutations on MIC.
 
 ``` r
+
 # plot the MIC distributions as boxplots, stratified by number of markers
 mic_boxplot_by_marker_count <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), boxplot = T)
 
@@ -504,6 +523,7 @@ mic_boxplot_by_marker_count$plot
 ![](SalmonellaExamples_files/figure-html/assay_by_markercount_boxplot-1.png)
 
 ``` r
+
 
 mic_boxplot_by_marker_count$stats
 #> # A tibble: 4 × 6
@@ -523,6 +543,7 @@ marker count so we can quantify as well as visualise the impact of
 number of mutations on MIC.
 
 ``` r
+
 # plot the MIC distributions as boxplots, stratified by number of markers
 mic_boxplot_by_marker_count_source <- assay_by_var(marker_count, measure = "mic", colour_by = "marker_count", colour_legend_label = "Total number\nof markers", pheno_drug = "Ciprofloxacin", colours = viridisLite::viridis(max(marker_count$marker_count) + 1), facet_by = "Source", boxplot = T)
 
@@ -541,6 +562,7 @@ dataset is quite small, we keep all the combinations, including those
 with a single isolate (`min_set_size = 1`).
 
 ``` r
+
 # Compare ciprofloxacin MIC data with quinolone marker combinations,
 #    using the binary matrix we constructed earlier via get_binary_matrix()
 cipro_mic_upset <- amr_upset(
@@ -564,6 +586,7 @@ of our additional metadata variables and then running
 we can focus on the animal isolates only:
 
 ``` r
+
 cip_bin_animal <- cip_bin_meta %>%
   filter(Source == "Animal") %>%
   select(-Source, -Serovar)

@@ -53,6 +53,7 @@ spread at a large US healthcare network. Genome Med 14, 147 (2022).
 ### Start by loading the AMRgen package:
 
 ``` r
+
 # Load AMRgen
 library(AMRgen)
 
@@ -94,6 +95,7 @@ The resulting phenotype table was imported to the AMRgen package and
 called `pheno_eco_2075`.
 
 ``` r
+
 # Check the format of the phenotype table pre-loaded in the AMRgen package
 data(pheno_eco_2075)
 
@@ -152,6 +154,7 @@ retrieved from the AllTheBacteria project, following these steps:
     table downloaded from the SRA (as for the phenotype table).
 
 ``` r
+
 # Load AMRFinderPlus data to create an object with the key columns needed to work with the AMRgen package
 data(geno_eco_2075)
 geno_eco_2075 <- import_amrfp(geno_eco_2075, "Name")
@@ -207,6 +210,7 @@ returns a single dataframe with one row per strain, for the subset of
 strains that appear in both the genotype and phenotype input tables.
 
 ``` r
+
 # Get matrix combining phenotype data for Ciprofloxacin, binary calls for R/NWT pheno,
 # and genotype presence/absence data for all markers associated with Quinolone
 eco_cip_matrix <- get_binary_matrix(
@@ -265,6 +269,7 @@ breakpoints from CLSI 2018. We can also compare them to the updated
 breakpoints from CLSI 2025.
 
 ``` r
+
 # CLSI 2018 guidelines (as in the publication from Mills et al).
 # The breakpoints are provided manually.
 assay_by_var(
@@ -281,6 +286,7 @@ assay_by_var(
 ![](Concordance_files/figure-html/pheno_dist-1.png)
 
 ``` r
+
 
 # CLSI 2025 guidelines
 # The breakpoints are provided by passing the option "guideline"
@@ -314,6 +320,7 @@ Start with a first concordance calculation including all the AMR markers
 in the binary matrix.
 
 ``` r
+
 concordance_cip <- concordance(eco_cip_matrix)
 
 concordance_cip
@@ -422,6 +429,7 @@ sample size, median and interquartile range, number and proportion
 classified as R).
 
 ``` r
+
 # Generate an upset plot comparing ciprofloxacin MIC data with quinolone marker combinations,
 eco_cip_upset <- amr_upset(
   eco_cip_matrix,
@@ -456,6 +464,7 @@ positive predictive value (PPV) for each combination (with 95% CI) and
 the basic plot elements (including PPV).
 
 ``` r
+
 # Generate a summary plot of PPV for each solo and combination of markers observed in the mic assay data and order by decreasing ppv value
 eco_cip_ppv <- amr_ppv(eco_cip_matrix,
   assay = "mic",
@@ -467,6 +476,7 @@ eco_cip_ppv <- amr_ppv(eco_cip_matrix,
 ![](Concordance_files/figure-html/ppv-1.png)
 
 ``` r
+
 
 # View the column headers of the ppv stats
 head(eco_cip_ppv$summary)
@@ -539,6 +549,7 @@ We will try this only for outcome R, as we have seen before that outcome
 NWT produces very similar concordance stats.
 
 ``` r
+
 # Filter the genotypic prediction by the presence of specific mutations
 concordance_cip_markers <- concordance(eco_cip_matrix,
   truth = "R",
@@ -614,6 +625,7 @@ predicting R for all samples with a marker or combination that had PPV
 \>=0.5.
 
 ``` r
+
 # Pass the PPV analysis output and a desired threshold to the `concordance()` function.
 concordance_cip_ppv <- concordance(eco_cip_matrix,
   truth = "R",
@@ -671,6 +683,7 @@ the options `prediction_rule="logistic"` and `logreg_results`. In this
 example, we will apply this to the R output only.
 
 ``` r
+
 # Model a binary Ciprofloxacin phenotype using genetic marker presence/absence data
 logreg <- amr_logistic(binary_matrix = eco_cip_matrix)
 #> ...Fitting logistic regression model to R using logistf
@@ -684,6 +697,7 @@ logreg <- amr_logistic(binary_matrix = eco_cip_matrix)
 ![](Concordance_files/figure-html/concordance_logistic-1.png)
 
 ``` r
+
 
 
 # Apply the logistic regression results to the concordance analysis
@@ -732,6 +746,7 @@ function to colour our input MIC distribution by the genotypic
 prediction.
 
 ``` r
+
 assay_by_var(concordance_cip_log$data, colour_by = "R_pred")
 ```
 
@@ -741,6 +756,7 @@ Predictions based on the logistic regression model have similar
 concordance statistics to those based on combinations with PPV\>=0.5.
 
 ``` r
+
 concordance_cip_log$metrics %>%
   left_join(concordance_cip_ppv$metrics, by = c("outcome", "metric"), suffix = c(".logistic", ".ppv"))
 #> # A tibble: 9 × 4
@@ -762,6 +778,7 @@ phenotype, to see how many samples yield different predictions with the
 two methods.
 
 ``` r
+
 concordance_cip_log$data %>%
   select(id, R_pred) %>%
   left_join(concordance_cip_ppv$data, by = "id", suffix = c(".logistic", ".ppv")) %>%
@@ -782,6 +799,7 @@ We can also extract and inspect the samples that the logistic model
 predicted wrongly, to explore their genotypes.
 
 ``` r
+
 # samples with predictions different from the observed phenotype
 concordance_cip_log$data %>%
   filter(R_pred != R)

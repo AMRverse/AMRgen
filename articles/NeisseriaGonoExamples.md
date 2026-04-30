@@ -29,6 +29,7 @@ investigate associations between genotype and phenotype data in
 Load the necessary libraries before running this vignette:
 
 ``` r
+
 library(AMRgen)
 library(dplyr)
 library(tidyr)
@@ -71,6 +72,7 @@ antibiotic). This pre-loaded object `eurogasp_pheno_raw` serves as the
 **phenotype input** for `AMRgen`:
 
 ``` r
+
 head(eurogasp_pheno_raw)
 #> # A tibble: 6 × 5
 #>   id         Azithromycin Ciprofloxacin Cefixime Ceftriaxone
@@ -119,6 +121,7 @@ Use [`import_amrfp()`](https://amrgen.org/reference/import_amrfp.md) to
 parse the AMRFinderPlus output:
 
 ``` r
+
 eurogasp_geno <- import_amrfp(
   input_table = eurogasp_geno_raw,
   sample_col = "Name"
@@ -134,6 +137,7 @@ conflicts while preserving this information for downstream processing by
 [`format_pheno()`](https://amrgen.org/reference/format_pheno.md):
 
 ``` r
+
 eurogasp_pheno <- eurogasp_pheno_raw %>%
   mutate(across(c(Azithromycin, Ciprofloxacin, Cefixime, Ceftriaxone), as.character)) %>%
   pivot_longer(
@@ -150,6 +154,7 @@ categorical SIR interpretations (clinical breakpoints) and WT/NWT
 classifications (ECOFF) fron EUCAST:
 
 ``` r
+
 eurogasp_ast <- format_pheno(
   input = eurogasp_pheno,
   sample_col = "id",
@@ -181,6 +186,7 @@ Negative samples should be added to the genotype table so they are
 properly accounted for in downstream analyses:
 
 ``` r
+
 negative_eurogasp <- eurogasp_pheno_raw %>%
   anti_join(eurogasp_geno, by = "id") %>%
   pull(id)
@@ -194,6 +200,7 @@ Round MIC values to the nearest doubling dilution using `as.mic()` with
 `round_to_next_log2 = TRUE`:
 
 ``` r
+
 eurogasp_double <- eurogasp_ast %>%
   mutate(across(all_of("mic"), ~ AMR::as.mic(.x, round_to_next_log2 = TRUE)))
 ```
@@ -206,6 +213,7 @@ compare it to the EUCAST reference distribution using
 ##### **Azithromycin**
 
 ``` r
+
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
@@ -219,6 +227,7 @@ assay_by_var(
 
 ``` r
 
+
 # Extract MIC data from the pheno table
 azm_data <- eurogasp_double %>%
   filter(drug == "AZM") %>%
@@ -226,6 +235,7 @@ azm_data <- eurogasp_double %>%
 ```
 
 ``` r
+
 # Compare with a reference distribution from EUCAST
 azm_comparison <- compare_mic_with_eucast(
   mics = azm_data,
@@ -235,6 +245,7 @@ azm_comparison <- compare_mic_with_eucast(
 ```
 
 ``` r
+
 # automated plot comparing to reference distribution
 autoplot(azm_comparison)
 ```
@@ -244,6 +255,7 @@ autoplot(azm_comparison)
 ##### **Ciprofloxacin**
 
 ``` r
+
 # Plot the distribution of MIC data in the study
 # The breakpoint for R is 0.06 but cannot be represented directly as it is not a doubling dilution (values in x axis).
 assay_by_var(
@@ -260,6 +272,7 @@ assay_by_var(
 
 ``` r
 
+
 # If the AST data without doublig dilutions is represented, then both breakpoints can be plotted.
 assay_by_var(
   pheno_table = eurogasp_ast,
@@ -275,6 +288,7 @@ assay_by_var(
 
 ``` r
 
+
 # Extract MIC data from the pheno table
 cip_data <- eurogasp_double %>%
   filter(drug == "CIP") %>%
@@ -282,6 +296,7 @@ cip_data <- eurogasp_double %>%
 ```
 
 ``` r
+
 # Compare with a reference distribution from EUCAST
 cip_comparison <- compare_mic_with_eucast(
   mics = cip_data,
@@ -291,6 +306,7 @@ cip_comparison <- compare_mic_with_eucast(
 ```
 
 ``` r
+
 # plot the data with the reference distribution
 autoplot(cip_comparison)
 ```
@@ -300,6 +316,7 @@ autoplot(cip_comparison)
 ##### **Ceftriaxone**
 
 ``` r
+
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
@@ -314,6 +331,7 @@ assay_by_var(
 ![](NeisseriaGonoExamples_files/figure-html/pheno_cro-1.png)
 
 ``` r
+
 # Extract MIC data from the pheno table
 cro_data <- eurogasp_double %>%
   filter(drug == "CRO") %>%
@@ -321,6 +339,7 @@ cro_data <- eurogasp_double %>%
 ```
 
 ``` r
+
 # Compare with a reference distribution from EUCAST
 cro_comparison <- compare_mic_with_eucast(
   mics = cro_data,
@@ -330,6 +349,7 @@ cro_comparison <- compare_mic_with_eucast(
 ```
 
 ``` r
+
 autoplot(cro_comparison)
 ```
 
@@ -338,6 +358,7 @@ autoplot(cro_comparison)
 ##### **Cefixime**
 
 ``` r
+
 # Plot the distribution of MIC data in the study
 assay_by_var(
   pheno_table = eurogasp_double,
@@ -352,6 +373,7 @@ assay_by_var(
 ![](NeisseriaGonoExamples_files/figure-html/pheno_cfm-1.png)
 
 ``` r
+
 # Extract MIC data from the pheno table
 cfm_data <- eurogasp_double %>%
   filter(drug == "CFM") %>%
@@ -359,6 +381,7 @@ cfm_data <- eurogasp_double %>%
 ```
 
 ``` r
+
 # Compare with a reference distribution from EUCAST
 cfm_comparison <- compare_mic_with_eucast(
   mics = cfm_data,
@@ -368,6 +391,7 @@ cfm_comparison <- compare_mic_with_eucast(
 ```
 
 ``` r
+
 autoplot(cfm_comparison)
 ```
 
@@ -384,6 +408,7 @@ epidemiological cut-off (ECOFF \> 1 mg/L).
 Build the binary matrix combining genotype and phenotype:
 
 ``` r
+
 azm_bin <- get_binary_matrix(
   geno_table = eurogasp_geno,
   pheno_table = eurogasp_ast,
@@ -402,6 +427,7 @@ combinations with
 [`amr_upset()`](https://amrgen.org/reference/amr_upset.md):
 
 ``` r
+
 # Calculate upset plots of MIC distributions vs genotype marker combinations
 # (specify species and drug in order to look up and plot the ecoff)
 azi_upset <- amr_upset(
@@ -429,6 +455,7 @@ Evaluate the positive predictive value (PPV) of solo markers
 determinant):
 
 ``` r
+
 azm_solo_ppv <- solo_ppv(
   binary_matrix = azm_bin,
   pheno_drug = "Azithromycin",
@@ -448,6 +475,7 @@ Now evaluate PPVs for marker combinations with
 [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md):
 
 ``` r
+
 azm_ppv <- amr_ppv(
   binary_matrix = azm_bin,
   order = "value",
@@ -475,6 +503,7 @@ including markers with a minimum allele frequency (MAF) of ≥ 10
 isolates:
 
 ``` r
+
 azm_logist <- amr_logistic(
   binary_matrix = azm_bin,
   pheno_drug = "Azithromycin",
@@ -501,6 +530,7 @@ or [`amr_ppv()`](https://amrgen.org/reference/amr_ppv.md) functions can
 be provided to the `ppv_results` parameter.
 
 ``` r
+
 azm_concordance <- concordance(
   binary_matrix = azm_bin,
   ppv_results = azm_solo_ppv,
@@ -547,6 +577,7 @@ incorporated into AMRFinderPlus.
 Visualise the prediction on the MIC distribution:
 
 ``` r
+
 eurogasp_azm_pred <- eurogasp_ast %>%
   left_join(azm_concordance$data[, c("id", "NWT_pred")], by = "id")
 
@@ -586,6 +617,7 @@ mutations in the *gyrA* and *parC* genes. Build the binary matrix and
 generate upset plots:
 
 ``` r
+
 # Get binary matrix
 cip_bin <- get_binary_matrix(
   geno_table = eurogasp_geno,
@@ -629,6 +661,7 @@ ECOFF.
 Only four markers appear in isolation; evaluate their solo PPVs:
 
 ``` r
+
 cip_solo_ppv <- solo_ppv(
   binary_matrix = cip_bin,
   pheno_drug = "Ciprofloxacin",
@@ -641,6 +674,7 @@ cip_solo_ppv <- solo_ppv(
 Evaluate PPVs for marker combinations:
 
 ``` r
+
 cip_ppv <- amr_ppv(
   binary_matrix = cip_bin,
   order = "value",
@@ -662,6 +696,7 @@ Run logistic regression to assess the individual contribution of each
 marker:
 
 ``` r
+
 cip_logist <- amr_logistic(
   binary_matrix = cip_bin,
   pheno_drug = "Ciprofloxacin",
@@ -684,6 +719,7 @@ Calculate concordance metrics using the results from the logistic
 regression:
 
 ``` r
+
 cip_concordance <- concordance(
   binary_matrix = cip_bin,
   ppv_results = cip_solo_ppv,
@@ -754,6 +790,7 @@ named `R_pred` and/or `NWT_pred`, and incorporate them into the
 antibiotic:
 
 ``` r
+
 eurogasp_cip_pred <- eurogasp_ast %>%
   left_join(cip_concordance$data[, c("id", "R_pred", "NWT_pred")],
     by = "id"
@@ -775,6 +812,7 @@ Visualise the distribution of ciprofloxacin MICs by the R/NWT
 predictions:
 
 ``` r
+
 assay_by_var(
   pheno_table = eurogasp_cip_pred,
   pheno_drug = "Ciprofloxacin",
@@ -814,6 +852,7 @@ recombination with other *Neisseria* species).
 Build binary matrices for each antibiotic:
 
 ``` r
+
 cfm_bin <- get_binary_matrix(
   geno_table = eurogasp_geno,
   pheno_table = eurogasp_ast,
@@ -842,6 +881,7 @@ cro_bin <- get_binary_matrix(
 Generate upset plots:
 
 ``` r
+
 cfm_upset <- amr_upset(
   binary_matrix = cfm_bin,
   min_set_size = 1,
@@ -862,6 +902,7 @@ cfm_upset <- amr_upset(
 ![](NeisseriaGonoExamples_files/figure-html/esc_upset-1.png)
 
 ``` r
+
 
 cro_upset <- amr_upset(
   binary_matrix = cro_bin,
@@ -894,6 +935,7 @@ combination, solo marker analysis provides limited information in this
 case:
 
 ``` r
+
 cfm_solo_ppv <- solo_ppv(
   binary_matrix = cfm_bin,
   pheno_drug = "Cefixime",
@@ -905,6 +947,7 @@ cfm_solo_ppv <- solo_ppv(
 ![](NeisseriaGonoExamples_files/figure-html/esc_solo_ppv-1.png)
 
 ``` r
+
 
 cro_solo_ppv <- solo_ppv(
   binary_matrix = cro_bin,
@@ -919,6 +962,7 @@ cro_solo_ppv <- solo_ppv(
 Instead, combination PPVs are a more informative metric:
 
 ``` r
+
 cfm_ppv <- amr_ppv(
   binary_matrix = cfm_bin,
   min_set_size = 2,
@@ -935,6 +979,7 @@ cfm_ppv <- amr_ppv(
 ![](NeisseriaGonoExamples_files/figure-html/esc_ppv-1.png)
 
 ``` r
+
 
 cro_ppv <- amr_ppv(
   binary_matrix = cro_bin,
@@ -997,6 +1042,7 @@ results from the following sources (total n = 2,101 genomes):
 Import and format the data:
 
 ``` r
+
 # Genotype file
 ngono_cro_geno <- import_amrfp(ngono_cro_geno_raw, "Name")
 #> Input file lacks the expected column: 'Type' (v4.0+) or 'Element type' (pre-v4), assuming all rows report AMR markers.
@@ -1044,6 +1090,7 @@ ngono_cro_geno <- ngono_cro_geno %>% bind_rows(tibble(id = negative_cro))
 Build the binary matrix and generate upset plots:
 
 ``` r
+
 # Get binary matrix
 cro_bin_2 <- get_binary_matrix(
   geno_table = ngono_cro_geno,
@@ -1079,6 +1126,7 @@ cro_upset_2 <- amr_upset(
 Calculate combination PPVs:
 
 ``` r
+
 cro_ppv_2 <- amr_ppv(
   binary_matrix = cro_bin_2,
   min_set_size = 1,
@@ -1097,6 +1145,7 @@ cro_ppv_2 <- amr_ppv(
 Run logistic regression to evaluate individual marker contributions:
 
 ``` r
+
 cro_logist <- amr_logistic(
   binary_matrix = cro_bin_2,
   pheno_drug = "Ceftriaxone",
@@ -1145,6 +1194,7 @@ tetracycline resistance in a local gonococcal population.
 Import and format phenotype data:
 
 ``` r
+
 ngono_tet_pheno <- ngono_tet_pheno_raw %>%
   pivot_longer(
     cols = c(Tetracycline),
@@ -1183,6 +1233,7 @@ AMRFinderPlus. For this example, there are 409 samples with MIC in the
 phenotype file but AMR determinants were only found for 402.
 
 ``` r
+
 ngono_tet_geno <- import_amrfp(
   input_table = ngono_tet_geno_raw,
   sample_col = "Name"
@@ -1199,6 +1250,7 @@ ngono_tet_geno <- ngono_tet_geno %>% bind_rows(tibble(id = negative_samples))
 Build the binary matrix and generate upset plots:
 
 ``` r
+
 tet_bin <- get_binary_matrix(
   geno_table = ngono_tet_geno,
   pheno_table = ngono_tet_ast,
@@ -1238,6 +1290,7 @@ Calculate prevalence of the two key resistance determinants in the
 studied population:
 
 ``` r
+
 pop_size <- 409
 
 ngono_tet_geno %>%
@@ -1260,6 +1313,7 @@ Of the 409 isolates with tetracycline phenotypic data:
 Explore marker combinations in the upset summary:
 
 ``` r
+
 tet_upset$summary %>%
   arrange(desc(marker_count)) %>%
   filter(grepl("rpsJ_V57M", marker_list))
@@ -1303,6 +1357,7 @@ tet_upset$summary %>%
 Calculate PPVs for marker combinations:
 
 ``` r
+
 # add species and pheno_drug to retrieve and plot breakpoint
 tet_ppv <- amr_ppv(
   binary_matrix = tet_bin,
@@ -1327,6 +1382,7 @@ Run logistic regression to confirm the independent contributions of
 *rpsJ* V57M and *tet(M)*:
 
 ``` r
+
 tet_logist <- amr_logistic(
   binary_matrix = tet_bin,
   pheno_drug = "Tetracycline",
@@ -1350,6 +1406,7 @@ use only clinical breakpoints (`truth = "R"`) in the concordance
 analysis:
 
 ``` r
+
 tet_concordance <- concordance(
   binary_matrix = tet_bin,
   ppv_results = tet_ppv,
@@ -1393,6 +1450,7 @@ breakpoint.
 Visualise the predictions on the MIC distribution:
 
 ``` r
+
 ngono_tet_pred <- ngono_tet_ast %>%
   left_join(tet_concordance$data[, c("id", "R_pred")],
     by = "id"

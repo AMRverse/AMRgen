@@ -12,6 +12,7 @@ clinical samples.
 Start by loading the package:
 
 ``` r
+
 library(AMRgen)
 library(ggplot2)
 library(dplyr)
@@ -29,6 +30,7 @@ includes the marker gene name and its closest accession number, and also
 indicate whether the match to the accession is exact or not.
 
 ``` r
+
 # Create the new marker.label column
 afp_CLI_public <- afp_CLI_public %>%
   mutate(exact_match = if_else(
@@ -50,6 +52,7 @@ Now let’s create some upset plots, to see how genes, and their allelic
 variants, relate to clindamycin MICs.
 
 ``` r
+
 # Visualise with UpSet plot (markers)
 cli_mic_upset <- amr_upset(
   geno_table = afp_CLI_public,
@@ -70,6 +73,7 @@ cli_mic_upset <- amr_upset(
 ![](StaphAureusClindamycin_files/figure-html/upset_gene-1.png)
 
 ``` r
+
 # Visualise with UpSet plot (markers)
 # order markers alphabetically so we can more easily see where there are different variants of the same gene
 cli_mic_upset_variant <- amr_upset(
@@ -98,6 +102,7 @@ each marker and variant. This will allow us to see which markers and
 variants are most predictive of clindamycin resistance.
 
 ``` r
+
 # soloPPV analysis for markers
 # order markers alphabetically so we can more easily see where there are different variants of the same gene
 cli_soloPPV <- solo_ppv(
@@ -113,6 +118,7 @@ cli_soloPPV <- solo_ppv(
 
 ``` r
 
+
 # soloPPV analysis for variants
 # order markers alphabetically so we can more easily see where there are different variants of the same gene
 cli_soloPPV_variant <- solo_ppv(
@@ -127,6 +133,7 @@ cli_soloPPV_variant <- solo_ppv(
 ![](StaphAureusClindamycin_files/figure-html/visualise%20upset%20plot-2.png)
 
 ``` r
+
 
 cli_soloPPV_variant$solo_stats
 ## # A tibble: 38 × 8
@@ -172,6 +179,7 @@ MIC assay measures grouped by variant and faceted into one panel per
 gene, coloured by S/I/R phenotype.
 
 ``` r
+
 cli_geno_pheno <- afp_CLI_public %>%
   filter(`variation type` == "Gene presence detected") %>%
   mutate(variant_hit = if_else(exact_match == "",
@@ -213,6 +221,7 @@ creating a binary matrix for the variants and then visualizing the
 associations with a bubble plot.
 
 ``` r
+
 # Identify "High-Frequency" STs because we have many STs with only a few samples, which can make the plot cluttered and less informative. By filtering to include only STs with a certain number of samples (e.g., n >= 100), we can focus on the most prevalent STs in the dataset, which are likely to provide more meaningful insights into the associations between specific variants and sequence types.
 high_freq_sts <- ST_data_CLI %>%
   count(ST) %>%

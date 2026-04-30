@@ -384,7 +384,7 @@ AST_CATB3_pheno_3 %>%
   summarise(median = median(mic, na.rm = T), n = n(), R = sum(pheno_clsi == "S"))
 ```
 
-As we can see, isolates with truncated *catB3* genes (n=110) have median MIC of 4 mg/L, and most (n=100) were classed as susceptible (MIC <16 mg/L). In contrast, those with full-length *catB3* genes (n=6) had higher values, and only 3 were classed as susceptible.
+As we can see, isolates with truncated *catB3* genes (n=110) have median MIC of 4 mg/L, and most (n=100) were classed as susceptible (CLSI breakpoint ≤8 mg/L; note there are no EUCAST breakpoints). In contrast, those with full-length *catB3* genes (n=6) had higher values, and only 3 were classed as susceptible.
 
 ## 3.4 Analysing genotype and phenotype data with `amr_ppv()`
 

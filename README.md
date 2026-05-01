@@ -90,23 +90,23 @@ concordance_cip <- concordance(eco_cip_matrix)
 
 Functions to import phenotypic data are documented in the [import_pheno()](https://amrgen.org/reference/import_pheno.html) function reference. Currently, AMRgen supports importing files in the following formats:
 
-* EBI
-* NCBI
-* VITEK
-* MicroScan
-* SensiTitre
-* BD Phoenix
-* WHOnet
+- EBI
+- NCBI
+- VITEK
+- MicroScan
+- SensiTitre
+- BD Phoenix
+- WHOnet
 
 The generic import function [format_pheno()](https://amrgen.org/reference/format_pheno.html) is provided to help import phenotype data from formats other than the above. For a usage example see the vignettes on [Large-scale regional/national surveillance data](https://amrgen.org/articles/NeisseriaGonoExamples.html) and [Custom stratification by isolate source](https://amrgen.org/articles/SalmonellaExamples.html).
 
 Functions to import genotypic data are documented in the [import_geno()](https://amrgen.org/reference/import_geno.html) function reference. Currently, AMRgen supports the following genotype data formats:
 
-* AMRFinderPlus
-* Kleborate
-* ABRicate (run with resfinder or ncbi databases)
-* CARD RGI
-* EBI AMR portal
+- AMRFinderPlus
+- Kleborate
+- ABRicate (run with resfinder or ncbi databases)
+- CARD RGI
+- EBI AMR portal
 
 ## Fetching public geno or pheno data
 
@@ -135,19 +135,22 @@ ggplot2::autoplot(comparison)
 
 AMRgen includes a set of [vignettes](https://amrgen.org/articles/) to illustrate package functionality.
 
-For an overview of available functions, and how they can be used to analyse genotypic and phenotypic data together, see 
-* [Analysing Geno-Pheno Data](http://amrgen.org/articles/AnalysingGenoPhenoData.html).
+For an overview of available functions, and how they can be used to analyse genotypic and phenotypic data together, see
+
+- [Analysing Geno-Pheno Data](http://amrgen.org/articles/AnalysingGenoPhenoData.html).
 
 Vignettes for specific tasks:
-* [Downloading Geno-Pheno Data](http://amrgen.org/articles/DownloadGenoPhenoData.html) from EBI or NCBI databases
-* [Assessing Geno-Pheno Concordance](https://amrgen.org/articles/Concordance.html)
+
+- [Downloading Geno-Pheno Data](http://amrgen.org/articles/DownloadGenoPhenoData.html) from EBI or NCBI databases
+- [Assessing Geno-Pheno Concordance](https://amrgen.org/articles/Concordance.html)
 
 Vignettes using real-world examples to illustrate more complex geno-pheno analyses:
-* [Large-scale surveillance data for *Neiserria gonohorroeae*](http://amrgen.org/articles/NeisseriaGonoExamples.html)
-* [Example with multiple *Salmonella enterica* serovars](http://amrgen.org/articles/SalmonellaExamples.html) - illustrating different ways to explore geno-pheno data by source, genotypic marker count, etc
-* [Analysing clindamycin resistance in *Staphylococcus aureus*](http://amrgen.org/articles/StaphAureusClindamycin.html) - illustrating how to dig further into AMRFinderPlus genotype calls and explore how different types of hits relate differently to phenotype
-* [Exploring catB3 deletion variants and impact on chloramphenicol susceptibility in *Escherichia coli*](https://amrgen.org/articles/DeletionVariantsCatB3.html) - illustrating how to explore the impact of gene deletion variants on phenotypes
-* [Analysing meropenem resistance in *Klebsiella pneumoniae*](https://amrgen.org/articles/ComparingGenotypers.html) - exploring combined impacts of acquired genes and mutations, comparing genotype calls from Kleborate, CARD RGI, AMRFinderPlus
+
+- [Large-scale surveillance data for *Neisseria gonorrhoeae*](http://amrgen.org/articles/NeisseriaGonoExamples.html)
+- [Example with multiple *Salmonella enterica* serovars](http://amrgen.org/articles/SalmonellaExamples.html) - illustrating different ways to explore geno-pheno data by source, genotypic marker count, etc
+- [Analysing clindamycin resistance in *Staphylococcus aureus*](http://amrgen.org/articles/StaphAureusClindamycin.html) - illustrating how to dig further into AMRFinderPlus genotype calls and explore how different types of hits relate differently to phenotype
+- [Exploring catB3 deletion variants and impact on chloramphenicol susceptibility in *Escherichia coli*](https://amrgen.org/articles/DeletionVariantsCatB3.html) - illustrating how to explore the impact of gene deletion variants on phenotypes
+- [Analysing meropenem resistance in *Klebsiella pneumoniae*](https://amrgen.org/articles/ComparingGenotypers.html) - exploring combined impacts of acquired genes and mutations, comparing genotype calls from Kleborate, CARD RGI, AMRFinderPlus
 
 ## Contributions
 

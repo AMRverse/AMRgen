@@ -1,5 +1,5 @@
 Package: AMRgen
-Title: Genotype-Phenotype Integration for Antimicrobial Resistance Research
+Title: Antimicrobial Resistance Genotype-Phenotype Analysis
 Version: 0.1.0.9000
 Date: 2026-05-01
 Authors@R: c(

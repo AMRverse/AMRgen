@@ -143,7 +143,7 @@ Vignettes for specific tasks:
 - [Assessing Geno-Pheno Concordance](https://amrgen.org/articles/Concordance.html)
 
 Vignettes using real-world examples to illustrate more complex geno-pheno analyses:
-- [Large-scale surveillance data for *Neiserria gonohorroeae*](http://amrgen.org/articles/NeisseriaGonoExamples.html)
+- [Large-scale surveillance data for *Neisseria gonorrhoeae*](http://amrgen.org/articles/NeisseriaGonoExamples.html)
 - [Example with multiple *Salmonella enterica* serovars](http://amrgen.org/articles/SalmonellaExamples.html) - illustrating different ways to explore geno-pheno data by source, genotypic marker count, etc
 - [Analysing clindamycin resistance in *Staphylococcus aureus*](http://amrgen.org/articles/StaphAureusClindamycin.html) - illustrating how to dig further into AMRFinderPlus genotype calls and explore how different types of hits relate differently to phenotype
 - [Exploring catB3 deletion variants and impact on chloramphenicol susceptibility in *Escherichia coli*](https://amrgen.org/articles/DeletionVariantsCatB3.html) - illustrating how to explore the impact of gene deletion variants on phenotypes

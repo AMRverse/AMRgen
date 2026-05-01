@@ -227,7 +227,7 @@ geno-pheno analyses:
   aureus*](http://amrgen.org/articles/StaphAureusClindamycin.md) -
   illustrating how to dig further into AMRFinderPlus genotype calls and
   explore how different types of hits relate differently to phenotype
-- [Exploring catB3 deletion variants and impact on chloramphenicol
+- [Exploring *catB3* deletion variants and impact on chloramphenicol
   susceptibility in *Escherichia
   coli*](https://amrgen.org/articles/DeletionVariantsCatB3.html) -
   illustrating how to explore the impact of gene deletion variants on

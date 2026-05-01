@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Genotype-Phenotype Integration for Antimicrobial Resistance Research • AMRgen</title>
+<title>Antimicrobial Resistance Genotype-Phenotype Analysis • AMRgen</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Genotype-Phenotype Integration for Antimicrobial Resistance Research">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Antimicrobial Resistance Genotype-Phenotype Analysis">
 <meta name="description" content="The AMRgen package provides tools for interpreting antimicrobial resistance (AMR) genes, integrating genomic data with phenotypic antimicrobial susceptibility testing (AST) data, and calculating genotype-phenotype associations. This package extends the functionality of the AMR package, enabling researchers to fetch MIC distribution data from EUCAST, visualise multidrug resistance patterns using UpSet plots, and generate NCBI-compliant antibiograms. Designed for AMR research and surveillance, AMRgen aims to support data-driven decision-making in combating AMR on a global scale.">
 <meta property="og:description" content="The AMRgen package provides tools for interpreting antimicrobial resistance (AMR) genes, integrating genomic data with phenotypic antimicrobial susceptibility testing (AST) data, and calculating genotype-phenotype associations. This package extends the functionality of the AMR package, enabling researchers to fetch MIC distribution data from EUCAST, visualise multidrug resistance patterns using UpSet plots, and generate NCBI-compliant antibiograms. Designed for AMR research and surveillance, AMRgen aims to support data-driven decision-making in combating AMR on a global scale.">
 <meta property="og:image" content="https://amrgen.org/logo.png">
@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="index.html">AMRgen</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -210,7 +210,7 @@
 <li>
 <a href="http://amrgen.org/articles/StaphAureusClindamycin.html" class="external-link">Analysing clindamycin resistance in <em>Staphylococcus aureus</em></a> - illustrating how to dig further into AMRFinderPlus genotype calls and explore how different types of hits relate differently to phenotype</li>
 <li>
-<a href="https://amrgen.org/articles/DeletionVariantsCatB3.html">Exploring catB3 deletion variants and impact on chloramphenicol susceptibility in <em>Escherichia coli</em></a> - illustrating how to explore the impact of gene deletion variants on phenotypes</li>
+<a href="https://amrgen.org/articles/DeletionVariantsCatB3.html">Exploring <em>catB3</em> deletion variants and impact on chloramphenicol susceptibility in <em>Escherichia coli</em></a> - illustrating how to explore the impact of gene deletion variants on phenotypes</li>
 <li>
 <a href="https://amrgen.org/articles/ComparingGenotypers.html">Analysing meropenem resistance in <em>Klebsiella pneumoniae</em></a> - exploring combined impacts of acquired genes and mutations, comparing genotype calls from Kleborate, CARD RGI, AMRFinderPlus</li>
 </ul>
@@ -254,20 +254,20 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Matthijs S. Berends <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-7620-1800" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Kathryn E. Holt <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3949-2471" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Jane Hawkey <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9661-5293" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Silvia Argimón <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2884-3857" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Dominique L. Chaput <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9736-2619" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Natacha Couto <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9152-5464" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Ebenezer Foster-Nyarko <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6620-9403" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Gwen M. Knight <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-7263-9896" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Zoe A. Dyson <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-8887-3492" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Kara K. Tsang <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-7742-8855" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Jane Hawkey <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9661-5293" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Ebenezer Foster-Nyarko <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6620-9403" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Richard N. Goodman <br><small class="roles"> Author </small> <a href="https://orcid.org/0009-0008-0578-789X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Gwen M. Knight <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-7263-9896" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Dorottya Nagy <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3779-8418" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Arjun B. Prasad <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1343-8664" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Leonor Sánchez-Busó <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4162-0228" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Silvia Argimón <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2884-3857" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Dorottya Nagy <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3779-8418" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Dominique L. Chaput <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9736-2619" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Richard N. Goodman <br><small class="roles"> Author </small> <a href="https://orcid.org/0009-0008-0578-789X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Kara K. Tsang <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-7742-8855" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Matthijs S. Berends <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-7620-1800" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 

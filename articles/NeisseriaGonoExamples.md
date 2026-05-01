@@ -8,7 +8,7 @@ This vignette demonstrates three usage examples of `AMRgen` functions to
 investigate associations between genotype and phenotype data in
 *Neisseria gonorrhoeae*. Specifically, we illustrate how to:
 
-- Importing AMR genotype data from AMRFinderPlus.
+- Import AMR genotype data from AMRFinderPlus.
 
 - Import and format antimicrobial susceptibility testing (AST)
   phenotypic data in the form of minimum inhibitory concentrations

@@ -201,30 +201,30 @@ AMRgen includes a set of [vignettes](https://amrgen.org/articles/) to
 illustrate package functionality.
 
 For an overview of available functions, and how they can be used to
-analyse genotypic and phenotypic data together, see \* [Analysing
+analyse genotypic and phenotypic data together, see - [Analysing
 Geno-Pheno Data](http://amrgen.org/articles/AnalysingGenoPhenoData.md).
 
-Vignettes for specific tasks: \* [Downloading Geno-Pheno
+Vignettes for specific tasks: - [Downloading Geno-Pheno
 Data](http://amrgen.org/articles/DownloadGenoPhenoData.md) from EBI or
-NCBI databases \* [Assessing Geno-Pheno
+NCBI databases - [Assessing Geno-Pheno
 Concordance](https://amrgen.org/articles/Concordance.html)
 
 Vignettes using real-world examples to illustrate more complex
-geno-pheno analyses: \* [Large-scale surveillance data for *Neiserria
-gonohorroeae*](http://amrgen.org/articles/NeisseriaGonoExamples.md) \*
+geno-pheno analyses: - [Large-scale surveillance data for *Neiserria
+gonohorroeae*](http://amrgen.org/articles/NeisseriaGonoExamples.md) -
 [Example with multiple *Salmonella enterica*
 serovars](http://amrgen.org/articles/SalmonellaExamples.md) -
 illustrating different ways to explore geno-pheno data by source,
-genotypic marker count, etc \* [Analysing clindamycin resistance in
+genotypic marker count, etc - [Analysing clindamycin resistance in
 *Staphylococcus
 aureus*](http://amrgen.org/articles/StaphAureusClindamycin.md) -
 illustrating how to dig further into AMRFinderPlus genotype calls and
-explore how different types of hits relate differently to phenotype \*
+explore how different types of hits relate differently to phenotype -
 [Exploring catB3 deletion variants and impact on chloramphenicol
 susceptibility in *Escherichia
 coli*](https://amrgen.org/articles/DeletionVariantsCatB3.html) -
 illustrating how to explore the impact of gene deletion variants on
-phenotypes \* [Analysing meropenem resistance in *Klebsiella
+phenotypes - [Analysing meropenem resistance in *Klebsiella
 pneumoniae*](https://amrgen.org/articles/ComparingGenotypers.html) -
 exploring combined impacts of acquired genes and mutations, comparing
 genotype calls from Kleborate, CARD RGI, AMRFinderPlus

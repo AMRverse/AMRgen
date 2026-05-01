@@ -22,6 +22,8 @@ The [AMRgen website](https://amrgen.org) has full function
 [vignettes](https://amrgen.org/articles/) working through analysing
 geno/pheno data using key functions.
 
+[![DOI](https://zenodo.org/badge/896005158.svg)](https://doi.org/10.5281/zenodo.19947408)
+
 ------------------------------------------------------------------------
 
 ## Key Features

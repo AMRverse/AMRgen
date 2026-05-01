@@ -6,6 +6,8 @@ This package is developed in collaboration with the [ESGEM-AMR Working Group](ht
 
 The [AMRgen website](https://amrgen.org) has full function [documentation](https://amrgen.org/reference/index.html) and various [vignettes](https://amrgen.org/articles/) working through analysing geno/pheno data using key functions.
 
+[![DOI](https://zenodo.org/badge/896005158.svg)](https://doi.org/10.5281/zenodo.19947408)
+
 ------------------------------------------------------------------------
 
 ## Key Features

@@ -399,6 +399,28 @@ import_kleborate <- function(input_table,
 
   in_table <- in_table %>% rename(id = !!sym(sample_col))
 
+  # Normalise column names to match kleborate_class_table using case-insensitive
+  # matching. Different Kleborate versions use inconsistent capitalisation, e.g.
+  # 'Agly_acquired' (v2/v3 with Strain column) vs 'AGly_acquired' (v3 default),
+  # and 'Bla_Chr' vs 'Bla_chr'. Using any_of() silently skips unmatched columns,
+  # so without normalisation entire drug classes are silently dropped.
+  expected_cols_lower <- setNames(
+    kleborate_class_table$Kleborate_Class,
+    tolower(kleborate_class_table$Kleborate_Class)
+  )
+  cols_to_rename <- names(in_table)[
+    tolower(names(in_table)) %in% names(expected_cols_lower) &
+    !(names(in_table) %in% kleborate_class_table$Kleborate_Class)
+  ]
+  if (length(cols_to_rename) > 0) {
+    rename_vec <- setNames(cols_to_rename, expected_cols_lower[tolower(cols_to_rename)])
+    in_table <- in_table %>% rename(!!!rename_vec)
+    message(
+      "Normalised Kleborate column name(s) to match expected capitalisation: ",
+      paste(cols_to_rename, "→", names(rename_vec), collapse = ", ")
+    )
+  }
+
   geno_table <- in_table %>%
     select(any_of(c("id", kleborate_class_table$Kleborate_Class))) %>%
     pivot_longer(-id, names_to = "Kleborate_Class", values_to = "marker") %>%

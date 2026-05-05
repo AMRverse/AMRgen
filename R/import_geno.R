@@ -417,7 +417,7 @@ import_kleborate <- function(input_table,
     in_table <- in_table %>% rename(!!!rename_vec)
     message(
       "Normalised Kleborate column name(s) to match expected capitalisation: ",
-      paste(cols_to_rename, "→", names(rename_vec), collapse = ", ")
+      paste(cols_to_rename, "->", names(rename_vec), collapse = ", ")
     )
   }
 

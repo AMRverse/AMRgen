@@ -24,6 +24,9 @@ geno/pheno data using key functions.
 
 [![DOI](https://zenodo.org/badge/896005158.svg)](https://doi.org/10.5281/zenodo.19947408)
 
+Citation: [Holt et al, 2026
+*BioRxiv*](https://www.biorxiv.org/content/10.64898/2026.05.01.722195v1)
+
 ------------------------------------------------------------------------
 
 ## Key Features

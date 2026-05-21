@@ -10,6 +10,9 @@ The [AMRgen website](https://amrgen.org) has full function [documentation](https
 
 Citation: [Holt et al, 2026 *BioRxiv*](https://www.biorxiv.org/content/10.64898/2026.05.01.722195v1) 
 
+If you want to convert AST data into formats suitable for submission to EBI or NCBI along with genome data, see the [AMRgen converter](http://apps.amrverse.org/amrgenconverter/) app which uses AMRgen functions to export submission-ready files suitable for depositing with NCBI or ENA (via EBI AMR portal) as BioSample data.
+
+
 ------------------------------------------------------------------------
 
 ## Key Features

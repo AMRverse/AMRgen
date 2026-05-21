@@ -49,8 +49,11 @@ navbar:
     - text: "Vignettes"
       icon: "fa-book"
       href: "articles"
-  right:
-    - text: "Source Code"
+  structure:
+    right: [search, git]
+  components:
+    git:
+      text: "Source Code"
       icon: "fab fa-github"
       href: "https://github.com/AMRverse/AMRgen"
 

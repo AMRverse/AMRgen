@@ -8,7 +8,7 @@ phenotypic data from automated antimicrobial susceptibility testing
 (AST) instruments and public repositories, and combine enotype-phenotype
 data together in a single data structure. AMRgen supports common
 analyses linking AST data to reference distributions, modelling
-enotype-phenotype associations, quantifying concordance, and producing
+genotype-phenotype associations, quantifying concordance, and producing
 publication-ready visualisations including UpSet plots that jointly
 display genotypic marker combination frequencies and associated
 phenotypic distributions.

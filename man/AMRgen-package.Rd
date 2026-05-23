@@ -4,7 +4,7 @@
 \name{AMRgen-package}
 \alias{AMRgen}
 \alias{AMRgen-package}
-\title{AMRgen: Genotype-Phenotype Integration for Antimicrobial Resistance Research}
+\title{AMRgen: Antimicrobial Resistance Genotype-Phenotype Analysis}
 \description{
 The AMRgen package provides tools for interpreting antimicrobial resistance (AMR) genes, integrating genomic data with phenotypic antimicrobial susceptibility testing (AST) data, and calculating genotype-phenotype associations. This package extends the functionality of the AMR package, enabling researchers to fetch MIC distribution data from EUCAST, visualise multidrug resistance patterns using UpSet plots, and generate NCBI-compliant antibiograms. Designed for AMR research and surveillance, AMRgen aims to support data-driven decision-making in combating AMR on a global scale.
 }
@@ -23,18 +23,18 @@ Useful links:
 Authors:
 \itemize{
   \item Kathryn E. Holt \email{drkatholt@gmail.com} (\href{https://orcid.org/0000-0003-3949-2471}{ORCID})
-  \item Jane Hawkey (\href{https://orcid.org/0000-0001-9661-5293}{ORCID})
+  \item Silvia Argimón (\href{https://orcid.org/0000-0002-2884-3857}{ORCID})
+  \item Dominique L. Chaput (\href{https://orcid.org/0000-0002-9736-2619}{ORCID})
   \item Natacha Couto (\href{https://orcid.org/0000-0002-9152-5464}{ORCID})
-  \item Ebenezer Foster-Nyarko (\href{https://orcid.org/0000-0001-6620-9403}{ORCID})
-  \item Gwen M. Knight (\href{https://orcid.org/0000-0002-7263-9896}{ORCID})
   \item Zoe A. Dyson \email{zoe.dyson@lshtm.ac.uk} (\href{https://orcid.org/0000-0002-8887-3492}{ORCID})
-  \item Kara K. Tsang (\href{https://orcid.org/0000-0001-7742-8855}{ORCID})
+  \item Jane Hawkey (\href{https://orcid.org/0000-0001-9661-5293}{ORCID})
+  \item Ebenezer Foster-Nyarko (\href{https://orcid.org/0000-0001-6620-9403}{ORCID})
+  \item Richard N. Goodman (\href{https://orcid.org/0009-0008-0578-789X}{ORCID})
+  \item Gwen M. Knight (\href{https://orcid.org/0000-0002-7263-9896}{ORCID})
+  \item Dorottya Nagy \email{dorottya.nagy@ndm.ox.ac.uk} (\href{https://orcid.org/0000-0003-3779-8418}{ORCID})
   \item Arjun B. Prasad (\href{https://orcid.org/0000-0002-1343-8664}{ORCID})
   \item Leonor Sánchez-Busó (\href{https://orcid.org/0000-0002-4162-0228}{ORCID})
-  \item Silvia Argimón (\href{https://orcid.org/0000-0002-2884-3857}{ORCID})
-  \item Dorottya Nagy \email{dorottya.nagy@ndm.ox.ac.uk} (\href{https://orcid.org/0000-0003-3779-8418}{ORCID})
-  \item Dominique L. Chaput (\href{https://orcid.org/0000-0002-9736-2619}{ORCID})
-  \item Richard N. Goodman (\href{https://orcid.org/0009-0008-0578-789X}{ORCID})
+  \item Kara K. Tsang (\href{https://orcid.org/0000-0001-7742-8855}{ORCID})
 }
 
 }

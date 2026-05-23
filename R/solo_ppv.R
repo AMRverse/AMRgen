@@ -31,7 +31,7 @@
 #' @param order_ppv A logical indicating whether to order markers in the plot by PPV value. Default `TRUE`. If set to `FALSE` markers will be ordered alphabetically.
 #' @param reverse_order A logical indicating whether to reverse the order of rows in the plot, so that markers are ordered from lowest R PPV to highest (default `FALSE`, i.e. markers are ordered from highest to lowest PPV).
 #' @param icat A logical indicating whether to calculate PPV for `"I"` (if such a category exists in the phenotype column) (default `FALSE`).
-#' @param min Minimum number of genomes with the solo marker, to include the marker in the plot (default `1`).
+#' @param min_count Minimum number of genomes with the solo marker, to include the marker in the plot (default `1`).
 #' @param pd A `ggplot2::position_dodge()` object controlling horizontal spacing of points and confidence intervals in the PPV plot. Default `position_dodge(width = 0.8)`.
 #' @param axis_label_size Font size for axis labels in the PPV plot (default `9`).
 #' @param excludeRanges Vector of phenotype categories (comprised of `"R"`, `"I"`, `"NWT"`) for which we should ignore MIC values expressed as ranges when calculating PPVs. To include MICs expressed as ranges set this to `NULL`.
@@ -84,7 +84,7 @@ solo_ppv <- function(geno_table, pheno_table,
                      order_ppv = TRUE,
                      reverse_order = FALSE,
                      binary_matrix = NULL,
-                     min = 1,
+                     min_count = 1,
                      axis_label_size = 9,
                      pd = position_dodge(width = 0.8),
                      excludeRanges = NULL,
@@ -168,13 +168,14 @@ solo_ppv <- function(geno_table, pheno_table,
   } else {
     solo_binary_norange <- NULL
   }
-
+  
   if (sum(!is.na(solo_binary$pheno)) > 0) {
     if ("R" %in% excludeRanges & "mic" %in% colnames(solo_binary)) {
       solo_binary_R <- solo_binary_norange
     } else {
       solo_binary_R <- solo_binary
     }
+
     solo_stats_R <- solo_binary_R %>%
       group_by(marker) %>%
       summarise(
@@ -182,8 +183,8 @@ solo_ppv <- function(geno_table, pheno_table,
         n = sum(pheno %in% c("S", "I", "R", "SDD")),
         p = x / n,
         se = sqrt(p * (1 - p) / n),
-        ci.lower = max(0, p - 1.96 * se),
-        ci.upper = min(1, p + 1.96 * se)
+        ci.lower = base::max(0, p - 1.96 * se),
+        ci.upper = base::min(1, p + 1.96 * se)
       ) %>%
       mutate(category = "R")
   } else {
@@ -193,7 +194,7 @@ solo_ppv <- function(geno_table, pheno_table,
       ci.upper = double(), category = character()
     )
   }
-
+  
   if (order_ppv) {
     solo_stats_R <- solo_stats_R %>% arrange(p)
     if (reverse_order) {
@@ -214,8 +215,8 @@ solo_ppv <- function(geno_table, pheno_table,
         n = sum(pheno %in% c("S", "I", "R", "SDD")),
         p = x / n,
         se = sqrt(p * (1 - p) / n),
-        ci.lower = max(0, p - 1.96 * se),
-        ci.upper = min(1, p + 1.96 * se)
+        ci.lower = base::max(0, p - 1.96 * se),
+        ci.upper = base::min(1, p + 1.96 * se)
       ) %>%
       mutate(category = "I")
   } else {
@@ -225,7 +226,7 @@ solo_ppv <- function(geno_table, pheno_table,
       ci.upper = double(), category = character()
     )
   }
-
+  
   if (sum(!is.na(solo_binary$ecoff)) > 0) {
     if ("NWT" %in% excludeRanges & "mic" %in% colnames(solo_binary)) {
       solo_binary_NWT <- solo_binary_norange
@@ -239,8 +240,8 @@ solo_ppv <- function(geno_table, pheno_table,
         n = sum(ecoff %in% c("WT", "NWT", "S", "I", "R", "SDD")),
         p = x / n,
         se = sqrt(p * (1 - p) / n),
-        ci.lower = max(0, p - 1.96 * se),
-        ci.upper = min(1, p + 1.96 * se)
+        ci.lower = base::max(0, p - 1.96 * se),
+        ci.upper = base::min(1, p + 1.96 * se)
       ) %>%
       mutate(category = "NWT")
   } else {
@@ -261,7 +262,7 @@ solo_ppv <- function(geno_table, pheno_table,
 
   # markers with minimum number for either pheno or ecoff
   markers_to_plot <- solo_stats %>%
-    filter(n >= min) %>%
+    filter(n >= min_count) %>%
     pull(marker) %>%
     unique()
 

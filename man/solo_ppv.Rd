@@ -19,7 +19,7 @@ solo_ppv(
   order_ppv = TRUE,
   reverse_order = FALSE,
   binary_matrix = NULL,
-  min = 1,
+  min_count = 1,
   axis_label_size = 9,
   pd = position_dodge(width = 0.8),
   excludeRanges = NULL,
@@ -56,7 +56,7 @@ solo_ppv(
 
 \item{binary_matrix}{A data frame containing the original binary matrix output from the \code{\link[=get_binary_matrix]{get_binary_matrix()}} function. If not provided (or set to \code{NULL}), user must specify \code{geno_table}, \code{pheno_table}, \code{pheno_drug}, and optionally \code{geno_class}, \code{geno_drug}, \code{geno_sample_col}, \code{pheno_sample_col}, \code{sir_col}, \code{ecoff_col}, \code{marker_col} to pass to \code{\link[=get_binary_matrix]{get_binary_matrix()}}.}
 
-\item{min}{Minimum number of genomes with the solo marker, to include the marker in the plot (default \code{1}).}
+\item{min_count}{Minimum number of genomes with the solo marker, to include the marker in the plot (default \code{1}).}
 
 \item{axis_label_size}{Font size for axis labels in the PPV plot (default \code{9}).}
 

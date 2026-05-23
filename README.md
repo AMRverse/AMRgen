@@ -1,6 +1,6 @@
 # AMRgen
 
-**AMRgen** is an open-source R package designed to support systematic AMR genotype-phenotype analysis. Developed as an extension to the [AMR R package](https://amr-for-r.org), it provides functions to import and harmonise genotypic data from common bioinformatics tools, alongside phenotypic data from automated antimicrobial susceptibility testing (AST) instruments and public repositories, and combine enotype-phenotype data together in a single data structure. AMRgen supports common analyses linking AST data to reference distributions, modelling enotype-phenotype associations, quantifying concordance, and producing publication-ready visualisations including UpSet plots that jointly display genotypic marker combination frequencies and associated phenotypic distributions. 
+**AMRgen** is an open-source R package designed to support systematic AMR genotype-phenotype analysis. Developed as an extension to the [AMR R package](https://amr-for-r.org), it provides functions to import and harmonise genotypic data from common bioinformatics tools, alongside phenotypic data from automated antimicrobial susceptibility testing (AST) instruments and public repositories, and combine enotype-phenotype data together in a single data structure. AMRgen supports common analyses linking AST data to reference distributions, modelling genotype-phenotype associations, quantifying concordance, and producing publication-ready visualisations including UpSet plots that jointly display genotypic marker combination frequencies and associated phenotypic distributions. 
 
 This package is developed in collaboration with the [ESGEM-AMR Working Group](https://esgem-amr.amrrules.org) and is tailored for researchers and health professionals tackling AMR globally.
 
@@ -21,6 +21,8 @@ Citation: [Holt et al, 2026 *BioRxiv*](https://www.biorxiv.org/content/10.64898/
 -   **Visualisation**: Generate powerful UpSet plots to identify intersections of AMR gene presence and phenotypic resistance, highlighting multidrug resistance patterns.
 -   **Modular and extensible**: Leverages the robust foundation of the AMR package, including antibiotic selectors and clinical breakpoint interpretations.
 -   **NCBI- and EBI-Compliant Export**: Export phenotype data to antibiogram formats suitable for submission to NCBI or EBI along with genome data (linked by BioSample).
+
+If you want to convert AST data into formats suitable for submission to EBI or NCBI along with genome data, see the [AMRgen converter](http://apps.amrverse.org/amrgenconverter/) web app which uses AMRgen functions to export submission-ready files suitable for depositing with NCBI or ENA (via EBI AMR portal) as BioSample data. This is a point-and-click Shiny web app that does not require you to install or use R.
 
 ------------------------------------------------------------------------
 

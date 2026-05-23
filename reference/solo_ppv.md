@@ -23,7 +23,7 @@ solo_ppv(
   order_ppv = TRUE,
   reverse_order = FALSE,
   binary_matrix = NULL,
-  min = 1,
+  min_count = 1,
   axis_label_size = 9,
   pd = position_dodge(width = 0.8),
   excludeRanges = NULL,
@@ -135,7 +135,7 @@ solo_ppv(
   `sir_col`, `ecoff_col`, `marker_col` to pass to
   [`get_binary_matrix()`](https://amrgen.org/reference/get_binary_matrix.md).
 
-- min:
+- min_count:
 
   Minimum number of genomes with the solo marker, to include the marker
   in the plot (default `1`).

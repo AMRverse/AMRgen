@@ -1,4 +1,4 @@
-# AMRgen: Genotype-Phenotype Integration for Antimicrobial Resistance Research
+# AMRgen: Antimicrobial Resistance Genotype-Phenotype Analysis
 
 The AMRgen package provides tools for interpreting antimicrobial
 resistance (AMR) genes, integrating genomic data with phenotypic
@@ -30,29 +30,29 @@ Authors:
 - Kathryn E. Holt <drkatholt@gmail.com>
   ([ORCID](https://orcid.org/0000-0003-3949-2471))
 
-- Jane Hawkey ([ORCID](https://orcid.org/0000-0001-9661-5293))
+- Silvia Argimón ([ORCID](https://orcid.org/0000-0002-2884-3857))
+
+- Dominique L. Chaput ([ORCID](https://orcid.org/0000-0002-9736-2619))
 
 - Natacha Couto ([ORCID](https://orcid.org/0000-0002-9152-5464))
-
-- Ebenezer Foster-Nyarko
-  ([ORCID](https://orcid.org/0000-0001-6620-9403))
-
-- Gwen M. Knight ([ORCID](https://orcid.org/0000-0002-7263-9896))
 
 - Zoe A. Dyson <zoe.dyson@lshtm.ac.uk>
   ([ORCID](https://orcid.org/0000-0002-8887-3492))
 
-- Kara K. Tsang ([ORCID](https://orcid.org/0000-0001-7742-8855))
+- Jane Hawkey ([ORCID](https://orcid.org/0000-0001-9661-5293))
+
+- Ebenezer Foster-Nyarko
+  ([ORCID](https://orcid.org/0000-0001-6620-9403))
+
+- Richard N. Goodman ([ORCID](https://orcid.org/0009-0008-0578-789X))
+
+- Gwen M. Knight ([ORCID](https://orcid.org/0000-0002-7263-9896))
+
+- Dorottya Nagy <dorottya.nagy@ndm.ox.ac.uk>
+  ([ORCID](https://orcid.org/0000-0003-3779-8418))
 
 - Arjun B. Prasad ([ORCID](https://orcid.org/0000-0002-1343-8664))
 
 - Leonor Sánchez-Busó ([ORCID](https://orcid.org/0000-0002-4162-0228))
 
-- Silvia Argimón ([ORCID](https://orcid.org/0000-0002-2884-3857))
-
-- Dorottya Nagy <dorottya.nagy@ndm.ox.ac.uk>
-  ([ORCID](https://orcid.org/0000-0003-3779-8418))
-
-- Dominique L. Chaput ([ORCID](https://orcid.org/0000-0002-9736-2619))
-
-- Richard N. Goodman ([ORCID](https://orcid.org/0009-0008-0578-789X))
+- Kara K. Tsang ([ORCID](https://orcid.org/0000-0001-7742-8855))

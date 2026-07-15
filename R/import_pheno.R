@@ -455,7 +455,6 @@ interpret_pheno <- function(ast, interpret_ecoff = TRUE, interpret_eucast = TRUE
 import_ncbi_pheno <- function(input, sample_col = "BioSample", source = NULL, species = NULL, ab = NULL,
                               interpret_eucast = FALSE, interpret_clsi = FALSE, interpret_ecoff = FALSE) {
   ast <- process_input(input)
-
   # find id column
   if (!is.null(sample_col)) {
     if (sample_col %in% colnames(ast)) {
@@ -534,7 +533,8 @@ import_ncbi_pheno <- function(input, sample_col = "BioSample", source = NULL, sp
     if ("Measurement sign" %in% colnames(ast)) {
       ast <- ast %>%
         mutate(mic = paste0(`Measurement sign`, `MIC (mg/L)`)) %>%
-        mutate(mic = gsub("==", "", mic))
+        mutate(mic = gsub("==", "", mic)) %>%
+        mutate(mic = gsub("<NA", "NA", mic))
     } else {
       ast <- ast %>% mutate(mic = `MIC (mg/L)`)
       warning("Expected column 'Measurement sign' not found in input, be careful interpreting MIC")

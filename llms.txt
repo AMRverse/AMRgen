@@ -56,11 +56,11 @@ Citation: [Holt et al, 2026
 
 If you want to convert AST data into formats suitable for submission to
 EBI or NCBI along with genome data, see the [AMRgen
-converter](http://apps.amrverse.org/amrgenconverter/) web app which uses
-AMRgen functions to export submission-ready files suitable for
-depositing with NCBI or ENA (via EBI AMR portal) as BioSample data. This
-is a point-and-click Shiny web app that does not require you to install
-or use R.
+converter](https://converter.amrgen.org/) web app which uses AMRgen
+functions to export submission-ready files suitable for depositing with
+NCBI or ENA (via EBI AMR portal) as BioSample data. This is a
+point-and-click Shiny web app that does not require you to install or
+use R.
 
 ------------------------------------------------------------------------
 

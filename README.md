@@ -22,7 +22,7 @@ Citation: [Holt et al, 2026 *BioRxiv*](https://www.biorxiv.org/content/10.64898/
 -   **Modular and extensible**: Leverages the robust foundation of the AMR package, including antibiotic selectors and clinical breakpoint interpretations.
 -   **NCBI- and EBI-Compliant Export**: Export phenotype data to antibiogram formats suitable for submission to NCBI or EBI along with genome data (linked by BioSample).
 
-If you want to convert AST data into formats suitable for submission to EBI or NCBI along with genome data, see the [AMRgen converter](http://apps.amrverse.org/amrgenconverter/) web app which uses AMRgen functions to export submission-ready files suitable for depositing with NCBI or ENA (via EBI AMR portal) as BioSample data. This is a point-and-click Shiny web app that does not require you to install or use R.
+If you want to convert AST data into formats suitable for submission to EBI or NCBI along with genome data, see the [AMRgen converter](https://converter.amrgen.org/) web app which uses AMRgen functions to export submission-ready files suitable for depositing with NCBI or ENA (via EBI AMR portal) as BioSample data. This is a point-and-click Shiny web app that does not require you to install or use R.
 
 ------------------------------------------------------------------------
 

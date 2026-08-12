@@ -26,8 +26,8 @@
 #' user-defined field providing predictions).
 #' This genotypic prediction is then
 #' compared to the observed phenotypes using standard classification metrics
-#' (via the `yardstick` pkg) and AMR-specific error rates (major error, ME
-#' and very major error, VME) per ISO 20776-2 (and see
+#' (via the `yardstick` pkg) and AMR-specific error rates (major error, ME,
+#' very major error, VME, and minor error, mE) per ISO 20776-2 (and see
 #' [FDA definitions](https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/antimicrobial-susceptibility-test-ast-systems-class-ii-special-controls-guidance-industry-and-fda)).
 #' Supports evaluating both R and NWT outcomes
 #' in a single call, with flexible prediction rules and marker inclusion options.
@@ -98,7 +98,12 @@
 #' - **VME** (Very Major Error): FN / (TP + FN) = 1 - sensitivity. Proportion of
 #'   truly resistant isolates not predicted as such from genotype.
 #' - **ME** (Major Error): FP / (TN + FP) = 1 - specificity. Proportion of
-#'   truly susceptible isolates incorrectly predicted resistant from genotype.
+#'   truly susceptible/intermediate isolates incorrectly predicted resistant from genotype.
+#' - **mE** (Minor Error): For the R outcome, the proportion of intermediate (I)
+#'   isolates predicted as resistant: count(I=1 & pred=1) / count(I=1). Returns
+#'   `NA` for the NWT outcome (no intermediate ECOFF category) or when no `I`
+#'   column is present in `binary_matrix`. Captures I vs R discordances as defined
+#'   in ISO 20776-2 and [Wanger et al. (1999)](https://pubmed.ncbi.nlm.nih.gov/10325331/).
 #'
 #' @return An S3 object of class `"amr_concordance"`, a list containing:
 #' - `conf_mat`: Named list of yardstick confusion matrix objects (e.g.
@@ -429,17 +434,26 @@ concordance <- function(binary_matrix,
       yardstick::f_meas(df, truth = truth_value, estimate = geno_prediction)
     )
 
-    # --- compute AMR-specific metrics (VME and ME) ---
+    # --- compute AMR-specific metrics (VME, ME, mE) ---
     sensitivity <- ys_metrics$.estimate[ys_metrics$.metric == "sens"]
     specificity <- ys_metrics$.estimate[ys_metrics$.metric == "spec"]
 
     vme <- 1 - sensitivity # FN / (TP + FN)
     me <- 1 - specificity # FP / (TN + FP)
 
+    # minor error: I isolates predicted as R (R outcome only, when I column present)
+    mE <- NA_real_
+    if (outcome == "R" && "I" %in% colnames(df)) {
+      n_I <- sum(df$I == 1, na.rm = TRUE)
+      if (n_I > 0) {
+        mE <- sum(df$I == 1 & df[[pred_col]] == 1, na.rm = TRUE) / n_I
+      }
+    }
+
     amr_metrics <- tibble(
-      .metric = c("VME", "ME"),
-      .estimator = c("binary", "binary"),
-      .estimate = c(vme, me)
+      .metric = c("VME", "ME", "mE"),
+      .estimator = c("binary", "binary", "binary"),
+      .estimate = c(vme, me, mE)
     )
 
     # --- clean metrics format ---
@@ -556,6 +570,10 @@ print.amr_concordance <- function(x, ...) {
     message("  F-measure   : ", fmt("f_meas"))
     message("  VME         : ", fmt("VME"))
     message("  ME          : ", fmt("ME"))
+    mE_val <- m$estimate[m$metric == "mE"]
+    if (length(mE_val) > 0 && !is.na(mE_val)) {
+      message("  mE          : ", fmt("mE"))
+    }
   }
 
   invisible(x)
@@ -638,6 +656,11 @@ concordance_from_tables <- function(pheno_table,
           !!sym(true_SIR_col) == "I" ~ 0,
           !!sym(true_SIR_col) == "S" ~ 0,
           TRUE ~ NA
+        )) %>%
+        mutate(I = case_when(
+          !!sym(true_SIR_col) == "I" ~ 1L,
+          !!sym(true_SIR_col) %in% c("R", "S") ~ 0L,
+          TRUE ~ NA_integer_
         ))
       drugs_R <- obs_pred %>%
         filter(!is.na(R) & !is.na(predR)) %>%
